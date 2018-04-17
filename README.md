@@ -57,6 +57,8 @@ GoKu API Gateway CE，支持OpenAPI与微服务管理，支持私有云部署，
 
 * Coding：https://git.coding.net/eolinker/Goku-API-Gateway.git
 
+* Docker：https://hub.docker.com/r/eolinker/goku-api-gateway-ce
+
 * 教程文档：http://help.eolinker.com/agw
 
 * 官方交流Q群：[用户交流1群](https://jq.qq.com/?_wv=1027&k=5ikfC2S)（群号：725853895）
@@ -77,8 +79,11 @@ GoKu API Gateway CE，支持OpenAPI与微服务管理，支持私有云部署，
 1. 全面优化界面；
 2. 优化访问性能。
 
-修复：
-1. 某个脚本的编码错误。
-
 其他：
+
 1. 加入开源声明。
+
+#### V1.0.1（2018/4/17）
+修复：
+
+1. 某个脚本的编码错误。
