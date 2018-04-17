@@ -8,8 +8,6 @@ GoKu API Gateway CE，支持OpenAPI与微服务管理，支持私有云部署，
 
 ## 特性
 
-----
-
 1. **免费且开源**：GoKu API Gateway秉承开源精神，是国内第一个企业开源的API接口网关，为广大的开发、运维以及管理人员提供专业的产品。
 
 2. **多种鉴权方式**：支持Basic 认证、API Key授权、IP认证、无认证等方式。
@@ -31,7 +29,7 @@ GoKu API Gateway CE，支持OpenAPI与微服务管理，支持私有云部署，
 10. **UI界面管理**：完全的图像化界面管理，网关管理员可对多个业务API网关进行管理。
 
 ## 预告
-----
+
 1. **Docker部署**：支持Docker部署。
 
 2. **兼容eoLinker-AMS**：可与国内最大的接口管理平台打通。
@@ -43,14 +41,14 @@ GoKu API Gateway CE，支持OpenAPI与微服务管理，支持私有云部署，
 5. **……**
 
 ## 部署要求
-----
+
 * go 1.8及以上版本
 
 * redis2.8.x及以上版本
 
 
 ## 相关链接
-----
+
 * 官方网站：https://agw.eolinker.com
 
 * Github：https://github.com/eolinker/GoKu-API-Gateway
@@ -64,7 +62,7 @@ GoKu API Gateway CE，支持OpenAPI与微服务管理，支持私有云部署，
 * 官方交流Q群：[用户交流1群](https://jq.qq.com/?_wv=1027&k=5ikfC2S)（群号：725853895）
 
 ## 更新日志
-----
+
 #### V1.0.0(2018/4/17)
 新增：
 
