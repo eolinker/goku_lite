@@ -28,17 +28,24 @@ GoKu API Gateway CE，支持OpenAPI与微服务管理，支持私有云部署，
 
 10. **UI界面管理**：完全的图像化界面管理，网关管理员可对多个业务API网关进行管理。
 
+11. **快速部署**：支持手动部署与Docker部署。
+
 ## 预告
 
-1. **Docker部署**：支持Docker部署。
+1. **兼容eoLinker-AMS**：可与国内最大的接口管理平台打通。
 
-2. **兼容eoLinker-AMS**：可与国内最大的接口管理平台打通。
+2. **告警设置**：当系统达到预设告警条件时，邮件通知运维人员。
 
-3. **告警设置**：当系统达到预设告警条件时，邮件通知运维人员。
+3. **……**
 
-4. **性能控制**：包括超时设置、熔断设置等。
+## 图片介绍
 
-5. **……**
+![](http://data.eolinker.com/course/a9l9ZzQfe7cfc0f93578629db01a1a3197864dd51fa9dab)
+
+![](http://data.eolinker.com/course/3KDiWxscb527a460477f5bbb95fc3db6c09426c47de96f1)
+
+![](http://data.eolinker.com/course/pRMJNTb1974cd4d502bf17f5b477b236cf5c090496af571)
+
 
 ## 部署要求
 
