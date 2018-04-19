@@ -1,6 +1,6 @@
 # GoKu API Gateway CE（悟空API网关 开源版）
 
-![](http://data.eolinker.com/course/B5NK9eR26cab5d947898b96493c9bacfa7d629fd98f333e)
+![](http://data.eolinker.com/course/Y9EYfxU069c9bc2f7a7f1e211966173e296cd04f768ee82)
 
 ## 简介
 
