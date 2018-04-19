@@ -1,7 +1,0 @@
-<ul class="pagination">
-  <li ng-if="::boundaryLinks" ng-class="{disabled: noPrevious()||ngDisabled}" class="pagination-first "><a href class="iconfont" ng-click="selectPage(1, $event)">{{::getText('first')}}</a></li>
-  <li ng-if="::directionLinks" ng-class="{disabled: noPrevious()||ngDisabled}" class="pagination-prev "><a href class="iconfont" ng-click="selectPage(page - 1, $event)">{{::getText('previous')}}</a></li>
-  <li ng-repeat="page in pages track by $index" ng-class="{active: page.active,disabled: ngDisabled&&!page.active,'last-page':$last,'first-page':$first,'only-page':$last==$first}" class="pagination-page"><a href ng-click="selectPage(page.number, $event)" >{{page.text}}</a></li>
-  <li ng-if="::directionLinks" ng-class="{disabled: noNext()||ngDisabled}" class="pagination-next "><a class="iconfont" href ng-click="selectPage(page + 1, $event)">{{::getText('next')}}</a></li>
-  <li ng-if="::boundaryLinks" ng-class="{disabled: noNext()||ngDisabled}" class="pagination-last "><a href ng-click="selectPage(totalPages, $event)" class="iconfont">{{::getText('last')}}</a></li>
-</ul>
