@@ -1,7 +1,6 @@
 package dao
 
 import (
-	"fmt"
 	"goku-ce-1.0/dao/cache"
 	"github.com/farseer810/yawf"
 	"github.com/garyburd/redigo/redis"

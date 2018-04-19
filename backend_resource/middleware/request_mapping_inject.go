@@ -3,7 +3,6 @@ package middleware
 import (
 	"goku-ce-1.0/dao"
 	"net/http"
-	"time"
 	"fmt"
 	"strings"
 	"github.com/farseer810/yawf"
@@ -56,6 +55,7 @@ func InjectRequestMapping(httpRequest *http.Request, context yawf.Context,
 		return false, "error gatewayAlias"
 	}
 	fmt.Println(gatewayHashkey)
+	paths := dao.GetAllAPIPaths(context, gatewayHashkey)
 	fmt.Println(paths)
 	var matchedURI string
 	gatewayLen := len(requestInfo[1]) + len(requestInfo[2]) + 2
