@@ -1,5 +1,7 @@
 # GoKu API Gateway CE（悟空API网关 开源版）
 
+![](http://data.eolinker.com/course/B5NK9eR26cab5d947898b96493c9bacfa7d629fd98f333e)
+
 ## 简介
 
 **GoKu API Gateway CE，中文名：悟空API网关（开源版），是国内首个开源go语言API网关，帮助企业进行API服务治理、API性能安全维护，为企业数字化赋能。**
