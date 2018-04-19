@@ -1,0 +1,159 @@
+    .modal-open {
+        .modal-content {
+            .gateway-modal-change-password {
+                width: 640px;
+                top: 150px;
+                @include eo-left(50%, 320px);
+                text-align: left;
+                border-radius: 5px;
+                @include eo-animation(fade .3s);
+                box-shadow: 0px 10px 29px #a3a3a3;
+                background-color: #fff;
+                header,
+                article {
+                    padding: 0 20px;
+                    font-size: 14px;
+                    @include eo-width(100%, 40px);
+                }
+                header {
+                    font-weight: bold;
+                    @include eo-line(61px);
+                }
+                >article {
+                    .input-li {
+                        margin: 10px 0;
+                        .eo-input {
+                            @include eo-width(100%, 2px);
+                        }
+                        .ng-invalid-pattern,
+                        .ng-invalid-password-confirm-directive {
+                            border: 1px solid #d85030;
+                        }
+                    }
+                    .btn-group {
+                        text-align: left;
+                        margin: 30px 0 10px 0;
+                        a,
+                        button {
+                            display: inline-block;
+                            width: 80px;
+                            text-align: center;
+                        }
+                        button {
+                            @include eo-line(34px);
+                        }
+                    }
+                }
+            }
+            .gateway-default-modal {
+                width: 600px;
+                top: 100px;
+                height: 360px;
+                @include eo-left(50%, 300px);
+                text-align: left;
+                border-radius: 5px;
+                @include eo-animation(fade .3s);
+                box-shadow: 0px 10px 29px #a3a3a3;
+                background-color: #fff;
+                overflow: hidden;
+                header,
+                article {
+                    margin: 0 20px;
+                    font-size: 14px;
+                    @include eo-width(100%, 40px);
+                }
+                header {
+                    font-weight: bold;
+                    @include eo-line(61px);
+                }
+                article {
+                    .eo-input {
+                        width: 100%;
+                    }
+                    .second-title-p {
+                        margin: 10px 0;
+                    }
+                    .desc {
+                        width: 100%;
+                        margin: 10px 0;
+                        textarea {
+                            @include eo-width(100%, 22px);
+                            padding: 10px;
+                            height: 85px;
+                            text-indent: 0;
+                        }
+                    }
+                    .area {
+                        width: 162px;
+                        select {
+                            @include eo-line(35px);
+                            text-indent: 0;
+                        }
+                    }
+                    .tips-li {
+                        color: #999;
+                        font-size: 13px;
+                    }
+                }
+                .btn-group {
+                    @include eo-line(50px);
+                    position: relative;
+                    z-index: 3;
+                    button,
+                    input[type=button] {
+                        display: inline-block;
+                        padding: 0 10px;
+                        text-align: center;
+                        font-size: 14px;
+                        min-width: 65px;
+                        margin-right: 5px;
+                    }
+                }
+            }
+            .gateway-backend-modal {
+                width: 600px;
+                top: 100px;
+                height: 290px;
+                @include eo-left(50%, 300px);
+                text-align: left;
+                border-radius: 5px;
+                @include eo-animation(fade .3s);
+                box-shadow: 0px 10px 29px #a3a3a3;
+                background-color: #fff;
+                overflow: hidden;
+                header,
+                article {
+                    margin: 0 20px;
+                    font-size: 14px;
+                    @include eo-width(100%, 40px);
+                }
+                header {
+                    font-weight: bold;
+                    @include eo-line(61px);
+                }
+                article {
+                    .eo-input {
+                        width: 100%;
+                    }
+                    .second-title-p {
+                        margin: 10px 0;
+                    }
+                }
+                .btn-group {
+                    @include eo-line(50px);
+                    position: relative;
+                    z-index: 3;
+                    margin-top:20px;
+                    button,
+                    input[type=button] {
+                        display: inline-block;
+                        padding: 0 10px;
+                        text-align: center;
+                        font-size: 14px;
+                        min-width: 65px;
+                        margin-right: 5px;
+                    }
+                }
+            }
+        }
+    }

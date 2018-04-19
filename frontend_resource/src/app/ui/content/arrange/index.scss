@@ -1,0 +1,105 @@
+arrange {
+    @extend %CONTENT-INIT-TYPE;
+    .content-wrap {
+        width: 900px;
+        margin: auto;
+        >header {
+            text-align: center;
+            margin: 100px 0 70px 0;
+        }
+        >article {
+            border: 1px solid rgba(0, 0, 0, .08);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, .05);
+            border-radius: 3px;
+            padding: 15px;
+            margin-bottom: 30px;
+            .title-p {
+                background-color: #f9f9f9;
+                font-size: 12px;
+                line-height: 30px;
+                margin-bottom: 20px;
+                text-indent: 5px;
+            }
+            .tips-p {
+                font-size: 14px;
+                font-weight: bold;
+                line-height: 24px;
+            }
+            .step-ul {
+                margin-top: 30px;
+                li {
+                    font-size: 14px;
+                    line-height: 24px;
+                }
+            }
+            .last-p {
+                margin: 35px 0 25px 0;
+                font-size: 14px;
+            }
+            .env-title-p {
+                margin-bottom: 0;
+            }
+            .env-ul {
+                margin-top: 20px;
+                li {
+                    font-size: 14px;
+                    line-height: 24px;
+                }
+            }
+            .emoji-p {
+                font-size: 100px;
+                margin-bottom: 50px;
+            }
+            .btn-group-p {
+                line-height: 80px;
+                button,
+                a {
+                    background: linear-gradient(180deg, #4caf50 0%, #4eb052 100%);
+                    min-width: 120px;
+                    padding: 0 10px;
+                    border-radius: 16px;
+                    text-align: left;
+                    .iconfont {
+                        font-size: 14px;
+                    }
+                    &:nth-child(n+2) {
+                        margin-left: 10px;
+                    }
+                    &:disabled {
+                        background: #f5f5f5;
+                        border-color: #e5e5e5;
+                        color: #999;
+                        cursor: not-allowed;
+                        .iconfont {
+                            color: #999;
+                        }
+                    }
+                }
+                a {
+                    display: inline-block;
+                    font-size: 14px;
+                    @include eo-line(30px);
+                }
+                .arrange-btn {
+                    width: 170px;
+                }
+            }
+            .common-table {
+                margin-top: 10px;
+                td {
+                    font-size: 14px;
+                    padding-right: 10px;
+                    line-height: 45px;
+                }
+            }
+            .warning-p {
+                font-size: 14px;
+                line-height: 24px;
+                margin-top: 15px;
+                b {
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+}

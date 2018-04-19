@@ -1,0 +1,248 @@
+<div class="home-project-inside-div">
+    <menu-common-component list="$ctrl.component.menuObject.list"></menu-common-component>
+    <article class="first-level-article">
+        <ng-form name="editForm">
+            <div class="first-part div-part">
+                <ul>
+                    <li>
+                        <ul class="api-message-send">
+                            <li class="pull-left"><span>分组：</span></li>
+                            <li class="pull-left second-li">
+                                <select class="eo-input" data-ng-model="$ctrl.data.interaction.response.apiInfo.groupID" data-ng-options="group.groupID as group.groupName for group in $ctrl.data.info.group.parent" data-ng-change="$ctrl.data.fun.change.group()">
+                                </select>
+                            </li>
+                            <li>
+                                <select class="eo-input" data-ng-model="$ctrl.data.interaction.response.apiInfo.childGroupID" data-ng-options="group.groupID as group.groupName for group in $ctrl.data.info.group.child">
+                                </select>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul class="api-message-name">
+                            <li class="pull-left"><span>名称：</span></li>
+                            <li class="second-li">
+                                <input class="eo-input" type="text" name="name" data-ng-model="$ctrl.data.interaction.response.apiInfo.apiName" data-ng-class="{'eo-input-error':($ctrl.data.info.input.submited&&editForm.name.$invalid)}" maxlength="255" required>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="uri-part div-part">
+                <header>接口地址映射表：</header>
+                <article>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td class="protocol-td">网关协议</td>
+                                <td class="method-td">网关请求方式</td>
+                                <td class="third-td">网关请求路径</td>
+                                <td class="mapping-td">映射到</td>
+                                <td class="protocol-td">后端协议</td>
+                                <td class="method-td">后端请求方式</td>
+                                <td class="serve-td">后端服务</td>
+                                <td class="seventh-td">后端请求路径</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <select class="eo-input" data-ng-model="$ctrl.data.interaction.response.apiInfo.gatewayProtocol">
+                                        <option value="0">HTTP</option>
+                                        <!-- <option value="1">HTTPS</option> -->
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="eo-input" ng-model="$ctrl.data.interaction.response.apiInfo.gatewayRequestType" data-ng-change="$ctrl.data.fun.change.method(true)">
+                                        <option value="0">POST</option>
+                                        <option value="1">GET</option>
+                                        <option value="2">PUT</option>
+                                        <option value="3">DELETE</option>
+                                        <option value="4">HEAD</option>
+                                        <option value="5">OPTIONS</option>
+                                        <option value="6">PATCH</option>
+                                    </select>
+                                </td>
+                                <td class="input-td">
+                                    <input class="eo-input" name="gatewayRequestPath" type="text" data-ng-model="$ctrl.data.interaction.response.apiInfo.gatewayRequestPath" placeholder="（以/开头，如/test/login）" data-ng-class="{'eo-input-error':($ctrl.data.info.input.submited&&editForm.gatewayRequestPath.$invalid)}" required>
+                                </td>
+                                <td class="mapping-td">>></td>
+                                <td>
+                                    <select class="eo-input" data-ng-model="$ctrl.data.interaction.response.apiInfo.backendProtocol">
+                                        <option value="0">HTTP</option>
+                                        <option value="1">HTTPS</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="eo-input" ng-model="$ctrl.data.interaction.response.apiInfo.backendRequestType" data-ng-change="$ctrl.data.fun.change.method(false)">
+                                        <option value="0">POST</option>
+                                        <option value="1">GET</option>
+                                        <option value="2">PUT</option>
+                                        <option value="3">DELETE</option>
+                                        <option value="4">HEAD</option>
+                                        <option value="5">OPTIONS</option>
+                                        <option value="6">PATCH</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="eo-input" ng-model="$ctrl.data.info.reset.backendItem" data-ng-options="item as item.backendName+
+                                    '['+item.backendURI+']' for item in $ctrl.data.info.reset.backendQuery" title="{{$ctrl.data.info.reset.backendItem.backendName+'['+$ctrl.data.info.reset.backendItem.backendURI+']'}}">
+                                    </select>
+                                </td>
+                                <td class="input-td">
+                                    <input name="backendRequestPath" class="eo-input" type="text" data-ng-model="$ctrl.data.interaction.response.apiInfo.backendRequestPath" placeholder="（以/开头，如/test/login）" data-ng-class="{'eo-input-error':($ctrl.data.info.input.submited&&editForm.backendRequestPath.$invalid)}" required>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+            </div>
+            <div class="accept-param-part div-part">
+                <header>接受参数映射表：</header>
+                <article>
+                    <table class="request-form-ul form-ul">
+                        <thead>
+                            <tr>
+                                <td class="order-td">顺序</td>
+                                <td class="address-td">参数位置</td>
+                                <td class="require-td">必填</td>
+                                <!-- <td class="type-td">参数类型</td> -->
+                                <td class="name-td">网关接口参数名</td>
+                                <td class="mapping-td">映射到</td>
+                                <td class="address-td">后端参数位置</td>
+                                <td class="name-td">后端接口参数名</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="query in $ctrl.data.interaction.response.apiInfo.gatewayRequestParam | filter :$ctrl.data.fun.filter" >
+                                <td class="nessarity">
+                                    <label class="eo-sv-handle pull-left">{{$index+1}}</label>
+                                    <label>
+                                        <a class="iconfont icon-shanchu eo-button-delete" data-ng-click="$ctrl.data.fun.requestParamList.delete({$index:$index})"></a>
+                                    </label>
+                                </td>
+                                <td class="address-td">
+                                    <select class="eo-input" data-ng-model="query.gatewayParamPosition">
+                                        <option value="0">header</option>
+                                        <option value="1" ng-hide="$ctrl.data.interaction.response.apiInfo.isRequestBody||!$ctrl.data.info.reset.type.gateway">body</option>
+                                        <option value="2" >query</option>
+                                    </select>
+                                </td>
+                                <td class="require-td">
+                                    <input class="hidden" type="checkbox" name="request-required-{{$index}}" id="request-required-{{$index}}" data-ng-model="query.checkbox" data-ng-change="$ctrl.data.fun.change.required(query)">
+                                    <label for="request-required-{{$index}}" class="radio-input iconfont " data-ng-class="{'icon-check':query.checkbox}"></label>
+                                </td>
+                                <!-- <td>
+                                    <select class="eo-input" data-ng-model="query.paramType">
+                                        <option value="0">[text]</option>
+                                        <option value="1">[file]</option>
+                                        <option value="2">[json]</option>
+                                        <option value="3">[int]</option>
+                                        <option value="4">[float]</option>
+                                        <option value="5">[double]</option>
+                                        <option value="6">[date]</option>
+                                        <option value="7">[datetime]</option>
+                                        <option value="8">[boolean]</option>
+                                        <option value="9">[byte]</option>
+                                        <option value="10">[short]</option>
+                                        <option value="11">[long]</option>
+                                    </select>
+                                </td> -->
+                                <td class="input-td">
+                                    <input class="eo-input" type="text" placeholder="请输入网关接口参数名" data-ng-class="{'eo-input-error':(($ctrl.check.gatewayRequestParam)&&!query.gatewayParamKey)}" maxlength="255" data-ng-model="query.gatewayParamKey">
+                                </td>
+                                <td class="mapping-td">>></td>
+                                <td class="address-td">
+                                    <select class="eo-input" data-ng-model="query.backendParamPosition">
+                                        <option value="0">header</option>
+                                        <option value="1" ng-show="$ctrl.data.info.reset.type.backend">body</option>
+                                        <option value="2" >query</option>
+                                    </select>
+                                </td>
+                                <td class="input-td">
+                                    <input class="eo-input" type="text" placeholder="请输入后端接口参数名" data-ng-class="{'eo-input-error':(($ctrl.check.gatewayRequestParam)&&!query.backendParamKey)}" maxlength="255" data-ng-model="query.backendParamKey">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+                <footer>
+                    <button class="eo-button-success add-param-btn" data-ng-click="$ctrl.data.fun.requestParamList.add()">添加<span class="iconfont icon-add"></span></button>
+                </footer>
+            </div>
+            <div class="request-body-part div-part" ng-show="$ctrl.data.info.reset.type.gateway">
+                <header>请求Body[非Form表单数据，比如JSON字符串、文件二进制数据等]：</header>
+                <article>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td class="open-td">开启</td>
+                                <td class="desc-td">请求body内容说明</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr >
+                                <td class="open-td">
+                                    <input class="hidden" type="checkbox" name="request-body" id="request-body" data-ng-model="$ctrl.data.interaction.response.apiInfo.isRequestBody" >
+                                    <label for="request-body" class="radio-input iconfont " ng-class="{'icon-check':$ctrl.data.interaction.response.apiInfo.isRequestBody}"></label>
+                                </td>
+                                <td class="input-td">
+                                    <input class="eo-input" type="text"  data-ng-model="$ctrl.data.interaction.response.apiInfo.gatewayRequestBodyNote" placeholder="请输入请求body内容说明" ng-disabled="!$ctrl.data.interaction.response.apiInfo.isRequestBody">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+            </div>
+            <div class="constant-param-part div-part">
+                <header>常量参数：</header>
+                <article>
+                    <table class="request-form-ul form-ul">
+                        <thead>
+                            <tr>
+                                <td class="order-td">顺序</td>
+                                <td class="address-td">参数位置</td>
+                                <td class="name-td">后端接口参数名</td>
+                                <td class="name-td">参数值</td>
+                                <td class="name-td">参数说明</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="query in $ctrl.data.interaction.response.apiInfo.constantResultParam | filter :$ctrl.data.fun.filter">
+                                <td class="nessarity">
+                                    <label class="eo-sv-handle pull-left">{{$index+1}}</label>
+                                    <label>
+                                        <a class="iconfont icon-shanchu eo-button-delete" data-ng-click="$ctrl.data.fun.resultParamList.delete({$index:$index})"></a>
+                                    </label>
+                                    <input class="hidden" type="checkbox" name="request-body">
+                                </td>
+                                <td class="address-td">
+                                    <select class="eo-input" data-ng-model="query.paramPosition">
+                                        <option value="0">header</option>
+                                        <option value="1" ng-hide="$ctrl.data.interaction.response.apiInfo.isRequestBody||!$ctrl.data.info.reset.type.gateway">body</option>
+                                        <option value="2" >query</option>
+                                    </select>
+                                </td>
+                                <td class="input-td">
+                                    <input class="eo-input" type="text" placeholder="请输入后端接口参数名" data-ng-class="{'eo-input-error':((!query.backendParamKey)&&$ctrl.check.constantResultParam)}" maxlength="255" data-ng-model="query.backendParamKey">
+                                </td>
+                                <td class="input-td">
+                                    <input class="eo-input" type="text" placeholder="请输入参数值" maxlength="255" data-ng-model="query.paramValue">
+                                </td>
+                                <td class="input-td">
+                                    <input class="eo-input" type="text" placeholder="请输入参数说明" maxlength="255" data-ng-model="query.paramName">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+                <footer>
+                    <button class="eo-button-success add-param-btn" data-ng-click="$ctrl.data.fun.resultParamList.add()">添加<span class="iconfont icon-add"></span></button>
+                </footer>
+            </div>
+        </ng-form>
+    </article>
+    <footer>
+        <div load-directive="$ctrl.data.fun.requestProcessing(arg)" interaction="{request:{delay:true}}">
+        </div>
+    </footer>
+</div>

@@ -1,0 +1,216 @@
+//作者：riverLethe
+gateway-overview {
+    .gateway-overview {
+        margin: 0 0 20px 0;
+        .left-div {
+            width: 918px;
+            display: inline-block;
+            margin: 10px 10px 0 10px;
+            .item-div {
+                border: 1px solid #e5e5e5;
+                background-color: #fff;
+                li {
+                    display: inline-block;
+                    text-indent: 20px;
+                    @include eo-line(82px);
+                    @include eo-width(25%, 2px);
+                    p {
+                        @include eo-line(30px);
+                    }
+                    .title-p {
+                        font-size: 18px;
+                        margin-top: 10px;
+                        .iconfont {
+                            font-size: 18px;
+                        }
+                    }
+                    .desc-p {
+                        font-size: 12px;
+                        color: #b6b6b6;
+                    }
+                }
+                .center-li {
+                    border-left: 1px solid #e5e5e5;
+                }
+                .last-li {
+                    border-left: 1px solid #e5e5e5;
+                }
+            }
+            .first-div {
+                    border: 1px solid #e5e5e5;
+                    background-color: #fff;
+                    border-bottom: none;
+                    border-radius: 3px 3px 0 0;
+                    @include eo-line(130px,65px);
+                    padding:0 20px;
+                    .title-li {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        b {
+                            font-size: 24px;
+                            color: $buttonSuccessBgColor;
+                        }
+                    }
+                    .desc-li {
+                        color: #b6b6b6;
+                        font-size: 14px;
+                        p {
+                            line-height: 20px;
+                        }
+                    }
+                    a {
+                        margin-left: 10px;
+                        padding: 0 15px;
+                        border-radius: 15.5px;
+                        font-size: 12px;
+                        display: inline-block;
+                        @include eo-line(26px);
+                        .iconfont{
+                            font-size: 12px;
+                        }
+                        &:hover {
+                            color: #999;
+                        }
+                    }
+                }
+            .second-div {
+                border-radius: 0 0 3px 3px;
+                li {
+                    @include eo-width(33%, 2px);
+                }
+            }
+            .third-div,
+            .forth-div {
+                margin: 15px 0;
+                border-radius: 3px;
+                ul {
+                    display: table;
+                    width: 100%;
+                    li {
+                        vertical-align: middle;
+                    }
+                    .first-li {
+                        @include eo-width(100%, 110px);
+                        p {
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            padding-right: 20px;
+                        }
+                    }
+                    .second-li {
+                        width: 100px;
+                        padding-right: 10px;
+                        input {
+                            position: absolute;
+                            opacity: 0;
+                            z-index: -1;
+                            width: 1px;
+                        }
+                        button {
+                            @include eo-button($buttonDefaultBgColor, $buttonDefaultColor, $buttonDefaultBorderColor);
+                            text-indent: 0;
+                            font-size: 14px;
+                            padding: 0 15px;
+                            @include eo-line(29px);
+                            border-radius: 15.5px;
+                            .iconfont {
+                                font-size: 14px;
+                                margin-right: 4px;
+                                cursor: pointer;
+                            }
+                            &:hover {
+                                color: #999;
+                                border-radius: 15.5px;
+                                background: $buttonDefaultFocusBgColor;
+                                border: 1px solid $buttonDefaultBorderColor;
+                                .iconfont {
+                                    color: #999;
+                                }
+                            }
+                        }
+                    }
+                }
+                .second-li{
+                    text-indent:0;
+                }
+            }
+            .third-div {
+                margin-bottom: 0;
+                border-bottom: none;
+                border-radius: 3px 3px 0 0;
+
+            }
+            .forth-div {
+                margin-top: 0;
+                border-radius: 0 0 3px 3px;
+            }
+        }
+        .right-div {
+            display: inline-block;
+            @include eo-width(100%, 938px + $HOME-SIDEBAR-LEFT);
+            background-color: #f3f3f3;
+            @include eo-height(100%, 51px);
+            position: absolute;
+            min-height: 481px;
+            ul {
+                padding-left: 15px;
+                background-color: #f3f3f3;
+                li {
+                    font-size: 12px;
+                }
+                .title-li {
+                    margin: 8px 0;
+                    * {
+                        color: #7abdf2;
+                    }
+                }
+                .item-li {
+                    p {
+                        line-height: 20px;
+                    }
+                    .title-p {
+                        font-weight: bold;
+                        margin-top: 15px;
+                    }
+                }
+                .first-item-li {
+                    .title-p {
+                        margin-top: 0;
+                    }
+                }
+            }
+        }
+        @media only screen and (max-width: 1365px) {
+            margin-bottom: 0;
+            .left-div {
+                @include eo-width(100%, 20px);
+            }
+            .right-div {
+                position: inherit;
+                margin-top: 15px;
+                @include eo-width(100%, -20px);
+                margin-left: -20px;
+                display: inherit;
+                min-height: initial;
+                padding-bottom: 20px;
+                ul {
+                    margin-left: 20px;
+                }
+            }
+        }
+    }
+}
+
+.shrink-inside-div {
+    gateway-overview {
+        .gateway-overview {
+            @media only screen and (min-width: 1365px) {
+                .right-div {
+                    @include eo-width(100%, 993px);
+                }
+            }
+        }
+    }
+}

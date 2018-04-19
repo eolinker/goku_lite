@@ -1,0 +1,48 @@
+.modal-open {
+    .modal-content {
+        .common-modal-login {
+            width: 550px;
+            top: 150px;
+            @include eo-left(50%, 275px);
+            text-align: left;
+            border-radius: 5px;
+            @include eo-animation(fade .3s);
+            box-shadow: 0px 10px 29px #a3a3a3;
+            background-color: #fff;
+            header,
+            .tips-p,
+            article,
+            footer {
+                padding: 0 20px;
+                font-size: 14px;
+                @include eo-width(100%, 40px);
+            }
+            header {
+                font-weight: bold;
+                @include eo-line(61px);
+            }
+            >.tips-p {
+                line-height: 24px;
+                padding-bottom: 10px;
+            }
+            >article {
+                li {
+                    line-height: 50px;
+                    label {
+                        width: 60px;
+                        line-height: 50px;
+                    }
+                    .eo-input {
+                        @include eo-width(100%, 62px);
+                    }
+                    button {
+                        display: inline-block;
+                        width: 80px;
+                        text-align: center;
+                    }
+                }
+            }
+        }
+
+    }
+}

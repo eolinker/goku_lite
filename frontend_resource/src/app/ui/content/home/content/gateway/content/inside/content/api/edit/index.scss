@@ -1,0 +1,300 @@
+gateway .gateway .gateway-content gateway-api-edit .home-project-inside-div{
+    margin: 10px;
+}
+gateway-api-edit {
+    .home-project-inside-div {
+        z-index: 0;
+        
+        .first-level-article {
+            .div-part {
+                padding: 10px;
+                min-height: 50px;
+                background-color: #fff;
+                margin-top: 10px;
+                border: 1px solid #e5e5e5;
+                border-radius:3px;
+                font-size:14px;
+                .eo-sv-handle {
+                    cursor: default;
+                    margin-right:5px;
+                }
+                .radio-input {
+                    border: 1px solid #e5e5e5;
+                    height: 23px;
+                    line-height: 23px;
+                    width: 23px;
+                    font-size: 13px;
+                    margin-right: 4px;
+                    cursor: pointer;
+                    display: block;
+                    border-radius: 3px;
+                }
+                project-api-test .project-test article .part article .nessarity .iconfont {
+                    height: 23px;
+                    line-height: 23px;
+                }
+            }
+            .first-part {
+                input {
+                    @include eo-line(28px);
+                    width: 100%;
+                }
+                li {
+                    @include eo-line(30px);
+                }
+                select {
+                    width: auto;
+                    text-indent: 0;
+                    margin-right: 5px;
+                    @include eo-line(30px);
+                    padding: 0 5px;
+                }
+                .api-message-send {
+                    margin-top: 10px;
+                    .pull-right {
+                        margin-right: 10px;
+                        .iconfont {
+                            color: #ccc;
+                        }
+                        .icon-favorfill {
+                            color: #f48932;
+                        }
+                    }
+                    .second-li {
+                        margin-left: 8px;
+                    }
+                }
+                .api-message-name {
+                    font-size: 14px;
+                    clear: both;
+                    margin-top: 10px;
+                    .second-li {
+                        margin: 0 10px 0 50px;
+                    }
+                }
+            }
+            .uri-part,
+            .accept-param-part,
+            .request-body-part,
+            .constant-param-part {
+                header {
+                    border-bottom: 1px solid #e5e5e5;
+                    @include eo-line(35px);
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+                input {
+                    @include eo-line(28px);
+                    width: 154px;
+                }
+                select {
+                    width: 100%;
+                    text-indent: 0;
+                    margin-right: 5px;
+                    @include eo-line(30px);
+                }
+                table {
+                    border-spacing: 0;
+                    width: 100%;
+                    td {
+                        padding: 10px 0;
+                        padding-right: 10px;
+                        select {
+                            margin-right: 0;
+                        }
+                    }
+                }
+            }
+            .accept-param-part,
+            .constant-param-part {
+                article {
+                    font-size: 14px;
+                    .param-form {
+                        border-bottom: 1px dotted #e5e5e5;
+                        padding-bottom: 10px;
+                        margin-top: 10px;
+                        background-color: #fff;
+                    }
+                    .nessarity {
+                        label,
+                        .iconfont {
+                            width: 25px;
+                            @include eo-line(25px);
+                            display: inline-block;
+                            text-align: center;
+                            border-radius: 3px;
+                        }
+                        label:first-child {
+                            background-color: #f2f2f2;
+                            color: #a3a3a3;
+                        }
+                        .iconfont {
+                            @include eo-line(23px);
+                        }
+                    }
+                    .param-info {
+                        margin-left: 150px;
+                        li {
+                            margin-right: 21px;
+                        }
+                    }
+                }
+                footer,
+                .footer {
+                    margin-top: 5px;
+                    .add-param-btn {
+                        width: 60px;
+                        @include eo-line(30px);
+                        display: inline-block;
+                        text-align: center;
+                        .iconfont {
+                            color: #fff;
+                            font-size: 14px;
+                            margin-left: 2px;
+                        }
+                    }
+                }
+            }
+            .uri-part {
+                table {
+                    .mapping-td {
+                        width: 52px;
+                        min-width: 52px;
+                        color: $buttonSuccessBgColor;
+                        text-align: center;
+                    }
+                    thead {
+                        td {
+                            border-bottom: 1px solid #e5e5e5;
+                        }
+                        .protocol-td {
+                            width: 80px;
+                        }
+                        .method-td {
+                            width: 100px;
+                        }
+                        .serve-td {
+                            width: 210px;
+                        }
+                        .third-td {
+                            max-width: 400px;
+                        }
+                    }
+                    tbody {
+                        .input-td {
+                            input {
+                                width: 100%;
+                            }
+                        }
+                    }
+                }
+            }
+            .accept-param-part {
+                article {
+                    table {
+                        .mapping-td {
+                            width: 52px;
+                            min-width: 52px;
+                            color: $buttonSuccessBgColor;
+                            text-align: center;
+                        }
+                        thead {
+                            td {
+                                border-bottom: 1px solid #e5e5e5;
+                            }
+                            .order-td {
+                                width: 55px;
+                            }
+                            .address-td {
+                                width: 100px;
+                            }
+                            .require-td {
+                                width: 30px;
+                            }
+                            .type-td {
+                                width: 105px;
+                            }
+                            .name-td {
+                                max-width: 400px;
+                            }
+                        }
+                        tbody {
+                            td {
+                                border-bottom: 1px dotted #e5e5e5;
+                            }
+                            .require-td {
+                                text-align: center;
+                            }
+                            .input-td {
+                                input {
+                                    width: 100%;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .request-body-part {
+                table {
+                    thead {
+                        td {
+                            border-bottom: 1px solid #e5e5e5;
+                        }
+                        .open-td {
+                            width: 30px;
+                        }
+                    }
+                    tbody {
+                        .input-td {
+                            height: 30px;
+                            input {
+                                width: 100%;
+                            }
+                        }
+                        .open-td {
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+            .constant-param-part {
+                article {
+                    table {
+                        .mapping-td {
+                            width: 52px;
+                            min-width: 52px;
+                            color: $buttonSuccessBgColor;
+                            text-align: center;
+                        }
+                        thead {
+                            td {
+                                border-bottom: 1px solid #e5e5e5;
+                            }
+                            .order-td {
+                                width: 55px;
+                            }
+                            .address-td {
+                                width: 100px;
+                            }
+                            .name-td {
+                                max-width: 400px;
+                            }
+                        }
+                        tbody {
+                            td {
+                                border-bottom: 1px dotted #e5e5e5;
+                            }
+                            .input-td {
+                                input {
+                                    width: 100%;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+

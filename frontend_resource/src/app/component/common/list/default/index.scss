@@ -1,0 +1,85 @@
+list-default-common-component {
+    display: flex;
+    width: 100%;
+    .first-level-article {
+        margin-top: 10px;
+        border: 1px solid #e5e5e5;
+        border-radius: 3px;
+        table {
+            width: 100%;
+            background: #fff;
+            font-size: 14px;
+            border-spacing: 0;
+            text-align: left;
+            text-indent: 15px;
+            border-radius: 3px;
+            table-layout: fixed;
+            thead {
+                @include eo-line(40px);
+                th {
+                    cursor: default;
+                }
+            }
+            tbody {
+                tr {
+                    @include eo-line(40px);
+                    cursor: pointer;
+                    td {
+                        cursor: inherit;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        button {
+                            color: #999;
+                            background-color: rgba(255, 255, 255, 0);
+                            border: none;
+                            .iconfont {
+                                font-size: 14px;
+                                color: inherit;
+                                cursor: inherit;
+                                padding-right: 5px;
+                            }
+                            &:hover {
+                                color: #333;
+                            }
+                            &:nth-child(n+2) {
+                                margin-left: 10px;
+                            }
+                        }
+                    }
+                    .unnecessary-td {
+                        color: #999;
+                    }
+                    &:hover {
+                        background-color: #efefef;
+                    }
+                    &:first-child {
+                        td,
+                        th {
+                            border-top: 1px solid #e5e5e5;
+                        }
+                    }
+                }
+                .disabled-tr {
+                    cursor: not-allowed;
+                    td {
+                        button {
+                            &:disabled {
+                                cursor: not-allowed;
+                                &:hover {
+                                    color: #999;
+                                }
+                            }
+                        }
+                    }
+                }
+                .eo-none-tr {
+                    cursor: default;
+                    td {
+                        color: #999;
+                    }
+                }
+            }
+        }
+    }
+}

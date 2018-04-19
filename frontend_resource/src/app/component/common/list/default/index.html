@@ -1,0 +1,15 @@
+<article class="first-level-article">
+    <table>
+        <thead>
+            <tr>
+                <th ng-style="item.keyStyle" ng-repeat="item in $ctrl.mainObject.item.default">{{item.key}}</th>
+                <th  ng-style="$ctrl.mainObject.item.fun.keyStyle" ng-if="$ctrl.mainObject.item.fun&&(!$ctrl.mainObject.baseInfo.operate||($ctrl.mainObject.baseInfo.operate&&$ctrl.authorityObject.operate))">操作</th>
+            </tr>
+        </thead>
+        <tbody inner-html-common-directive html="{{$ctrl.data.info.html}}">
+            <tr class="eo-none-tr" ng-if="$ctrl.list.length==0">
+                <td colspan="{{$ctrl.mainObject.baseInfo.colspan}}">{{$ctrl.mainObject.baseInfo.warning||'尚无任何内容'}}</td>
+            </tr>
+        </tbody>
+    </table>
+</article>

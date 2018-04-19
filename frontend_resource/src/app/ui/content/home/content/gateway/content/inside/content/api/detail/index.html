@@ -1,0 +1,106 @@
+<div class="home-project-inside-div">
+    <menu-common-component list="$ctrl.component.menuObject.list"></menu-common-component>
+    <article class="first-level-article">
+        <div class="first-part">
+            <ul class="api-detail">
+                <li>
+                    <b>接口名称：{{$ctrl.data.interaction.response.apiInfo.apiName}}</b>
+                </li>
+            </ul>
+        </div>
+        <div class="new-first-part item-part">
+            <p class="title-p">
+                <b>网关接口请求地址</b>
+            </p>
+            <ul class="container-ul">
+                <li class="pull-left">
+                    <label class="send-protocol">{{$ctrl.data.interaction.response.apiInfo.gatewayProtocol=='0'?'HTTP':'HTTPS'}}</label>
+                </li>
+                <li class="pull-left">
+                    <label class="send-function" ng-class="{'eo-color-success':$ctrl.data.interaction.response.apiInfo.gatewayRequestType==0,'eo-color-default':$ctrl.data.interaction.response.apiInfo.gatewayRequestType==1,'eo-color-others':$ctrl.data.interaction.response.apiInfo.gatewayRequestType==2,'eo-color-warning':$ctrl.data.interaction.response.apiInfo.gatewayRequestType==6,'eo-color-danger':$ctrl.data.interaction.response.apiInfo.gatewayRequestType==3,'eo-color-info':$ctrl.data.interaction.response.apiInfo.gatewayRequestType==4,'eo-color-options':$ctrl.data.interaction.response.apiInfo.gatewayRequestType==5}">{{$ctrl.data.interaction.response.apiInfo.gatewayRequestType=='0'?'POST':($ctrl.data.interaction.response.apiInfo.gatewayRequestType=='1'?'GET':($ctrl.data.interaction.response.apiInfo.gatewayRequestType=='2'?'PUT':($ctrl.data.interaction.response.apiInfo.gatewayRequestType=='3'?'DELETE':($ctrl.data.interaction.response.apiInfo.gatewayRequestType=='4'?'HEAD':($ctrl.data.interaction.response.apiInfo.gatewayRequestType=='5'?'OPTIONS':'PATCH')))))}}</label>
+                </li>
+                <li class="api-url">{{$ctrl.data.interaction.response.apiInfo.hash}}
+                </li>
+            </ul>
+        </div>
+        <div class="new-first-part item-part">
+            <p class="title-p">
+                <b>对应后端接口地址</b>
+            </p>
+            <ul class="container-ul">
+                <li class="pull-left">
+                    <label class="send-protocol">{{$ctrl.data.interaction.response.apiInfo.backendProtocol=='0'?'HTTP':'HTTPS'}}</label>
+                </li>
+                <li class="pull-left">
+                    <label class="send-function" ng-class="{'eo-color-success':$ctrl.data.interaction.response.apiInfo.backendRequestType==0,'eo-color-default':$ctrl.data.interaction.response.apiInfo.backendRequestType==1,'eo-color-others':$ctrl.data.interaction.response.apiInfo.backendRequestType==2,'eo-color-warning':$ctrl.data.interaction.response.apiInfo.backendRequestType==6,'eo-color-danger':$ctrl.data.interaction.response.apiInfo.backendRequestType==3,'eo-color-info':$ctrl.data.interaction.response.apiInfo.backendRequestType==4,'eo-color-options':$ctrl.data.interaction.response.apiInfo.backendRequestType==5}">{{$ctrl.data.interaction.response.apiInfo.backendRequestType=='0'?'POST':($ctrl.data.interaction.response.apiInfo.backendRequestType=='1'?'GET':($ctrl.data.interaction.response.apiInfo.backendRequestType=='2'?'PUT':($ctrl.data.interaction.response.apiInfo.backendRequestType=='3'?'DELETE':($ctrl.data.interaction.response.apiInfo.backendRequestType=='4'?'HEAD':($ctrl.data.interaction.response.apiInfo.backendRequestType=='5'?'OPTIONS':'PATCH')))))}}</label>
+                </li>
+                <li class="api-url">{{$ctrl.data.interaction.response.apiInfo.backendURI}}{{$ctrl.data.interaction.response.apiInfo.backendPath}}
+                </li>
+            </ul>
+        </div>
+        <div class="item-part param-part" ng-show="$ctrl.data.interaction.response.apiInfo.requestParams.length>0">
+            <p class="title-p">
+                <b>接受参数映射表</b>
+            </p>
+            <table class="common-table">
+                <thead>
+                    <tr>
+                        <td class="require-label">必填</td>
+                        <td class="param-name">参数位置</td>
+                        <td class="param-desc">参数名称</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover-tr" ng-repeat="item in $ctrl.data.interaction.response.apiInfo.requestParams track by $index">
+                        <td>{{item.isNotNull==1?'是':''}}</td>
+                        <td class="request-param-position ">
+                            {{item.gatewayParamPosition=='0'?'[header]':(item.gatewayParamPosition=='1'?'[body]':'[query]')}}
+                        </td>
+                        <td class="request-param-name ">
+                            {{item.gatewayParamKey}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="item-part body-part" ng-show="$ctrl.data.interaction.response.apiInfo.isRequestBody=='1'">
+            <p class="title-p">
+                <b>请求Body</b>
+            </p>
+            <article class="raw-article">
+                <div>
+                    <pre class="back-result-content ">{{$ctrl.data.interaction.response.apiInfo.gatewayRequestBodyNote}}
+                    </pre>
+                </div>
+            </article>
+        </div>
+        <div class="item-part constant-part" ng-show="$ctrl.data.interaction.response.apiInfo.constantParams.length>0">
+            <p class="title-p">
+                <b>常量参数</b>
+            </p>
+            <table class="common-table">
+                <thead>
+                    <tr>
+                        <td class="param-position">参数位置</td>
+                        <td class="param-name">参数名称</td>
+                        <td class="param-value">参数值</td>
+                        <td class="param-desc">参数说明</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover-tr" ng-repeat="item in $ctrl.data.interaction.response.apiInfo.constantParams track by $index">
+                        <td>{{item.paramPosition==0?'[header]':(item.paramPosition==1?'[body]':'[query]')}}</td>
+                        <td>
+                            {{item.backendParamKey}}
+                        </td>
+                        <td>
+                            {{item.paramValue}}
+                        </td>
+                        <td>{{item.paramName}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </article>
+    <loading-common-component fun="$ctrl.data.fun.init(arg)"></loading-common-component>
+</div>

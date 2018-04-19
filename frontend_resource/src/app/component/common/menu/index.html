@@ -1,0 +1,50 @@
+<ul class="title-ul">
+    <li ng-repeat="item in $ctrl.list" class="{{item.class}}" ng-switch="item.type" ng-if="!item.authority||$ctrl.authorityObject[item.authority]">
+        <p ng-switch-when='btn'>
+            <button ng-repeat="btnItem in item.btnList" class="{{btnItem.class||'default-btn'}} common-btn" button-set-disable-directive="$ctrl.data.fun.common(btnItem.fun,{item:btnItem})" ng-show="btnItem.show==-1||($ctrl.showObject[item.showPoint][item.showVariable]==btnItem.show)" ng-disabled="item.disabledPoint&&(item.disabledVariable?$ctrl.otherObject[item.disabledPoint][item.disabledVariable]==btnItem.disabled:!$ctrl.otherObject[item.disabledPoint][btnItem.disabled])">
+                <span class="iconfont icon-{{btnItem.icon}}" ng-if="btnItem.icon"></span><span class="btn-name">{{btnItem.name}}</span>
+            </button>
+        </p>
+        <p ng-switch-when='customized-html' inner-html-common-directive html="{{item.html}}" ng-show="$ctrl.showObject[item.showPoint][item.showVariable]==item.show"></p>
+        <p ng-switch-when='link'>
+            <a class="common-a default-btn link-a" ui-sref="{{item.sref}}">
+                <span class="iconfont icon-{{item.icon}}" ng-if="item.icon"></span><span class="btn-name">{{item.name}}</span>
+            </a>
+        </p>
+        <p ng-switch-when='download'>
+            <a class="common-a default-btn download-a" ng-href="{{item.href}}" download="{{item.download}}" ng-show="($ctrl.showObject[item.showPoint][item.showVariable]==item.show)">
+                <span class="iconfont icon-{{item.icon}}"></span><span class="btn-name">{{item.name}}</span>
+            </a>
+        </p>
+        <span ng-switch-when="divide" ng-show="$ctrl.showObject[item.showPoint][item.showVariable]==item.show"></span>
+        <form name="searchForm" ng-switch-when="search">
+            <ul class="search-function-ul">
+                <li class="search-input-li">
+                    <input type="text" placeholder="{{item.placeholder}}" ng-model="item.tips" >
+                </li>
+                <li class="search-btn-li">
+                    <button class="iconfont icon-sousuo" ng-click="item.fun(item.tips)"></button>
+                </li>
+            </ul>
+        </form>
+        <p ng-switch-when="tips-tab">
+            <a ng-repeat="tabItem in item.tabList" class="view-common-btn" ng-class="{'elem-active':item.activeVariable?$ctrl.activeObject[item.activePoint][item.activeVariable]==tabItem.active:$ctrl.activeObject[item.activePoint]==tabItem.active}" ng-click="$ctrl.data.fun.common(tabItem.fun,{item:tabItem})">
+                <span class="iconfont icon-{{tabItem.icon}}"></span>{{tabItem.name}}
+            </a>
+        </p>
+        <div class="common-a default-btn" ng-switch-when="fun-list">
+            <span class="iconfont icon-{{item.icon}}"></span><span class="btn-name">{{item.name}}</span>
+            <div class="list-function-wrap" ng-switch="!item.funHtml">
+                <ul class="nav-function" ng-switch-when=false>
+                    <li ng-click="$ctrl.data.fun.common(funItem.fun,{item:funItem})" ng-repeat="funItem in item.funList" ng-class="{'strong-li':item.activeVariable?$ctrl.activeObject[item.activePoint][item.activeVariable]==funItem.active:($ctrl.activeObject[item.activePoint]==funItem.active&&item.activePoint)}" ng-init="item.init({item:funItem})" inner-html-common-directive html="{{item.funHtml}}"></li>
+                </ul>
+                <ul class="nav-function" ng-switch-default>
+                    <li ng-click="$ctrl.data.fun.common(funItem.fun,{item:funItem})" ng-repeat="funItem in item.funList" ng-class="{'strong-li':item.activeVariable?$ctrl.activeObject[item.activePoint][item.activeVariable]==funItem.active:($ctrl.activeObject[item.activePoint]==funItem.active&&item.activePoint)}" ng-init="item.init({item:funItem})"><span class="iconfont icon-{{funItem.icon}}" ng-if="funItem.icon"></span>{{funItem.name}}</li>
+                </ul>
+            </div>
+        </div>
+        <p ng-switch-when="tabs">
+            <a ng-repeat="tabItem in item.tabList" class="pull-left {{tabItem.class}}" ng-click="$ctrl.data.fun.common(tabItem.fun,{item:tabItem})" ng-class="{'elem-active':item.activePoint&&(item.activeVariable?$ctrl.activeObject[item.activePoint][item.activeVariable]==tabItem.active:$ctrl.activeObject[item.activePoint]==tabItem.active)}" ng-if="!tabItem.authority||$ctrl.authorityObject[tabItem.authority]">{{tabItem.name}}</a>
+        </p>
+    </li>
+</ul>
