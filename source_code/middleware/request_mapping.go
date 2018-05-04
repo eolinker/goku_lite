@@ -15,44 +15,45 @@ func Mapping(g *goku.Goku,res http.ResponseWriter, req *http.Request) (bool,stri
         if requestURI[1] == "" {
             res.WriteHeader(404)
             res.Write([]byte("Lack gatewayAlias"))
-            } else {
             return false,"Lack gatewayAlias"
-                res.WriteHeader(404)
-                return false,"Lack StrategyKey"
-            }
+        } else {
+            res.WriteHeader(404)
+            res.Write([]byte("Lack StrategyID"))
+            return false,"Lack StrategyID"
         }
-        gatewayAlias := requestURI[1]
-        strategyKey := requestURI[2]
-        urlLen := len(gatewayAlias) + len(strategyKey) + 2
-        flag := false
-        for _,m := range g.ServiceConfig.GatewayList{
-            if m.GatewayAlias == gatewayAlias{
-                for _,i := range m.StrategyList.Strategy{
-                    if i.StrategyID == strategyKey{
-                    flag = true
-                    f,r := IPLimit(m,i,res,req)
-                    if !f {
-                        res.Write([]byte(r))
-                        return false,r
-                    }
-
-                    f,r = Auth(i,res,req)
-                    if !f {
-                        res.Write([]byte(r))
-                        return false,r
-                    } 
-
-                    f,r = RateLimit(g,i)
-                    if !f {
-                        res.Write([]byte(r))
-                        return false,r
-                    }                    
-                    break
+    }
+    gatewayAlias := requestURI[1]
+    StrategyID := requestURI[2]
+    urlLen := len(gatewayAlias) + len(StrategyID) + 2
+    flag := false
+    for _,m := range g.ServiceConfig.GatewayList{
+        if m.GatewayAlias == gatewayAlias{
+            for _,i := range m.StrategyList.Strategy{
+                if i.StrategyID == StrategyID{
+                flag = true
+                f,r := IPLimit(m,i,res,req)
+                if !f {
+                    res.Write([]byte(r))
+                    return false,r
                 }
-			}
-		}
-		if flag {
-			for _,i := range m.ApiList.Apis{
+
+                f,r = Auth(i,res,req)
+                if !f {
+                    res.Write([]byte(r))
+                    return false,r
+                } 
+
+                f,r = RateLimit(g,i)
+                if !f {
+                    res.Write([]byte(r))
+                    return false,r
+                }                    
+                break
+                }
+		    }
+	    }
+        if flag {
+            for _,i := range m.ApiList.Apis{
                 if i.RequestURL == url[urlLen:]{
                     // 验证请求
                     if !validateRequest(i,req){
@@ -65,8 +66,8 @@ func Mapping(g *goku.Goku,res http.ResponseWriter, req *http.Request) (bool,stri
                     f,r := GetBackendInfo(i.BackendID,m.BackendList)
                     if !f {
                         res.WriteHeader(404)
-                        res.Write([]byte("Backend config are not exist!"))
-                        return false,"Backend config are not exist!"
+                        res.Write([]byte("Backend config is not exist!"))
+                        return false,"Backend config is not exist!"
                     }
                     
 
@@ -80,7 +81,7 @@ func Mapping(g *goku.Goku,res http.ResponseWriter, req *http.Request) (bool,stri
                     return true,string(response)
                 }
             }
-		}
+        }
 	}
     res.Write([]byte("URI Not Found"))
     return false,"URI Not Found"
@@ -127,7 +128,7 @@ func CreateRequest(api conf.ApiInfo,i conf.BackendInfo,httpRequest *http.Request
         }
 		if param == nil {
 			if reqParam.NotEmpty {
-				return 400, []byte("missing required parameters"),make(map[string][]string)
+				return 400, []byte("Missing required parameters"),make(map[string][]string)
 			} else {
 				continue
 			}

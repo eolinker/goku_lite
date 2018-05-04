@@ -32,11 +32,12 @@ func getGatewayList(path []string) []GatewayInfo {
 		var gateway GatewayInfo
 		c,err := ioutil.ReadFile(p + PthSep + "gateway.conf")
 		if err != nil {
-			panic("Error gateway config path!")
+
+			panic("Error gateway config path! Error path: " + p)
 		}
 		err = yaml.Unmarshal(c,&gateway)
 		if err != nil {
-			panic("Error gateway config!")
+			panic("Error gateway config! Error path: " + p)
 		}
 		if gateway.GatewayStatus != "on" {
 			continue
@@ -53,11 +54,11 @@ func getStrategyList(path string) Strategy {
 	var strategy Strategy
 	c,err := ioutil.ReadFile(path)
 	if err != nil {
-		panic("Error strategy config path!")
+		panic("Error strategy config path! Error path: " + path)
 	}
 	err = yaml.Unmarshal(c,&strategy)
 	if err != nil {
-		panic("Error strategy config!")
+		panic("Error strategy config! Error path: " + path)
 	}
 	return strategy
 }
@@ -66,11 +67,11 @@ func getApiList(path string) Api {
 	var api Api
 	c,err := ioutil.ReadFile(path)
 	if err != nil {
-		panic("Error api config path!")
+		panic("Error api config path! Error path: " + path)
 	}
 	err = yaml.Unmarshal(c,&api)
 	if err != nil {
-		panic("Error api config!")
+		panic("Error api config! Error path: " + path)
 	}
 	return api
 }
@@ -79,11 +80,11 @@ func getBackendList(path string) Backend {
 	var backend Backend
 	c,err := ioutil.ReadFile(path)
 	if err != nil {
-		panic("Error api config path!")
+		panic("Error backend config path! Error path: " + path)
 	}
 	err = yaml.Unmarshal(c,&backend)
 	if err != nil {
-		panic("Error api config!")
+		panic("Error backend config! Error path: " + path)
 	}
 	return backend
 }
