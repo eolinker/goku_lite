@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
     "net/http"
     "strings"
     "goku-ce/goku"
@@ -9,7 +10,7 @@ import (
 )
 
 func Mapping(g *goku.Goku,res http.ResponseWriter, req *http.Request) (bool,string){
-    url := req.RequestURI
+    url := InterceptURL(req.RequestURI,"?")
     requestURI := strings.Split(url,"/")
     if len(requestURI) == 2 {
         if requestURI[1] == "" {
@@ -22,6 +23,7 @@ func Mapping(g *goku.Goku,res http.ResponseWriter, req *http.Request) (bool,stri
             return false,"Lack StrategyID"
         }
     }
+    fmt.Println(url)
     gatewayAlias := requestURI[1]
     StrategyID := requestURI[2]
     urlLen := len(gatewayAlias) + len(StrategyID) + 2
@@ -30,28 +32,28 @@ func Mapping(g *goku.Goku,res http.ResponseWriter, req *http.Request) (bool,stri
         if m.GatewayAlias == gatewayAlias{
             for _,i := range m.StrategyList.Strategy{
                 if i.StrategyID == StrategyID{
-                flag = true
-                f,r := IPLimit(m,i,res,req)
-                if !f {
-                    res.Write([]byte(r))
-                    return false,r
-                }
+                    flag = true
+                    f,r := IPLimit(m,i,res,req)
+                    if !f {
+                        res.Write([]byte(r))
+                        return false,r
+                    }
 
-                f,r = Auth(i,res,req)
-                if !f {
-                    res.Write([]byte(r))
-                    return false,r
-                } 
+                    f,r = Auth(i,res,req)
+                    if !f {
+                        res.Write([]byte(r))
+                        return false,r
+                    } 
 
-                f,r = RateLimit(g,i)
-                if !f {
-                    res.Write([]byte(r))
-                    return false,r
-                }                    
-                break
+                    f,r = RateLimit(g,i)
+                    if !f {
+                        res.Write([]byte(r))
+                        return false,r
+                    }                    
+                    break
                 }
 		    }
-	    }
+        }
         if flag {
             for _,i := range m.ApiList.Apis{
                 if i.RequestURL == url[urlLen:]{
@@ -109,9 +111,9 @@ func CreateRequest(api conf.ApiInfo,i conf.BackendInfo,httpRequest *http.Request
         return 500,[]byte("Fail to Parse Args"),make(map[string][]string)
     }
     
-    backendMethod := api.ProxyMethod
+    backendMethod := strings.ToUpper(api.ProxyMethod)
     backenDomain := i.BackendPath + api.ProxyURL
-    requ,err := request.Method(strings.ToUpper(backendMethod),backenDomain)
+    requ,err := request.Method(backendMethod,backenDomain)
     for _, reqParam := range api.ProxyParams {
 		var param []string
 		switch reqParam.KeyPosition {
@@ -124,7 +126,7 @@ func CreateRequest(api conf.ApiInfo,i conf.BackendInfo,httpRequest *http.Request
 				continue
 			}
 		case "query":
-			param = httpRequest.Form[reqParam.Key]
+            param = httpRequest.Form[reqParam.Key]
         }
 		if param == nil {
 			if reqParam.NotEmpty {
@@ -166,11 +168,15 @@ func CreateRequest(api conf.ApiInfo,i conf.BackendInfo,httpRequest *http.Request
 
     for key, values := range backendHeaders {
 		requ.SetHeader(key, values...)
-	}
+    }
 	for key, values := range backendQueryParams {
+        fmt.Println(key)
+        fmt.Println(values)
 		requ.SetQueryParam(key, values...)
 	}
 	for key, values := range backendFormParams {
+        fmt.Println(key)
+        fmt.Println(values)
 		requ.SetFormParam(key, values...)
     }
     if api.ProxyBodyType == "raw" {
@@ -201,3 +207,14 @@ func CreateRequest(api conf.ApiInfo,i conf.BackendInfo,httpRequest *http.Request
 
     return res.StatusCode(), res.Body(),httpResponseHeader
 } 
+
+func InterceptURL(str, substr string) string {
+    result := strings.Index(str, substr)
+    var rs string
+    if result != -1{
+        rs = str[:result]
+    }else {
+        rs = str
+    }
+	return rs
+}
