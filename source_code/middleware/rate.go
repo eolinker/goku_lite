@@ -1,12 +1,14 @@
 package middleware
 
 import (
+	"fmt"
 	"time"
 	"goku-ce/conf"
 	"goku-ce/goku"
 )
 
-func getStrategyRate(c conf.StrategyInfo) (bool,[]conf.RateLimitInfo) {
+func getStrategyRate(context *goku.Context) (bool,[]conf.RateLimitInfo) {
+	c := context.StrategyInfo
 	now := time.Now()
 	flag := false
 	rateLimitList := make([]conf.RateLimitInfo,0)
@@ -63,16 +65,18 @@ func timeInPeriod(c conf.RateLimitInfo,now int) bool {
 	return false
 }
 
-func RateLimit(g *goku.Goku,c conf.StrategyInfo) (bool,string) {
-	value, ok := g.Rate[c.StrategyID]
+func RateLimit(context *goku.Context) (bool,string) {
+	c := context.StrategyInfo
+	g := context.Rate
+	value, ok := g[c.StrategyID]
 	if !ok {
 		var w goku.Rate
-		g.Rate[c.StrategyID] = w
+		g[c.StrategyID] = w
 	} 
 	if !value.IsInit{
-		flag,r := getStrategyRate(c)
+		flag,r := getStrategyRate(context)
 		if flag == false {
-			return false,"Don't allow visit!"
+			return false,"Forbidden Request"
 		}
 		for _,i := range r {
 			if i.Period == "sec" {
@@ -87,9 +91,9 @@ func RateLimit(g *goku.Goku,c conf.StrategyInfo) (bool,string) {
 		}
 		value.IsInit = true
 	} else if value.SecLimit.IsNeedReset(){
-		flag,r := getStrategyRate(c)
+		flag,r := getStrategyRate(context)
 		if flag == false {
-			return false,"Don't allow visit!"
+			return false,"Forbidden Request"
 		}
 		for _,i := range r {
 			if i.Period == "sec" {
@@ -103,58 +107,58 @@ func RateLimit(g *goku.Goku,c conf.StrategyInfo) (bool,string) {
 			}
 		}
 	}
-	
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
 	if value.Limit == "day" {
 		if !value.DayLimit.DayLimit() {
 			value.Limit = "day"
-			g.Rate[c.StrategyID] = value
-			return false,"Day visit limit exceeded"
+			g[c.StrategyID] = value
+			return false,"API Rate Limit of Day Exceeded"
 		}
 		value.Limit = ""
 	} else if value.Limit == "hour" {
 		if !value.HourLimit.HourLimit() {
 			value.Limit = "hour"
-			g.Rate[c.StrategyID] = value
-			return false,"Hour visit limit exceeded"
+			g[c.StrategyID] = value
+			return false,"API Rate Limit of Hour Exceeded"
 		}else if !value.DayLimit.DayLimit() {
 			value.Limit = "day"
-			g.Rate[c.StrategyID] = value
-			return false,"Day visit limit exceeded"
+			g[c.StrategyID] = value
+			return false,"API Rate Limit of Day Exceeded"
 		}
 		value.Limit = ""
 	} else if value.Limit == "minute" {
 		if !value.MinuteLimit.MinLimit() {
 			value.Limit = "minute"
-			g.Rate[c.StrategyID] = value
-			return false,"Minute visit limit exceeded"
+			g[c.StrategyID] = value
+			return false,"API Rate Limit of Minute Exceeded"
 		}else if !value.HourLimit.HourLimit() {
 			value.Limit = "hour"
-			g.Rate[c.StrategyID] = value
-			return false,"Hour visit limit exceeded"
+			g[c.StrategyID] = value
+			return false,"API Rate Limit of Hour Exceeded"
 		}else if !value.DayLimit.DayLimit() {
 			value.Limit = "day"
-			g.Rate[c.StrategyID] = value
-			return false,"Day visit limit exceeded"
+			g[c.StrategyID] = value
+			return false,"API Rate Limit of Day Exceeded"
 		}
 		value.Limit = ""
 	} else {
 		if !value.SecLimit.SecLimit() {
-			g.Rate[c.StrategyID] = value
-			return false,"Second visit limit exceeded"
+			g[c.StrategyID] = value
+			return false,"API Rate Limit of Second Exceeded"
 		}else if !value.MinuteLimit.MinLimit() {
 			value.Limit = "minute"
-			g.Rate[c.StrategyID] = value
-			return false,"Minute visit limit exceeded"
+			g[c.StrategyID] = value
+			return false,"API Rate Limit of Minute Exceeded"
 		}else if !value.HourLimit.HourLimit() {
 			value.Limit = "hour"
-			g.Rate[c.StrategyID] = value
-			return false,"Hour visit limit exceeded"
+			g[c.StrategyID] = value
+			return false,"API Rate Limit of Hour Exceeded"
 		}else if !value.DayLimit.DayLimit() {
 			value.Limit = "day"
-			g.Rate[c.StrategyID] = value
-			return false,"Day visit limit exceeded"
+			g[c.StrategyID] = value
+			return false,"API Rate Limit of Day Exceeded"
 		}
 	}
-	g.Rate[c.StrategyID] = value
+	g[c.StrategyID] = value
 	return true,""
 }

@@ -78,7 +78,7 @@ func (this *request) SetQueryParam(key string, values ...string) Request {
 func Method(method string, urlPath string) (Request, error) {
 	if method != "GET" && method != "POST" && method != "PUT" && method != "DELETE" &&
 		method != "HEAD" && method != "OPTIONS" && method != "PATCH" {
-		return nil, errors.New("method not supported")
+		return nil, errors.New("Unsupported Request Method")
 	}
 	return newRequest(method, urlPath)
 }
@@ -228,16 +228,14 @@ func (this *request) Send() (res Response, err error) {
 		fmt.Println(err)
 		return
 	}
+	req.Header.Set("Accept-Encoding", "gzip")
 	req.Header = parseHeaders(this.headers)
 	httpResponse, err := this.client.Do(req)
 	if err != nil {
-		httpResponse.Body.Close()
-		fmt.Println(err)
 		return
 	}
 	res, err = newResponse(httpResponse)
 	if err != nil {
-		fmt.Println(err)
 		return
 	}
 	return

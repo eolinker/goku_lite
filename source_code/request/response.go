@@ -3,6 +3,8 @@ package request
 import (
 	"io/ioutil"
 	"net/http"
+	"io"
+	"compress/gzip"
 )
 
 type Response interface {
@@ -24,7 +26,15 @@ type response struct {
 func newResponse(httpResponse *http.Response) (Response, error) {
 	defer httpResponse.Body.Close()
 	var headers map[string][]string = httpResponse.Header
-	body, err := ioutil.ReadAll(httpResponse.Body)
+	var reader io.ReadCloser
+	switch httpResponse.Header.Get("Content-Encoding") {
+		case "gzip":
+			reader, _ = gzip.NewReader(httpResponse.Body)
+			defer reader.Close()
+		default:
+			reader = httpResponse.Body
+	}
+	body, err := ioutil.ReadAll(reader)
 	content_length := int64(len(body))
 	if err != nil {
 		return nil, err

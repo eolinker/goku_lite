@@ -33,6 +33,9 @@ type GatewayInfo struct {
 	StrategyList			Strategy				
 	ApiList					Api
 	BackendList				Backend
+	UpdateTime				string					`json:"update_time" yaml:"update_time"`	
+	CreateTime				string					`json:"create_time" yaml:"create_time"`
+	GroupList				ApiGroup	
 }
 
 type Strategy struct {
@@ -50,6 +53,8 @@ type StrategyInfo struct {
 	IPWhiteList				[]string				`json:"ip_white_list" yaml:"ip_white_list"`
 	IPBlackList				[]string				`json:"ip_black_list" yaml:"ip_black_list"`
 	RateLimitList			[]RateLimitInfo			`json:"rate_limit_list" yaml:"rate_limit_list"`
+	UpdateTime				string					`json:"update_time" yaml:"update_time"`	
+	CreateTime				string					`json:"create_time" yaml:"create_time"`
 }
 
 type RateLimitInfo struct {
@@ -67,7 +72,7 @@ type ApiGroupInfo struct {
 }
 
 type ApiGroup struct {
-	Group					ApiGroupInfo			`json:"group" yaml:"group"`
+	Group					[]ApiGroupInfo			`json:"group" yaml:"group"`
 }
 
 type Api struct {
@@ -82,8 +87,7 @@ type ApiInfo struct {
 	BackendID				int						`json:"backend_id" yaml:"backend_id"`
 	ProxyURL				string					`json:"proxy_url" yaml:"proxy_url"`
 	ProxyMethod				string					`json:"proxy_method" yaml:"proxy_method"`
-	ProxyBodyType			string					`json:"proxy_body_type" yaml:"proxy_body_type"`
-	ProxyBody				string					`json:"proxy_body" yaml:"proxy_body"`
+	IsRaw					bool					`json:"is_raw" yaml:"is_raw"`
 	ProxyParams				[]Param					`json:"proxy_params" yaml:"proxy_params"`
 	ConstantParams			[]ConstantParam			`json:"constant_params" yaml:"constant_params"`						
 }

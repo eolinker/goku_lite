@@ -1,35 +1,33 @@
 package middleware
 
 import (
-	"goku-ce/conf"
+	"goku-ce/goku"
 	"net/http"
 	"strings"
 )
 
 
-func IPLimit(g conf.GatewayInfo,d conf.StrategyInfo,res http.ResponseWriter, req *http.Request) (bool,string) {
+func IPLimit(g *goku.Context,res http.ResponseWriter, req *http.Request) (bool,string) {
     remoteAddr := req.RemoteAddr
 	remoteIP := InterceptIP(remoteAddr, ":")
 	if !globalIPLimit(g,remoteIP){
-		res.WriteHeader(404)
-		return false,"[global] Illegal ip"
-	} else if globalIPLimit(g,remoteIP) && !strategyIPLimit(d,remoteIP) {
-		res.WriteHeader(404)
-		return false,"[strategy] Illegal ip"
+		return false,"[Global] Illegal IP"
+	} else if globalIPLimit(g,remoteIP) && !strategyIPLimit(g,remoteIP) {
+		return false,"[Strategy] Illegal IP"
 	}
 	return true,""
 }
 
-func globalIPLimit(g conf.GatewayInfo,remoteIP string) bool{
-	if g.IPLimitType == "black"{
-		for _,ip := range g.IPBlackList{
+func globalIPLimit(g *goku.Context,remoteIP string) bool{
+	if g.GatewayInfo.IPLimitType == "black"{
+		for _,ip := range g.GatewayInfo.IPBlackList{
 			if ip == remoteIP {
 				return false
 			}
 		}
 		return true
-	} else if g.IPLimitType == "white" {
-		for _,ip := range g.IPWhiteList{
+	} else if g.GatewayInfo.IPLimitType == "white" {
+		for _,ip := range g.GatewayInfo.IPWhiteList{
 			if ip == remoteIP {
 				return true
 			}
@@ -39,16 +37,16 @@ func globalIPLimit(g conf.GatewayInfo,remoteIP string) bool{
 	return true
 }
 
-func strategyIPLimit(d conf.StrategyInfo,remoteIP string) bool {
-	if d.IPLimitType == "black" {
-		for _,ip := range d.IPBlackList{
+func strategyIPLimit(g *goku.Context,remoteIP string) bool {
+	if g.StrategyInfo.IPLimitType == "black" {
+		for _,ip := range g.StrategyInfo.IPBlackList{
 			if ip == remoteIP {
 				return false
 			}
 		}
 		return true
-	} else if d.IPLimitType == "white" {
-		for _,ip := range d.IPWhiteList{
+	} else if g.StrategyInfo.IPLimitType == "white" {
+		for _,ip := range g.StrategyInfo.IPWhiteList{
 			if ip == remoteIP {
 				return true
 			}

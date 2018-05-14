@@ -1,135 +1,90 @@
 package middleware
 
 import (
-	"fmt"
     "net/http"
     "strings"
     "goku-ce/goku"
-    "goku-ce/conf"
     "goku-ce/request"
+    "io/ioutil"
 )
 
-func Mapping(g *goku.Goku,res http.ResponseWriter, req *http.Request) (bool,string){
-    url := InterceptURL(req.RequestURI,"?")
-    requestURI := strings.Split(url,"/")
-    if len(requestURI) == 2 {
-        if requestURI[1] == "" {
-            res.WriteHeader(404)
-            res.Write([]byte("Lack gatewayAlias"))
-            return false,"Lack gatewayAlias"
-        } else {
-            res.WriteHeader(404)
-            res.Write([]byte("Lack StrategyID"))
-            return false,"Lack StrategyID"
+func Mapping(res http.ResponseWriter, req *http.Request,param goku.Params,context *goku.Context) {
+    // 验证IP是否合法
+    f,s := IPLimit(context,res,req) 
+    if !f {
+        res.WriteHeader(403)
+        res.Write([]byte(s))
+        return
+    }
+    f,s = Auth(context,res,req)
+    if !f {
+        res.WriteHeader(403)
+        res.Write([]byte(s))
+        return
+    }
+    f,s = RateLimit(context)
+    if !f {
+        res.WriteHeader(403)
+        res.Write([]byte(s))
+        return
+    }
+    statusCode,body,headers := CreateRequest(context,req,res)
+    for key,values := range headers {
+        for _,value := range values {
+            res.Header().Add(key,value)
         }
     }
-    fmt.Println(url)
-    gatewayAlias := requestURI[1]
-    StrategyID := requestURI[2]
-    urlLen := len(gatewayAlias) + len(StrategyID) + 2
-    flag := false
-    for _,m := range g.ServiceConfig.GatewayList{
-        if m.GatewayAlias == gatewayAlias{
-            for _,i := range m.StrategyList.Strategy{
-                if i.StrategyID == StrategyID{
-                    flag = true
-                    f,r := IPLimit(m,i,res,req)
-                    if !f {
-                        res.Write([]byte(r))
-                        return false,r
-                    }
-
-                    f,r = Auth(i,res,req)
-                    if !f {
-                        res.Write([]byte(r))
-                        return false,r
-                    } 
-
-                    f,r = RateLimit(g,i)
-                    if !f {
-                        res.Write([]byte(r))
-                        return false,r
-                    }                    
-                    break
-                }
-		    }
-        }
-        if flag {
-            for _,i := range m.ApiList.Apis{
-                if i.RequestURL == url[urlLen:]{
-                    // 验证请求
-                    if !validateRequest(i,req){
-                        res.WriteHeader(404)
-                        res.Write([]byte("Error Request Method!"))
-                        return false,"Error Request Method!"
-                    }
-                    
-                    // 验证后端信息是否存在
-                    f,r := GetBackendInfo(i.BackendID,m.BackendList)
-                    if !f {
-                        res.WriteHeader(404)
-                        res.Write([]byte("Backend config is not exist!"))
-                        return false,"Backend config is not exist!"
-                    }
-                    
-
-                    _,response,httpResponseHeader := CreateRequest(i,r,req,res)
-                    for key, values := range httpResponseHeader {
-                        for _, value := range values {
-                            res.Header().Add(key,value)
-                        }
-                    }
-                    res.Write(response)
-                    return true,string(response)
-                }
-            }
-        }
-	}
-    res.Write([]byte("URI Not Found"))
-    return false,"URI Not Found"
-}
-
-// 验证协议及请求参数
-func validateRequest(api conf.ApiInfo, req *http.Request) bool{
-    flag := false
-    for _,method := range api.RequestMethod{
-        if !(strings.ToUpper(method) == req.Method){
-            flag = true
-            break
-        }
-    }
-    return flag
+    res.WriteHeader(statusCode)
+    res.Write(body)
+    return
 }
 
 // 将请求参数写入请求中
-func CreateRequest(api conf.ApiInfo,i conf.BackendInfo,httpRequest *http.Request,httpResponse http.ResponseWriter) (int,[]byte,map[string][]string) {
+func CreateRequest(g *goku.Context,httpRequest *http.Request,httpResponse http.ResponseWriter) (int,[]byte,map[string][]string) {
+    api := g.ApiInfo
     var backendHeaders map[string][]string = make(map[string][]string)
 	var backendQueryParams map[string][]string = make(map[string][]string)
     var backendFormParams map[string][]string = make(map[string][]string)
     err := httpRequest.ParseForm()
     if err != nil {
-        return 500,[]byte("Fail to Parse Args"),make(map[string][]string)
+        return 500,[]byte("Parsing Arguments Fail"),make(map[string][]string)
     }
     
     backendMethod := strings.ToUpper(api.ProxyMethod)
-    backenDomain := i.BackendPath + api.ProxyURL
+    backenDomain := api.BackendPath + api.ProxyURL
     requ,err := request.Method(backendMethod,backenDomain)
     for _, reqParam := range api.ProxyParams {
-		var param []string
+        var param []string
+        isFile := false
 		switch reqParam.KeyPosition {
-		case "header":
-			param = httpRequest.Header[reqParam.Key]
+        case "header":
+            key := parseHeader(reqParam.Key)
+            param = httpRequest.Header[key]
 		case "body":
 			if httpRequest.Method == "POST" || httpRequest.Method == "PUT" || httpRequest.Method == "PATCH" {
                 param = httpRequest.PostForm[reqParam.Key]
+                if param == nil {
+                    f,fh,err := httpRequest.FormFile(reqParam.Key)
+                    if err != nil {
+                        panic(err)
+                    }
+                    defer f.Close()
+                    body,err := ioutil.ReadAll(f)
+                    if err != nil {
+                        panic(err)
+                    }
+                    requ.AddFile(reqParam.ProxyKey,fh.Filename,body)
+                    isFile = true
+                }
 			} else {
 				continue
 			}
 		case "query":
             param = httpRequest.Form[reqParam.Key]
         }
+
 		if param == nil {
-			if reqParam.NotEmpty {
+			if reqParam.NotEmpty && !isFile {
 				return 400, []byte("Missing required parameters"),make(map[string][]string)
 			} else {
 				continue
@@ -137,8 +92,9 @@ func CreateRequest(api conf.ApiInfo,i conf.BackendInfo,httpRequest *http.Request
         }
         
 		switch reqParam.ProxyKeyPosition {
-		case "header":
-			backendHeaders[reqParam.ProxyKey] = param
+        case "header":
+            key := parseHeader(reqParam.ProxyKey)
+			backendHeaders[key] = param
         case "body":
 			if backendMethod == "POST" || backendMethod == "PUT" || backendMethod == "PATCH" {
 				backendFormParams[reqParam.ProxyKey] = param
@@ -150,16 +106,17 @@ func CreateRequest(api conf.ApiInfo,i conf.BackendInfo,httpRequest *http.Request
     
     for _, constParam := range api.ConstantParams {
 		switch constParam.Position {
-		case "header":
-			backendHeaders[constParam.Key] = []string{constParam.Key}
+        case "header":
+			backendHeaders[constParam.Key] = []string{constParam.Value}
 		case "body":
-			
 			if backendMethod == "POST" || backendMethod == "PUT" || backendMethod == "PATCH" {
 				backendFormParams[constParam.Key] = []string{constParam.Value}
 			} else {
 				backendQueryParams[constParam.Key] = []string{constParam.Value}
-			}
-		}
+            }
+        case "query":
+			backendQueryParams[constParam.Key] = []string{constParam.Value}
+        }
     }
     
     if err != nil{
@@ -170,28 +127,20 @@ func CreateRequest(api conf.ApiInfo,i conf.BackendInfo,httpRequest *http.Request
 		requ.SetHeader(key, values...)
     }
 	for key, values := range backendQueryParams {
-        fmt.Println(key)
-        fmt.Println(values)
 		requ.SetQueryParam(key, values...)
 	}
 	for key, values := range backendFormParams {
-        fmt.Println(key)
-        fmt.Println(values)
 		requ.SetFormParam(key, values...)
     }
-    if api.ProxyBodyType == "raw" {
-        requ.SetRawBody([]byte(api.ProxyBody))
-    } else if api.ProxyBodyType == "json" {
-        requ.SetJSON(api.ProxyBody)
-    }
+    if api.IsRaw {
+        body,_ := ioutil.ReadAll(httpRequest.Body)
+        requ.SetRawBody([]byte(body))
+    } 
 
-    
     cookies := make(map[string]string)
 	for _, cookie := range httpRequest.Cookies() {
 		cookies[cookie.Name] = cookie.Value
     }
-    // requ.SetHeader("Cookie",cookies)
-
     res, err := requ.Send()
     if err != nil {
         return 500,[]byte(""),make(map[string][]string)
@@ -208,13 +157,16 @@ func CreateRequest(api conf.ApiInfo,i conf.BackendInfo,httpRequest *http.Request
     return res.StatusCode(), res.Body(),httpResponseHeader
 } 
 
-func InterceptURL(str, substr string) string {
-    result := strings.Index(str, substr)
-    var rs string
-    if result != -1{
-        rs = str[:result]
-    }else {
-        rs = str
+// 修饰请求头
+func parseHeader(header string) string {
+    headerArray := strings.Split(header,"-")
+    result := ""
+    for i,h := range headerArray {
+        h = strings.Replace(h,"_","",-1)
+        result += strings.ToUpper(h[0:1]) + strings.ToLower(h[1:])
+        if i + 1 < len(headerArray) {
+            result += "-"
+        }
     }
-	return rs
+    return result
 }

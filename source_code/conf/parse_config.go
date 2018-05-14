@@ -13,11 +13,11 @@ func ParseConfInfo() GlobalConfig {
 	var g GlobalConfig
 	err := yaml.Unmarshal([]byte(Configure),&g)
 	if err != nil {
-		panic("Error global config!")
+		panic("Global Config Error!")
 	}
 	path,err := GetDir(g.GatewayConfPath)
 	if err != nil {
-		panic("Error gateway config path!")
+		panic("Gateway Config Path Error!")
 	}
 	fmt.Println(path)
 	gatewayList := getGatewayList(path)
@@ -33,11 +33,11 @@ func getGatewayList(path []string) []GatewayInfo {
 		c,err := ioutil.ReadFile(p + PthSep + "gateway.conf")
 		if err != nil {
 
-			panic("Error gateway config path! Error path: " + p)
+			panic("Gateway Config Path Error! Error path: " + p)
 		}
 		err = yaml.Unmarshal(c,&gateway)
 		if err != nil {
-			panic("Error gateway config! Error path: " + p)
+			panic("Gateway Config Error! Error path: " + p)
 		}
 		if gateway.GatewayStatus != "on" {
 			continue
@@ -54,11 +54,11 @@ func getStrategyList(path string) Strategy {
 	var strategy Strategy
 	c,err := ioutil.ReadFile(path)
 	if err != nil {
-		panic("Error strategy config path! Error path: " + path)
+		panic("Strategy Config Path Error! Error path: " + path)
 	}
 	err = yaml.Unmarshal(c,&strategy)
 	if err != nil {
-		panic("Error strategy config! Error path: " + path)
+		panic("Strategy Config Error! Error path: " + path)
 	}
 	return strategy
 }
@@ -67,11 +67,11 @@ func getApiList(path string) Api {
 	var api Api
 	c,err := ioutil.ReadFile(path)
 	if err != nil {
-		panic("Error api config path! Error path: " + path)
+		panic("Api Config Path Error! Error path: " + path)
 	}
 	err = yaml.Unmarshal(c,&api)
 	if err != nil {
-		panic("Error api config! Error path: " + path)
+		panic("Api Config Error! Error path: " + path)
 	}
 	return api
 }
@@ -80,7 +80,7 @@ func getBackendList(path string) Backend {
 	var backend Backend
 	c,err := ioutil.ReadFile(path)
 	if err != nil {
-		panic("Error backend config path! Error path: " + path)
+		panic("Backend Config Path Error! Error path: " + path)
 	}
 	err = yaml.Unmarshal(c,&backend)
 	if err != nil {

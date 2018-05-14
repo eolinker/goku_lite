@@ -8,10 +8,9 @@ import (
 
 func main() {
 	server := goku.New()
-	server.Use(middleware.Mapping)
+	server.RegisterRouter(server.ServiceConfig,middleware.Mapping)
 	server.Listen()
 	server.Run()
 }
-
 
 
