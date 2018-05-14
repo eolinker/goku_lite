@@ -12,7 +12,7 @@ func IPLimit(g *goku.Context,res http.ResponseWriter, req *http.Request) (bool,s
 	remoteIP := InterceptIP(remoteAddr, ":")
 	if !globalIPLimit(g,remoteIP){
 		return false,"[Global] Illegal IP"
-	} else if globalIPLimit(g,remoteIP) && !strategyIPLimit(g,remoteIP) {
+	} else if !strategyIPLimit(g,remoteIP) {
 		return false,"[Strategy] Illegal IP"
 	}
 	return true,""
