@@ -44,12 +44,13 @@ func AddRateLimit(strategyConfPath,strategyID,period string,startTime,endTime,pr
 
 // 修改流量限制
 func EditRateLimit(strategyConfPath,strategyID,period string,rateLimitID,startTime,endTime,priority,limitCount int,allow bool) bool {
-	rates,rateLimit,_ := conf.ParseRateLimitInfo(strategyConfPath,strategyID)
+	_,rateLimit,_ := conf.ParseRateLimitInfo(strategyConfPath,strategyID)
 	_,ok := rateLimit[rateLimitID]
 	if !ok {
 		return false
 	}
 	rateLimit[rateLimitID] = &conf.RateLimitInfo{
+		LimitID: rateLimitID,
 		Allow : allow,
 		Period : period,
 		Limit : limitCount,
@@ -59,8 +60,8 @@ func EditRateLimit(strategyConfPath,strategyID,period string,rateLimitID,startTi
 	}
 
 	rateLimitList := make([]*conf.RateLimitInfo,0)
-	for i:= 0; i< len(rates);i++ {
-		rateLimitList = append(rateLimitList,rateLimit[i+1])
+	for _,r := range rateLimit {
+		rateLimitList = append(rateLimitList,r)
 	}
 
 	_,strategy := conf.ParseStrategyInfo(strategyConfPath)
@@ -89,7 +90,8 @@ func DeleteRateLimit(strategyConfPath,strategyID string,rateLimitID int) bool {
 	}
 	delete(rateLimit,rateLimitID)
 	rateLimitList := make([]*conf.RateLimitInfo,0)
-	for _,r := range rateLimit {
+	for key,r := range rateLimit {
+		r.LimitID = key
 		rateLimitList = append(rateLimitList,r)
 	}
 	_,strategy := conf.ParseStrategyInfo(strategyConfPath)

@@ -9,9 +9,11 @@ import (
 
 // 新增接口
 func AddApi(apiConfPath,apiName,requestURL,requestMethod,proxyURL,proxyMethod string,groupID,backendID int,follow,isRaw bool,param []*conf.Param,constantParam []*conf.ConstantParam) (bool,int) {
-	apiList,_,_ := conf.ParseApiInfo(apiConfPath)
+	apiList,_,_,maxID := conf.ParseApiInfo(apiConfPath)
 	now := time.Now().Format("2006-01-02 15:04:05")
+
 	api := &conf.ApiInfo{
+		ApiID : maxID + 1,
 		ApiName : apiName,
 		GroupID : groupID,
 		RequestURL : requestURL,
@@ -39,7 +41,7 @@ func AddApi(apiConfPath,apiName,requestURL,requestMethod,proxyURL,proxyMethod st
 
 // 修改接口
 func EditApi(apiConfPath,apiName,requestURL,requestMethod,proxyURL,proxyMethod string,apiID,groupID,backendID int,follow,isRaw bool,param []*conf.Param,constantParam []*conf.ConstantParam) (bool) {
-	apis,api,_ := conf.ParseApiInfo(apiConfPath)
+	_,api,_,_ := conf.ParseApiInfo(apiConfPath)
 	_,ok := api[apiID] 
 	if !ok {
 		return false
@@ -59,8 +61,9 @@ func EditApi(apiConfPath,apiName,requestURL,requestMethod,proxyURL,proxyMethod s
 	api[apiID].Follow = follow
 
 	apiList := make([]*conf.ApiInfo,0)
-	for i:=0 ; i<len(apis);i++ {
-		apiList = append(apiList,api[i+1])
+	for key,r := range api {
+		r.ApiID = key
+		apiList = append(apiList,r)
 	}
 	content,err := yaml.Marshal(conf.Api{
 		ApiList : apiList,
@@ -73,17 +76,16 @@ func EditApi(apiConfPath,apiName,requestURL,requestMethod,proxyURL,proxyMethod s
 }
 
 func DeleteApi(apiConfPath string,apiID int) (bool) {
-	apis,api,_ := conf.ParseApiInfo(apiConfPath)
+	_,api,_,_ := conf.ParseApiInfo(apiConfPath)
 	_,ok := api[apiID] 
 	if !ok {
 		return false
 	}
 	delete(api,apiID)
 	apiList := make([]*conf.ApiInfo,0)
-	for i:=0 ; i<len(apis);i++ {
-		if i + 1 != apiID {
-			apiList = append(apiList,api[i+1])
-		}
+	for key,r := range api {
+		r.ApiID = key
+		apiList = append(apiList,r)
 	}
 	content,err := yaml.Marshal(conf.Api{
 		ApiList : apiList,
@@ -97,7 +99,7 @@ func DeleteApi(apiConfPath string,apiID int) (bool) {
 
 // 获取接口详情
 func GetApiInfo(apiConfPath string,apiID int) (bool,map[string]interface{}) {
-	_,api,_ := conf.ParseApiInfo(apiConfPath)
+	_,api,_,_ := conf.ParseApiInfo(apiConfPath)
 	
 	value,ok := api[apiID] 
 	if !ok {
@@ -125,7 +127,7 @@ func GetApiInfo(apiConfPath string,apiID int) (bool,map[string]interface{}) {
 
 // 获取接口列表
 func GetAllApiList(apiConfPath string) map[string]interface{}{
-	_,_,apiList := conf.ParseApiInfo(apiConfPath)
+	_,_,apiList,_ := conf.ParseApiInfo(apiConfPath)
 	apis := make([]map[string]interface{},0)
 	for _,api := range apiList {
 		apis = append(apis,api)
@@ -140,7 +142,7 @@ func GetAllApiList(apiConfPath string) map[string]interface{}{
 }
 
 func GetApiListByGroup(apiConfPath string,groupID int) map[string]interface{}{
-	_,_,apiList := conf.ParseApiInfo(apiConfPath)
+	_,_,apiList,_ := conf.ParseApiInfo(apiConfPath)
 	apis := make([]map[string]interface{},0)
 	for _,api := range apiList {
 		if api["groupID"] == groupID {
@@ -158,13 +160,13 @@ func GetApiListByGroup(apiConfPath string,groupID int) map[string]interface{}{
 
 // 获取接口数量
 func GetApiCount(apiConfPath string) int {
-	apiList,_,_ := conf.ParseApiInfo(apiConfPath)
+	apiList,_,_,_ := conf.ParseApiInfo(apiConfPath)
 	return len(apiList)
 }
 
 // 批量修改接口分组
 func DeleteApiOfGroup(apiConfPath string,groupID int) bool {
-	_,apis,_ := conf.ParseApiInfo(apiConfPath)
+	_,apis,_,_ := conf.ParseApiInfo(apiConfPath)
 	apiList := make([]*conf.ApiInfo,0)
 	for _,value := range apis {
 		if value.GroupID != groupID {
@@ -183,7 +185,7 @@ func DeleteApiOfGroup(apiConfPath string,groupID int) bool {
 
 // 请求路径及请求方式查重
 func CheckApiURLIsExist(apiConfPath,requestURL,requestMethod,follow string,apiID int) bool{
-	_,_,apis := conf.ParseApiInfo(apiConfPath)
+	_,_,apis,_ := conf.ParseApiInfo(apiConfPath)
 	method := strings.Split(requestMethod,",")
 	for _,value := range apis {
 		if value["requestURL"]== requestURL {
@@ -213,7 +215,7 @@ func CheckApiURLIsExist(apiConfPath,requestURL,requestMethod,follow string,apiID
 
 // 搜索接口
 func SearchApi(apiConfPath,keyword string) []map[string]interface{}{
-	_,_,apiList := conf.ParseApiInfo(apiConfPath)
+	_,_,apiList,_ := conf.ParseApiInfo(apiConfPath)
 	apis := make([]map[string]interface{},0)
 	for _,api := range apiList {
 		if strings.Contains(api["apiName"].(string),keyword) || strings.Contains(api["requestURL"].(string),keyword) {

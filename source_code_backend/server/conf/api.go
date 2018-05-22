@@ -77,14 +77,14 @@ func (a ApiSlice) Less(i, j int) bool {    // 重写 Less() 方法， 从大到�
 }
 
 // 读入接口信息
-func ParseApiInfo(path string) ([]*ApiInfo,map[int]*ApiInfo,[]map[string]interface{}) {
+func ParseApiInfo(path string) ([]*ApiInfo,map[int]*ApiInfo,[]map[string]interface{},int) {
 	apiInfo := make(map[int]*ApiInfo)
 	mapApiList := make([]map[string]interface{},0)
 	apiList := make([]*ApiInfo,0)
 	var api Api
 	content,err := ioutil.ReadFile(path)
 	if err != nil {
-		return apiList,apiInfo,mapApiList
+		return apiList,apiInfo,mapApiList,0
 	}
 
 	err = yaml.Unmarshal(content,&api)
@@ -123,5 +123,5 @@ func ParseApiInfo(path string) ([]*ApiInfo,map[int]*ApiInfo,[]map[string]interfa
 		maxID += 1
 	}
 	sort.Sort(sort.Reverse(ApiSlice(mapApiList)))
-	return apiList,apiInfo,mapApiList
+	return apiList,apiInfo,mapApiList,maxID
 }

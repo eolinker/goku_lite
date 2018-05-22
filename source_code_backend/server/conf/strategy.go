@@ -35,19 +35,30 @@ func (s StrategySlice) Swap(i, j int){     // 重写 Swap() 方法
     s[i], s[j] = s[j], s[i]
 }
 func (s StrategySlice) Less(i, j int) bool {    // 重写 Less() 方法， 从大到小排序
-	t1, t1Err := time.Parse("2006-01-02 15:04:05", s[j]["updateTime"].(string))
-	t2, t2Err := time.Parse("2006-01-02 15:04:05", s[i]["updateTime"].(string))
+	_,ok := s[i]["updateTime"]
+	if ok {
+		t1, t1Err := time.Parse("2006-01-02 15:04:05", s[j]["updateTime"].(string))
+		t2, t2Err := time.Parse("2006-01-02 15:04:05", s[i]["updateTime"].(string))
 
-	if t1Err == nil && t2Err != nil {
-		return true
-	} else if t1Err == nil && t2Err == nil{
-		if t1.Before(t2) {
+		if t1Err == nil && t2Err != nil {
+			return true
+		} else if t1Err == nil && t2Err == nil{
+			if t1.Before(t2) {
+				return false
+			} else {
+				return true
+			}
+		} else if t1Err != nil && t2Err == nil {
 			return false
 		} else {
-			return true
+			str := []string{s[i]["strategyName"].(string),s[j]["strategyName"].(string)}
+			sort.Strings(str)
+			if str[0] == s[i]["strategyName"].(string) {
+				return false
+			}else {
+				return true
+			}
 		}
-	} else if t1Err != nil && t2Err == nil {
-		return false
 	} else {
 		str := []string{s[i]["strategyName"].(string),s[j]["strategyName"].(string)}
 		sort.Strings(str)
@@ -57,6 +68,7 @@ func (s StrategySlice) Less(i, j int) bool {    // 重写 Less() 方法， 从�
 			return true
 		}
 	}
+	
 }
 
 // 读入策略组信息
