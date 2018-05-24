@@ -39,7 +39,7 @@ func Mapping(res http.ResponseWriter, req *http.Request,param goku.Params,contex
     statusCode,body,headers := CreateRequest(context,req,res)
     for key,values := range headers {
         for _,value := range values {
-            res.Header().Add(key,value)
+            res.Header().Set(key,value)
         }
     }
     res.WriteHeader(statusCode)
@@ -170,9 +170,8 @@ func CreateRequest(g *goku.Context,httpRequest *http.Request,httpResponse http.R
 		httpResponseHeader[key] = nil
     }
 	for key, values := range res.Headers() {
-		httpResponseHeader[key] = values
+        httpResponseHeader[key] = values
     }
-
     return res.StatusCode(), res.Body(),httpResponseHeader
 } 
 

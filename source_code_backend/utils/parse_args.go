@@ -23,30 +23,6 @@ func ParseArgs() {
 	if err != nil && ConfFilepath != "./config/goku.conf"{
 		log.Fatalln("[error]: Not a valid configuration file, check if the file exists and the validation inside")
 	}
-	// config := conf.ParseConfInfo()
-	// if command == "stop" {
-	// 	f := StopGatewayService(config.Port,true)
-	// 	if !f {
-	// 		log.Fatalln("[error]: Gateway service is already stop!")
-	// 	}
-	// }else if command == "start" {
-	// 	f := StartGatewayService(config.Port)
-	// 	if !f {
-	// 		log.Fatalln("[error]: Gateway service is already start!")
-	// 	}
-	// }else if command == "restart" {
-	// 	f := RestartGatewayService(config.Port)
-	// 	if !f {
-	// 		log.Fatalln("[error]: Gateway service is failed to restart!")
-	// 	}
-	// }else if command == "reload" {
-	// 	f := StopGatewayService(config.Port,false)
-	// 	if !f {
-	// 		log.Fatalln("[error]: Gateway service is failed to reload!")
-	// 	}
-	// }else {
-	// 	log.Fatalln("[error]: Error command args!")
-	// }
 }
 
 func ReloadConf() {
