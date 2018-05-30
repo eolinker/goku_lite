@@ -1,0 +1,119 @@
+gpedit-gateway-component {
+    .common-li {
+        display: inline-block;
+        .child-input-li {
+            display: flex;
+            .iconfont {
+                height: 30px;
+                line-height: 30px;
+            }
+        }
+    }
+    .checkbox-btn {
+        margin-left: -120px;
+        text-align: center;
+        border-radius: 3px;
+        border: 1px solid #ddd;
+        background-color: #fff;
+        padding: 0 5px;
+        @include eo-line(32px);
+        .eo-checkbox {
+            margin: 6px 5px 0 0;
+            @include eo-line(15px);
+            width: 15px;
+            border-color: #ddd;
+        }
+    }
+    .container {
+        margin-right: 5px;
+        .default-btn {
+            @include eo-line(30px, 31px);
+            display: inline-flex;
+            width: auto;
+            padding: 0 10px;
+            text-align: center;
+            text-indent: 0;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            color: #333;
+            .iconfont {
+                margin-right: 5px;
+                font-size: 14px;
+                color: #333;
+            }
+            &:disabled {
+                border: 1px solid #ddd;
+                color: #ddd;
+                .iconfont {
+                    color: #ddd;
+                }
+            }
+        }
+        .active-btn {
+            border: 1px solid $buttonSuccessFocusBorderColor;
+            color: $buttonSuccessFocusBorderColor;
+            .iconfont {
+                color: $buttonSuccessFocusBorderColor;
+            }
+        }
+        .message-ul {
+            .list-li {
+                @include eo-line(30px);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+        .common-li {
+            .iconfont {
+                color: #333;
+            }
+            .child-input-li {
+                input[type="text"] {
+                    cursor: pointer;
+                    width: 182px;
+                    height: 30px;
+                    float: left;
+                }
+                .iconfont {
+                    position: absolute;
+                    right: 0;
+                    cursor: pointer;
+                    width: 31px;
+                }
+            }
+            .common-child-li {
+                z-index: 1;
+            }
+            .message-ul {
+                background-color: #fff;
+                width: 182px;
+                border-radius: 3px;
+                border: 1px solid #e5e5e5;
+                margin-top: 5px;
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.12);
+                li {
+                    font-size: 14px;
+                    padding: 5px 10px;
+                    cursor: pointer;
+                }
+                .list-li {
+                    &:hover {
+                        background-color: #f0f0f0;
+                    }
+                }
+                .center-li {
+                    border-bottom: 1px solid #e5e5e5;
+                }
+                .admin-li {
+                    height: 40px;
+                    line-height: 40px;
+                    border-top: 1px dashed #e5e5e5;
+                    &:hover {
+                        color: #2196F3;
+                    }
+                }
+            }
+        }
+    }
+}

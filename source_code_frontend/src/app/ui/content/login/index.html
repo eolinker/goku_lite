@@ -1,0 +1,26 @@
+<div class="login-wrap">
+    <eo-navbar1></eo-navbar1>
+    <div class="login-content ">
+        <header>
+            <p class="logo-p"><b>GoKu&nbsp;Gateway</b></p>
+            <p class="tips-p">欢迎回到GOKU</p>
+        </header>
+        <article>
+            <form name="loginForm">
+                <ul>
+                    <li>
+                        <input class="eo-input" name="username" ng-model="$ctrl.data.interaction.request.loginName" type="text" placeholder="账号" ng-class="{'eo-input-error':loginForm.username.$invalid&&$ctrl.data.info.submitted}" required autofocus />
+                    </li>
+                    <li class="password-li">
+                        <input class="eo-input pull-left" name="password" ng-if="!$ctrl.data.info.password.isShow" ng-class="{'eo-input-error':$ctrl.data.info.submitted&&loginForm.password.$invalid}" type="password" placeholder="密码" ng-model="$ctrl.data.interaction.request.loginPassword" required />
+                        <input class="eo-input pull-left" name="eyepassword" ng-if="$ctrl.data.info.password.isShow" ng-class="{'eo-input-error':$ctrl.data.info.submitted&&loginForm.eyepassword.$invalid}" type="text" placeholder="密码" ng-model="$ctrl.data.interaction.request.loginPassword" required />
+                        <a class="iconfont" ng-class="{'icon-attention':$ctrl.data.info.password.isShow,'icon-attentionfill':!$ctrl.data.info.password.isShow}" ng-click="$ctrl.data.fun.changeView()"></a>
+                    </li>
+                    <li>
+                        <button ng-class="{'eo-button-success':loginForm.$valid,'eo-button-default':loginForm.$invalid}" ng-click="$ctrl.data.fun.confirm()">登录</button>
+                    </li>
+                </ul>
+            </form>
+        </article>
+    </div>
+</div>

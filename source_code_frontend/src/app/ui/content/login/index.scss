@@ -1,0 +1,84 @@
+login {
+    @extend %CONTENT-INIT-TYPE;
+    display: table;
+    .login-wrap {
+        vertical-align: middle;
+        display: table-cell;
+        .login-content {
+            width: 325px;
+            margin: -100px auto 30px auto;
+            text-align: left;
+            padding: 30px;
+            font-size: 14px;
+            box-shadow: 0 0 14px #d4d4d4;
+            header {
+                .logo-p {
+                    font-size:32px;
+                    margin-bottom: 30px;
+                }
+                .tips-p {
+                    color: #666;
+                    line-height: 1.75em;
+                }
+            }
+            article {
+                li {
+                    margin-bottom: 15px;
+                    @include eo-line(37px);
+                    .iconfont {
+                        color: #999;
+                        &:hover,
+                        &:focus,
+                        &:active {
+                            color: #333;
+                        }
+                    }
+                    .checkbox-label {
+                        border: 1px solid #dcdcdc;
+                        @include eo-line(23px, 26px);
+                        width: 23px;
+                        font-size: 13px;
+                        margin-right: 4px;
+                        cursor: pointer;
+                        display: inline-block;
+                        text-align: center;
+                        border-radius: 3px;
+                    }
+                }
+                .password-li {
+                    .iconfont {
+                        position: absolute;
+                        @include eo-line(18px);
+                        padding: 0 9px;
+                        margin-left: -39px;
+                        margin-top: 9px;
+                    }
+                }
+                li:first-child {
+                    margin-top: 20px;
+                }
+                li:nth-child(n+4) {
+                    margin-bottom: 25px;
+                }
+                .eo-input {
+                    @include eo-width(100%, 2px);
+                }
+                .eo-button-success,
+                .eo-button-default {
+                    width: 100%;
+                }
+                .common-btn {
+                    color: #666;
+                    font-size: 14px;
+                    cursor: pointer;
+                    &:hover {
+                        color: #333;
+                    }
+                }
+                .remember-btn {
+                    margin-right: 11px;
+                }
+            }
+        }
+    }
+}

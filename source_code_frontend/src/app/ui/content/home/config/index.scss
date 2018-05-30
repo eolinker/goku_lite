@@ -1,0 +1,64 @@
+config {
+    display: block;
+    margin: $NAV-TOP 0 0 $HOME-SIDEBAR-LEFT;
+    padding: 10px;
+    article {
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 3px;
+        font-size: 14px;
+        .title-p {
+            border-bottom: 1px solid #e5e5e5;
+            padding: 10px 20px;
+        }
+        .common-ul {
+            padding: 0 20px 10px 20px;
+        }
+        .item-li {
+            .item-title-p {
+                line-height: 3em;
+            }
+        }
+        button,
+        input[type=button] {
+            min-width: 60px;
+            padding: 0 10px;
+        }
+        button,
+        input[type=button] {
+            &:disabled {
+                background-color: #b7b7b7;
+                color: #fff;
+                border-color: #b7b7b7;
+                cursor: not-allowed;
+                &:hover {
+                    background-color: #b7b7b7;
+                    color: #fff;
+                    border-color: #b7b7b7;
+                    cursor: not-allowed;
+                }
+            }
+        }
+        .btn-group-li {
+            margin-top: 30px;
+            .list-div {
+                display: inline-grid;
+                p {
+                    line-height: 40px;
+                }
+                button {
+                    width: 80px;
+                }
+            }
+        }
+        &:nth-child(n+2) {
+            margin-top: 10px;
+        }
+    }
+}
+
+.shrink-div {
+    config {
+        margin-left: 51px;
+    }
+}

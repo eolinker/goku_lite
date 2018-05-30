@@ -1,0 +1,42 @@
+<div class="eo-sidebar">
+    <div class="common-sidebar" ng-class="{'had-child-div':$ctrl.data.info.current.childList&&!$ctrl.data.info.current.back}">
+        <ul>
+            <a class="shrink-a">
+                <li class="title-li" ng-click="$ctrl.data.fun.shrink()"><span class="iconfont" ng-class="{'icon-zuojiantou':!$ctrl.shrinkObject.isShrink,'icon-youjiantou2-copy':$ctrl.shrinkObject.isShrink}"></span></li>
+            </a>
+            <li class="container-item-li" ng-repeat='item in $ctrl.mainObject.baseInfo.menu'  
+            ng-init="$ctrl.data.fun.initMenu({item:item})" ui-sref-active="elem-active" ng-class="{'divide-li':item.divide==1,'divide-bottom-li':item.divide==2}" ng-if="item.power==-1||(item.power&&($ctrl.powerObject[item.power][item.powerName||'look']&&((item.$index&&$ctrl.pluginList[item.$index].useStatus)||!item.$index)))">
+                <div class="item-li first-sidebar" ng-class="{'disable-menu-li':item.disable&&$ctrl.data.service.pro.info.isExpire}" ng-click="$ctrl.data.fun.menu({item:item})">
+                    <span ui-sref="{{item.sref}}" ng-if="item.sref"></span>
+                    <span class="title-icon iconfont {{item.icon}}">   
+                        </span>
+                    <span class="pull-left triangle-left"></span>
+                    <span class="group-name">{{item.name}}</span>
+                    <label class="{{item.tipClass}}" ng-if="item.tip">{{item.tip}}</label>
+                    <span style="font-size: 14px;" class="link-span iconfont icon-daochu pull-right" ng-if="item.href"></span>
+                </div>
+                <div class="second-sidebar" ng-show="!item.back&&item.childList">
+                    <ul>
+                        <a ng-click="item.back=true">
+                            <li class="back-li">
+                                <span class="title-icon iconfont icon-xiangzuo"> </span>
+                                <span class="group-name" ng-switch="item.status">{{item.name}}</span>
+                            </li>
+                        </a>
+                        <a ng-repeat='childItem in item.childList' ng-click="childItem.click?childItem.click():$ctrl.data.fun.menu({item:childItem},'child')"
+                            ui-sref-active="active">
+                            <li class="ui-sref-li {{childItem.class}}" ng-class="{'disable-menu-li':childItem.disable&&$ctrl.data.service.pro.info.isExpire}">
+                                <span ui-sref="{{childItem.sref}}" ng-if="childItem.sref"></span>
+                                <span class="title-icon iconfont {{childItem.icon}}"> </span>
+                                <span class="pull-left triangle-left"></span>
+                                <span class="group-name pull-left" ng-switch="childItem.status">{{childItem.name}}</span>
+                                <label class="{{childItem.tipClass}}" ng-if="childItem.tip">{{childItem.tip}}</label>
+                                <span style="font-size: 14px;margin-right: 20px;" class="link-span iconfont icon-daochu pull-right" ng-if="childItem.href"></span>
+                            </li>
+                        </a>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

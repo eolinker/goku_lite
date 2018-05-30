@@ -1,0 +1,75 @@
+list-require-common-component {
+    >div{
+        overflow-y: auto;
+        position: absolute;
+        background-color: #fff;
+        margin-right: 10px;
+        border-radius: 0 3px 3px 0;
+        border: 1px solid #e5e5e5;
+        margin-top: 10px;
+        overflow-x: hidden;
+        @include eo-height(100%, 123px);
+    }
+    table {
+        width: 100%;
+        background: #fff;
+        font-size: 14px;
+        border-spacing: 0;
+        text-align: left;
+        text-indent: 10px;
+        table-layout: fixed;
+        .iconfont {
+            font-size: 14px;
+            line-height: 20px;
+            cursor: inherit;
+        }
+        thead {
+            @include eo-line(40px);
+        }
+        tbody {
+            tr:nth-child(odd) {
+                background: #fafafa;
+            }
+            tr:nth-child(even) {
+                background: #fff;
+            }
+            tr {
+                @include eo-line(40px);
+                td {
+                    color: #666;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    .btn-a {
+                        color: #666;
+                        .iconfont {
+                            padding-right: 5px;
+                        }
+                        &:hover {
+                            color: #999;
+                        }
+                        &:nth-child(n+2){
+                            margin-left: 10px;
+                        }
+                    }
+                }
+                &:hover {
+                    background: #f0f0f0;
+                }
+            }
+            .hover-tr{
+                cursor: pointer;
+            }
+            .elem-active {
+                &:nth-child(odd),
+                &:nth-child(even) {
+                    background-color: #ffecb3;
+                }
+            }
+        }
+
+        .margin-left{
+            margin-left:5px;
+        }
+    }
+}

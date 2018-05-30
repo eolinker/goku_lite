@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
     "net/http"
     "strings"
     "goku-ce/goku"
@@ -36,7 +37,7 @@ func Mapping(res http.ResponseWriter, req *http.Request,param goku.Params,contex
         go context.VisitCount.TotalCount.UpdateDayCount()
         return
     }
-    statusCode,body,headers := CreateRequest(context,req,res)
+    statusCode,body,headers := CreateRequest(context,req,res,param)
     for key,values := range headers {
         for _,value := range values {
             res.Header().Set(key,value)
@@ -55,23 +56,33 @@ func Mapping(res http.ResponseWriter, req *http.Request,param goku.Params,contex
 }
 
 // 将请求参数写入请求中
-func CreateRequest(g *goku.Context,httpRequest *http.Request,httpResponse http.ResponseWriter) (int,[]byte,map[string][]string) {
+func CreateRequest(g *goku.Context,httpRequest *http.Request,httpResponse http.ResponseWriter,params goku.Params) (int,[]byte,map[string][]string) {
     api := g.ApiInfo
     var backendHeaders map[string][]string = make(map[string][]string)
 	var backendQueryParams map[string][]string = make(map[string][]string)
     var backendFormParams map[string][]string = make(map[string][]string)
+    var restfulParam map[string]string = make(map[string]string)
     err := httpRequest.ParseForm()
     if err != nil {
         return 500,[]byte("Parsing Arguments Fail"),make(map[string][]string)
     }
-
+    
     backendMethod := strings.ToUpper(api.ProxyMethod)
     if api.Follow {
         backendMethod = strings.ToUpper(httpRequest.Method)
     }
     
     backenDomain := api.BackendPath + api.ProxyURL
+
+    // 将restful参数数组转为map
+    for _,p := range params {
+        restfulParam[p.Key] = p.Value
+    }
     requ,err := request.Method(backendMethod,backenDomain)
+    
+    if err != nil{
+        panic(err)
+    }
     for _, reqParam := range api.ProxyParams {
         var param []string
         isFile := false
@@ -100,6 +111,8 @@ func CreateRequest(g *goku.Context,httpRequest *http.Request,httpResponse http.R
 			}
 		case "query":
             param = httpRequest.Form[reqParam.Key]
+        case "restful":
+            param = strings.Split(restfulParam[reqParam.Key],",")
         }
 
 		if param == nil {
@@ -119,9 +132,14 @@ func CreateRequest(g *goku.Context,httpRequest *http.Request,httpResponse http.R
 				backendFormParams[reqParam.ProxyKey] = param
 			}
 		case "query":
-			backendQueryParams[reqParam.ProxyKey] = param
+            backendQueryParams[reqParam.ProxyKey] = param
+        case "restful":
+            pattern := ":" + reqParam.ProxyKey
+            p := strings.Join(param,",")
+            backenDomain = strings.Replace(backenDomain,pattern,p,-1)
 		}
     }
+    fmt.Println(backenDomain)
     
     for _, constParam := range api.ConstantParams {
 		switch constParam.Position {
@@ -138,9 +156,7 @@ func CreateRequest(g *goku.Context,httpRequest *http.Request,httpResponse http.R
         }
     }
     
-    if err != nil{
-        panic(err)
-    }
+    requ.SetURL(backenDomain)
 
     for key, values := range backendHeaders {
 		requ.SetHeader(key, values...)

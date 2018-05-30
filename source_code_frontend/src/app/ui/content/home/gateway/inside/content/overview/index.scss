@@ -1,0 +1,102 @@
+//作者：riverLethe
+gateway-overview {
+    .gateway-overview {
+        margin: 0 0 20px 0;
+        padding:10px;
+        // width:918px;
+        .item-div {
+            border: 1px solid #e5e5e5;
+            background-color: #fff;
+            border-radius:3px;
+            li {
+                display: inline-block;
+                text-indent: 20px;
+                @include eo-line(82px);
+                p {
+                    @include eo-line(30px);
+                }
+                .title-p {
+                    font-size: 18px;
+                    margin-top: 10px;
+                    .iconfont {
+                        font-size: 18px;
+                    }
+                }
+                .desc-p {
+                    font-size: 12px;
+                    color: #b6b6b6;
+                }
+            }
+            .center-li {
+                border-left: 1px solid #e5e5e5;
+            }
+            .last-li {
+                border-left: 1px solid #e5e5e5;
+            }
+        }
+        .item-p {
+            @include eo-line(44px);
+            font-size: 14px;
+            color: #555;
+        }
+        .first-div {
+            border: 1px solid #e5e5e5;
+            background-color: #fff;
+            border-radius: 3px;
+            padding: 0 20px 10px 20px;
+            .title-li {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height:65px;
+                b {
+                    font-size: 24px;
+                    color: $buttonSuccessBgColor;
+                }
+            }
+            .desc-li {
+                color: #b6b6b6;
+                font-size: 14px;
+                p {
+                    line-height: 20px;
+                }
+            }
+            a {
+                margin-left: 10px;
+                padding: 0 15px;
+                border-radius: 15.5px;
+                font-size: 12px;
+                display: inline-block;
+                @include eo-line(26px);
+                .iconfont{
+                    font-size: 12px;
+                }
+                &:hover {
+                    color: #999;
+                }
+            }
+            >p{
+                font-size:14px;
+                line-height: 1.75em;
+            }
+        }
+        .three-row-div{
+            @include eo-width(60%, 2px);
+            li{
+                @include eo-width(100% / 3, 1px);
+            }
+        }
+        .fifth-row-div{
+            @include eo-width(100%, 2px);
+            li{
+                @include eo-width(100% / 5, 1px);
+            }
+        }
+        .two-row-div{
+            @include eo-width(40%, 2px);
+            li{
+                @include eo-width(50%, 1px);
+            }
+        }
+    }
+}

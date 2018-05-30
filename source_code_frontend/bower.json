@@ -1,0 +1,34 @@
+{
+  "name": "eolinker",
+  "version": "1.0.0",
+  "authors": [
+    "riverLethe "
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-ui-router": "^0.4.0",
+    "angular-animate": "^1.5.0",
+    "angular-resource": "^1.5.0",
+    "oclazyload": "^1.0.9",
+    "particles.js": "^2.0.0",
+    "angular-md5": "^0.1.10",
+    "angular-cookies": "^1.5.8",
+    "clipboard": "^1.5.12",
+    "crypto-js": "^3.1.9",
+    "mockjs": "1.0.1-beta3",
+    "ace-builds": "^1.2.9",
+    "zepto": "^1.2.0"
+  },
+  "overrides": {}
+}

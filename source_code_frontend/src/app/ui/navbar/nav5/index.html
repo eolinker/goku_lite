@@ -1,0 +1,44 @@
+<div class="eo-navbar">
+   
+    <div class="nav-5">
+            <p class="notice-p">温馨提示：修改内容后须先重载网关或重启网关，方能使新配置生效。</p>
+        <header class="nav-header">
+            <ul class="first-level-ul pull-left">
+                <li class="go-index-btn logo-li pull-left">&nbsp;</li>
+                <li class="nav-li pull-left project-controller-li ">
+                    <p class="menu-item">
+                        <b>GoKu&nbsp;Gateway&nbsp;CE</b>
+                    </p>
+                </li>
+            </ul>
+            <ul class="first-level-ul pull-left">
+                <li class="navigation-li">
+                    <span ng-repeat="item in $ctrl.data.service.navbar.info.navigation.query">
+                        <span ng-if="!item.sref">{{item.name}}</span>
+                        <a ng-if="item.sref" ui-sref="{{item.sref}}">{{item.name}}</a>
+                        <span class="iconfont icon-xiangyou"></span>
+                    </span>
+                    <span>{{$ctrl.data.service.navbar.info.navigation.current}}</span>
+                </li>
+            </ul>
+            <ul>
+                <li class="list-function pull-right btn-li">
+                    <div class="list ">
+                        <span class="iconfont icon-yonghu first-icon"></span>
+                        <div class="list-function-wrap">
+                            <ul class="nav-hide-ul">
+                                <li class="list-function-detail">
+                                    <ul>
+                                        <a>
+                                            <li data-ng-click="$ctrl.data.fun.logout()">退出登录</li>
+                                        </a>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </header>
+    </div>
+</div>

@@ -1,0 +1,116 @@
+<div class="gateway-modal modal">
+    <!-- 添加编辑网关流量控制弹窗 -->
+    <script type="text/ng-template" id="GatewayRateLimitModal">
+        <div class="gateway-modal-rate-limit eo-modal">
+            <header ng-bind="::input.config.title"></header>
+            <article>
+                <form name="ConfirmForm">
+                    <p class="title-p">访问类型：</p>
+                    <p class="common-p">
+                        <select class="eo-input " ng-model="input.request.allow" ng-options="item.id as item.name for item in data.constant.viewArray"></select>
+                    </p>
+                    <p class="title-p" ng-show="input.request.allow">单位时间：</p>
+                    <p class="common-p" ng-show="input.request.allow">
+                        <select class="eo-input " ng-model="input.request.period" ng-options="item.id as item.name for item in data.constant.intervalArray"></select>
+                    </p>
+                    <p class="title-p" ng-show="input.request.allow">请求频率限制：</p>
+                    <p class="common-p" ng-show="input.request.allow">
+                        <input type="text" name="limit" ng-model="input.request.limit" placeholder="限制每单位时间能够访问的最大次数" class="eo-input " ng-class="{'eo-input-error':(ConfirmForm.limit.$dirty&&ConfirmForm.limit.$invalid)}"
+                            ng-pattern="/^(([1-9]*[1-9][0-9]*)|0)$/" maxlength="32" ng-required="input.request.allow">
+                    </p>
+                    <p class="title-p">时间段：</p>
+                    <p>
+                        <select class="eo-input " ng-model="input.request.startTime" ng-options="item.id as item.id for item in data.constant.timeArray"></select>
+                        <span>~</span>
+                        <select class="eo-input " ng-model="input.request.endTime" ng-options="item.id as item.id for item in data.constant.timeArray"></select>
+                    </p>
+                    <p class="title-p">优先级：</p>
+                    <p class="common-p">
+                        <input type="text" name="priority" ng-model="input.request.priority" placeholder="优先级为1-999，数字越大优先级越高" class="eo-input "
+                            ng-class="{'eo-input-error':(ConfirmForm.priority.$dirty&&ConfirmForm.priority.$invalid)}" ng-pattern="/^[1-9]*[1-9][0-9]*$/"
+                            maxlength="3" required>
+                    </p>
+                    <p class="btn-group">
+                        <button class="eo-button-success " ng-click="fun.confirm()">确定</button>
+                        <input type="button" class="eo-button-default " value="取消" ng-click="fun.cancel()">
+                    </p>
+                </form>
+            </article>
+            <footer></footer>
+        </div>
+        <div class="mask"></div>
+    </script>
+    <!-- 添加编辑gateway输入弹窗 -->
+    <script type="text/ng-template" id="Gateway_DefaultModal">
+        <div class="gateway-default-modal eo-modal">
+            <header>
+                <ul>
+                    <li ng-bind="::data.title"></li>
+                </ul>
+            </header>
+            <article>
+                <form name="ConfirmForm">
+                    <ul>
+                        <li class="name">
+                            <p class="second-title-p">网关名称：</p>
+                            <p>
+                                <input type="text" name="name" ng-model="interaction.request.gatewayName" placeholder="1~32位字符串" class="eo-input " ng-class="{'eo-input-error':(ConfirmForm.name.$dirty&&ConfirmForm.name.$invalid)}"
+                                    maxlength="32" ng-pattern="/^.{1,32}$/" required>
+                            </p>
+                        </li>
+                        <li class="alias-li">
+                            <p class="second-title-p">网关别名：</p>
+                            <p>
+                                <input type="text" name="alias" ng-model="interaction.request.gatewayAlias" placeholder="1~100位字符串：支持英文、数字、下划线" class="eo-input "
+                                    ng-class="{'eo-input-error':(ConfirmForm.alias.$dirty&&ConfirmForm.alias.$invalid)}" maxlength="100"
+                                    ng-pattern="/^[a-zA-Z0-9_]{1,100}$/" required>
+                                <a class="eo-link pull-right" ng-click="fun.random()">随机生成</a>
+                            </p>
+                        </li>
+                        <li class="btn-group">
+                            <button class="eo-button-success " ng-click="fun.confirm()">确定</button>
+                            <input type="button" class="eo-button-default " value="取消" ng-click="fun.cancel()">
+                        </li>
+                    </ul>
+                </form>
+            </article>
+        </div>
+        <div class="mask"></div>
+    </script>
+    <!-- 添加编辑网关后端服务表弹窗 -->
+    <script type="text/ng-template" id="GatewayBackendModal">
+        <div class="gateway-backend-modal eo-modal">
+            <header>
+                <ul>
+                    <li ng-bind="::title"></li>
+                </ul>
+            </header>
+            <article>
+                <form name="ConfirmForm">
+                    <ul>
+                        <li>
+                            <p class="second-title-p">后端服务名称：</p>
+                            <p>
+                                <input type="text" name="name" ng-model="info.backendName" placeholder="请输入后端服务名称" class="eo-input " ng-class="{'eo-input-error':(submited&&ConfirmForm.name.$invalid)}"
+                                    ng-pattern="/^.{1,255}$/" maxlength="255" required>
+                            </p>
+                        </li>
+                        <li>
+                            <p class="second-title-p">后端服务地址（域名或IP地址，需要填写HTTP或HTTPS等协议头）：</p>
+                            <p>
+                                <input type="text" name="uri" ng-model="info.backendPath" placeholder="请输入后端服务uri" class="eo-input " ng-class="{'eo-input-error':(submited&&ConfirmForm.uri.$invalid)}"
+                                    ng-pattern="/^.{1,255}$/" maxlength="255" required>
+                            </p>
+                        </li>
+                        <li class="btn-group">
+                            <button class="eo-button-success " ng-click="ok()">确定</button>
+                            <input type="button" class="eo-button-default " value="取消" ng-click="cancel()">
+                        </li>
+                    </ul>
+                </form>
+            </article>
+            <footer></footer>
+        </div>
+        <div class="mask"></div>
+    </script>
+</div>

@@ -1,0 +1,82 @@
+gateway-gpedit-auth {
+    >article {
+        margin: 50px 0 0 $HOME-GROUP-SIDEBAR-LEFT;
+    }
+    form {
+        margin-top: 10px;
+        padding:0 20px 20px 20px;
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 3px;
+        .first-level-li {
+            @include eo-line(50px);
+        }
+        .type-li {
+            ul {
+                display: flex;
+                li {
+                    &:nth-child(n+2) {
+                        margin-left: 15px;
+                    }
+                    .iconfont {
+                        padding-right: 5px;
+                        font-size: 14px;
+                        cursor: pointer;
+                    }
+                    .icon-radioboxfill {
+                        color: $buttonSuccessFocusBgColor;
+                    }
+                    .icon-radiobox {
+                        color: #999;
+                    }
+                }
+                .checkbox-item-li {
+                    label {
+                        cursor: pointer;
+                        font-size: 14px;
+                    }
+                    .disabled {
+                        cursor: default;
+                    }
+                }
+            }
+        }
+        .content-li {
+            font-size: 14px;
+            height: 100px;
+            .mark-span {
+                width: 80px;
+                display: inline-block;
+            }
+            p {
+                line-height: 50px;
+            }
+            .iconfont{
+                margin-left: -30px;
+            }
+        }
+        .tips-li {
+            color: #999;
+            line-height: 50px;
+        }
+        .eo-link {
+            margin-left: 20px;
+        }
+        copy-common-component {
+            margin-left: 20px;
+            .eo-button-default {
+                background-color: #fff;
+                color: #2196F3;
+                border: none;
+                font-size: 14px;
+                &:hover,
+                &:active,
+                &:focus {
+                    background-color: #fff;
+                    color: #2196F3;
+                    border: none;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="common-li" ng-mouseleave="$ctrl.data.info.itemStatus='hidden'">
+        <button class="checkbox-btn pull-left" ng-click="$ctrl.data.fun.click('contact')">
+            <span class="eo-checkbox pull-left iconfont" ng-class="{'icon-check':$ctrl.data.info.shouldContactGatewayUrl}"></span>拼接网关地址
+        </button>
+        <ul>
+            <li class="child-input-li" ng-click="$ctrl.data.info.itemStatus='visible'">
+                <input class="eo-input" placeholder="请选择策略组" type="text" ng-model="$ctrl.data.info.model.strategyName" readonly>
+                <label class="iconfont icon-xiangxia"></label>
+            </li>
+            <li class="absolute common-child-li" ng-class="{hidden:$ctrl.data.info.itemStatus=='hidden'}">
+                <ul class="message-ul">
+                    <li class="list-li" ng-click="$ctrl.data.fun.click('select',null)">无策略组</li>
+                    <li class="list-li" ng-repeat="item in $ctrl.data.interaction.response.query track by $index" ng-click="$ctrl.data.fun.click('select',item)">
+                        {{item.strategyName}}
+                    </li>
+                    <li class="admin-li" ui-sref="home.gateway.inside.gpedit.default">管理策略组</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

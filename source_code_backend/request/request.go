@@ -19,7 +19,7 @@ type Request interface {
 	UrlPath() string
 	SetJSON(string) Request
 	SetRawBody([]byte) Request
-
+	SetURL(string)
 	SetFormParam(string, ...string) Request
 	FormParams() map[string][]string
 
@@ -63,6 +63,10 @@ func (this *request) Headers() map[string][]string {
 		headers[key] = values[:]
 	}
 	return headers
+}
+
+func (this *request) SetURL(url string) {
+	this.URL = url
 }
 
 // Set a url param, could be multiple values. If no values are provided, then delete the key if any.
