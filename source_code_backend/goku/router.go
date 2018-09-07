@@ -1,13 +1,15 @@
 package goku
 
 import (
-	"net/http"
 	"goku-ce/conf"
+	"net/http"
+	"reflect"
 	"strings"
 )
 
 // Handle是一个可以被注册到路由中去处理http请求，类似于HandlerFunc,但是有第三个参数值
-type Handle func(http.ResponseWriter, *http.Request, Params,*Context)
+type Handle func(http.ResponseWriter, *http.Request, Params, *Context)
+
 // Param is a single URL parameter, consisting of a key and a value.
 type Param struct {
 	Key   string
@@ -17,7 +19,12 @@ type Param struct {
 // Params是一个参数切片，作为路由的返回结果，这个切片是有序的
 // 第一个URL参数会作为第一个切片值，因此通过索引来读值是安全的
 type Params []Param
-var requestMethod = []string{"POST","GET","DELETE","PUT","PATCH","OPTIONS","HEAD"}
+
+var requestMethod = []string{"POST", "GET", "DELETE", "PUT", "PATCH", "OPTIONS", "HEAD"}
+
+var strategyMap map[string]Strategy = make(map[string]Strategy)
+var gatewayMap map[string]Gateway = make(map[string]Gateway)
+
 // ByName returns the value of the first Param which key matches the given name.
 // If no matching Param is found, an empty string is returned.
 func (ps Params) ByName(name string) string {
@@ -29,7 +36,7 @@ func (ps Params) ByName(name string) string {
 	return ""
 }
 
-// Router是一个可以被用来调度请求去不同处理函数的Handler 
+// Router是一个可以被用来调度请求去不同处理函数的Handler
 type Router struct {
 	trees map[string]*node
 
@@ -61,13 +68,11 @@ func NewRouter() *Router {
 	}
 }
 
-
 func (r *Router) Use(handle Handle) {
 	r.handle = handle
 }
 
-
-func (r *Router) Handle(method, path string, handle Handle,context Context) {
+func (r *Router) Handle(method, path string, handle Handle, context Context) {
 	if path[0] != '/' {
 		panic("path must begin with '/' in path '" + path + "'")
 	}
@@ -81,7 +86,7 @@ func (r *Router) Handle(method, path string, handle Handle,context Context) {
 		root = new(node)
 		r.trees[method] = root
 	}
-	root.addRoute(path, handle,context)
+	root.addRoute(path, handle, context)
 }
 
 // // HandlerFunc 是一个适配器允许使用http.HandleFunc函数作为一个请求处理器
@@ -90,6 +95,7 @@ func (r *Router) recv(w http.ResponseWriter, req *http.Request) {
 		r.PanicHandler(w, req, rcv)
 	}
 }
+
 // 查找允许手动查找方法 + 路径组合。
 // 这对于构建围绕此路由器的框架非常有用。
 // 如果找到路径, 它将返回句柄函数和路径参数值
@@ -98,7 +104,7 @@ func (r *Router) Lookup(method, path string) (Handle, Params, *Context, bool) {
 	if root := r.trees[method]; root != nil {
 		return root.getValue(path)
 	}
-	return nil, nil,&Context{}, false
+	return nil, nil, &Context{}, false
 }
 
 func (r *Router) allowed(path, reqMethod string) (allow string) {
@@ -123,7 +129,7 @@ func (r *Router) allowed(path, reqMethod string) (allow string) {
 				continue
 			}
 
-			handle, _, _,_ := r.trees[method].getValue(path)
+			handle, _, _, _ := r.trees[method].getValue(path)
 			if handle != nil {
 				// 将请求方法添加到允许的方法列表中
 				if len(allow) == 0 {
@@ -143,38 +149,76 @@ func (r *Router) allowed(path, reqMethod string) (allow string) {
 // ServeHTTP使用路由实现http.Handler接口
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	if r.PanicHandler != nil {
-		
+
 		defer r.recv(w, req)
 	}
 	// now := time.Now()
 	path := req.URL.Path
-	pathArray := strings.Split(path,"/")
-	
-	if len(pathArray) == 2 {
-		w.WriteHeader(500)
-		if pathArray[1] == "" {
-			w.Write([]byte("Missing Gateway Alias"))
-		} else {
-			w.Write([]byte("Missing StrategyID"))
+	isMatchHeader := false
+
+	var strategy Strategy
+	var gateway Gateway
+
+	// 从头部获取策略ID
+	strategyID := req.Header.Get("Strategy-Id")
+	if strategyID == "" {
+		// 从uri中获取策略ID
+		pathArray := strings.Split(path, "/")
+
+		if len(pathArray) == 2 {
+			w.WriteHeader(500)
+			if pathArray[1] == "" {
+				w.Write([]byte("Missing Gateway Alias"))
+			} else {
+				w.Write([]byte("Missing StrategyID"))
+			}
+			return
+		} else if len(pathArray) == 3 {
+			w.WriteHeader(500)
+			if pathArray[2] == "" {
+				w.Write([]byte("Missing StrategyID"))
+			} else {
+				w.Write([]byte("Invalid URI"))
+			}
+			return
 		}
-		return
-	} else if len(pathArray) == 3 {
-		w.WriteHeader(500)
-		if pathArray[2] == "" {
-			w.Write([]byte("Missing StrategyID"))
-		} else {
-			w.Write([]byte("Invalid URI"))
+	} else {
+		isMatchHeader = true
+		pathArray := strings.Split(path, "/")
+		if len(pathArray) == 2 {
+			w.WriteHeader(500)
+			if pathArray[1] == "" {
+				w.Write([]byte("Missing Gateway Alias"))
+			}
+			return
 		}
-		return
+		if value, ok := strategyMap[pathArray[1]+":"+strategyID]; ok {
+			strategy = value
+		} else {
+			w.WriteHeader(500)
+			w.Write([]byte("Missing Gateway Alias or StrategyID"))
+			return
+		}
 	}
-	
+
 	if root := r.trees[req.Method]; root != nil {
-		handle, ps, context,tsr := root.getValue(path); 
+		handle, ps, context, tsr := root.getValue(path)
 		if handle != nil {
-			handle(w, req, ps,context)
+			if isMatchHeader {
+				context.StrategyInfo = strategy
+				context.GatewayInfo = gateway
+			} else {
+				st := reflect.ValueOf(context.StrategyInfo)
+				val := st.FieldByName("StrategyID").String()
+				if val == "" {
+					w.Write([]byte("Missing StrategyID"))
+					return
+				}
+			}
+			handle(w, req, ps, context)
 			return
 		} else if req.Method != "CONNECT" && path != "/" {
-			code := 301 
+			code := 301
 			if req.Method != "GET" {
 				code = 307
 			}
@@ -237,72 +281,108 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 
 // 注册路由
-func (r *Router) RegisterRouter(c conf.GlobalConfig,handle ...Handle) {
+func (r *Router) RegisterRouter(c conf.GlobalConfig, handle ...Handle) {
 	r.handle = handle[0]
 
 	var count = &Count{}
-	r.Handle("GET","/goku/Count/getVisitCount",handle[1],Context{
-		VisitCount:count,
+	r.Handle("GET", "/goku/Count/getVisitCount", handle[1], Context{
+		VisitCount: count,
 	})
 	for _, g := range c.GatewayList {
 		if g.GatewayStatus != "on" {
 			continue
 		}
 		gateway := Gateway{
-			GatewayAlias: g.GatewayAlias,
-			GatewayStatus: g.GatewayStatus, 
-			IPLimitType: g.IPLimitType,
-			IPWhiteList: g.IPWhiteList,
-			IPBlackList: g.IPBlackList,
+			GatewayAlias:  g.GatewayAlias,
+			GatewayStatus: g.GatewayStatus,
+			IPLimitType:   g.IPLimitType,
+			IPWhiteList:   g.IPWhiteList,
+			IPBlackList:   g.IPBlackList,
 		}
+		gatewayMap[g.GatewayAlias] = gateway
 		for _, s := range g.StrategyList.Strategy {
 			strategy := Strategy{
-				StrategyID: s.StrategyID,
-				Auth: s.Auth,
-				ApiKey: s.ApiKey,
-				BasicUserName: s.BasicUserName,
+				StrategyID:        s.StrategyID,
+				Auth:              s.Auth,
+				ApiKey:            s.ApiKey,
+				BasicUserName:     s.BasicUserName,
 				BasicUserPassword: s.BasicUserPassword,
-				IPLimitType: s.IPLimitType,
-				IPWhiteList: s.IPWhiteList,
-				IPBlackList: s.IPBlackList,
-				RateLimitList:s.RateLimitList,
+				IPLimitType:       s.IPLimitType,
+				IPWhiteList:       s.IPWhiteList,
+				IPBlackList:       s.IPBlackList,
+				RateLimitList:     s.RateLimitList,
 			}
+			strategyMap[g.GatewayAlias+":"+s.StrategyID] = strategy
 			for _, api := range g.ApiList.Apis {
 				path := "/" + g.GatewayAlias + "/" + s.StrategyID + api.RequestURL
 				backendPath := ""
 				flag := false
 				// 获取后端请求路径
-				for _,b := range g.BackendList.Backend {
-					if b.BackendID == api.BackendID{
+				for _, b := range g.BackendList.Backend {
+					if b.BackendID == api.BackendID {
 						backendPath = b.BackendPath
-						flag =true
+						flag = true
 						break
 					}
 				}
-				if !flag && api.BackendID != -1{
+				if !flag && api.BackendID != -1 {
 					continue
 				}
 				apiInfo := Api{
-					RequestURL: api.RequestURL,
-					BackendPath: backendPath,
-					ProxyURL: api.ProxyURL,
-					IsRaw:api.IsRaw,
-					ProxyMethod:api.ProxyMethod,
-					ProxyParams:api.ProxyParams,
-					ConstantParams:api.ConstantParams,
-					Follow:api.Follow,
+					RequestURL:     api.RequestURL,
+					BackendPath:    backendPath,
+					ProxyURL:       api.ProxyURL,
+					IsRaw:          api.IsRaw,
+					ProxyMethod:    api.ProxyMethod,
+					ProxyParams:    api.ProxyParams,
+					ConstantParams: api.ConstantParams,
+					Follow:         api.Follow,
 				}
 				context := Context{
-					GatewayInfo:gateway,
-					StrategyInfo:strategy,
-					ApiInfo:apiInfo,
-					Rate:make(map[string]Rate),
-					VisitCount:count,
+					GatewayInfo:  gateway,
+					StrategyInfo: strategy,
+					ApiInfo:      apiInfo,
+					Rate:         make(map[string]Rate),
+					VisitCount:   count,
 				}
-
-				for _,method := range api.RequestMethod {
-					r.Handle(strings.ToUpper(method),path,r.handle,context)
+				for _, method := range api.RequestMethod {
+					r.Handle(strings.ToUpper(method), path, r.handle, context)
 				}
+			}
+		}
+		for _, api := range g.ApiList.Apis {
+			path := "/" + g.GatewayAlias + api.RequestURL
+			backendPath := ""
+			flag := false
+			// 获取后端请求路径
+			for _, b := range g.BackendList.Backend {
+				if b.BackendID == api.BackendID {
+					backendPath = b.BackendPath
+					flag = true
+					break
+				}
+			}
+			if !flag && api.BackendID != -1 {
+				continue
+			}
+			apiInfo := Api{
+				RequestURL:     api.RequestURL,
+				BackendPath:    backendPath,
+				ProxyURL:       api.ProxyURL,
+				IsRaw:          api.IsRaw,
+				ProxyMethod:    api.ProxyMethod,
+				ProxyParams:    api.ProxyParams,
+				ConstantParams: api.ConstantParams,
+				Follow:         api.Follow,
+			}
+			ct := Context{
+				GatewayInfo: gateway,
+				ApiInfo:     apiInfo,
+				Rate:        make(map[string]Rate),
+				VisitCount:  count,
+			}
+			for _, method := range api.RequestMethod {
+				r.Handle(strings.ToUpper(method), path, r.handle, ct)
 			}
 		}
 	}

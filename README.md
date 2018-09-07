@@ -4,9 +4,23 @@
 
 ## 简介
 
-**GoKu API Gateway CE，中文名：悟空API网关（开源版），是国内首个开源go语言API网关，帮助企业进行API服务治理、API性能安全维护，为企业数字化赋能。**
+**GoKu API Gateway CE，中文名：悟空API网关（开源版），是eoLinker旗下的API网关，帮助企业进行API服务治理、API性能安全维护，为企业数字化赋能。**
 
 GoKu API Gateway CE，支持OpenAPI与微服务管理，支持私有云部署，实现API转发、请求参数转换、数据校验等功能，提供图形化界面管理，能够快速管理多个API网关，提高API业务安全性。
+
+## 相关链接
+
+* 官方网站：https://agw.eolinker.com
+
+* 教程文档：http://help.eolinker.com/agw
+
+* 官方交流Q群：[用户交流1群](https://jq.qq.com/?_wv=1027&k=5ikfC2S)（群号：725853895）
+
+* Github：https://github.com/eolinker/GoKu-API-Gateway
+
+* 码云：https://gitee.com/eoLinker-API-Management/API-Gateway
+
+* Coding：https://git.coding.net/eolinker/Goku-API-Gateway.git
 
 ## 特性
 
@@ -36,26 +50,18 @@ GoKu API Gateway CE，支持OpenAPI与微服务管理，支持私有云部署，
 
 ![](http://data.eolinker.com/course/pRMJNTb1974cd4d502bf17f5b477b236cf5c090496af571)
 
-
-## 部署要求
-
-* go 1.8及以上版本
-
-## 相关链接
-
-* 官方网站：https://agw.eolinker.com
-
-* Github：https://github.com/eolinker/GoKu-API-Gateway
-
-* 码云：https://gitee.com/eoLinker-API-Management/API-Gateway
-
-* Coding：https://git.coding.net/eolinker/Goku-API-Gateway.git
-
-* 教程文档：http://help.eolinker.com/agw
-
-* 官方交流Q群：[用户交流1群](https://jq.qq.com/?_wv=1027&k=5ikfC2S)（群号：725853895）
-
 ## 更新日志
+
+#### V2.1.4（2018/9/7）
+新增：
+
+1. 策略ID参数支持放在Header。
+
+说明：
+
+通过网关访问的请求地址注意事项：
+* 若策略ID放头部，则完整请求路径为：**网关IP：端口号/网关别名/接口路径**，策略ID的Header字段名为：**Strategy-Id**。
+* 若策略ID放URI，则完整请求路径为：**网关IP：端口号/网关别名/策略ID/接口路径**。
 
 #### V2.1.3（2018/5/30）
 新增：
