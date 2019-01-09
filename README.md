@@ -14,8 +14,6 @@ GoKu API Gateway CE，支持OpenAPI与微服务管理，支持私有云部署，
 
 * 教程文档：http://help.eolinker.com/agw
 
-* 官方交流Q群：[用户交流1群](https://jq.qq.com/?_wv=1027&k=5ikfC2S)（群号：725853895）
-
 * Github：https://github.com/eolinker/GoKu-API-Gateway
 
 * 码云：https://gitee.com/eoLinker-API-Management/API-Gateway
