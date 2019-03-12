@@ -10,15 +10,11 @@ GoKu API Gateway CE，支持OpenAPI与微服务管理，支持私有云部署，
 
 ## 相关链接
 
-* 官方网站：https://agw.eolinker.com
+* 官方网站：https://www.eolinker.com/#/product/agw
 
 * 教程文档：http://help.eolinker.com/agw
 
 * Github：https://github.com/eolinker/GoKu-API-Gateway
-
-* 码云：https://gitee.com/eoLinker-API-Management/API-Gateway
-
-* Coding：https://git.coding.net/eolinker/Goku-API-Gateway.git
 
 ## 特性
 
