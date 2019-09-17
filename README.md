@@ -50,6 +50,7 @@ Goku API Gateway 的社区版本（CE）拥有完善的使用指南和二次开�
 * **mysql ，版本 5.7+**
 * **redis ，版本 2.8+，推荐3.0及以上版本**
 * **net-tools**
+* **golnag12.x**
 
 ### 安装文件描述
 
@@ -61,6 +62,7 @@ AGW的安装包包含两个文件 **goku-console（控制台安装包）** 和 *
 | ------------ | ------------ |
 | goku-ce-console  | 编译后的网关控制台文件 |
 | goku-sql| mysql数据库安装脚本  |
+
 其中goku-ce-console（控制台文件）里包含一个程序：
 * gateway-console：控制台程序
 
@@ -69,6 +71,7 @@ AGW的安装包包含两个文件 **goku-console（控制台安装包）** 和 *
 | 目录名称  | 含义  |
 | ------------ | ------------ |
 | goku-ce-node  | 编译后的网关节点文件 |
+
 其中goku-ce-node（节点文件）里包含一个程序：
 * gateway-node：节点程序
 
