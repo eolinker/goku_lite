@@ -1,0 +1,9 @@
+menu-radio-common-component{
+    span{
+        display: inline-block;
+        line-height: 30px;
+    }
+    button:disabled{
+        cursor: not-allowed;
+    }
+}

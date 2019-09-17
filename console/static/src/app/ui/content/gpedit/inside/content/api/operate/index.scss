@@ -1,0 +1,46 @@
+gpedit-inside-api-operate {
+    list-default-common-component .fixed-height-list{
+        @include eo-height(100%,183px);
+        margin-left: $HOME-GROUP-LEFT;
+        @include eo-width(100%,514px + $HOME-GROUP-LEFT);
+    }
+    .common-scss-group{
+        margin-top: 65px;
+        @include eo-height(100%,132px);
+    }
+    .group-compoment-container .cc-group-container {
+        left: 482px;
+    }
+    .search_menu_giao .common_menu_ul{
+        margin-left: $HOME-GROUP-LEFT;
+        @include eo-width(100%,263px);
+    }
+    .btn-group-div {
+        button {
+            height: 20px;
+            line-height: 22px;
+            padding: 0 10px;
+            font-size: 12px;
+            margin-right: 10px;
+            &:hover,
+            &:focus {
+                height: 20px;
+                line-height: 22px;
+            }
+            &:disabled {
+                background-color: rgb(195, 195, 195);
+                cursor: not-allowed;
+                border: none;
+            }
+        }
+    }
+}
+
+.shrink-div {
+    gpedit-inside-api-operate .group-compoment-container .cc-group-container {
+        left: 292px;
+    }
+    gpedit-inside-api-operate list-default-common-component .fixed-height-list{
+        @include eo-width(100%,324px + $HOME-GROUP-LEFT);
+    }
+}

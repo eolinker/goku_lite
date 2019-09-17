@@ -1,0 +1,610 @@
+/**颜色集合**/
+$buttonDeleteBgColor:#f2f2f2;
+$buttonDeleteColor:#a3a3a3;
+$buttonDeleteBorderColor:#e5e5e5;
+$buttonSuccessBgColor:#00ab6d;
+$buttonSuccessColor:#fff;
+$buttonSuccessFocusBgColor:#089462;
+$buttonDefaultBgColor:#fff;
+$buttonDefaultFocusBgColor:#fff;
+$buttonDefaultBorderColor:#1e88e5;
+$buttonInfoBgColor:#2196f3;
+$buttonInfoFocusBgColor:#1e88e5;
+$buttonInfoBorderColor:rgba(0, 0, 0, .21);
+$buttonDangerBgColor:#e83333;
+$buttonDangerFocusBgColor:#d03333;
+$buttonWarningBgColor:#FFB300;
+$buttonWarningBorderColor:#FFA000;
+$buttonWarningFocusBgColor:#D84A4A;
+$buttonWarningFocusBorderColor:#e83333;
+$buttonESColor:#555;
+$buttonQSColor:#fff;
+
+/**--全局配置--**/
+.eo_theme_modal_mask {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.eo_theme_mask_bg {
+    background: #f0f2f5;
+}
+
+.eo_theme_ts_btn {
+    background-color: #2196f3;
+    color: #fff;
+
+    &:hover {
+        background-color: $buttonInfoFocusBgColor;
+        color: $buttonQSColor;
+    }
+}
+
+.eo_theme_tp_btn {
+    background-color: $buttonSuccessBgColor;
+    color: #fff;
+
+    &:hover {
+        background-color: $buttonSuccessFocusBgColor;
+    }
+}
+
+.eo_theme_tp_p_btn {
+    background-color: #388E3C;
+    color: #fff;
+
+    &:hover {
+        background-color: #2E7D32;
+    }
+}
+
+.eo_theme_t_p_btn {
+    background-color: #3c7ce5;
+    color: #fff;
+
+    &:hover {
+        background-color: #3a85c1;
+    }
+}
+
+.eo-input,
+.eo-textarea,
+.eo-select {
+    border-color: #d9d9d9;
+    background-color: #fff;
+    color: #333;
+
+    &:hover {
+        border-color: #999;
+        transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+
+    &:focus {
+        border-color: #089462;
+    }
+
+    &:disabled {
+        color: #999;
+        background-color: #fafafa;
+    }
+}
+input:disabled {
+    color: #999 !important;
+    background-color: #fafafa !important;
+}
+.eo-tab-menu{
+    background-color: #efefef;
+    .item-tab{
+        border-bottom-color: #efefef;
+        &:hover {
+            border-color: #089462;
+        }
+        .tab-icon {
+            background-color: $buttonSuccessBgColor;
+        }
+        .icon-circle{
+            color: $buttonSuccessBgColor;
+        }
+    }
+    .active-item {
+        border-bottom-color: #00ab6d;
+        &:hover {
+            border-bottom-color: #00ab6d;
+        }
+    }
+    .disable-item{
+        color:#999;
+        &:hover{
+            border-bottom-color: transparent;
+        }
+    }
+}
+/**--模块--**/
+.eo_theme_iblock {
+    background-color: #fff;
+    border-color: #d9d9d9;
+}
+
+.eo_theme_iblock_i {
+    border-color: #d9d9d9;
+    background-color: #fff;
+
+    &:hover {
+        background-color: #fafafa;
+    }
+}
+
+.eo_theme_iblock_i_dp {
+    color: #b6b6b6;
+}
+
+.eo_theme_iblock_tb {
+    color: #607d8b;
+}
+
+.eo_theme_iblock_tp {
+    color: #555;
+}
+
+.eo_theme_rblock {
+    background-color: #f3f3f3;
+}
+
+.eo_theme_rblock_tp {
+    color: #b6b6b6;
+}
+
+.eo_theme_rblock_i_dp {
+    border-color: #b6b6b6;
+}
+
+/**--分组样式--**/
+.eo_theme_gd_container {
+    background-color: #fff;
+}
+
+.eo_theme_gd_container .sv-helper {
+    background-color: #eee;
+}
+
+.eo_theme_gd_d {
+    border-color: #e5e5e5;
+}
+
+.eo_theme_gd_lt {
+    border-color: #d9d9d9;
+}
+
+.eo_theme_gd_li {
+    color: #555;
+}
+
+.eo_theme_gd_li:hover {
+    background-color: #eee;
+
+    .eo_theme_gd_lt_icon {
+        color: #455A64;
+    }
+}
+
+.eo_theme_gd_li .iconfont {
+    color: #999;
+}
+
+.eo_theme_gd_li_fl {
+    background-color: #fff;
+    box-shadow: -5px 5px 15px #ededed;
+    border-color: #dcdcdc;
+
+}
+
+.eo_theme_gd_li_fli {
+    color: #555;
+
+    &:hover {
+        background-color: #eee;
+        color: #607d8b;
+    }
+}
+
+.eo_theme_gd_li_fli_s {
+    color: $buttonSuccessFocusBgColor;
+}
+
+.eo_theme_gd_li_fli_a {
+    background-color: #eee;
+    color: #607d8b;
+}
+
+.eo_theme_gd_btn_c {
+    background-color: $buttonQSColor;
+    color: $buttonDangerBgColor;
+    border-color: $buttonDangerBgColor;
+
+    &:hover,
+    &:active {
+        background-color: $buttonDangerFocusBgColor;
+        color: $buttonQSColor;
+        border-color: $buttonDangerFocusBgColor;
+    }
+}
+
+/**--列表样式--**/
+.eo_theme_lct_tra {
+    background-color: #ffecb3 !important;
+}
+
+.eo_theme_ldt,
+.eo_theme_lgt {
+    background-color: #fff;
+}
+
+.eo_theme_ldt thead th {
+    border-color: #d9d9d9;
+}
+
+.eo_theme_lgt thead th {
+    background-color: #f8f8f8;
+    color: #48555c;
+}
+
+.bottom-count-div {
+    background-color: #f8f8f8;
+    color: #48555c;
+}
+
+.eo_theme_ldt tbody tr,
+.eo_theme_lgt tbody tr {
+    &:hover {
+        background-color: #efefef;
+    }
+}
+
+.eo_theme_ldt_tdt {
+    color: #999;
+}
+
+
+.eo_theme_lrd {
+    background-color: #fff;
+}
+
+.eo_theme_lrt tbody {
+    tr {
+        color: #666;
+    }
+
+    tr:nth-child(odd) {
+        background: #fafafa;
+    }
+
+    tr:nth-child(even) {
+        background: #fff;
+    }
+
+    tr:hover {
+        background: #f0f0f0;
+    }
+}
+
+/**--sidebar static--**/
+.s_style {
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    border-color: #d9d9d9;
+}
+
+.s0_style {
+    border-bottom: 1px solid #d9d9d9;
+    color: #999;
+    background-color: #fff;
+
+    &:hover {
+        background-color: #f2f2f2;
+    }
+}
+
+.s0_logo_style {
+    border-color: #d9d9d9;
+    background-color: #fff;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+.s0_icon_style {
+    border-right: 1px solid #d9d9d9;
+    background-color: #fafafa;
+}
+
+/**--sidebar 一级--**/
+.s1_style {
+    background-color: #fff;
+}
+
+.s1_tip_style {
+    color: #fff;
+    background-color: #dc441e;
+}
+
+.s1_c_style {
+    background-color: #fff;
+}
+.s1_ic_style{
+    background-color: #efefef;
+}
+.s1_i_style {
+    border-color: #e5e5e5;
+    &:hover {
+        background-color: #f0f2f5;
+    }
+}
+
+
+
+.s1_if_style {
+    color: #333;
+    background-color: #efefef;
+    .iconfont{
+        color: $buttonSuccessBgColor;
+    }
+    &:hover {
+        background-color: #efefef;
+    }
+}
+
+.s1_i_shrink_style {
+    border-color: #e5e5e5;
+
+    &:hover {
+        color: #000;
+        background-color: #e5e7e8;
+    }
+}
+
+.s1_if_shrink_style {
+    color: #000;
+    background-color: #e5e7e8;
+    .iconfont{
+        color: $buttonSuccessBgColor;
+    }
+    &:hover {
+        color: #000;
+        background-color: #e5e7e8;
+    }
+}
+
+
+
+/**--sidebar 二级--**/
+.s2_style {
+    background-color: #efefef;
+    border-right: 1px solid #d9d9d9;
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.02);
+}
+
+.s2_c_style {
+    background-color: #efefef;
+}
+
+.s2_c_shrink_style {
+    background-color: #fff;
+}
+
+.s2_i_style {
+    &:hover {
+        background-color: #f0f2f5;
+    }
+}
+
+.s2_i_shrink_style {
+
+    &:hover {
+        background-color: #f3f3f3;
+    }
+}
+
+.s2_iaf_style {
+    color: #000;
+    background-color: #e5e7e8;
+    border-right-color: #e5e7e8;
+
+    &:hover {
+        background-color: #e5e7e8;
+    }
+}
+
+.s_id_style {
+    background-color: #efefef;
+    color: #999;
+
+    &:hover {
+        background-color: #efefef;
+        color: #999;
+    }
+}
+/**--nav--**/
+.n0_style {
+    background-color: #fff;
+    border-color: #d9d9d9;
+}
+
+.n_space_d_style {
+    background-color: #fff;
+    color: #333;
+}
+
+.n_sbtn_style {
+    background-color: #fff;
+    color: #555;
+    border-color: #d9d9d9;
+}
+
+.n_space_d_style:hover .n_sbtn_style {
+    border-color: $buttonDefaultBorderColor;
+    color: $buttonDefaultBorderColor;
+}
+
+.n_dv_c {
+    border-color: #d9d9d9;
+}
+
+.n_r_style {
+    color: #999;
+
+}
+
+.n_ra_style {
+    &:hover {
+        color: #333;
+    }
+}
+
+.n_list0_style {
+    background-color: #fff;
+
+    &:hover {
+        background-color: #f8f8f8;
+        border-color: #f8f8f8;
+    }
+}
+
+.n_list1_style {
+    background-color: #fff;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.12);
+}
+
+.n_list1_i_style {
+    &:hover {
+        background-color: #f0f0f0;
+    }
+}
+
+/**--menu样式集--**/
+.m_i_tab_style {
+    border-color: $buttonSuccessFocusBgColor;
+    background-color: #fff;
+}
+.m_nav_item_style{
+    border-bottom-color: transparent;
+    &:hover{
+        border-bottom-color: #089462;
+    }
+}
+.m_nav_active_item_style{
+    border-bottom-color: #00ab6d;
+    &:hover{
+        border-bottom-color:#00ab6d;
+    }
+}
+.m_btn_d {
+    background-color: #fff;
+    border-color: #d9d9d9;
+
+    &:hover {
+        background-color: #fafafa;
+    }
+}
+
+.m_tab_d {
+    background-color: #fff;
+    border-color: #d9d9d9;
+}
+
+.m_i_tab_style .m_tab_d:hover {
+    background-color: $buttonSuccessFocusBgColor;
+    color: #fff;
+}
+
+.m_tab_a {
+    background-color: $buttonSuccessBgColor;
+    color: #fff;
+}
+%COMMON_HAD_BG_BTN{
+    // text-shadow: 0 -1px 0 rgba(0, 0, 0, .12);
+    .iconfont{
+        color:rgba($color: #fff, $alpha: .7);
+    }
+    // &:hover {
+    //     box-shadow: 0px 3px 3px rgba(0, 0, 1, 0.15);
+    // }
+
+    // &:active {
+    //     box-shadow: 0 2px 0 rgba(0, 0, 0, .045);
+    // }
+}
+/**--按钮样式--**/
+@mixin eo-button ($bgColor, $color, $bgHoverColor:$bgColor, $hoverColor:$color) {
+    background-color: $bgColor;
+    color: $color;
+    
+    &:hover {
+        background-color: $bgHoverColor;
+        color: $hoverColor;
+        
+    }
+
+    &:disabled {
+        color: #999 !important;
+        background-color: #eee !important;
+        border-color: #d9d9d9 !important;
+        .iconfont{
+            color: #999 !important;
+        }
+    }
+}
+
+
+
+.eo_theme_btn_default {
+    // box-shadow: 0 2px 0 rgba(0,0,0,.045);
+    @include eo-button($buttonDefaultBgColor, #666, $buttonDefaultFocusBgColor, $buttonDefaultBorderColor);
+    border-color: #d9d9d9;
+    &:hover{
+        border-color: $buttonDefaultBorderColor;
+    }
+    // &:hover {
+    //     box-shadow: 0px 3px 3px rgba(0, 0, 1, 0.15);
+    // }
+}
+
+.eo_theme_btn_delete {
+    
+    @include eo-button($buttonDeleteBgColor, $buttonDeleteColor, $buttonDangerBgColor, $buttonQSColor);
+    @extend %COMMON_HAD_BG_BTN;
+}
+.btn_static_test_utac:hover+.eo_theme_btn_success{
+    background-color: #00b775;
+}
+.btn_static_test_utac:hover+.eo_theme_btn_info{
+    background-color: #3aa3ff;
+}
+.eo_theme_btn_success {
+    @include eo-button(#00ab6d, $buttonSuccessColor, #00b775, $buttonSuccessColor);
+    @extend %COMMON_HAD_BG_BTN;
+    &:active{
+        background-color: #008d5a;
+    }
+}
+
+.eo_theme_btn_info {
+    @include eo-button(#1890ff, $buttonQSColor, #3aa3ff, $buttonQSColor);
+    @extend %COMMON_HAD_BG_BTN;
+    &:active{
+        background-color: #137cdd;
+    }
+}
+
+.eo_theme_btn_orange {
+    @include eo-button(#FF9800, $buttonQSColor, #f47c36, $buttonQSColor);
+    @extend %COMMON_HAD_BG_BTN;
+}
+
+.eo_theme_btn_warning {
+    @include eo-button(#FF5722, $buttonQSColor, #f44336, $buttonQSColor);
+    @extend %COMMON_HAD_BG_BTN;
+}
+
+.eo_theme_btn_danger {
+    @include eo-button(#e83333, $buttonQSColor, #fd5858, $buttonQSColor);
+    @extend %COMMON_HAD_BG_BTN;
+    &:active{
+        background-color: #d52828;
+    }
+}

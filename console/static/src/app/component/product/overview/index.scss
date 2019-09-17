@@ -1,0 +1,86 @@
+overview-Product-Component {
+    .first-box {
+        background-color: #fff;
+        padding: 40px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .productInfo-box {
+        padding-top: 30px;
+    }
+
+    .btn-edit-project {
+        cursor: pointer;
+
+        &:hover {
+            color: $buttonInfoBgColor;
+            @extend %HOVER_ANIMATION;
+        }
+
+    }
+
+    .productInfo-ul {
+        margin-right: 140px;
+    }
+
+    .productInfo-il {
+        @include eo-line(30px);
+    }
+
+    .productInfo-name {
+        margin-right: 5px;
+    }
+
+    .project-operate {
+        margin-top: 30px;
+        margin-bottom: -30px;
+        padding-top: 30px;
+        border-top: 1px solid #d9d9d9;
+        flex-wrap: wrap;
+    }
+
+    .operate-box {
+        width: 300px;
+        height: 108px;
+        border: 1px solid #d9d9d9;
+        margin-bottom: 30px;
+        margin-right: 30px;
+
+        &:hover {
+            box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.05);
+        }
+    }
+
+    .operate-box-top {
+        height: 55px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .operate-box-bottom {
+        border-radius: 3px;
+        border-top: 1px solid #d9d9d9;
+        background-color: #f9f9f9;
+    }
+    .common-btn {
+        @include eo-line(50px);
+        color: #666;
+        flex:1;
+        &:hover {
+            border-color: #d9d9d9;
+            color: $buttonInfoBgColor;
+            @extend %HOVER_ANIMATION;
+        }
+        .common_btn_divide {
+            display: inline-block;
+            vertical-align: middle;
+            @include eo-line(30px);
+            position: relative;
+            right: 25%;
+            border-left: 1px solid #d9d9d9;
+        }
+    }
+    .list-box {
+        margin: 0 20px 20px 20px;
+    }
+}

@@ -1,0 +1,108 @@
+<div class="account-setting-common-scss">
+    <article class="common-table-div">
+        <p class="title-p">
+            <b>告警设置</b>
+        </p>
+        <form name="ConfirmForm">
+            <fieldset ng-disabled="!$ctrl.data.isEdit">
+                <p class="mb10 mt20 f_row_ac">
+                    <span>启用告警</span>
+                    <a class="iconfont open-alert-btn"
+                        ng-class="{'icon-huadongkaiguan-dakai':$ctrl.ajaxResponse.alertInfo.alertStatus,'icon-huadongkaiguan-guanbi':!$ctrl.ajaxResponse.alertInfo.alertStatus,'disabled-btn':!$ctrl.data.isEdit}"
+                        ng-click="$ctrl.fun.startAlert()"></a>
+                </p>
+                <p class="mb10 mt20">发件人邮箱
+                    <span class="tips-span">*发送告警信息的邮箱</span>
+                </p>
+                <p>
+                    <input autocomplete="off" class="eo-input" type="text" ng-model="$ctrl.ajaxResponse.alertInfo.sender">
+                </p>
+                <p class="mb10 mt20">发件人密码
+                    <span class="tips-span">*发送告警信息邮箱的密码</span>
+                </p>
+                <p>
+                    <input autocomplete="off" class="eo-input" type="text"
+                        ng-model="$ctrl.ajaxResponse.alertInfo.senderPassword">
+
+                </p>
+                <p class="mb10 mt20">smtp地址</p>
+                <p>
+                    <input autocomplete="off" class="eo-input" type="text"
+                        ng-model="$ctrl.ajaxResponse.alertInfo.smtpAddress">
+
+                </p>
+                <p class="mb10 mt20">smtp端口</p>
+                <p>
+                    <input autocomplete="off" class="eo-input" type="text"
+                        ng-model="$ctrl.ajaxResponse.alertInfo.smtpPort">
+
+                </p>
+                <p class="mb10 mt20">邮件协议</p>
+                <p>
+                    <select class="eo-select" ng-model="$ctrl.ajaxResponse.alertInfo.smtpProtocol"
+                        ng-options="item.value as item.key for item in $ctrl.CONST.ALERT_PROTOCOL_ARR "></select>
+                </p>
+
+                <div class="mt20 eo-block-container w_50percent">
+                    <div class="eo-tab-menu">
+                        <div class="pull-left item-tab" ng-repeat="item in $ctrl.CONST.ALERT_METHOD_ARR"
+                            ng-class="{'active-item':$ctrl.data.menu===item.value}"
+                            ng-click="$ctrl.fun.changeAlertMenu(item.value)">
+                            <span>{{item.key}}</span>
+                            <tip-directive ng-if="item.tip" input="{{item.tip}}"></tip-directive>
+                        </div>
+                    </div>
+                    <div class="pb20 plr20" ng-switch="$ctrl.data.menu">
+                        <div ng-switch-when="api">
+                            <!--API告警html-->
+                            <p class="mb10 mt20">单位时间
+                                <span class="tips-span">*单位时间内，API请求失败到达设定阀值则进行告警</span>
+                            </p>
+                            <p>
+                                <select class="eo-select" ng-model="$ctrl.ajaxResponse.alertInfo.apiAlertInfo.alertPeriodType"
+                                    ng-options="item.value as item.key for item in $ctrl.CONST.alertPeriodTypeQuery "></select>
+                            </p>
+                        </div>
+                        <div>
+                            <p class="mb10 mt20">告警地址
+                                <span class="tips-span">*接收告警信息的API地址</span>
+                            </p>
+                            <p>
+                                <input autocomplete="off" class="eo-input" type="text"
+                                    ng-model="$ctrl.ajaxResponse.alertInfo[$ctrl.data.menu+'AlertInfo'].alertAddr">
+
+                            </p>
+                            <p class="mb10 mt20">接收邮箱</p>
+                            <table>
+                                <tr ng-repeat="item in $ctrl.ajaxResponse.alertInfo[$ctrl.data.menu+'AlertInfo'].userEmail track by $index">
+                                    <td>
+                                        <input name="email_{{$ctrl.data.menu}}{{$index}}" autocomplete="off"
+                                            class="eo-input header-content-input" type="text" placeholder="邮箱"
+                                            ng-model="item.value"
+                                            ng-change="$ctrl.fun.changeNotice({$last:$last})"
+                                            ng-class="{'eo-input-error':$ctrl.fun.checkIsValidEmail(item.value)}">
+                                    </td>
+                                    <td>
+                                        <a class="iconfont icon-shanchu number-label"
+                                            ng-click="$ctrl.fun.deleteNotice({$index:$index})"
+                                            ng-hide="$last||!$ctrl.data.isEdit"></a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+            <div class="btn-group-li" ng-show="$ctrl.data.isEdit"
+                ng-if="$ctrl.service.authority.permission.default.alertManagement.edit">
+                <button class="eo_theme_btn_success pull-left" ng-click="$ctrl.fun.editAlert()">保存</button>
+                <button class="eo_theme_btn_default" type="button" ng-click="$ctrl.fun.cancleAlert()">取消</button>
+            </div>
+            <div class="btn-group-li" ng-hide="$ctrl.data.isEdit"
+                ng-if="$ctrl.service.authority.permission.default.alertManagement.edit">
+                <button class="eo_theme_btn_success" type="button" ng-click="$ctrl.fun.authorityToEdit()">编辑</button>
+            </div>
+        </form>
+    </article>
+</div>

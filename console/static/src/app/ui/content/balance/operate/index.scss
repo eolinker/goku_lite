@@ -1,0 +1,19 @@
+balance-operate {
+    .first-level-article {
+        border: 1px solid #e5e5e5;
+        background-color: #fff;
+        padding: 10px;
+    }
+    .input_cluster_blo,.select_cluster_blo {
+        width: 578px;
+    }
+    input[type=text],select{
+        &:disabled{
+            background-color:#fafafa;
+            cursor:not-allowed;
+        }
+    }
+    tip-directive{
+        margin-left: 0;
+    }
+}

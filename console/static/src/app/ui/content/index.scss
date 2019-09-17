@@ -1,0 +1,107 @@
+/**
+* @author 银云信息科技有限公司
+*/
+home {
+    >div{
+        min-width: 1000px;
+    }
+    .home-content {
+        .home-div {
+            margin: $HOME-NAVBAR-HEIGHT 0 0 $HOME-SIDEBAR-LEFT;
+
+            .home-header {
+                li {
+                    button {
+                        width: 100px;
+                        @include eo-line(30px);
+                        margin-top: 15px;
+
+                        span {
+                            margin-right: 5px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .shrink-div {
+        .home-content {
+            .home-div {
+                margin-left: 51px;
+            }
+        }
+    }
+
+    .home-common-only-list-div {
+        padding: 0 $PLATE_PADDING $PLATE_PADDING;
+    }
+
+    .home-common-project-list {
+        .common_scss_list {
+            margin: $PLATE_PADDING;
+        }
+
+        .common-menu-fixed-seperate {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-bottom: none;
+        }
+    }
+}
+balance-service,
+balance-list,
+plugin-Default {
+    menu-Default-Common-Component .common_menu_ul .search-form {
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
+        height: auto;
+    }
+}
+.checkbox-btn {
+    text-align: center;
+    border-radius: 3px;
+    border: 1px solid #bcdffb;
+    background-color: #e3f7ff;
+    color: $buttonInfoFocusBgColor;
+    padding: 0 5px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+    .eo-checkbox {
+        margin: 6px 5px 0 0;
+        @include eo-line(15px);
+        width: 15px;
+        border-color: $buttonInfoFocusBgColor;
+    }
+}
+.home-common-has-group-div {
+    margin: 0 0 0 $PLATE_HOME_SIDEBAR_LEFT;
+}
+
+
+.input-icon-span {
+    position: absolute;
+    display: inline-block;
+    line-height: 38px;
+    margin: 1px;
+    text-indent: 15px;
+}
+
+.display-container-div {
+    display: table;
+    background-color: #f7f8fc;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: -1;
+}
+.menu-divide-span {
+    line-height: 34px;
+    margin-top: -4px;
+    float: left;
+    color: #999;
+    font-weight: lighter;
+}

@@ -1,0 +1,74 @@
+group-default-common-component {
+    .cc-group-container {
+        margin-top: $PLATE_PADDING;
+        border: 1px solid #d9d9d9;
+        margin-left: $PLATE_PADDING;
+    }
+    .divide-li {
+        border-bottom-style: dashed;
+        border-bottom-width: 1px;
+    }
+
+    .more-btn-box {
+        position: relative;
+        
+    }
+    .more-btn-left {
+        border-radius: 3px 0 0 3px;
+    }
+
+    .more-btn-right {
+        border-left: 1px solid rgba(0, 0, 0, .1);
+        border-radius: 0 3px 3px 0;
+        padding: 0 5px;
+        
+    }
+    .more-btn-right:focus+.more-btn-list {
+        display: block;
+    }
+    .more-btn-list {
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #d9d9d9;
+        border-radius: 3px;
+        z-index: 2;
+        left: 0;
+        display: none;
+        
+    }
+    .item-li{
+        @include eo-line(35px);
+        cursor: pointer;
+        text-align: left;
+        min-width: 60px;
+        padding: 0 20px;
+        white-space: nowrap;
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: #fafafa;
+            text-decoration: underline;
+        }
+    }
+    .shrink-btn:hover {
+        color: #00b775;
+    }
+    .shrink-gdcc {
+        width: 60px;
+        background-color: #fff;
+    }
+
+    .untop-gdcc .group-ul{
+        @include eo-height(100%, 41px);
+    }
+
+}
+
+.shrink-group-div {
+    .home-common-has-group-div {
+        margin: 0 0 0 76px;
+    }
+    .common-scss-group .title-ul{
+        border-bottom: none;
+    }
+}

@@ -1,0 +1,57 @@
+<menu-default-common-component class="mt10" main-object="$ctrl.component.menuObject">
+</menu-default-common-component>
+<article class="first-level-article">
+        <tip-common-component version="plug" status="{{$ctrl.data.interaction.response.pluginInfo.official?'official':'operate'}}"></tip-common-component>
+
+    <ng-form class="form_plugin_opr dp_b" name="editForm">
+        <div class="first-part div-part">
+            <p class="title-p">名称：</p>
+            <p>
+                <input autocomplete="off" class="eo-input" type="text" name="name" ng-model="$ctrl.data.interaction.response.pluginInfo.pluginName"
+                    ng-class="{'eo-input-error':(($ctrl.data.info.submited||editForm.name.$dirty)&&editForm.name.$invalid)}" ng-disabled="$ctrl.data.interaction.response.pluginInfo.official||$ctrl.data.from=='edit'"
+                    maxlength="255" required><span class="eo-status-danger" ng-if="$ctrl.data.from=='add'">&nbsp;&nbsp;&nbsp;*插件名需与插件代码文件名一致，保存后不可更改</span>
+            </p>
+            <!-- <p class="title-p">插件版本：</p>
+            <p>
+                <input autocomplete="off" class="eo-input" type="text" name="version" ng-model="$ctrl.data.interaction.response.pluginInfo.version"
+                    ng-class="{'eo-input-error':($ctrl.data.info.submited||editForm.version.$dirty)&&editForm.version.$invalid}" ng-disabled="$ctrl.data.interaction.response.pluginInfo.official"
+                    maxlength="255" placeholder="如1.4.1" ng-pattern="/^[0-9.]{1,6}$/" required>
+            </p> -->
+            <p class="title-p">插件类型：</p>
+            <p>
+                <select class="eo-input" ng-model="$ctrl.data.interaction.response.pluginInfo.pluginType" ng-disabled="$ctrl.data.interaction.response.pluginInfo.official||$ctrl.data.from=='edit'">
+                    <option value="0">全局</option>
+                    <option value="1">策略</option>
+                    <option value="2">API</option>
+                </select><span class="eo-status-danger" ng-if="$ctrl.data.from=='add'">&nbsp;&nbsp;&nbsp;*保存后不可更改</span>
+            </p>
+            <p class="title-p">插件优先级（0-3000）：</p>
+            <p>
+                <input autocomplete="off" class="eo-input" type="text" name="pluginPriority" ng-model="$ctrl.data.interaction.response.pluginInfo.pluginPriority"
+                    ng-class="{'eo-input-error':(($ctrl.data.info.submited||editForm.pluginPriority.$dirty)&&editForm.pluginPriority.$invalid)}" ng-disabled="$ctrl.data.interaction.response.pluginInfo.official"
+                    ng-pattern="/(^(([1-9]\d{0,2})|([1-2]\d{0,3})|(3000))$)|(^0$)/" placeholder="不可与已有的插件优先级重复" required>
+            </p>
+            <p class="title-p">描述信息：</p>
+            <p>
+                <input autocomplete="off" class="eo-input" type="text" name="pluginDesc" ng-model="$ctrl.data.interaction.response.pluginInfo.pluginDesc"
+                    ng-class="{'eo-input-error':($ctrl.data.info.submited&&editForm.pluginDesc.$invalid)}" ng-disabled="$ctrl.data.interaction.response.pluginInfo.official"
+                    maxlength="255">
+            </p>
+            <p class="title-p">错误处理方式：</p>
+            <p>
+                <select class="eo-input" ng-model="$ctrl.data.interaction.response.pluginInfo.isStop" ng-disabled="$ctrl.data.interaction.response.pluginInfo.official">
+                    <option value="1">中断请求并返回错误信息</option>
+                    <option value="0">继续后续操作</option>
+                </select>
+            </p>
+            <p class="title-p" ng-show="$ctrl.data.interaction.response.pluginInfo.pluginType=='0'">插件配置文件信息：</p>
+            <p ng-class="{'eo-static-hidden':$ctrl.data.interaction.response.pluginInfo.pluginType!='0'}">
+                <ace-editor-ams-component class="ace-editor-container" set-model='$ctrl.data.interaction.response.pluginInfo.pluginConfig'></ace-editor-ams-component>
+            </p>
+        </div>
+    </ng-form>
+</article>
+<footer ng-init="$ctrl.fun.init()">
+    <div load-directive="$ctrl.fun.requestProcessing(arg)" interaction="{request:{delay:true}}">
+    </div>
+</footer>

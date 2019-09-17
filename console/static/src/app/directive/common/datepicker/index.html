@@ -1,0 +1,17 @@
+<div ng-show='interaction.show' class='datapicker_time_directive'>
+    <div>
+        <div class='f_column plr20 f_as mt20'>
+            <span
+                class='time_desc'>开始：{{request.startTime?(request.startTime | currentTimeFilter:{min:'day'}):'' }}</span>
+            <span class='time_desc'>结束：{{request.endTime?(request.endTime | currentTimeFilter:{min:'day'}):'' }}</span>
+        </div>
+        <div>
+            <span class='pull-left' range=true uib-datepicker ng-model='request'
+                datepicker-options='data.datePicker.duration.option'></span>
+        </div>
+        <div class='datapicker_footer'>
+            <button type="button" class='eo_theme_btn_success mr15' ng-click='fun.confirm({$event:$event})'>确定</button>
+            <button type="button" class='eo_theme_btn_default' ng-click='fun.close({$event:$event})'>取消</button>
+        </div>
+    </div>
+</div>

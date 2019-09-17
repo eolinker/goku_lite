@@ -1,0 +1,59 @@
+<div class="eo-sidebar s_style  {{$ctrl.mainObject.baseInfo.class}}"
+    ng-class="{'default-div':!$ctrl.service.sidebar.isShrink,'shrink-sidebar-div':$ctrl.service.sidebar.isShrink}">
+    <ul class="static-sidebar">
+        <li class="item-li s0_style f_row static-li" ng-repeat='item in $ctrl.mainObject.baseInfo.staticQuery'
+            ng-click="$ctrl.fun.clickMenu('default',item)">
+            <span class="title-icon iconfont {{item.icon}} s0_icon_style"></span>
+            <span>{{item.name}}{{$ctrl.data.autoSetShrink}}</span>
+        </li>
+        <li class="logo-li s0_logo_style static-li f_row_ac" ng-if="!($ctrl.mainObject.baseInfo.staticQuery.length>0)">
+            <span class="img-span"
+                style="background-size: contain;background-image:url('app/assets/images/logo_white_mini.png')" >&nbsp;</span>
+            <span class="item-span" ng-if="!$ctrl.service.sidebar.isShrink">GOKU GATEWAY CE</span>
+        </li>
+    </ul>
+    <div class="common-sidebar s1_style ">
+        <ul class="item-container-ul s1_c_style overview_step3_class">
+            <li class="item-container-li" ng-repeat='item in $ctrl.mainObject.baseInfo.menu'
+                ng-init="item.mark=='text'?'':$ctrl.fun.initMenu({item:item})"
+                ng-show="item.power==-1||(item.power&&($ctrl.powerObject[item.power][item.powerName||'look']&&((item.$index&&$ctrl.pluginList[item.$index].useStatus)||!item.$index)))">
+                <p class="item-li first-sidebar {{item.class}}"
+                    ng-class="{'c9':item.unImportantText,'s1_ic_style':$ctrl.data.itemSpreedObject[item.sref]==1&&!$ctrl.service.sidebar.isShrink&&item.childList.length>0,'s1_i_style':!$ctrl.service.sidebar.isShrink,'s1_i_shrink_style':$ctrl.service.sidebar.isShrink,'s1_if_style':!$ctrl.service.sidebar.isShrink&&$ctrl.data.current.sref==item.sref&&item.childList.length>0,'s1_if_shrink_style':($ctrl.service.sidebar.isShrink||!item.childList)&&$ctrl.data.current.sref==item.sref,'divide-li':item.divide==1,'divide-solid-top-li':item.divide==2&&(!item.unDividePower||(item.unDividePower&&!$ctrl.powerObject[item.unDividePower]['look'])),'divide-solid-bottom-li':item.divide==3,'s_id_style disable-menu-li':(item.permissionKey=='disabled'&&$ctrl.permissionObject[item.permission].disabled==item.permissionValue)||item.mark=='text'}"
+                    ng-click="$ctrl.fun.clickMenu('default',item)">
+                    <span ui-sref="{{item.sref}}" ng-if="item.sref"></span>
+                    <span class="pull-left title-icon iconfont {{item.icon}}"></span>
+                    <span class=" pull-left">{{item.name}}</span>
+                    <tip-directive class="tip_scc" input="<p>{{item.warningTip}}</p>" ng-if="item.warningTip">
+                    </tip-directive>
+                    <label class="s1_tip_style"
+                        ng-if="item.tip&&$ctrl.permissionObject[item.permission].disabled==item.permissionValue">{{item.tip}}</label>
+                    <span class="fs12 fwb mr10 iconfont pull-right ti0" ng-if="item.childList.length>0"
+                        ng-class="{'icon-xuanzeqizhankai':$ctrl.data.itemSpreedObject[item.sref]!=1,'icon-xuanzeqishouqi':$ctrl.data.itemSpreedObject[item.sref]==1}"></span>
+
+                </p>
+                <div class="list-item-div1"
+                    ng-show="$ctrl.data.itemSpreedObject[item.sref]==1||$ctrl.service.sidebar.isShrink"
+                    ng-class="{'had-child-div':item.childList.length>0&&$ctrl.service.sidebar.isShrink,'un-child-div':!item.childList.length&&$ctrl.service.sidebar.isShrink}">
+                    <div
+                        ng-class="{'s2_c_style':!$ctrl.service.sidebar.isShrink,'s2_c_shrink_style float-s2':$ctrl.service.sidebar.isShrink}">
+                        <p class="parent-router-p">{{item.name}}</p>
+                        <p ng-repeat='childItem in item.childList' class="item-li {{childItem.class}}"
+                            ui-sref-active="s2_iaf_style" ng-click="$ctrl.fun.clickMenu('child',childItem,item)"
+                            ng-show="(!childItem.power)||(childItem.power&&$ctrl.powerObject[childItem.power][childItem.powerName||'look'])"
+                            ng-class="{'s2_i_style':!$ctrl.service.sidebar.isShrink,'s2_i_shrink_style':$ctrl.service.sidebar.isShrink,'s_id_style disable-menu-li':childItem.permissionKey=='disabled'&&$ctrl.permissionObject[childItem.permission].disabled==childItem.permissionValue}">
+                            <span ui-sref="{{childItem.sref}}"></span>
+                            <span class="group-name1 pull-left">{{childItem.name}}</span>
+                            <label class="s1_tip_style"
+                                ng-if="childItem.tip&&$ctrl.permissionObject[childItem.permission].disabled==childItem.permissionValue">{{childItem.tip}}</label>
+                        </p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="footer_sidebar_cc cp" ng-class="{'shrink_footer_sidebar_cc':$ctrl.service.sidebar.isShrink}" ng-click="$ctrl.fun.shrinkSidebar()">
+        <span class="iconfont icon-zhediedaohang fs24 pull-left"></span>
+        <span class="text_footer_sidebar_cc">隐藏侧边栏</span>
+        <span ng-if="$ctrl.service.sidebar.isShrink" move-tip-directive parent-class-name="eo-sidebar" able-class-name="footer_sidebar_cc" tips-style='{"left":10,"top":-3}' tips-text="展开侧边栏"></span>
+    </div>
+</div>

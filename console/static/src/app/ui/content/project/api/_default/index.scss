@@ -1,0 +1,11 @@
+api-default{
+    list-default-common-component .fixed-height-list{
+        @include eo-height(100%,183px);
+    }
+}
+api-Group{
+    .common-scss-group{
+        margin-top: 65px;
+        @include eo-height(100%,132px);
+    }
+}

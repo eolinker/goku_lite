@@ -1,0 +1,44 @@
+.sv-group-helper {
+    position: fixed !important;
+    z-index: 99999;
+    margin: 0 !important;
+    .iconfont {
+        // color: rgba(0, 0, 0, 0.1);
+    }
+    .group-li {
+        background-color: rgba(221, 221, 221,0.3);
+        color: #999;
+        &:hover{
+            background-color: rgba(221, 221, 221,0.3);
+        }
+    }
+}
+.sv-group-candidate-top{
+    border-top: 2px solid #26A69A;
+}
+.sv-group-candidate-bottom{
+    border-bottom: 2px solid #26A69A;
+}
+.sv-group-sort{
+    // border:2px solid #e5e5e5;
+}
+.sv-group-candidate {
+    border:2px solid #26A69A;
+}
+
+
+.sv-group-placeholder {
+    opacity: 0.5;
+}
+
+.sv-sorting-in-progress {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.sv-visibility-hidden {
+    visibility: hidden !important;
+    opacity: 0 !important;
+}

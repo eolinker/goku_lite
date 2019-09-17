@@ -1,0 +1,8 @@
+ace-editor-ams-component{
+	display: block;
+    border: 1px solid #e5e5e5;
+    margin: 0 0 10px 0;
+    border-radius: 3px;
+    max-width: 100%;
+    @include eo-width(100%,2px);
+}

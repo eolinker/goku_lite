@@ -1,0 +1,161 @@
+gpedit-inside-auth {
+    .first-level-article {
+        border: 1px solid #e5e5e5;
+        background-color: #fff;
+        font-size: 14px;
+        padding: 10px 10px 10px 10px;
+    }
+    .disabled-table {
+        td {
+            background-color: #fafafa;
+            cursor: not-allowed;
+        }
+    }
+    .title-p {
+        line-height: 50px;
+    }
+    input[type=text] {
+        width: 578px;
+    }
+    select {
+        text-indent: 0;
+        width: 580px;
+    }
+    input[type=text],
+    select,
+    textarea {
+        &:disabled {
+            background-color: #fafafa;
+            cursor: not-allowed;
+        }
+    }
+    .common-table {
+        width: 100%;
+        border-spacing: 0;
+        table-layout: fixed;
+        td {
+            font-size: 14px;
+            height: 40px;
+            line-height: 20px;
+            cursor: default;
+            position: relative;
+            .eo-input {
+                border: none;
+                width: 100%;
+                border-radius: 0;
+                height: 40px;
+                display: block;
+            }
+            &:nth-child(n+2) {
+                border-left: 1px dashed #e5e5e5;
+            }
+            .auto-complete-message {
+                line-height: 20px;
+                text-indent: 10px;
+                font-size: 12px;
+                margin-left: -1px;
+            }
+            .disabled-div {
+                background-color: #fafafa;
+                cursor: not-allowed;
+            }
+            .item-textarea {
+                border: none;
+                border-radius: 0;
+                display: block;
+                position: absolute;
+                text-indent: 0;
+                line-height: 1.65em;
+                padding: 10px;
+                height: 100%;
+            }
+            .textarea-div {
+                white-space: pre-wrap;
+                height: auto;
+                padding: 0 10px;
+                text-indent: 0;
+                line-height: 1.65em;
+                @include eo-width(100%, 20px);
+                max-height: 200px;
+                min-height: 43px;
+            }
+        }
+        .required-td {
+            width: 40px;
+            text-align: center;
+            text-indent: 0;
+            label {
+                margin-right: 0;
+            }
+        }
+        .operation-td {
+            text-indent: 0;
+            padding-left: 10px;
+            width: 100px;
+        }
+        thead {
+            background-color: #fafafa;
+            td {
+                text-indent: 10px;
+            }
+        }
+        tbody {
+            .number-label {
+                height: 25px;
+                line-height: 27px;
+                border-radius: 3px;
+                background-color: #f2f2f2;
+                color: #9e9e9e;
+                display: inline-block;
+                text-align: center;
+                border: 1px solid #e5e5e5;
+                padding: 0 5px;
+                font-size: 12px;
+            }
+            .icon-shanchu {
+                &:hover {
+                    background-color: #D32F2F;
+                    color: #fff;
+                    border: 1px solid #C62828;
+                }
+            }
+            .icon-index-magicwand {
+                &:hover {
+                    background-color: #e5e5e5;
+                }
+            }
+            .radio-input {
+                border: 1px solid #e5e5e5;
+                @include eo-line(23px);
+                width: 23px;
+                font-size: 13px;
+                margin-right: 4px;
+                cursor: pointer;
+                display: inline-block;
+                text-align: center;
+                border-radius: 3px;
+            }
+            tr {
+                td {
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    height: 40px;
+                }
+                &:nth-last-child(n+2) {
+                    td {
+                        border-bottom: 1px dashed #e5e5e5;
+                    }
+                }
+                &:first-child {
+                    td {
+                        border-top: 1px solid #e5e5e5;
+                    }
+                }
+            }
+        }
+    }
+    .margin-top-60 {
+        margin-top: 60px;
+    }
+}

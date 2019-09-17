@@ -1,0 +1,43 @@
+<div class="account-setting-common-scss">
+    <article class="common-table-div">
+        <p class="title-p">
+            <b>基本设置</b>
+        </p>
+        <form name="BasicForm">
+            <p class="mb10 mt20">调用统计更新频率</p>
+            <p>
+                <select class="eo-select" ng-disabled="!$ctrl.data.status.config.isEdit"
+                    ng-model="$ctrl.interaction.response.gatewayConfig.monitorUpdatePeriod"
+                    ng-options="item.value as item.key for item in $ctrl.constant.monitorUpdatePeriodQuery "></select>
+                <span class="tips-span">监控面板统计调用信息的更新频率</span>
+            </p>
+            <p class="mb10 mt20">请求成功状态码</p>
+            <p>
+                <input autocomplete="off" class="eo-input" type="text" placeholder="多个状态码用英文逗号隔空"
+                    ng-model="$ctrl.interaction.response.gatewayConfig.successCode"
+                    ng-disabled="!$ctrl.data.status.config.isEdit" required>
+                <span class="tips-span">设定请求成功的状态码，用于请求成功次数的统计，多个状态码用英文逗号隔开</span>
+            </p>
+            <p class="mb10 mt20">节点同步频率</p>
+            <p>
+                <input autocomplete="off" class="eo-input" name="nodeUpdatePeriod" type="text" placeholder="节点同步频率"
+                    ng-model="$ctrl.interaction.response.gatewayConfig.nodeUpdatePeriod"
+                    ng-disabled="!$ctrl.data.status.config.isEdit" ng-pattern="/^[1-9]\d*$/"
+                    ng-class="{'eo-input-error':BasicForm.nodeUpdatePeriod.$invalid&&(BasicForm.nodeUpdatePeriod.$dirty||$ctrl.data.status.config.submitted)}"
+                    required>
+                <span class="tips-span">节点从控制台同步信息的频率，单位为秒，update_period的值</span>
+            </p>
+            <div class="btn-group-li" ng-show="$ctrl.data.status.config.isEdit"
+                ng-if="$ctrl.service.authority.permission.default.gatewayConfig.edit">
+                <button class="eo_theme_btn_success pull-left" ng-click="$ctrl.fun.editBasicInfo()">保存</button>
+                <button class="eo_theme_btn_default" type="button" ng-click="$ctrl.fun.cancleBasicInfo()">取消</button>
+            </div>
+            <div class="btn-group-li" ng-hide="$ctrl.data.status.config.isEdit"
+                ng-if="$ctrl.service.authority.permission.default.gatewayConfig.edit">
+                <button class="eo_theme_btn_success" type="button"
+                    ng-click="$ctrl.data.status.config.isEdit = true;">编辑</button>
+            </div>
+        </form>
+    </article>
+
+</div>

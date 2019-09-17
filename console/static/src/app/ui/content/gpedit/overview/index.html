@@ -1,0 +1,23 @@
+<div class="home-common-project-list">
+    <menu-default-common-component authority-object="{showTitle:1}" main-object="$ctrl.component.menuObject">
+    </menu-default-common-component>
+    <div class="mlr15 mt10">
+        <div class="item_gpedit_overview f_row f_js f_ac eo-tab-container p15" ng-click="$ctrl.fun.enterGpedit('open')">
+            <div>
+                <p class="f_row_ac">
+                    <b class="fs16 mr5">开放策略</b>
+                    <span class="ml5 ptb2 plr5" ng-class="{'eo-color-danger':$ctrl.ajaxResponse.openGpeditInfo.enableStatus===0,'eo-color-success':$ctrl.ajaxResponse.openGpeditInfo.enableStatus===1}">{{$ctrl.ajaxResponse.openGpeditInfo.enableStatus?"启用":"停用"}}</span>
+                </p>
+                <p class="mt10">系统自带访问策略，使用开放策略时不需要传递策略 ID 参数</p>
+            </div>
+            <div class="iconfont icon-xuanzeqixiayige fs18 fwb"></div>
+        </div>
+        <div class="f_row item_gpedit_overview f_js f_ac eo-tab-container p15 mt15" ng-click="$ctrl.fun.enterGpedit('common')">
+            <div>
+                <p><b class="fs16">普通策略</b></p>
+                <p class="mt10">自定义访问策略，需要传递策略 ID 参数</p>
+            </div>
+            <div class="iconfont icon-xuanzeqixiayige fs18 fwb"></div>
+        </div>
+    </div>
+</div>

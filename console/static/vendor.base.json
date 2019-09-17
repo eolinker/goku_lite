@@ -1,0 +1,7 @@
+[
+	"libs/angular/angular.js",
+    "bower_components/angular-resource/angular-resource.js",
+    "libs/angular-ui-router/release/angular-ui-router.js",
+    "bower_components/oclazyload/dist/ocLazyLoad.js",
+    "bower_components/angular-md5/angular-md5.min.js"
+]

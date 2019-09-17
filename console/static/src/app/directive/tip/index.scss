@@ -1,0 +1,20 @@
+tip-directive {
+    display: inline-flex;
+    height: 20px;
+    line-height: 20px;
+    margin-left: 5px;
+    *{
+        text-indent: 0;
+    }
+    .iconfont {
+        color: rgba(0, 0, 0, .5);
+        cursor: help;
+        display: inline-block;
+        font-weight: initial;
+    }
+    &:hover {
+        .tips-message {
+            visibility: visible;
+        }
+    }
+}

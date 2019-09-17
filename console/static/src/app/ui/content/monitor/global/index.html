@@ -1,0 +1,129 @@
+<!-- author：广州银云信息科技有限公司 -->
+<overview-product-component main-object="$ctrl.component.overviewObject"></overview-product-component>
+<div class="plr30 pt25 mb65 panel-ui-div">
+    <div class="f_row mb25">
+        <div class="eo-tab-container item_panel mr25">
+            <div class="eo-tab-menu"><span class="item-tab">网关基本信息</span></div>
+            <div class="f_row_ac f_jc h_70 p20 tac">
+                <div class="mr80">
+                    <p class="fs20">V{{$ctrl.ajaxResponse.monitorInfo.baseInfo.version}}</p>
+                    <p class="c999 mt20">版本</p>
+                </div>
+                <div class="mr80">
+                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.baseInfo.clusterCount||0}}</p>
+                    <p class="c999 mt20">集群</p>
+                </div>
+                <div class="mr80">
+                    <p class="fs20">
+                        {{$ctrl.ajaxResponse.monitorInfo.baseInfo.nodeCount}}
+                    </p>
+                    <p class="c999 mt20">节点</p>
+                </div>
+                <div>
+                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.baseInfo.redisCount}}</p>
+                    <p class="c999 mt20">REDIS</p>
+                </div>
+            </div>
+        </div>
+        <div class="eo-tab-container item_panel">
+            <div class="eo-tab-menu"><span class="item-tab">API信息</span></div>
+            <div class="f_row_ac f_jc h_70 p20 tac">
+                <div class="mr80">
+                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.baseInfo.projectCount}}</p>
+                    <p class="c999 mt20">项目</p>
+                </div>
+                <div class="mr80">
+                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.baseInfo.apiCount}}</p>
+                    <p class="c999 mt20">API</p>
+                </div>
+                <div>
+                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.baseInfo.strategyCount}}</p>
+                    <p class="c999 mt20">访问策略</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p class="mb25 bbd divide_panel"></p>
+    <div class="f_row mb25">
+        <select class="eo-select mr10" ng-model="$ctrl.data.cluster"
+            ng-options="item.name as item.title for item in $ctrl.ajaxResponse.clusterArr"
+            ng-change="$ctrl.fun.changeClutser()"></select>
+        <div class="time_panel">
+            <a ng-repeat="tabItem in $ctrl.data.tabSummaryList" class="item_time_panel"
+                ng-class="{'item_time_active_panel':$ctrl.ajaxRequest.table.period==tabItem.active}"
+                ng-click="$ctrl.fun.changeMenu('basic',{item:tabItem,$event:$event})" ng-switch="tabItem.type">
+                <span ng-switch-default>{{tabItem.name}}</span>
+                <div ng-switch-when="html">
+                    <span>{{$ctrl.ajaxRequest.table.beginTime?($ctrl.ajaxRequest.table.beginTime+' - '+$ctrl.ajaxRequest.table.endTime):'自定义时间段'}}</span>
+                    <p datepicker-times-directive="$ctrl.fun.tableFilterTime(arg)"
+                        interaction="$ctrl.directive.tableTimeObject"></p>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="f_row mb25">
+        <div class="eo-tab-container item_panel mr25">
+            <div class="eo-tab-menu"><span class="item-tab">访问统计</span></div>
+            <div class="f_row_ac f_jc h_70 p20 tac">
+                <div class="mr80">
+                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.gatewayRequestInfo.gatewayRequestCount}}</p>
+                    <p class="c999 mt20">请求到达总数</p>
+                </div>
+                <div class="mr80">
+                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.gatewayRequestInfo.gatewayErrorCount||0}}</p>
+                    <p class="c999 mt20">请求异常数量</p>
+                </div>
+                <div class="mr80">
+                    <p class="fs20">
+                        {{$ctrl.ajaxResponse.monitorInfo.gatewayRequestInfo.gatewaySuccessRate}}
+                    </p>
+                    <p class="c999 mt20">请求成功率</p>
+                </div>
+            </div>
+        </div>
+        <div class="eo-tab-container item_panel">
+            <div class="eo-tab-menu"><span class="item-tab">转发统计</span></div>
+            <div class="f_row_ac f_jc h_70 p20 tac">
+                <div class="mr80">
+                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.proxyRequestInfo.proxyRequestCount}}</p>
+                    <p class="c999 mt20">请求转发总数</p>
+                </div>
+                <div class="mr80">
+                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.proxyRequestInfo.proxyErrorCount||0}}</p>
+                    <p class="c999 mt20">转发异常数量</p>
+                </div>
+                <div class="mr80">
+                    <p class="fs20">
+                        {{$ctrl.ajaxResponse.monitorInfo.proxyRequestInfo.proxySuccessRate}}
+                    </p>
+                    <p class="c999 mt20">转发成功率</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="f_row mb25">
+        <div class="eo-tab-container item_panel">
+            <div class="eo-tab-menu"><span class="item-tab">帮助</span></div>
+            <div class="f_row_ac h_70 p20">
+                <div class="iconfont icon-bangzhu_o pr20"></div>
+                <div class="lh_30">
+                    <p>访问官方网站获取最新产品资讯以及使用文档</p>
+                    <p>
+                        <span>[官方网站]</span>
+                        <a class="eo_link" target="_blank" href="https://www.eolinker.com">https://www.eolinker.com</a>
+                    </p>
+                    <p>
+                        <span>[帮助中心]</span>
+                        <a class="eo_link" target="_blank"
+                            href="https://help.eolinker.com">https://help.eolinker.com</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="foot_panel">
+    <a class="eo_link pull-right ml15" href="https://www.eolinker.com" target="_blank">WWW.EOLINKER.COM</a>
+    <span class="pull-right">GOKU API GATEWAY V{{$ctrl.ajaxResponse.monitorInfo.baseInfo.version}}</span>
+</div>
+<loading-common-component fun="$ctrl.fun.init(arg)"></loading-common-component>

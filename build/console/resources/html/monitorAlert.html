@@ -1,0 +1,41 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="charset=utf-8"/>
+</head>
+
+<body style="    background: #f7f7f7;">
+<div style="border-collapse: collapse; border:1px solid #e5e5e5;box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05); width:800px;padding-bottom:10px;margin: auto; background-color: #fff;border-radius: 3px;">
+    <table cellpadding="0" cellspacing="0"
+           style="text-align: justify;width: 100%;font-size: 14px;padding:0 60px;color:#333;    table-layout: fixed;">
+        <tbody>
+        <tr>
+            <td style="line-height: 120px;height: 120px;"><b>GoKu&nbsp;Gateway&nbsp;EE</b></td>
+        </tr>
+        <tr>
+            <td style="line-height: 1.75em;">
+                <h2>GoKu告警：节点自动重启失败，请及时重启节点。</h2>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p style="color:#333;font-size:14px;margin:15px 0 40px 0;">GoKu接口网关于 <b>$alertTime</b>
+                    检测到以下节点重启失败，详细日志内容请于 <b>./log/nodeMonitorLog</b> 文件查看。
+            </td>
+        </tr>
+        <tr>
+            <td style="padding:40px 0 5px 0;line-height: 1.75em;border-top:1px solid #e5e5e5;">
+                <h3>自动重启失败的节点列表</h3>
+            </td>
+        </tr>
+        <tr>
+            <td style="line-height: 1.75em; padding-bottom: 40px;">
+                $nodeList
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "goku",
+  "version": "1.0.0",
+  "authors": [
+    "广州银云信息科技有限公司 "
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-ui-router": "^0.4.0",
+    "angular-resource": "^1.5.0",
+    "oclazyload": "^1.0.9",
+    "angular-md5": "^0.1.10"
+  },
+  "overrides": {}
+}
