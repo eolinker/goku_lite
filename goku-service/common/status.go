@@ -4,10 +4,8 @@ import "strings"
 
 type InstanceStatus int
 
-
-
 const (
-	InstanceRun= iota
+	InstanceRun = iota
 	InstanceDown
 	InstanceChecking
 )
@@ -24,8 +22,8 @@ func (status InstanceStatus) String() string {
 	return "unkown"
 }
 
-func ParseStatus(status string)InstanceStatus  {
-	s:=strings.ToLower(status)
+func ParseStatus(status string) InstanceStatus {
+	s := strings.ToLower(status)
 
 	switch s {
 	case "down":

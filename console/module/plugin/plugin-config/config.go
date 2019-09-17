@@ -23,17 +23,17 @@ func CheckConfig(pluginName string, config []byte) (bool, error) {
 			switch v := err.(type) {
 			case *json.SyntaxError:
 				{
-					end :=   int64(bytes.IndexFunc(config[v.Offset:], isEnd))
-					if end == -1{
-						end = int64(len(config)-1)
-					}else{
+					end := int64(bytes.IndexFunc(config[v.Offset:], isEnd))
+					if end == -1 {
+						end = int64(len(config) - 1)
+					} else {
 						end = end + v.Offset
 					}
 					start := 0
 					if v.Offset > 0 {
 						start = bytes.LastIndexFunc(config[:v.Offset], isEnd)
 					}
-					if start == -1{
+					if start == -1 {
 						start = 0
 					}
 
@@ -41,7 +41,7 @@ func CheckConfig(pluginName string, config []byte) (bool, error) {
 				}
 			case *json.UnmarshalTypeError:
 				{
-					return false, fmt.Errorf("数据类型不正确:\"%s\":%s", v.Field,v.Value)
+					return false, fmt.Errorf("数据类型不正确:\"%s\":%s", v.Field, v.Value)
 				}
 			}
 

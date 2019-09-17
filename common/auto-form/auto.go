@@ -1,7 +1,6 @@
 package auto
 
 import (
-
 	"errors"
 	"fmt"
 	"net"
@@ -90,10 +89,10 @@ func setValues(ctx Values, c interface{}) error {
 		if !has {
 			continue
 		}
-		if tag == "-"{
+		if tag == "-" {
 			continue
 		}
-		name,opts := parseTag(tag)
+		name, opts := parseTag(tag)
 		if !isValidTag(name) {
 			continue
 		}
@@ -104,8 +103,8 @@ func setValues(ctx Values, c interface{}) error {
 				return err
 			}
 		} else {
-			if opts.Contains("require"){
-				return fmt.Errorf("require value of [%s] but has no",name)
+			if opts.Contains("require") {
+				return fmt.Errorf("require value of [%s] but has no", name)
 			}
 
 			defaultVal := field.Tag.Get("default")

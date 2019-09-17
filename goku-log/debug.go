@@ -6,13 +6,12 @@ import (
 	"os"
 )
 
-func StartDebug()  {
+func StartDebug() {
 
 	logger.AddHook(new(debugHook))
 }
 
 type debugHook struct {
-
 }
 
 func (h *debugHook) Levels() []logrus.Level {
@@ -29,7 +28,7 @@ func (h *debugHook) Levels() []logrus.Level {
 
 func (h *debugHook) Fire(entry *logrus.Entry) error {
 	s, e := logger.Formatter.Format(entry)
-	if e!=nil{
+	if e != nil {
 		fmt.Println(entry)
 		return nil
 	}

@@ -37,7 +37,6 @@ type BalanceConfig struct {
 	ServersConfigOrg string                 `json:"staticOrg"`
 }
 
-
 type BalanceServerConfig struct {
 	Server string `json:"server"`
 	Weight int    `json:"weight"`
@@ -46,6 +45,7 @@ type BalanceServerConfig struct {
 type _OldVersionBalanceInfo struct {
 	BalanceConfig []*BalanceServerConfig `json:"loadBalancingServer"`
 }
+
 //
 //func (info *BalanceInfo) Encode() *BalanceInfoEntity {
 //

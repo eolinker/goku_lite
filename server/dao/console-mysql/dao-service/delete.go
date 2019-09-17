@@ -9,39 +9,37 @@ const sqlDelete = "DELETE FROM  `goku_service_config` WHERE  `name` = ? AND NOT 
 
 type DeleteError string
 
-func (e DeleteError) Error()string  {
-	return fmt.Sprintf("can not delete :%s",string(e))
+func (e DeleteError) Error() string {
+	return fmt.Sprintf("can not delete :%s", string(e))
 }
 
-func Delete(names []string)error  {
+func Delete(names []string) error {
 
-	tx, err:= database.GetConnection().Begin()
-	if err!=nil{
+	tx, err := database.GetConnection().Begin()
+	if err != nil {
 		return err
 	}
 
 	stmt, e := tx.Prepare(sqlDelete)
-	if e!=nil{
+	if e != nil {
 
 		return e
 	}
 
-
 	defer stmt.Close()
 
-
-	for _,name:=range names{
-		r,e:=stmt.Exec(name)
-		if e!=nil{
+	for _, name := range names {
+		r, e := stmt.Exec(name)
+		if e != nil {
 			tx.Rollback()
 			return e
 		}
-		rowCount,err:=r.RowsAffected()
-		if err!=nil{
+		rowCount, err := r.RowsAffected()
+		if err != nil {
 			tx.Rollback()
 			return e
 		}
-		if rowCount == 0{
+		if rowCount == 0 {
 			tx.Rollback()
 			return DeleteError(name)
 		}

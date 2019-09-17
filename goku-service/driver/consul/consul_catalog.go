@@ -3,7 +3,7 @@ package consul
 import (
 	"context"
 	log "github.com/eolinker/goku/goku-log"
- 	"github.com/eolinker/goku/goku-service/common"
+	"github.com/eolinker/goku/goku-service/common"
 	"github.com/hashicorp/consul/api"
 	"time"
 )
@@ -34,8 +34,6 @@ func (d *ConsulDiscovery) SetConfig(config string) error {
 		return err
 	}
 	d.client = client
-
-
 
 	return nil
 
@@ -99,7 +97,7 @@ func (d *ConsulDiscovery) GetServicesInTime() (map[string][]string, map[string][
 	catalogServices := make(map[string][]*api.ServiceEntry)
 
 	for serviceName := range services {
-		cs, _, err := d.client.Health().Service(serviceName, "",true, q)
+		cs, _, err := d.client.Health().Service(serviceName, "", true, q)
 		if err != nil {
 			log.Info(err.Error())
 			continue
@@ -159,7 +157,7 @@ func (d *ConsulDiscovery) execCallbacks(services map[string][]string, catalogSer
 	for appName, catalogInstances := range catalogServices {
 
 		size := len(catalogInstances)
-		if size == 0{
+		if size == 0 {
 			continue
 		}
 		hosts := make([]*common.Instance, size)

@@ -1,5 +1,5 @@
 package config_log
 
-func InitLog()  {
-	
+func InitLog() {
+
 }

@@ -83,7 +83,7 @@ func temporaryStorage() {
 		select {
 		case <-t.C:
 
-			if len(ts.strategys)>0{
+			if len(ts.strategys) > 0 {
 				o := ts
 				ts = &_MonitorMap{
 					strategys: make(map[string]*_StrategyInfo),

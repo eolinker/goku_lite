@@ -4,7 +4,6 @@ import (
 	SQL "database/sql"
 	"github.com/eolinker/goku/common/database"
 	"github.com/eolinker/goku/utils"
- 
 )
 
 func Login(loginCall, loginPassword string) (bool, int) {

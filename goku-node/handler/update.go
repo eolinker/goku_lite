@@ -2,12 +2,11 @@ package handler
 
 import (
 	"encoding/json"
-	. "github.com/eolinker/goku/common/version"
 	"github.com/eolinker/goku/goku-node/manager/updater"
 	"net/http"
 )
 
-func gokuUpdate(w http.ResponseWriter, r *http.Request)  {
+func gokuUpdate(w http.ResponseWriter, r *http.Request) {
 	updater.Update()
 }
 func gokuCheckUpdate(w http.ResponseWriter, r *http.Request) {

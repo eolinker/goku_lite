@@ -4,14 +4,11 @@ import (
 	"github.com/eolinker/goku/goku-service/common"
 )
 
-
-
 type Discovery interface {
-	SetConfig(config string)error
-	Driver()string
+	SetConfig(config string) error
+	Driver() string
 	SetCallback(callback func(services []*common.Service))
-	GetServers()([]*common.Service,error)
-	Close()error
-	Open()error
+	GetServers() ([]*common.Service, error)
+	Close() error
+	Open() error
 }
-

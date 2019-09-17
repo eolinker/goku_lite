@@ -10,9 +10,9 @@ import (
 )
 
 const (
-	ConsoleLog = "console"
-	NodeLog    = "node"
-	AccessLog  = "access"
+	ConsoleLog    = "console"
+	NodeLog       = "node"
+	AccessLog     = "access"
 	ExpireDefault = 3
 )
 
@@ -24,24 +24,24 @@ var (
 	}
 	Expires = []ValueTitle{
 		{
-			Value:3,
-			Title:"3天",
+			Value: 3,
+			Title: "3天",
 		},
 		{
-			Value:7,
-			Title:"7天",
+			Value: 7,
+			Title: "7天",
 		},
 		{
-			Value:30,
-			Title:"30天",
+			Value: 30,
+			Title: "30天",
 		},
 		{
-			Value:90,
-			Title:"90天",
+			Value: 90,
+			Title: "90天",
 		},
 		{
-			Value:180,
-			Title:"180天",
+			Value: 180,
+			Title: "180天",
 		},
 	}
 	Periods = []NameTitle{
@@ -98,7 +98,7 @@ type PutParam struct {
 	File   string `opt:"file,require"`
 	Level  string `opt:"level,require"`
 	Period string `opt:"period,require"`
-	Expire int 	  `opt:"expire,require"`
+	Expire int    `opt:"expire,require"`
 }
 
 func (p *PutParam) Format() (*Param, error) {
@@ -128,7 +128,7 @@ type AccessParam struct {
 	File   string `opt:"file,require"`
 	Period string `opt:"period,require"`
 	Fields string `opt:"fields,require"`
-	Expire int `opt:"expire,require"`
+	Expire int    `opt:"expire,require"`
 }
 
 func (p *AccessParam) Format() (*Param, error) {
@@ -169,7 +169,7 @@ func (c *LogConfig) Read(ent *entity.LogConfig) {
 	c.Level = ent.Level
 	c.Period = ent.Period
 	c.Expire = ent.Expire
-	if c.Expire < ExpireDefault{
+	if c.Expire < ExpireDefault {
 		c.Expire = ExpireDefault
 	}
 }

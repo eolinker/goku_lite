@@ -8,7 +8,6 @@ import (
 )
 
 type MinPeriod struct {
-
 }
 
 func (p *MinPeriod) String() string {
@@ -20,17 +19,17 @@ func (p *MinPeriod) FormatLayout() string {
 }
 
 func TestFileWriterByPeriod(t *testing.T) {
-	w:=NewFileWriteBytePeriod("/Users/huangmengzhu/test/log","app.log",new(MinPeriod))
+	w := NewFileWriteBytePeriod("/Users/huangmengzhu/test/log", "app.log", new(MinPeriod))
 	defer w.Close()
-	ctx,_:=context.WithTimeout(context.Background(),time.Minute*3)
+	ctx, _ := context.WithTimeout(context.Background(), time.Minute*3)
 
-	tick:=time.NewTicker(time.Millisecond)
+	tick := time.NewTicker(time.Millisecond)
 	defer tick.Stop()
-	index:= 0
+	index := 0
 
 	for {
 		select {
-		case  <-ctx.Done():
+		case <-ctx.Done():
 			{
 				w.Close()
 				return
@@ -39,7 +38,7 @@ func TestFileWriterByPeriod(t *testing.T) {
 		case <-tick.C:
 			{
 				index++
-				fmt.Fprintf(w,"line:%d\n",index)
+				fmt.Fprintf(w, "line:%d\n", index)
 			}
 		}
 	}

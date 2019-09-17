@@ -7,7 +7,6 @@ import (
 	access_log "github.com/eolinker/goku/goku-node/access-log"
 	"github.com/eolinker/goku/goku-node/handler"
 	"github.com/eolinker/goku/goku-node/plugin-flow"
-	. "github.com/eolinker/goku/server/access-field"
 	"net/http"
 	"strconv"
 	"strings"
@@ -30,7 +29,7 @@ type Router struct {
 	mu map[string]http.HandlerFunc
 }
 
-func (mux*Router) ServeHTTP(w http.ResponseWriter, r*http.Request) {
+func (mux *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.RequestURI == "*" {
 		if r.ProtoAtLeast(1, 1) {
 			w.Header().Set("Connection", "close")
@@ -38,72 +37,69 @@ func (mux*Router) ServeHTTP(w http.ResponseWriter, r*http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	path:=r.URL.Path
-	h, has:= mux.mu[path]
-	if has{
+	path := r.URL.Path
+	h, has := mux.mu[path]
+	if has {
 		h.ServeHTTP(w, r)
 		return
 	}
-	ServeHTTP(w,r)
+	ServeHTTP(w, r)
 
 }
 
 func NewRouter() http.Handler {
 
-	r:=&Router{
-		mu :make(map[string]http.HandlerFunc),
+	r := &Router{
+		mu: make(map[string]http.HandlerFunc),
 	}
 
+	hs := handler.Handler()
 
-	hs:= handler.Handler()
-
-	for _,h:=range hs{
+	for _, h := range hs {
 		r.mu[h.Pattern] = h.HandlerFunc
 	}
 
-	return  r
+	return r
 }
 
 var systemRequestPath = []string{"/oauth2/token", "/oauth2/authorize", "/oauth2/verify"}
 
-func   ServeHTTP(w http.ResponseWriter, req *http.Request) {
+func ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Warn(err)
 		}
 	}()
 
+	timeStart := time.Now()
 
-	timeStart:=time.Now()
-
-	logFields:=make(log.Fields)
+	logFields := make(log.Fields)
 
 	// 记录访问次数
 	requestID := GetRandomString(16)
 
-
 	ctx := common.NewContext(req, requestID, w)
 	proxyStatusCode := 0
 
-	log.Debug(requestID," url: ",req.URL.String())
-	log.Debug(requestID," header: ",ctx.RequestOrg.Header.String())
-	 rawBody ,err:=ctx.RequestOrg.RawBody()
-	 if err==nil{
-		 log.Debug(requestID," body: ",string(rawBody))
-	 }
+	log.Debug(requestID, " url: ", req.URL.String())
+	log.Debug(requestID, " header: ", ctx.RequestOrg.Header.String())
+	rawBody, err := ctx.RequestOrg.RawBody()
+	if err == nil {
+		log.Debug(requestID, " body: ", string(rawBody))
+	}
 
 	defer func() {
-		n,status:=ctx.Finish()
+		n, status := ctx.Finish()
 
 		if ctx.ProxyResponseHandler != nil {
 			proxyStatusCode = ctx.ProxyResponseHandler.StatusCode()
 		}
-		logFields[RequestId]= requestID
+		logFields[RequestId] = requestID
 		logFields[StatusCode] = status
-		logFields[HttpUserAgent] = fmt.Sprint("\"",req.UserAgent(),"\"")
+		logFields[HttpUserAgent] = fmt.Sprint("\"", req.UserAgent(), "\"")
 		logFields[HttpReferer] = req.Referer()
 		logFields[RequestTime] = time.Since(timeStart)
-		logFields[Request] = fmt.Sprint("\"",req.Method," ",req.URL.Path," ",req.Proto,"\"")
+		logFields[Request] = fmt.Sprint("\"", req.Method, " ", req.URL.Path, " ", req.Proto, "\"")
 		logFields[BodyBytesSent] = n
 		logFields[Host] = req.Host
 		access_log.Log(logFields)
@@ -120,12 +116,12 @@ func   ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}()
 
 	remoteAddr := Intercept(req.RemoteAddr, ":")
-	logFields[RemoteAddr]= remoteAddr
+	logFields[RemoteAddr] = remoteAddr
 
-	if realIp := ctx.GetHeader("X-Real-Ip") ;realIp == ""{
+	if realIp := ctx.GetHeader("X-Real-Ip"); realIp == "" {
 		ctx.ProxyRequest.SetHeader("X-Real-Ip", remoteAddr)
 		logFields[HttpXForwardedFor] = remoteAddr
-	}else{
+	} else {
 		logFields[HttpXForwardedFor] = realIp
 	}
 
@@ -133,21 +129,20 @@ func   ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	var isBefor bool
 	start := time.Now()
 	isBefor = plugin_flow.BeforeMatch(ctx)
-	log.Info(requestID," BeforeMatch plugin duration:",time.Since(start))
+	log.Info(requestID, " BeforeMatch plugin duration:", time.Since(start))
 	if !isBefor {
-		log.Info(requestID," stop by BeforeMatch plugin")
+		log.Info(requestID, " stop by BeforeMatch plugin")
 		return
 	}
 
 	var timeout, retryCount int
-
 
 	strategyID, ok := retrieveStrategyID(ctx)
 	if !ok {
 		return
 	}
 
-	logFields[Strategy] = fmt.Sprintf("\"%s %s\"", strategyID,ctx.StrategyName())
+	logFields[Strategy] = fmt.Sprintf("\"%s %s\"", strategyID, ctx.StrategyName())
 
 	requestPath := req.URL.Path
 	requestMenthod := ctx.Request().Method()
@@ -159,7 +154,6 @@ func   ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		retryCount = apiInfo.RetryCount
 		//ctx.IsMatch = true
 		timeout = apiInfo.Timeout
-
 
 		ctx.ProxyRequest.SetTargetServer(fmt.Sprintf("%s://%s", apiInfo.Protocol, apiInfo.Target))
 
@@ -185,7 +179,7 @@ func   ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 	start = time.Now()
 	isAccess, _ := plugin_flow.AccessFunc(ctx, handleFunc)
-	log.Info(requestID," Access plugin duration:",time.Since(start))
+	log.Info(requestID, " Access plugin duration:", time.Since(start))
 	if !isAccess {
 
 		// todo
@@ -193,20 +187,20 @@ func   ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 
 	if apiInfo == nil {
-		log.Info(requestID," URL dose not exist!")
+		log.Info(requestID, " URL dose not exist!")
 		ctx.SetStatus(404, "404")
 		ctx.SetBody([]byte("[ERROR]URL dose not exist!"))
-		
+
 		return
 	}
-	logFields[Api] = fmt.Sprintf("\"%d %s\"",apiInfo.ApiID,apiInfo.ApiName)
-	logFields[Proxy] = fmt.Sprintf("\"%s %s %s\"",ctx.ProxyRequest.Method,ctx.ProxyRequest.TargetURL(),apiInfo.Protocol)
+	logFields[Api] = fmt.Sprintf("\"%d %s\"", apiInfo.ApiID, apiInfo.ApiName)
+	logFields[Proxy] = fmt.Sprintf("\"%s %s %s\"", ctx.ProxyRequest.Method, ctx.ProxyRequest.TargetURL(), apiInfo.Protocol)
 	logFields[Balance] = apiInfo.Target
 	start = time.Now()
 	err, response := CreateRequest(ctx, apiInfo, timeout, retryCount)
-	log.Info(requestID," Proxy request duration:",time.Since(start))
+	log.Info(requestID, " Proxy request duration:", time.Since(start))
 	if err != nil {
-		 log.Warn(err.Error())
+		log.Warn(err.Error())
 	}
 	logFields[FinallyServer] = ctx.FinalTargetServer()
 	logFields[Retry] = ctx.RetryTargetServers()
@@ -243,7 +237,7 @@ func   ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	start = time.Now()
 	isProxy, _ := plugin_flow.ProxyFunc(ctx, handleFunc)
-	log.Info(requestID," Proxy plugin Duration:",time.Since(start))
+	log.Info(requestID, " Proxy plugin Duration:", time.Since(start))
 	if !isProxy {
 		return
 	}

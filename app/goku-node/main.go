@@ -40,16 +40,15 @@ func initConfig(resultInfo map[string]interface{}) *entity.ClusterInfo {
 
 func main() {
 
-
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	flag.StringVar(&adminHost, "admin", "127.0.0.1:7005", "Please provide a valid host!")
 	//flag.IntVar(&adminPort, "P", 7005, "Please provide a valid port")
 	flag.IntVar(&listenPort, "port", 6689, "Please provide a valid listen port!")
-	isDebug := flag.Bool("debug",false,"")
+	isDebug := flag.Bool("debug", false, "")
 
 	flag.Parse()
-	if *isDebug{
+	if *isDebug {
 		log.StartDebug()
 	}
 	//
@@ -64,9 +63,9 @@ func main() {
 
 	node_common.SetClusterName(config.Name)
 
-	err:=database.InitConnection(&config.DB)
-	if err!=nil{
-		log.Fatal("Fail to Init db:",err)
+	err := database.InitConnection(&config.DB)
+	if err != nil {
+		log.Fatal("Fail to Init db:", err)
 		return
 	}
 	goku_node.InitLog()
@@ -76,7 +75,7 @@ func main() {
 
 	log.Debug("redis_manager.SetDefault")
 	// 其他需要初始化的模块
-	_=general.General()
+	_ = general.General()
 
 	log.Debug("general.General()")
 	goku_node.InitServer()
@@ -88,6 +87,5 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Fatalf("Server on :%d stoped \n", listenPort)
-
 
 }

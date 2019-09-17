@@ -8,7 +8,8 @@ import (
 	entity "github.com/eolinker/goku/server/entity/console-entity"
 )
 
-const _TableName  = "goku_service_config"
+const _TableName = "goku_service_config"
+
 func Add(param *AddParam) error {
 
 	err := dao_service.Add(param.Name, param.Driver, param.Desc, param.Config, param.ClusterConfig, false, param.HealthCheck, param.HealthCheckPath, param.HealthCheckCode, param.HealthCheckPeriod, param.HealthCheckTimeOut)
@@ -30,7 +31,7 @@ func Save(param *AddParam) error {
 		return fmt.Errorf("not allowed change dirver from %s to %s for service", v.Driver, param.Driver)
 	}
 
-	err:= dao_service.Save(param.Name, param.Desc, param.Config, param.ClusterConfig, param.HealthCheck, param.HealthCheckPath, param.HealthCheckCode, param.HealthCheckPeriod, param.HealthCheckTimeOut)
+	err := dao_service.Save(param.Name, param.Desc, param.Config, param.ClusterConfig, param.HealthCheck, param.HealthCheckPath, param.HealthCheckCode, param.HealthCheckPeriod, param.HealthCheckTimeOut)
 	if err == nil {
 		dao.UpdateTable(_TableName)
 	}
@@ -77,7 +78,7 @@ func tran(v *entity.Service) *Service {
 		IsDefault:   v.IsDefault,
 		HealthCheck: v.HealthCheck,
 		UpdateTime:  v.UpdateTime,
-		CreateTime:v.CreateTime,
+		CreateTime:  v.CreateTime,
 	}
 
 	d, has := driver2.Get(v.Driver)

@@ -19,6 +19,5 @@ type Api struct {
 
 type ApiExtend struct {
 	*Api
-	Target       string
-
+	Target string
 }

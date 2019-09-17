@@ -22,7 +22,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		controller.WriteError(w, "700001", "cluster", err.Error()+ip, err)
 		return
 	}
-	node.Refresh(ip,strconv.Itoa(port))
+	node.Refresh(ip, strconv.Itoa(port))
 	controller.WriteResultInfo(w, "cluster", "cluster", cluster)
 }
 

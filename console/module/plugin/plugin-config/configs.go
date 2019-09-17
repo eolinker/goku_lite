@@ -1,28 +1,26 @@
 package plugin_config
 
 func init() {
-	allConfigOfPlugin=map[string]interface{}{
-		"goku-apikey_auth":new(APIKeyConf),
-		"goku-basic_auth":new(basicAuthConf),
-		"goku-circuit_breaker":new(CircuitBreakerConf),
-		"goku-cors":new(gokuCorsConfig),
-		"goku-data_format_transformer":new(dataFormatTranformerConf),
-		"goku-default_response":new(defaultResponseConf),
-		"goku-extra_params":new(extraParamsConf),
-		"goku-http_log":new(Log),
-		"goku-ip_restriction":new(IPList),
-		"goku-jwt_auth":new(JwtConf),
-		"goku-oauth2_auth":new(Oauth2Conf),
-		"goku-params_check":new(paramsCheckConf),
-		"goku-params_transformer":new(paramsTransformerconf),
-		"goku-proxy_caching":new(ProxyCachingConf),
-		"goku-rate_limiting":new(_RateLimitingConf),
-		"goku-replay_attack_defender":new(ReplayAttackDefenderConf),
-		"goku-request_size_limiting":new(requestSizeLimit),
-		"goku-response_headers":new(responseHeader),
-		"goku-service_downgrade":new(serviceDowngradeConf),
-
-
+	allConfigOfPlugin = map[string]interface{}{
+		"goku-apikey_auth":             new(APIKeyConf),
+		"goku-basic_auth":              new(basicAuthConf),
+		"goku-circuit_breaker":         new(CircuitBreakerConf),
+		"goku-cors":                    new(gokuCorsConfig),
+		"goku-data_format_transformer": new(dataFormatTranformerConf),
+		"goku-default_response":        new(defaultResponseConf),
+		"goku-extra_params":            new(extraParamsConf),
+		"goku-http_log":                new(Log),
+		"goku-ip_restriction":          new(IPList),
+		"goku-jwt_auth":                new(JwtConf),
+		"goku-oauth2_auth":             new(Oauth2Conf),
+		"goku-params_check":            new(paramsCheckConf),
+		"goku-params_transformer":      new(paramsTransformerconf),
+		"goku-proxy_caching":           new(ProxyCachingConf),
+		"goku-rate_limiting":           new(_RateLimitingConf),
+		"goku-replay_attack_defender":  new(ReplayAttackDefenderConf),
+		"goku-request_size_limiting":   new(requestSizeLimit),
+		"goku-response_headers":        new(responseHeader),
+		"goku-service_downgrade":       new(serviceDowngradeConf),
 	}
 }
 
@@ -169,7 +167,6 @@ type ProxyCachingConf struct {
 	RedisPassword  string `json:"redisPassword"`
 	RedisDatabase  int    `json:"redisDatabase"`
 }
-
 
 type _RateLimitingConf struct {
 	Second           int64 `json:"second,omitempty"`

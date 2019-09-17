@@ -16,32 +16,30 @@ import (
 )
 
 type Eureka struct {
- 
-	services  []*common.Service
+	services []*common.Service
 	//AppNames  map[string]string
-	eurekaUrl []string
-	weightKey string
-	callback func(services []*common.Service)
-	ct        uint64
-	cancelFunc context.CancelFunc
+	eurekaUrl       []string
+	weightKey       string
+	callback        func(services []*common.Service)
+	ct              uint64
+	cancelFunc      context.CancelFunc
 	instanceFactory *common.InstanceFactory
 }
 
-
 func (d *Eureka) SetConfig(config string) error {
-	tags:=strings.Split(config,";")
+	tags := strings.Split(config, ";")
 	weightKey := ""
-	if len(tags)>1{
-		weightKey=tags[1]
+	if len(tags) > 1 {
+		weightKey = tags[1]
 	}
 
-	urls:=strings.Split(tags[0],",")
+	urls := strings.Split(tags[0], ",")
 
-	d.setConfig(urls,weightKey)
+	d.setConfig(urls, weightKey)
 
 	return nil
 }
-func (d *Eureka)setConfig(eurekaUrl []string,weightKey string)  {
+func (d *Eureka) setConfig(eurekaUrl []string, weightKey string) {
 	d.eurekaUrl = eurekaUrl
 	d.weightKey = weightKey
 }
@@ -54,11 +52,11 @@ func (d *Eureka) SetCallback(callback func(services []*common.Service)) {
 }
 
 func (d *Eureka) GetServers() ([]*common.Service, error) {
-	return d.services,nil
+	return d.services, nil
 }
 
 func (d *Eureka) Close() error {
-	if d.cancelFunc !=nil{
+	if d.cancelFunc != nil {
 		d.cancelFunc()
 		d.cancelFunc = nil
 	}
@@ -66,12 +64,12 @@ func (d *Eureka) Close() error {
 }
 
 func (d *Eureka) Open() error {
-	d.ScheduleAtFixedRate(time.Second*5)
+	d.ScheduleAtFixedRate(time.Second * 5)
 	return nil
 }
 
 func NewEurekaDiscovery(config string) *Eureka {
-	e:= &Eureka{
+	e := &Eureka{
 		services:        nil,
 		callback:        nil,
 		ct:              0,
@@ -82,45 +80,44 @@ func NewEurekaDiscovery(config string) *Eureka {
 	return e
 }
 
-
 func (d *Eureka) execCallbacks(apps *Applications) {
-	if d.callback == nil{
+	if d.callback == nil {
 		return
 	}
-	if apps ==nil{
+	if apps == nil {
 		d.callback(nil)
 		return
 	}
-	if len(apps.Applications) == 0{
+	if len(apps.Applications) == 0 {
 		d.callback(nil)
 		return
 	}
 
-	services:=make([]*common.Service,0,len(apps.Applications))
-	for _,app:=range apps.Applications{
-		inses:= make([]*common.Instance,0,len(app.Instances))
-		for _,ins:=range app.Instances{
-			if ins.Status != EurekaStatusUp{
+	services := make([]*common.Service, 0, len(apps.Applications))
+	for _, app := range apps.Applications {
+		inses := make([]*common.Instance, 0, len(app.Instances))
+		for _, ins := range app.Instances {
+			if ins.Status != EurekaStatusUp {
 				continue
 			}
-			weight:= 0
-			if w,has:=ins.Metadata.Map[d.weightKey];has{
-				weight,_ = strconv.Atoi(w)
+			weight := 0
+			if w, has := ins.Metadata.Map[d.weightKey]; has {
+				weight, _ = strconv.Atoi(w)
 
 			}
-			if weight == 0{
+			if weight == 0 {
 				weight = 1
 			}
-			port:= 0
-			if ins.Port.Enabled{
+			port := 0
+			if ins.Port.Enabled {
 				port = ins.Port.Port
-			} else if ins.SecurePort.Enabled{
+			} else if ins.SecurePort.Enabled {
 				port = ins.SecurePort.Port
 			}
-			inses = append(inses, d.instanceFactory.General(ins.IpAddr, port,weight))
+			inses = append(inses, d.instanceFactory.General(ins.IpAddr, port, weight))
 		}
-		server:=common.NewService(app.Name,inses)
-		services = append(services,server)
+		server := common.NewService(app.Name, inses)
+		services = append(services, server)
 	}
 
 	d.callback(services)
@@ -129,17 +126,17 @@ func (d *Eureka) execCallbacks(apps *Applications) {
 
 func (d *Eureka) ScheduleAtFixedRate(second time.Duration) {
 	d.run()
-	if d.cancelFunc !=nil{
+	if d.cancelFunc != nil {
 		d.cancelFunc()
 		d.cancelFunc = nil
 	}
 
-	ctx,cancel:=context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(context.Background())
 	d.cancelFunc = cancel
-	go d.runTask(second,ctx)
+	go d.runTask(second, ctx)
 }
 
-func (d *Eureka) runTask(second time.Duration,ctx context.Context) {
+func (d *Eureka) runTask(second time.Duration, ctx context.Context) {
 	timer := time.NewTicker(second)
 	for {
 		select {
@@ -164,11 +161,11 @@ func (d *Eureka) run() {
 
 func (d *Eureka) GetApplications() (*Applications, error) {
 	//url := c.eurekaUrl + "/apps"
-	url, err:= d.getEurekaServerUrl()
-	if err!= nil{
-		return nil,err
+	url, err := d.getEurekaServerUrl()
+	if err != nil {
+		return nil, err
 	}
-	url = fmt.Sprintf("%s/apps",url)
+	url = fmt.Sprintf("%s/apps", url)
 
 	res, err := http.Get(url)
 	if err != nil {
@@ -190,20 +187,20 @@ func (d *Eureka) GetApplications() (*Applications, error) {
 	return applications, err
 }
 
-func (d *Eureka) getEurekaServerUrl()( string ,error){
+func (d *Eureka) getEurekaServerUrl() (string, error) {
 	ct := atomic.AddUint64(&d.ct, 1)
 	size := len(d.eurekaUrl)
 	if size == 0 {
-		e:= NilPointError("eureka url is empty")
+		e := NilPointError("eureka url is empty")
 
-		return "",e
+		return "", e
 	}
 	index := int(ct) % size
 	url := d.eurekaUrl[index]
 	//if strings.LastIndex(url,"/")>-1{
 	url = strings.TrimSuffix(url, "/")
 	//}
-	return url,nil
+	return url, nil
 }
 
 func (d *Eureka) Health() (bool, string) {

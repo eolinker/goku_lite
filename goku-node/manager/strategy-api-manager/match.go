@@ -36,7 +36,7 @@ func CheckApiFromStrategy(strategyId, requestPath string, requestMethod string) 
 					apiextend.Target = apiInfo.BalanceName
 				}
 
-				apiextend.Target = 	utils.TrimSuffixAll(apiextend.Target,"/")
+				apiextend.Target = utils.TrimSuffixAll(apiextend.Target, "/")
 
 				//apiextend.TargetServer = balance_manager.ParseTargetServer(apiextend.Target)
 				return apiextend, splitURL, param, true

@@ -7,18 +7,18 @@ import (
 
 type LogPeriod interface {
 	String() string
-	FormatLayout()string
+	FormatLayout() string
 }
 type LogPeriodType int
 
-func ParsePeriod(v string)(LogPeriod,error)  {
+func ParsePeriod(v string) (LogPeriod, error) {
 	switch strings.ToLower(v) {
 	case "month":
-		return PeriodMonth,nil
+		return PeriodMonth, nil
 	case "day":
-		return PeriodDay,nil
+		return PeriodDay, nil
 	case "hour":
-		return PeriodHour,nil
+		return PeriodHour, nil
 	}
 
 	return nil, fmt.Errorf("not a valid period: %q", v)
@@ -42,12 +42,11 @@ const (
 	PeriodHour
 )
 
-
 func (period LogPeriodType) FormatLayout() string {
 	switch period {
 	case PeriodHour:
 		{
-			return  "2006-01-02-15"
+			return "2006-01-02-15"
 		}
 	case PeriodDay:
 		{

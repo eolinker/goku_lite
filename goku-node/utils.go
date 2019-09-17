@@ -51,4 +51,3 @@ func PanicTrace(kb int) []byte {
 	stack = bytes.TrimRight(stack, "\n")
 	return stack
 }
-

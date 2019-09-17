@@ -1,16 +1,13 @@
 package node
 
 import (
-
 	"encoding/json"
 	"errors"
-
 
 	log "github.com/eolinker/goku/goku-log"
 
 	"net/http"
 	"strconv"
-
 
 	"github.com/eolinker/goku/console/controller"
 	"github.com/eolinker/goku/console/module/node"
@@ -42,7 +39,6 @@ func AddNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	groupID := httpRequest.PostFormValue("groupID")
 	gatewayPath := httpRequest.PostFormValue("gatewayPath")
 
-
 	gID, err := strconv.Atoi(groupID)
 	if err != nil && groupID != "" {
 		controller.WriteError(httpResponse, "230015", "", "[ERROR]Illegal groupID!", err)
@@ -72,7 +68,6 @@ func AddNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		}
 	}
 
-
 	exits := node.CheckIsExistRemoteAddr(0, nodeIP, nodePort)
 
 	if exits {
@@ -83,8 +78,6 @@ func AddNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 			errors.New("The remote address is alreadey existed"))
 		return
 	}
-
-
 
 	flag, result, err := node.AddNode(clusterId, nodeName, nodeIP, nodePort, gatewayPath, gID)
 
@@ -168,7 +161,7 @@ func EditNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	}
 
-	flag, result, _ := node.EditNode(nodeName, nodeIP, nodePort,   gatewayPath,   id,  gID)
+	flag, result, _ := node.EditNode(nodeName, nodeIP, nodePort, gatewayPath, id, gID)
 
 	if !flag {
 		controller.WriteError(httpResponse, "330000", "node", result, nil)
@@ -292,7 +285,6 @@ func GetNodeInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-
 // 节点IP查重
 func CheckIsExistRemoteAddr(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
@@ -330,7 +322,6 @@ func CheckIsExistRemoteAddr(httpResponse http.ResponseWriter, httpRequest *http.
 
 	return
 }
-
 
 // 批量修改节点分组
 func BatchEditNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {

@@ -7,12 +7,11 @@ const (
 	RedisModeStand    = "stand"
 )
 
-
 type Redis interface {
 	redis.Cmdable
 	GetConfig() RedisConfig
 	//Foreach(fn func(client *localRedis.Client) error) error
-	Nodes()[]string
+	Nodes() []string
 }
 
 type RedisConfig interface {

@@ -13,13 +13,12 @@ type Plugin struct {
 	IsStop       int    `json:"isStop"`
 }
 
-
 type PluginParams struct {
 	PluginName   string `json:"pluginName"`
 	PluginConfig string `json:"pluginConfig"`
 	PluginIndex  int    `json:"pluginPriority"`
 	//PluginInfo   string `json:"pluginInfo"`
-	IsStop       int    `json:"isStop"`
+	IsStop int `json:"isStop"`
 }
 
 type PluginSlice []*Plugin

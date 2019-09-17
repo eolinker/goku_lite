@@ -1,6 +1,5 @@
 cluster:
-  -
-    name: "Default"
+  - name: "Default"
     title: "默认机房"
     note: "默认机房"
     db:

@@ -8,10 +8,10 @@ import (
 )
 
 type CheckHandler interface {
-	Open(path string,statusCodes string,second int,timeout time.Duration)
+	Open(path string, statusCodes string, second int, timeout time.Duration)
 	Check(instance *common.Instance)
 	IsNeedCheck() bool
-	Close()[]*common.Instance
+	Close() []*common.Instance
 }
 type CheckBox struct {
 	isNeedCheck bool
@@ -19,40 +19,39 @@ type CheckBox struct {
 	checker     *Checker
 }
 
-func (c *CheckBox) Open(path string, statusCodes string,second int, timeout time.Duration) {
+func (c *CheckBox) Open(path string, statusCodes string, second int, timeout time.Duration) {
 
-	old:= c.checker
+	old := c.checker
 
-	checker:=new(Checker)
+	checker := new(Checker)
 
-	checker.path = strings.TrimPrefix(path,"/")
-	status:=make(map[int]bool)
-	for _,s:=range  strings.Split(statusCodes,","){
-		code,e:=strconv.Atoi(s)
-		if e!=nil{
+	checker.path = strings.TrimPrefix(path, "/")
+	status := make(map[int]bool)
+	for _, s := range strings.Split(statusCodes, ",") {
+		code, e := strconv.Atoi(s)
+		if e != nil {
 			status[code] = true
 		}
 
 	}
-	if len(status) == 0{
+	if len(status) == 0 {
 		status[200] = true
 	}
 	checker.statusCodes = status
-	checker.second=second
-	if checker.second < 5{
+	checker.second = second
+	if checker.second < 5 {
 		checker.second = 5
 	}
 	checker.timeout = timeout
 
-	if checker.timeout < time.Millisecond*100{
-		checker.timeout = time.Millisecond*100
+	if checker.timeout < time.Millisecond*100 {
+		checker.timeout = time.Millisecond * 100
 	}
 
-	if old!=nil{
-		sources,_:=  old.Close()
-		checker.instances=sources
+	if old != nil {
+		sources, _ := old.Close()
+		checker.instances = sources
 	}
-
 
 	checker.Open()
 	c.checker = checker
@@ -70,30 +69,28 @@ func (c *CheckBox) Check(instance *common.Instance) {
 
 func (c *CheckBox) IsNeedCheck() bool {
 
-	return c.isNeedCheck && c.checker!=nil
+	return c.isNeedCheck && c.checker != nil
 }
 
-func (c *CheckBox) Close() []*common.Instance{
-	if c.checker == nil{
+func (c *CheckBox) Close() []*common.Instance {
+	if c.checker == nil {
 		return nil
 	}
 	c.isNeedCheck = false
-	oldInstances,count:=c.checker.Close()
+	oldInstances, count := c.checker.Close()
 	c.checker = nil
-	if count>0{
-		instances:=make([]*common.Instance,0,count)
+	if count > 0 {
+		instances := make([]*common.Instance, 0, count)
 
-		for _,ins:=range oldInstances{
+		for _, ins := range oldInstances {
 
-			if len(ins)>0{
-				instances = append(instances,ins...)
+			if len(ins) > 0 {
+				instances = append(instances, ins...)
 			}
 		}
 
 		return instances
 	}
 
-
 	return nil
 }
-

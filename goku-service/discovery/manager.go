@@ -5,9 +5,9 @@ import (
 	"sync"
 )
 
-var manager=&Manager{
-	locker:sync.RWMutex{},
-	sources:make( map[string]ISource),
+var manager = &Manager{
+	locker:  sync.RWMutex{},
+	sources: make(map[string]ISource),
 }
 
 type Manager struct {
@@ -16,49 +16,49 @@ type Manager struct {
 	sources map[string]ISource
 }
 
-func ResetAllServiceConfig(confs []*Config)  {
+func ResetAllServiceConfig(confs []*Config) {
 
-	sources:=make( map[string]ISource)
+	sources := make(map[string]ISource)
 	manager.locker.RLock()
-	oldSources:= manager.sources
+	oldSources := manager.sources
 	manager.locker.RUnlock()
-	for _,conf:=range confs{
+	for _, conf := range confs {
 
 		name := conf.Name
-		s,has:= oldSources[name]
-		if has && !s.CheckDriver(conf.Driver){
+		s, has := oldSources[name]
+		if has && !s.CheckDriver(conf.Driver) {
 			// 如果驱动不一样，关闭旧的
-				has = false
-				s.Close()
-				s=nil
-				delete(oldSources,name)
+			has = false
+			s.Close()
+			s = nil
+			delete(oldSources, name)
 		}
-		if !has{
-			driverName:=conf.Driver
-			driver,has:=drivers[driverName]
-			if !has{
-				log.Error("invalid driver:",driverName)
+		if !has {
+			driverName := conf.Driver
+			driver, has := drivers[driverName]
+			if !has {
+				log.Error("invalid driver:", driverName)
 				continue
 			}
-			ns, err:=driver.Open(name,conf.Config)
-			if err!=nil{
+			ns, err := driver.Open(name, conf.Config)
+			if err != nil {
 				continue
 			}
-			s=ns
+			s = ns
 		}
 
-		sources[name]=s
+		sources[name] = s
 		s.SetHealthConfig(&conf.HealthCheckConfig)
 
-		err:=s.SetDriverConfig(conf.Config)
+		err := s.SetDriverConfig(conf.Config)
 
-		if err!=nil{
+		if err != nil {
 			continue
 		}
 	}
 
-	for name,s:=range oldSources{
-		if _,has:=sources[name];!has{
+	for name, s := range oldSources {
+		if _, has := sources[name]; !has {
 			s.Close()
 		}
 	}
@@ -68,9 +68,9 @@ func ResetAllServiceConfig(confs []*Config)  {
 	manager.locker.Unlock()
 }
 
-func GetDiscoverer(discoveryName string)(ISource,bool)  {
+func GetDiscoverer(discoveryName string) (ISource, bool) {
 	manager.locker.RLock()
-	s,has:=manager.sources[discoveryName]
+	s, has := manager.sources[discoveryName]
 	manager.locker.RUnlock()
-	return s,has
+	return s, has
 }

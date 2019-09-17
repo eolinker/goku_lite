@@ -136,7 +136,7 @@ func RefreshGatewayAlertConfig() bool {
 	dropColomn := []string{"alertPeriodType", "alertAddress", "alertLogPath", "receiverList"}
 	for _, colomn := range dropColomn {
 		sql := "ALTER TABLE goku_gateway DROP COLUMN " + colomn + ";"
-		log.Debug("RefreshGatewayAlertConfig-sql:",sql)
+		log.Debug("RefreshGatewayAlertConfig-sql:", sql)
 		_, err = Tx.Exec(sql)
 		if err != nil {
 			Tx.Rollback()

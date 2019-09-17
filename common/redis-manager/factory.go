@@ -26,7 +26,7 @@ func Create(config RedisConfig) Redis {
 
 			return &redisProxy{
 				Cmdable: redis.NewClusterClient(option),
-				config:      config,
+				config:  config,
 			}
 		}
 
@@ -49,7 +49,7 @@ func Create(config RedisConfig) Redis {
 
 			return &redisProxy{
 				Cmdable: redis.NewRing(&option),
-				config:      config,
+				config:  config,
 			}
 		}
 	}

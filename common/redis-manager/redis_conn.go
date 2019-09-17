@@ -30,4 +30,3 @@ func GetConnection() Redis {
 	def = Create(defaultConfig)
 	return def
 }
-

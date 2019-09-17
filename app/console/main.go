@@ -22,10 +22,10 @@ func main() {
 	flag.StringVar(&ConfFilePath, "c", "./config/goku.conf", "Please provide a valid configuration file path")
 	flag.StringVar(&UserName, "u", "", "Please provide user name")
 	flag.StringVar(&UserPassword, "p", "", "Please provide user password")
-	isDebug := flag.Bool("debug",false,"")
+	isDebug := flag.Bool("debug", false, "")
 
 	flag.Parse()
-	if *isDebug{
+	if *isDebug {
 		log.StartDebug()
 	}
 	// 初始化配置
@@ -42,11 +42,10 @@ func main() {
 	_ = general.General()
 	// 检测是否安装
 
-
-	if s, err := account.CheckSuperAdminCount(); err!= nil {
+	if s, err := account.CheckSuperAdminCount(); err != nil {
 		log.Panic(err)
 		return
-	}else if s == 0 {
+	} else if s == 0 {
 		if UserName == "" {
 			log.Fatal("[ERROR] Fail to create administrator. Please try again or contact technical support of eoLinker GOKU API Gateway.")
 			//fmt.Println("[ERROR] Fail to create administrator. Please try again or contact technical support of eoLinker GOKU API Gateway.")
@@ -67,7 +66,6 @@ func main() {
 			return
 		}
 	}
-
 
 	console.Router()
 	console.Server()

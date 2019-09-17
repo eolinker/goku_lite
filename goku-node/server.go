@@ -14,8 +14,6 @@ import (
 	"strings"
 )
 
-
-
 func InitPluginUtils() {
 	goku_plugin.SetRedisManager(redis_plugin_proxy.Create())
 	goku_plugin.InitLog(log.GetLogger())
@@ -26,10 +24,10 @@ func InitDiscovery() {
 	all := discovery.AllDrivers()
 	log.Infof("install service discovery driver:[%s]\n", strings.Join(all, ","))
 }
-func InitLog()  {
+func InitLog() {
 	config_manager.InitLog()
 }
-func InitServer(){
+func InitServer() {
 	log.Debug("init InitServer start")
 
 	InitPluginUtils()

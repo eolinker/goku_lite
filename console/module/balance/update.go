@@ -10,31 +10,29 @@ import (
 func init() {
 	general.RegeditLater(Update)
 }
-func Update()error  {
+func Update() error {
 
-	l,e:= dao_balance_update.GetAllOldVerSion()
-	if e!=nil{
+	l, e := dao_balance_update.GetAllOldVerSion()
+	if e != nil {
 		return e
 	}
 
-	defStaticServiceName :=dao_balance_update.GetDefaultServiceStatic()
-	for _,e:=range l{
-		update(e,defStaticServiceName)
+	defStaticServiceName := dao_balance_update.GetDefaultServiceStatic()
+	for _, e := range l {
+		update(e, defStaticServiceName)
 	}
-
-
 
 	return nil
 
 }
 
-func update(e *entity.BalanceInfoEntity,serviceName string)  {
+func update(e *entity.BalanceInfoEntity, serviceName string) {
 
-	if e==nil{
+	if e == nil {
 		return
 	}
 
-	param:=&Param{
+	param := &Param{
 		Name:          e.Name,
 		ServiceName:   serviceName,
 		AppName:       "",
@@ -43,33 +41,31 @@ func update(e *entity.BalanceInfoEntity,serviceName string)  {
 		Desc:          e.Desc,
 	}
 
-	info,err:=e.Decode()
+	info, err := e.Decode()
 
-	if err!=nil{
+	if err != nil {
 		return
 	}
 
-
-	if info.Default!= nil{
+	if info.Default != nil {
 
 		param.Static = info.Default.ServersConfigOrg
 	}
-	if info.Cluster !=nil{
-		cluster:=make(map[string]string)
-		for clusterName,server:=range info.Cluster{
+	if info.Cluster != nil {
+		cluster := make(map[string]string)
+		for clusterName, server := range info.Cluster {
 			cluster[clusterName] = server.ServersConfigOrg
 
 		}
 
-		data ,err:= json.Marshal(cluster)
+		data, err := json.Marshal(cluster)
 
-		if err==nil{
+		if err == nil {
 
 			param.StaticCluster = string(data)
 		}
 	}
 
 	Save(param)
-
 
 }
