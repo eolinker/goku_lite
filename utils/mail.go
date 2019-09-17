@@ -16,14 +16,6 @@ var period map[string]string = map[string]string{
 	"4": "60",
 }
 
-func SendMail(sender, subject, senderPassword, smtpAddress, smtpPort, smtpProtocol, receiverMail, content string) {
-	host := net.JoinHostPort(smtpAddress, smtpPort)
-	err := SendToMail(sender, senderPassword, host, receiverMail, subject, content, "html", smtpProtocol)
-	if err != nil {
-		log.Warn("SendMail:",err)
-	}
-}
-
 func SendToMail(user, password, host, to, subject, body, mailtype, smtpProtocol string) error {
 	hp := strings.Split(host, ":")
 	auth := smtp.PlainAuth("", user, password, hp[0])
