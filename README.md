@@ -7,8 +7,8 @@ Goku API Gateway （中文名：悟空 API 网关）是一个基于 Golang + MyS
 - [为什么要使用Goku](#为什么要使用Goku "为什么要使用Goku")
 - [产品特性](#产品特性 "产品特性")
 - [快速安装](#快速安装 "快速安装")
-- [企业支持](#企业支持与帮助 "企业支持")
-- [关于我们（Eolinker）](#关于我们（Eolinker） "关于我们（Eolinker）")
+- [企业支持](#企业支持 "企业支持")
+- [关于我们](#关于我们 "关于我们")
 - [授权协议](#授权协议 "授权协议")
 
 # 为什么要使用Goku
@@ -243,7 +243,7 @@ Goku API Gateway EE（企业版本）拥有更强大的功能、插件库以及�
 - **购买咨询邮箱**：sales@eolinker.com
 - **帮助文档**：[help.eolinker.com](help.eolinker.com "help.eolinker.com")
 
-# 关于我们（EOLINKER）
+# 关于我们
 EOLINKER 是领先的 API 管理服务供应商，为全球超过3000家企业提供专业的 API 研发管理、API自动化测试、API监控、API网关等服务。是首家为ITSS（中国电子工业标准化技术协会）制定API研发管理行业规范的企业。
 
 官方网站：[https://www.eolinker.com](https://www.eolinker.com "EOLINKER官方网站")
