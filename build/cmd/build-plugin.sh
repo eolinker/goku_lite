@@ -10,6 +10,9 @@ do
     fi
 done
 else
+    if [ ! -d "${BasePath}/app/plugins/" ];then
+    	exit 0
+    fi
     for i in $(ls ${BasePath}/app/plugins/)
     do
         buildPlugin $i

@@ -15,7 +15,7 @@
 ## Fill in name of program here.
 cd  $(dirname $0) # 当前位置跳到脚本位置
 
-PROG="console"
+PROG="gateway-console"
 PROG_PATH="$(pwd)" ## Not need, but sometimes helpful (if $PROG resides in /opt for example).
 
 WORK_PATH="$PROG_PATH/work"
