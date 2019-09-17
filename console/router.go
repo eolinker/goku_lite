@@ -45,9 +45,6 @@ func Router() {
 
 	http.HandleFunc("/monitor/gateway/getSummaryInfo", monitor.GetGatewayMonitorSummaryByPeriod)
 
-
-
-
 	// 项目
 	http.HandleFunc("/project/add", project.AddProject)
 	http.HandleFunc("/project/edit", project.EditProject)
@@ -157,10 +154,8 @@ func Router() {
 	http.HandleFunc("/node/getList", node.GetNodeList)
 	http.HandleFunc("/node/checkIsExistRemoteAddr", node.CheckIsExistRemoteAddr)
 
-
 	http.HandleFunc("/node/batchEditGroup", node.BatchEditNodeGroup)
 	http.HandleFunc("/node/batchDelete", node.BatchDeleteNode)
-
 
 	// 节点分组
 	http.HandleFunc("/node/group/add", node.AddNodeGroup)

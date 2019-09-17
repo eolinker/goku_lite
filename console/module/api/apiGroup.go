@@ -1,7 +1,7 @@
 package api
 
 import (
-	dao "github.com/eolinker/goku/server/dao"
+	"github.com/eolinker/goku/server/dao"
 	console_mysql "github.com/eolinker/goku/server/dao/console-mysql"
 )
 

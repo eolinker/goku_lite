@@ -6,16 +6,14 @@ import (
 )
 
 type Driver struct {
-
 }
 
-func (d *Driver) Open(name string,config string)(discovery.ISource,error) {
+func (d *Driver) Open(name string, config string) (discovery.ISource, error) {
 
-	return NewStaticSources(name),nil
+	return NewStaticSources(name), nil
 }
 
 type StaticDiscovery struct {
-
 }
 
 func (d *StaticDiscovery) SetConfig(config string) error {
@@ -31,13 +29,13 @@ func (d *StaticDiscovery) SetCallback(callback func(services []*common.Service))
 }
 
 func (d *StaticDiscovery) GetServers() ([]*common.Service, error) {
-	return nil,nil
+	return nil, nil
 }
 
 func (d *StaticDiscovery) Close() error {
-return nil
+	return nil
 }
 
 func (d *StaticDiscovery) Open() error {
-return nil
+	return nil
 }

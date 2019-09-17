@@ -51,7 +51,7 @@ func toDiscoverConfig(e *entity.Service) *discovery.Config {
 
 			clusterName := node_common.ClusterName()
 			if v, has := clusterConfigObj[clusterName]; has {
-				if len(strings.Trim(v, " "))>0{
+				if len(strings.Trim(v, " ")) > 0 {
 					c.Config = v
 				}
 			}

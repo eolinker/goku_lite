@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"time"
 )
+
 var (
 	authNames = map[string]string{
 		"Oauth2": "goku-oauth2_auth",
@@ -23,13 +24,10 @@ var (
 	}
 )
 
-
-
 func getPluginNameByType(authType string) (string, bool) {
 	name, has := authNames[authType]
 	return name, has
 }
-
 
 // 执行插件的Access函数
 func AccessFunc(ctx *common.Context, handleFunc []*entity.PluginHandlerExce) (bool, int) {
@@ -37,26 +35,26 @@ func AccessFunc(ctx *common.Context, handleFunc []*entity.PluginHandlerExce) (bo
 	authType := ctx.Request().GetHeader("Authorization-Type")
 	authName, _ := getPluginNameByType(authType)
 	defer func(ctx *common.Context) {
-		log.Debug(requestId," access plugin default: begin")
+		log.Debug(requestId, " access plugin default: begin")
 		for _, handler := range plugin_manager.GetDefaultPlugins() {
-			if handler.PluginObj.Access==nil || reflect.ValueOf(handler.PluginObj.Access).IsNil() {
+			if handler.PluginObj.Access == nil || reflect.ValueOf(handler.PluginObj.Access).IsNil() {
 				continue
 			}
 			ctx.SetPlugin(handler.Name)
-			log.Info(requestId," access plugin:",handler.Name)
-			now:=time.Now()
-			_, err:=handler.PluginObj.Access.Access(ctx)
-			log.Debug(requestId," access plugin:",handler.Name," Duration",time.Since(now))
-			if err!=nil{
-				log.Warn(requestId," access plugin:",handler.Name," error:",err.Error())
+			log.Info(requestId, " access plugin:", handler.Name)
+			now := time.Now()
+			_, err := handler.PluginObj.Access.Access(ctx)
+			log.Debug(requestId, " access plugin:", handler.Name, " Duration", time.Since(now))
+			if err != nil {
+				log.Warn(requestId, " access plugin:", handler.Name, " error:", err.Error())
 			}
 		}
-		log.Debug(requestId," access plugin default: end")
+		log.Debug(requestId, " access plugin default: end")
 	}(ctx)
 	isAuthSucess := false
 	isNeedAuth := false
 
-	log.Debug(requestId," access plugin auth check: begin")
+	log.Debug(requestId, " access plugin auth check: begin")
 	for _, handler := range handleFunc {
 		if _, has := authPluginNames[handler.Name]; has {
 			isNeedAuth = true
@@ -67,33 +65,33 @@ func AccessFunc(ctx *common.Context, handleFunc []*entity.PluginHandlerExce) (bo
 				continue
 			}
 			ctx.SetPlugin(handler.Name)
-			log.Debug(requestId," access plugin:",handler.Name," begin")
-			now:=time.Now()
+			log.Debug(requestId, " access plugin:", handler.Name, " begin")
+			now := time.Now()
 			flag, err := handler.PluginObj.Access.Access(ctx)
-			log.Debug(requestId," access plugin:",handler.Name," Duration",time.Since(now))
+			log.Debug(requestId, " access plugin:", handler.Name, " Duration", time.Since(now))
 			if flag == false {
 				// 校验失败
 				if err != nil {
-					log.Warn(requestId," access auth:[",handler.Name,"] error:",err.Error())
+					log.Warn(requestId, " access auth:[", handler.Name, "] error:", err.Error())
 				}
-				log.Info(requestId," auth [",authName,"] refuse")
+				log.Info(requestId, " auth [", authName, "] refuse")
 
 				return false, 0
 			}
-			log.Debug(requestId," auth [",authName,"] pass")
+			log.Debug(requestId, " auth [", authName, "] pass")
 			isAuthSucess = true
 		}
 	}
-	log.Debug(requestId," access plugin auth check: end")
+	log.Debug(requestId, " access plugin auth check: end")
 	// 需要校验但是没有执行校验
 	if isNeedAuth && !isAuthSucess {
-		log.Warn(requestId," Illegal authorization type:",authType)
+		log.Warn(requestId, " Illegal authorization type:", authType)
 		ctx.SetStatus(403, "403")
 		ctx.SetBody([]byte("[ERROR]Illegal authorization type!"))
 		return false, 0
 	}
 	lastIndex := 0
-	log.Debug(requestId," access plugin : begin")
+	log.Debug(requestId, " access plugin : begin")
 	// 执行校验以外的插件
 	for index, handler := range handleFunc {
 		lastIndex = index
@@ -106,19 +104,19 @@ func AccessFunc(ctx *common.Context, handleFunc []*entity.PluginHandlerExce) (bo
 		}
 
 		ctx.SetPlugin(handler.Name)
-		log.Debug(requestId," access plugin:",handler.Name)
-		now:=time.Now()
+		log.Debug(requestId, " access plugin:", handler.Name)
+		now := time.Now()
 		flag, err := handler.PluginObj.Access.Access(ctx)
-		log.Debug(requestId," access plugin:",handler.Name," Duration:",time.Since(now))
+		log.Debug(requestId, " access plugin:", handler.Name, " Duration:", time.Since(now))
 		if err != nil {
-			log.Warn(requestId," access plugin:",handler.Name," error:",err.Error())
+			log.Warn(requestId, " access plugin:", handler.Name, " error:", err.Error())
 		}
 		if flag == false && handler.IsStop {
-			log.Info(requestId," access plugin:",handler.Name," stop")
+			log.Info(requestId, " access plugin:", handler.Name, " stop")
 			return false, index
 		}
-		log.Debug(requestId," access plugin:",handler.Name," continue")
+		log.Debug(requestId, " access plugin:", handler.Name, " continue")
 	}
-	log.Debug(requestId," access plugin : end")
+	log.Debug(requestId, " access plugin : end")
 	return true, lastIndex
 }

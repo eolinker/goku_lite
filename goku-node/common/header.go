@@ -1,11 +1,9 @@
 package common
 
 import (
-
 	goku_plugin "github.com/eolinker/goku-plugin"
 	"net/http"
 	"net/url"
-
 )
 
 type Header struct {
@@ -20,7 +18,7 @@ func (h *Header) Headers() http.Header {
 	}
 	return n
 }
-func (h *Header) String()string  {
+func (h *Header) String() string {
 
 	return url.Values(h.header).Encode()
 	//buf:=bytes.NewBuffer(nil)

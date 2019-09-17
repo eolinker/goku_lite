@@ -14,69 +14,72 @@ import (
 
 func Add(info *Param) (string, error) {
 	const TableName = "goku_balance"
-	serviceInfo,err:= service.Get(info.ServiceName)
-	if err!=nil{
-		return fmt.Sprintf("serviceName:%s",err.Error()),err
+	serviceInfo, err := service.Get(info.ServiceName)
+	if err != nil {
+		return fmt.Sprintf("serviceName:%s", err.Error()), err
 	}
 	switch serviceInfo.Type {
-	case driver2.Static:{
-		if info.Static == ""&& info.StaticCluster ==""{
-			return "param:static 和 staticCluster 不能同时为空",errors.New( "param:static 和 staticCluster 不能同时为空")
+	case driver2.Static:
+		{
+			if info.Static == "" && info.StaticCluster == "" {
+				return "param:static 和 staticCluster 不能同时为空", errors.New("param:static 和 staticCluster 不能同时为空")
+			}
+			now := time.Now().Format("2006-01-02 15:04:05")
+			result, err := dao_balance.AddStatic(info.Name, info.ServiceName, info.Static, info.StaticCluster, info.Desc, now)
+			if err == nil {
+				dao.UpdateTable(TableName)
+			}
+			return result, err
 		}
-		now := time.Now().Format("2006-01-02 15:04:05")
-		result, err :=dao_balance.AddStatic(info.Name,info.ServiceName,info.Static,info.StaticCluster,info.Desc,now)
-		if err == nil {
-			dao.UpdateTable(TableName)
+	case driver2.Discovery:
+		{
+			if info.AppName == "" {
+				return "param:appName 不能为空", errors.New("param:appName 不能为空")
+			}
+			now := time.Now().Format("2006-01-02 15:04:05")
+			result, err := dao_balance.AddDiscovery(info.Name, info.ServiceName, info.AppName, info.Desc, now)
+			if err == nil {
+				dao.UpdateTable(TableName)
+			}
+			return result, err
 		}
-		return result, err
-	}
-	case driver2.Discovery:{
-		if info.AppName == ""{
-			return "param:appName 不能为空",errors.New( "param:appName 不能为空")
-		}
-		now := time.Now().Format("2006-01-02 15:04:05")
-		result, err :=dao_balance.AddDiscovery(info.Name,info.ServiceName,info.AppName,info.Desc,now)
-		if err == nil {
-			dao.UpdateTable(TableName)
-		}
-		return result, err
-	}
 
 	}
 
 	return "无效serviceName", errors.New("invalid serviceName")
 }
 
-
 func Save(info *Param) (string, error) {
 	const TableName = "goku_balance"
-	serviceInfo,err:= service.Get(info.ServiceName)
-	if err!=nil{
-		return fmt.Sprintf("serviceName:%s",err.Error()),err
+	serviceInfo, err := service.Get(info.ServiceName)
+	if err != nil {
+		return fmt.Sprintf("serviceName:%s", err.Error()), err
 	}
 	switch serviceInfo.Type {
-	case driver2.Static:{
-		if info.Static == ""&& info.StaticCluster ==""{
-			return "param:static 和 staticCluster 不能同时为空",errors.New( "param:static 和 staticCluster 不能同时为空")
+	case driver2.Static:
+		{
+			if info.Static == "" && info.StaticCluster == "" {
+				return "param:static 和 staticCluster 不能同时为空", errors.New("param:static 和 staticCluster 不能同时为空")
+			}
+			now := time.Now().Format("2006-01-02 15:04:05")
+			result, err := dao_balance.SaveStatic(info.Name, info.ServiceName, info.Static, info.StaticCluster, info.Desc, now)
+			if err == nil {
+				dao.UpdateTable(TableName)
+			}
+			return result, err
 		}
-		now := time.Now().Format("2006-01-02 15:04:05")
-		result, err :=dao_balance.SaveStatic(info.Name,info.ServiceName,info.Static,info.StaticCluster,info.Desc,now)
-		if err == nil {
-			dao.UpdateTable(TableName)
+	case driver2.Discovery:
+		{
+			if info.AppName == "" {
+				return "param:appName 不能为空", errors.New("param:appName 不能为空")
+			}
+			now := time.Now().Format("2006-01-02 15:04:05")
+			result, err := dao_balance.SaveDiscover(info.Name, info.ServiceName, info.AppName, info.Desc, now)
+			if err == nil {
+				dao.UpdateTable(TableName)
+			}
+			return result, err
 		}
-		return result, err
-	}
-	case driver2.Discovery:{
-		if info.AppName == ""{
-			return "param:appName 不能为空",errors.New( "param:appName 不能为空")
-		}
-		now := time.Now().Format("2006-01-02 15:04:05")
-		result, err :=dao_balance.SaveDiscover(info.Name,info.ServiceName,info.AppName,info.Desc,now)
-		if err == nil {
-			dao.UpdateTable(TableName)
-		}
-		return result, err
-	}
 
 	}
 
@@ -88,18 +91,18 @@ func Get(name string) (*Info, error) {
 		return nil, e
 	}
 
-	return ReadInfo(b),nil
+	return ReadInfo(b), nil
 }
-func Search(keyworkd string)([]*Info, error){
+func Search(keyworkd string) ([]*Info, error) {
 	var entities []*entity.Balance
-	if keyworkd == ""{
-		es, e:= dao_balance.GetAll()
+	if keyworkd == "" {
+		es, e := dao_balance.GetAll()
 		if e != nil {
 			return nil, e
 		}
 		entities = es
-	}else{
-		es, e:= dao_balance.Search(keyworkd)
+	} else {
+		es, e := dao_balance.Search(keyworkd)
 		if e != nil {
 			return nil, e
 		}

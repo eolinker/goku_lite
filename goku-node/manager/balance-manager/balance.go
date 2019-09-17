@@ -47,7 +47,7 @@ func genBalance(e *entity.Balance) *balance.Balance {
 			b.AppConfig = e.Static
 			if err := json.Unmarshal([]byte(e.StaticCluster), &m); err == nil {
 				if v, has := m[node_common.ClusterName()]; has {
-					if len(strings.Trim(v, " "))>0{
+					if len(strings.Trim(v, " ")) > 0 {
 						b.AppConfig = v
 					}
 				}

@@ -5,24 +5,24 @@ import (
 )
 
 type Entry struct {
-	Pattern string
+	Pattern     string
 	HandlerFunc func(w http.ResponseWriter, r *http.Request)
 }
+
 func init() {
 
 }
 func Handler() []Entry {
 
-
 	return []Entry{
 		{
-			Pattern:"/goku-update", HandlerFunc:gokuUpdate,
+			Pattern: "/goku-update", HandlerFunc: gokuUpdate,
 		},
 		{
-			Pattern:"/goku-check_update",HandlerFunc: gokuCheckUpdate},
+			Pattern: "/goku-check_update", HandlerFunc: gokuCheckUpdate},
 		{
-			Pattern:"/goku-check_plugin" , HandlerFunc:gokuCheckPlugin},
+			Pattern: "/goku-check_plugin", HandlerFunc: gokuCheckPlugin},
 		{
-			Pattern:"/goku-monitor",HandlerFunc:gokuMonitor},
+			Pattern: "/goku-monitor", HandlerFunc: gokuMonitor},
 	}
 }

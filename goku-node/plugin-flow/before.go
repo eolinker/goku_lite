@@ -12,24 +12,24 @@ import (
 func BeforeMatch(ctx *common.Context) bool {
 	requestId := ctx.RequestId()
 	defer func(ctx *common.Context) {
-		log.Debug(requestId," before plugin default: begin")
+		log.Debug(requestId, " before plugin default: begin")
 		for _, handler := range plugin_manager.GetDefaultPlugins() {
 			if handler.PluginObj.BeforeMatch == nil || reflect.ValueOf(handler.PluginObj.BeforeMatch).IsNil() {
 				continue
 			}
 			ctx.SetPlugin(handler.Name)
-			log.Debug(requestId," before plugin :",handler.Name," start")
-			now:=time.Now()
-			_,err:=handler.PluginObj.BeforeMatch.BeforeMatch(ctx)
-			log.Debug(requestId," before plugin :",handler.Name," Duration:",time.Since(now))
-			log.Debug(requestId," before plugin :",handler.Name," end")
+			log.Debug(requestId, " before plugin :", handler.Name, " start")
+			now := time.Now()
+			_, err := handler.PluginObj.BeforeMatch.BeforeMatch(ctx)
+			log.Debug(requestId, " before plugin :", handler.Name, " Duration:", time.Since(now))
+			log.Debug(requestId, " before plugin :", handler.Name, " end")
 			if err != nil {
-				log.Warn(requestId," before plugin:",handler.Name," error:",err.Error())
+				log.Warn(requestId, " before plugin:", handler.Name, " error:", err.Error())
 			}
 		}
-		log.Debug(requestId," before plugin default: end")
+		log.Debug(requestId, " before plugin default: end")
 	}(ctx)
-	log.Debug(requestId," before plugin : begin")
+	log.Debug(requestId, " before plugin : begin")
 	for _, handler := range plugin_manager.GetBeforPlugins() {
 
 		if handler.PluginObj.BeforeMatch == nil || reflect.ValueOf(handler.PluginObj.BeforeMatch).IsNil() {
@@ -37,14 +37,14 @@ func BeforeMatch(ctx *common.Context) bool {
 		}
 
 		ctx.SetPlugin(handler.Name)
-		log.Debug(requestId," before plugin :",handler.Name," start")
-		now:=time.Now()
+		log.Debug(requestId, " before plugin :", handler.Name, " start")
+		now := time.Now()
 		flag, err := handler.PluginObj.BeforeMatch.BeforeMatch(ctx)
-		log.Debug(requestId," before plugin :",handler.Name," Duration:",time.Since(now))
-		log.Debug(requestId," before plugin :",handler.Name," end")
+		log.Debug(requestId, " before plugin :", handler.Name, " Duration:", time.Since(now))
+		log.Debug(requestId, " before plugin :", handler.Name, " end")
 
 		if err != nil {
-			log.Warn(requestId," before plugin:",handler.Name," error:",err.Error())
+			log.Warn(requestId, " before plugin:", handler.Name, " error:", err.Error())
 		}
 		if flag == false {
 			if handler.IsStop == true {
@@ -52,6 +52,6 @@ func BeforeMatch(ctx *common.Context) bool {
 			}
 		}
 	}
-	log.Debug(requestId," before plugin : end")
+	log.Debug(requestId, " before plugin : end")
 	return true
 }

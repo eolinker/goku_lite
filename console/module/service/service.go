@@ -16,30 +16,30 @@ type Service struct {
 	IsDefault   bool   `json:"isDefault"`
 	HealthCheck bool   `json:"healthCheck"`
 	UpdateTime  string `json:"updateTime"`
-	CreateTime         string `json:"createTime"`
+	CreateTime  string `json:"createTime"`
 }
 
 type Info struct {
 	*Service
-	Config             string `json:"config"`
-	ClusterConfig      string `json:"-"`
-	ClusterConfigObj map[string]string `json:"clusterConfig"`
-	HealthCheckPath    string `json:"healthCheckPath"`
-	HealthCheckPeriod  int    `json:"healthCheckPeriod"`
-	HealthCheckCode    string `json:"healthCheckCode"`
-	HealthCheckTimeOut int    `json:"healthCheckTimeOut"`
+	Config             string            `json:"config"`
+	ClusterConfig      string            `json:"-"`
+	ClusterConfigObj   map[string]string `json:"clusterConfig"`
+	HealthCheckPath    string            `json:"healthCheckPath"`
+	HealthCheckPeriod  int               `json:"healthCheckPeriod"`
+	HealthCheckCode    string            `json:"healthCheckCode"`
+	HealthCheckTimeOut int               `json:"healthCheckTimeOut"`
 }
 
-func (i *Info) Decode()  {
-	json.Unmarshal([]byte(i.ClusterConfig),&i.ClusterConfigObj)
+func (i *Info) Decode() {
+	json.Unmarshal([]byte(i.ClusterConfig), &i.ClusterConfigObj)
 }
 
 type AddParam struct {
-	Name               string `opt:"name,require"`
-	Driver             string `opt:"driver" default:"static"`
-	Desc               string `opt:"desc"`
-	Config             string `opt:"config"`
-	ClusterConfig      string `opt:"clusterConfig"`
+	Name          string `opt:"name,require"`
+	Driver        string `opt:"driver" default:"static"`
+	Desc          string `opt:"desc"`
+	Config        string `opt:"config"`
+	ClusterConfig string `opt:"clusterConfig"`
 	//ClusterConfigObj map[string]string `json:"clusterConfig"`
 	HealthCheck        bool   `opt:"healthCheck" default:"false"`
 	HealthCheckPath    string `opt:"healthCheckPath"`

@@ -40,7 +40,7 @@ func (ctx *Context) SetRetryTargetServers(retryTargetServers string) {
 	ctx.retryTargetServers = retryTargetServers
 }
 
-func (ctx *Context) Finish() (n int,statusCode int){
+func (ctx *Context) Finish() (n int, statusCode int) {
 
 	header := ctx.PriorityHeader.header
 
@@ -91,10 +91,10 @@ func (ctx *Context) Finish() (n int,statusCode int){
 	ctx.w.WriteHeader(statusCode)
 
 	if !bodyAllowed {
-		return 0,statusCode
+		return 0, statusCode
 	}
 	n, _ = ctx.w.Write(ctx.Body)
-	return n,statusCode
+	return n, statusCode
 }
 func (ctx *Context) RequestId() string {
 	return ctx.requestId

@@ -10,10 +10,11 @@ import (
 )
 
 type AccessLogFormatter struct {
-	fields []access_field.AccessFieldKey
-	locker sync.RWMutex
+	fields          []access_field.AccessFieldKey
+	locker          sync.RWMutex
 	TimestampFormat string
 }
+
 func (f *AccessLogFormatter) SetFields(fields []access_field.AccessFieldKey) {
 	f.locker.Lock()
 	f.fields = fields
@@ -32,27 +33,27 @@ func (f *AccessLogFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 		timestampFormat = DefaultTimeStampFormatter
 	}
 
-	data:= entry.Data
+	data := entry.Data
 	data[access_field.TimeLocal] = entry.Time.Format(timestampFormat)
-	data[access_field.TimeIso8601] =  entry.Time.Format(TimeIso8601Formatter)
+	data[access_field.TimeIso8601] = entry.Time.Format(TimeIso8601Formatter)
 
-	msec := entry.Time.UnixNano()/int64(time.Millisecond)
-	data[access_field.Msec] = fmt.Sprintf("%d.%d",msec/1000,msec%1000)
+	msec := entry.Time.UnixNano() / int64(time.Millisecond)
+	data[access_field.Msec] = fmt.Sprintf("%d.%d", msec/1000, msec%1000)
 
-	requestTIme:= data[access_field.RequestTime].(time.Duration)
-	data[access_field.RequestTime] = fmt.Sprintf("%dms",requestTIme/time.Millisecond)
+	requestTIme := data[access_field.RequestTime].(time.Duration)
+	data[access_field.RequestTime] = fmt.Sprintf("%dms", requestTIme/time.Millisecond)
 
-	for _,key:=range f.fields{
+	for _, key := range f.fields {
 		b.WriteByte('\t')
-		if v,has := data[key.Key()];has{
-			f.appendValue(b,v)
-		}else{
-			f.appendValue(b,"-")
+		if v, has := data[key.Key()]; has {
+			f.appendValue(b, v)
+		} else {
+			f.appendValue(b, "-")
 		}
 	}
 	b.WriteByte('\n')
-	p:=b.Bytes()
-	return p[1:],nil
+	p := b.Bytes()
+	return p[1:], nil
 }
 
 //
@@ -75,11 +76,11 @@ func (f *AccessLogFormatter) appendValue(b *bytes.Buffer, value interface{}) {
 	}
 
 	//if !f.needsQuoting(stringVal) {
-		b.WriteString(stringVal)
+	b.WriteString(stringVal)
 	//} else {
 	//	b.WriteString(fmt.Sprintf("%q", stringVal))
 	//}
 }
-func NewAccessLogFormatter(fields []access_field.AccessFieldKey)*AccessLogFormatter  {
-	return &AccessLogFormatter{fields:fields}
+func NewAccessLogFormatter(fields []access_field.AccessFieldKey) *AccessLogFormatter {
+	return &AccessLogFormatter{fields: fields}
 }

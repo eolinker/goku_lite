@@ -1,1 +1,5 @@
 /.idea/
+/vendor/
+/out/
+/vendor
+/.vscode/

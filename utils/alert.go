@@ -4,7 +4,6 @@ import (
 	log "github.com/eolinker/goku/goku-log"
 	"io/ioutil"
 	"net"
-	"os"
 	"strings"
 	"time"
 )
@@ -36,10 +35,10 @@ func SendAlertMail(sender, senderPassword, smtpAddress, smtpPort, smtpProtocol, 
 	bodyStr = strings.Replace(bodyStr, "$apiName", apiName, -1)
 	host := net.JoinHostPort(smtpAddress, smtpPort)
 	subject := "GoKu告警：" + requestURL + "接口在" + period[alertPeriod] + "分钟内转发失败" + alertCount + "次"
-	err = SendToMail(sender, senderPassword, host, receiverMail, subject, bodyStr, "html", smtpProtocol)
+	err := SendToMail(sender, senderPassword, host, receiverMail, subject, bodyStr, "html", smtpProtocol)
 	if err != nil {
-		log.Warn("SendAlertMail:",err)
+		log.Warn("SendAlertMail:", err)
+		return false, err
 	}
 	return true, nil
 }
-

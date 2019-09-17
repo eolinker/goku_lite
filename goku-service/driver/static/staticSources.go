@@ -12,17 +12,19 @@ import (
 	"strings"
 	"unicode"
 )
+
 var ErrorNoInstance = errors.New("no instance")
+
 type Sources struct {
 	name string
 
-	discovery *StaticDiscovery
+	discovery          *StaticDiscovery
 	healthCheckHandler health.CheckHandler
-	instanceFactory *common.InstanceFactory
+	instanceFactory    *common.InstanceFactory
 }
 
 func (s *Sources) SetHealthConfig(conf *discovery.HealthCheckConfig) {
-	if conf==nil || !conf.IsHealthCheck  {
+	if conf == nil || !conf.IsHealthCheck {
 		s.Close()
 		return
 	}
@@ -36,37 +38,35 @@ func (s *Sources) SetHealthConfig(conf *discovery.HealthCheckConfig) {
 
 func (s *Sources) Close() {
 	instances := s.healthCheckHandler.Close()
-	for _,instance:=range instances{
-		instance.ChangeStatus(common.InstanceChecking,common.InstanceRun)
+	for _, instance := range instances {
+		instance.ChangeStatus(common.InstanceChecking, common.InstanceRun)
 	}
 }
 
 func (s *Sources) CheckDriver(driverName string) bool {
 
-
 	return driverName == DriverName
 }
 
-func (s*Sources)SetDriverConfig(config string) error {
+func (s *Sources) SetDriverConfig(config string) error {
 	return nil
 }
 
-func (s *Sources) GetApp(app string) (*common.Service,health.CheckHandler, bool) {
-	service,e:=s.decode(app)
-	if e!=nil{
-		return nil,nil,false
+func (s *Sources) GetApp(app string) (*common.Service, health.CheckHandler, bool) {
+	service, e := s.decode(app)
+	if e != nil {
+		return nil, nil, false
 	}
-	return service, s.healthCheckHandler,true
+	return service, s.healthCheckHandler, true
 }
 
 func NewStaticSources(name string) *Sources {
 	return &Sources{
 
-			name:               name,
-			discovery:          new(StaticDiscovery),
-			healthCheckHandler: &health.CheckBox{},
-			instanceFactory: common.NewInstanceFactory(),
-
+		name:               name,
+		discovery:          new(StaticDiscovery),
+		healthCheckHandler: &health.CheckBox{},
+		instanceFactory:    common.NewInstanceFactory(),
 	}
 }
 
@@ -82,13 +82,12 @@ func fields(str string) []string {
 	return words
 }
 
-func   (s*Sources) decode(config string)(*common.Service,error ){
+func (s *Sources) decode(config string) (*common.Service, error) {
 
 	words := fields(config)
 
-
-	instances:=make([]*common.Instance,0,5)
-	nodes:= make([]*Node,0,5)
+	instances := make([]*common.Instance, 0, 5)
+	nodes := make([]*Node, 0, 5)
 	var node *Node = nil
 	index := 0
 	for _, word := range words {
@@ -106,26 +105,26 @@ func   (s*Sources) decode(config string)(*common.Service,error ){
 		case 0:
 			{
 				node = new(Node)
-				vs:=strings.Split(value,":")
-			 	if len(vs)>2{
-			 		return nil,fmt.Errorf("decode ip:port failt for[%s]",value)
+				vs := strings.Split(value, ":")
+				if len(vs) > 2 {
+					return nil, fmt.Errorf("decode ip:port failt for[%s]", value)
 				}
-				node.IP=vs[0]
-				if len(vs) == 2{
-					node.Port,_= strconv.Atoi(vs[1])
+				node.IP = vs[0]
+				if len(vs) == 2 {
+					node.Port, _ = strconv.Atoi(vs[1])
 				}
-				if node.Port == 0{
+				if node.Port == 0 {
 					node.Port = 80
 				}
-			 	//node.InstanceId = fmt.Sprintf("%s:%d",node.IP,node.Port)
-				nodes = append(nodes,node)
+				//node.InstanceId = fmt.Sprintf("%s:%d",node.IP,node.Port)
+				nodes = append(nodes, node)
 
 			}
 		case 1:
 			{
 				weight, err := strconv.Atoi(value)
 				if err != nil {
-					return nil,err
+					return nil, err
 				}
 				node.Weight = weight
 			}
@@ -146,13 +145,13 @@ func   (s*Sources) decode(config string)(*common.Service,error ){
 	}
 
 	if len(nodes) > 0 {
-		for _,n:=range nodes{
-			instance:= s.instanceFactory.General(n.IP,n.Port,n.Weight)
+		for _, n := range nodes {
+			instance := s.instanceFactory.General(n.IP, n.Port, n.Weight)
 			instances = append(instances, instance)
 		}
-		s:=common.NewService("static_upstream",instances)
-		return s,nil
+		s := common.NewService("static_upstream", instances)
+		return s, nil
 	}
-	return nil,ErrorNoInstance
+	return nil, ErrorNoInstance
 
 }

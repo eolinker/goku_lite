@@ -1,7 +1,7 @@
 package access_field
 
-var(
-	defaultFields =[]AccessFieldKey{
+var (
+	defaultFields = []AccessFieldKey{
 		RequestId,
 
 		TimeIso8601,
@@ -20,17 +20,16 @@ var(
 		Retry,
 	}
 
-	defaultSet =make(map[AccessFieldKey]bool)
-
+	defaultSet = make(map[AccessFieldKey]bool)
 )
 
 func init() {
-	for _,k:=range defaultFields{
+	for _, k := range defaultFields {
 		defaultSet[k] = true
 	}
 }
 func IsDefault(k AccessFieldKey) bool {
-	_,has:= defaultSet[k]
+	_, has := defaultSet[k]
 	return has
 
 }

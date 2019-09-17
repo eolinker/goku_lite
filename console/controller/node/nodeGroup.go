@@ -188,8 +188,8 @@ func GetNodeGroupList(httpResponse http.ResponseWriter, httpRequest *http.Reques
 	}
 
 	cluserName := httpRequest.FormValue("cluster")
-	clusterId,has := cluster2.GetId(cluserName)
-	if !has{
+	clusterId, has := cluster2.GetId(cluserName)
+	if !has {
 		controller.WriteError(httpResponse,
 			"280001",
 			"nodeGroup",

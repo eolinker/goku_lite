@@ -34,7 +34,7 @@ func SendToMail(user, password, host, to, subject, body, mailtype, smtpProtocol 
 	}
 	var err error
 	msg := []byte("To: " + to + "\r\nFrom: " + user + ">\r\nSubject: " + subject + "\r\n" + content_type + "\r\n\r\n" + body)
-	log.Debug("SendToMail",msg)
+	log.Debug("SendToMail", msg)
 	if smtpProtocol != "0" {
 		err = SendMailUsingTLS(
 			host,

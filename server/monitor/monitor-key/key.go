@@ -15,27 +15,26 @@ const (
 	ProxyStatus5xxCount
 	ProxyTimeoutCount
 
-
-	MonitorKeyTypeSize = int(ProxyTimeoutCount)+1
-
+	MonitorKeyTypeSize = int(ProxyTimeoutCount) + 1
 )
+
 var (
 	keys []MonitorKeyType
 )
 
 func init() {
-	ks:=make([]MonitorKeyType,MonitorKeyTypeSize)
+	ks := make([]MonitorKeyType, MonitorKeyTypeSize)
 
-	for i:=range ks{
+	for i := range ks {
 		ks[i] = MonitorKeyType(i)
 	}
 	keys = ks
 }
-func Keys()[]MonitorKeyType  {
+func Keys() []MonitorKeyType {
 	return keys
 }
 
-func ToString(key int)string  {
+func ToString(key int) string {
 	return MonitorKeyType(key).String()
 }
 func (t MonitorKeyType) String() string {

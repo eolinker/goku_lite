@@ -1,8 +1,7 @@
 package static
 
 type Node struct {
-IP string
-Port int
-Weight int
-
+	IP     string
+	Port   int
+	Weight int
 }

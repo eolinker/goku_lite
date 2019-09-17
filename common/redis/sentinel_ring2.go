@@ -17,13 +17,12 @@ import (
 	"github.com/eolinker/goku/common/redis/internal"
 )
 
-
 // RingOptions are used to configure a ring client and should be
 // passed to NewRing.
 type SentinelRingOptions struct {
 	// Map of name => host:port addresses of ring shards.
-	Addrs []string
-	Masters[]string
+	Addrs   []string
+	Masters []string
 	// Frequency of PING commands sent to check shards availability.
 	// Shard is considered down after 3 subsequent failed checks.
 	HeartbeatFrequency time.Duration
@@ -98,10 +97,10 @@ func (opt *SentinelRingOptions) init() {
 func (opt *SentinelRingOptions) clientOptions(masterName string) *FailoverOptions {
 	return &FailoverOptions{
 
-		MasterName:masterName,
-		SentinelAddrs:opt.Addrs,
-		DB:       opt.DB,
-		Password: opt.Password,
+		MasterName:    masterName,
+		SentinelAddrs: opt.Addrs,
+		DB:            opt.DB,
+		Password:      opt.Password,
 
 		DialTimeout:  opt.DialTimeout,
 		ReadTimeout:  opt.ReadTimeout,
@@ -322,8 +321,8 @@ func NewSentinelRing(opt *SentinelRingOptions) *SentinelRing {
 		clopt := opt.clientOptions(masterName)
 		ring.shards.Add(masterName, NewFailoverClient(clopt))
 	}
-	ring.sentinelClients = make([]*SentinelClient,0,len(opt.Addrs))
-	for _, addr:=range opt.Addrs{
+	ring.sentinelClients = make([]*SentinelClient, 0, len(opt.Addrs))
+	for _, addr := range opt.Addrs {
 
 		sentinel := NewSentinelClient(&Options{
 			Addr: addr,
@@ -335,11 +334,11 @@ func NewSentinelRing(opt *SentinelRingOptions) *SentinelRing {
 			WriteTimeout: opt.WriteTimeout,
 
 			PoolSize:           1,
-			PoolTimeout:       opt.PoolTimeout,
+			PoolTimeout:        opt.PoolTimeout,
 			IdleTimeout:        opt.IdleTimeout,
 			IdleCheckFrequency: opt.IdleCheckFrequency,
 		})
-		ring.sentinelClients = append(ring.sentinelClients,sentinel)
+		ring.sentinelClients = append(ring.sentinelClients, sentinel)
 	}
 	go ring.shards.Heartbeat(opt.HeartbeatFrequency)
 
@@ -429,23 +428,20 @@ func (c *SentinelRing) PSubscribe(channels ...string) *PubSub {
 //// It returns the first error if any.
 func (c *SentinelRing) ForEachAddr(fn func(addr string) error) error {
 
-
 	for _, masterName := range c.opt.Masters {
 
+		for _, sentinel := range c.sentinelClients {
 
+			masterAddrs, err := sentinel.GetMasterAddrByName(masterName).Result()
 
-			for _, sentinel := range c.sentinelClients {
-
-				masterAddrs, err := sentinel.GetMasterAddrByName(masterName).Result()
-
-				if err != nil {
-					internal.Logf("sentinel: GetMasterAddrByName master=%q failed: %s",masterName, err)
-					continue
-				}
-
-				 fn(fmt.Sprintf("%s:%s",masterAddrs[0],masterAddrs[1]))
-				break
+			if err != nil {
+				internal.Logf("sentinel: GetMasterAddrByName master=%q failed: %s", masterName, err)
+				continue
 			}
+
+			fn(fmt.Sprintf("%s:%s", masterAddrs[0], masterAddrs[1]))
+			break
+		}
 
 	}
 	return nil

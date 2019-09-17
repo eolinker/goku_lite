@@ -19,7 +19,7 @@ func Register(loginCall, loginPassword string) bool {
 	return console_mysql.Register(loginCall, loginPassword)
 }
 
-func CheckSuperAdminCount()(int,error){
-	b,err:=console_mysql.CheckSuperAdminCount()
-	return b,err
+func CheckSuperAdminCount() (int, error) {
+	b, err := console_mysql.CheckSuperAdminCount()
+	return b, err
 }

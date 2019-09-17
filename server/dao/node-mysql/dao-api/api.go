@@ -31,11 +31,11 @@ func GetAllApi() (map[int]*entity.Api, error) {
 		if err != nil {
 			continue
 		}
-		if len(api.RequestURL)==0 || api.RequestURL[0]!= '/'{
-			api.RequestURL = fmt.Sprint("/",api.RequestURL)
+		if len(api.RequestURL) == 0 || api.RequestURL[0] != '/' {
+			api.RequestURL = fmt.Sprint("/", api.RequestURL)
 		}
-		if len(api.TargetURL)==0 ||api.TargetURL[0]!= '/'{
-			api.TargetURL = fmt.Sprint("/",api.TargetURL)
+		if len(api.TargetURL) == 0 || api.TargetURL[0] != '/' {
+			api.TargetURL = fmt.Sprint("/", api.TargetURL)
 		}
 
 		apiList[api.ApiID] = api

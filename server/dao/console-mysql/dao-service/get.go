@@ -6,24 +6,25 @@ import (
 	entity "github.com/eolinker/goku/server/entity/console-entity"
 )
 
-const sqlGet  = "SELECT `name`,`driver`,`default`,`desc`,`config`,`clusterConfig`,`healthCheck`,`healthCheckPath`,`healthCheckPeriod`,`healthCheckCode`,`healthCheckTimeOut`,`createTime`,`updateTime` FROM `goku_service_config` WHERE `name`=?; "
-func Get(name string)(*entity.Service, error)  {
+const sqlGet = "SELECT `name`,`driver`,`default`,`desc`,`config`,`clusterConfig`,`healthCheck`,`healthCheckPath`,`healthCheckPeriod`,`healthCheckCode`,`healthCheckTimeOut`,`createTime`,`updateTime` FROM `goku_service_config` WHERE `name`=?; "
+
+func Get(name string) (*entity.Service, error) {
 
 	stmt, e := database.GetConnection().Prepare(sqlGet)
-	if e!=nil{
-		return nil,e
+	if e != nil {
+		return nil, e
 	}
 	defer stmt.Close()
-	rows,err:=stmt.Query(name)
+	rows, err := stmt.Query(name)
 
-	if err!=nil{
-		return nil,err
+	if err != nil {
+		return nil, err
 	}
 	defer rows.Close()
-	if rows.Next(){
+	if rows.Next() {
 
-		v:=new(entity.Service)
-		er:=rows.Scan(&v.Name,
+		v := new(entity.Service)
+		er := rows.Scan(&v.Name,
 			&v.Driver,
 			&v.IsDefault,
 			&v.Desc,
@@ -36,15 +37,14 @@ func Get(name string)(*entity.Service, error)  {
 			&v.HealthCheckTimeOut,
 			&v.CreateTime,
 			&v.UpdateTime,
-			)
-		if er!=nil{
-			return nil,er
+		)
+		if er != nil {
+			return nil, er
 		}
 
-
-		return v,nil
+		return v, nil
 	}
 
-	return nil,fmt.Errorf("no that service:%s",name)
+	return nil, fmt.Errorf("no that service:%s", name)
 
 }

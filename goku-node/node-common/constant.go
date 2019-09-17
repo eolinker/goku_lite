@@ -19,11 +19,11 @@ func ClusterName() string {
 }
 
 func SetAdmin(host string) {
-	h:= strings.TrimPrefix(host,"http://")
-	h = strings.TrimSuffix(h,"/")
+	h := strings.TrimPrefix(host, "http://")
+	h = strings.TrimSuffix(h, "/")
 	adminUrl = fmt.Sprintf("http://%s", h)
 }
 func GetAdminUrl(path string) string {
-	p:=strings.TrimPrefix(path,"/")
+	p := strings.TrimPrefix(path, "/")
 	return fmt.Sprintf("%s/%s", adminUrl, p)
 }

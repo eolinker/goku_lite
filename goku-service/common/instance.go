@@ -4,11 +4,11 @@ import "sync"
 
 type Instance struct {
 	InstanceId string
-	IP string
-	Port int
-	Weight int
-	Status InstanceStatus
-	locker sync.RWMutex
+	IP         string
+	Port       int
+	Weight     int
+	Status     InstanceStatus
+	locker     sync.RWMutex
 }
 type PInstances []*Instance
 
@@ -17,32 +17,31 @@ func (p PInstances) Len() int {
 }
 
 func (p PInstances) Less(i, j int) bool {
-	return p[i].Weight<p[j].Weight
+	return p[i].Weight < p[j].Weight
 }
 
 func (p PInstances) Swap(i, j int) {
-	p[i],p[j]=p[j],p[i]
+	p[i], p[j] = p[j], p[i]
 }
 
-func (i*Instance)CheckStatus(status InstanceStatus)  bool {
+func (i *Instance) CheckStatus(status InstanceStatus) bool {
 	i.locker.RLock()
-	b:= i.Status == status
+	b := i.Status == status
 	i.locker.RUnlock()
 	return b
 }
 
-
 //ChangeStatus set status to desc  where status is org
-func (i *Instance)ChangeStatus(org,dest InstanceStatus)bool {
-	if org == dest{
+func (i *Instance) ChangeStatus(org, dest InstanceStatus) bool {
+	if org == dest {
 		return i.CheckStatus(org)
 	}
 
 	i.locker.RLock()
-	b:= i.Status == org
+	b := i.Status == org
 	i.locker.RUnlock()
 
-	if !b{
+	if !b {
 		return false
 	}
 

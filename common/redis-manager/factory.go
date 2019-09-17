@@ -26,7 +26,7 @@ func Create(config RedisConfig) Redis {
 
 			return &redisProxy{
 				Cmdable: redis.NewClusterClient(option),
-				config:      config,
+				config:  config,
 			}
 		}
 	case RedisModeSentinel:
@@ -41,7 +41,7 @@ func Create(config RedisConfig) Redis {
 			}
 			return &redisProxy{
 				Cmdable: redis.NewSentinelRing(&option),
-				config:      config,
+				config:  config,
 			}
 		}
 	case RedisModeStand:
@@ -63,7 +63,7 @@ func Create(config RedisConfig) Redis {
 
 			return &redisProxy{
 				Cmdable: redis.NewRing(&option),
-				config:      config,
+				config:  config,
 			}
 		}
 	}

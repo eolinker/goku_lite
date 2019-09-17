@@ -68,7 +68,7 @@ func LoadPlugin(pis map[string]*entity.PluginInfo) (allFactory map[string]*entit
 	for key, value := range pis {
 		handle, err, _ := globalPluginManager.loadPlugin(key)
 		if err != nil {
-			goku_plugin.Warn("LoadPlugin:",err.Error())
+			goku_plugin.Warn("LoadPlugin:", err.Error())
 			continue
 		}
 		factory := &entity.PluginFactoryHandler{
@@ -144,14 +144,14 @@ func (m *_GlodPluginManager) loadPlugin(name string) (goku_plugin.PluginFactory,
 
 	vp, ok := v.(func() goku_plugin.PluginFactory)
 	if !ok {
-		e := fmt.Errorf("The builder func  can not  implemented interface named goku_plugin.PluginFactory:%s ",name)
+		e := fmt.Errorf("The builder func  can not  implemented interface named goku_plugin.PluginFactory:%s ", name)
 		m.errors[name] = e
 		m.errorCodes[name] = LoadInterFaceError
 		return nil, e, LoadInterFaceError
 	}
 	factory := vp()
 	if factory == nil || reflect.ValueOf(factory).IsNil() {
-		e := fmt.Errorf("The builder result is nil:%s ",name)
+		e := fmt.Errorf("The builder result is nil:%s ", name)
 		m.errors[name] = e
 		m.errorCodes[name] = LoadInterFaceError
 		return nil, e, LoadInterFaceError

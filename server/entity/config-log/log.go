@@ -1,13 +1,12 @@
 package entity
 
 type LogConfig struct {
-	Name string
+	Name   string
 	Enable int
-	Dir string
-	File string
-	Level string
+	Dir    string
+	File   string
+	Level  string
 	Period string
 	Expire int
 	Fields string
 }
-

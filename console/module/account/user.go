@@ -3,6 +3,7 @@ package account
 import (
 	"github.com/eolinker/goku/server/dao/console-mysql"
 )
+
 // 获取具有编辑权限的用户列表
 func GetUserListWithPermission(operationType, operation string) (bool, []map[string]interface{}, error) {
 	return console_mysql.GetUserListWithPermission(operationType, operation)

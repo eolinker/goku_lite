@@ -6,12 +6,12 @@ import (
 	"testing"
 )
 
-func TestGenSql(t *testing.T)  {
+func TestGenSql(t *testing.T) {
 	keys := monitor_key.Keys()
-	fields := make([]string,len(keys))
+	fields := make([]string, len(keys))
 
-	for i:=range keys{
-		fields[i] = fmt.Sprintf("`%s`",keys[i].String())
+	for i := range keys {
+		fields[i] = fmt.Sprintf("`%s`", keys[i].String())
 	}
 	fmt.Println("# save ")
 	fmt.Println(genSqlSave(fields))

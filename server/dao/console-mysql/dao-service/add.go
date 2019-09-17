@@ -5,17 +5,17 @@ import (
 	"time"
 )
 
-const sqlAdd="INSERT INTO `goku_service_config`(`name`,`driver`,`default`,`desc`,`config`,`clusterConfig`,`healthCheck`,`healthCheckPath`,`healthCheckPeriod`,`healthCheckCode`,`healthCheckTimeOut`,`createTime`,`updateTime`)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?);"
-func Add(name, driver, desc, config, clusterConfig string,isDefault,healthCheck bool,healthCheckPath string,healthCheckCode string,healthCheckPeriod ,healthCheckTimeOut int) error {
+const sqlAdd = "INSERT INTO `goku_service_config`(`name`,`driver`,`default`,`desc`,`config`,`clusterConfig`,`healthCheck`,`healthCheckPath`,`healthCheckPeriod`,`healthCheckCode`,`healthCheckTimeOut`,`createTime`,`updateTime`)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?);"
 
-	now:=time.Now()
+func Add(name, driver, desc, config, clusterConfig string, isDefault, healthCheck bool, healthCheckPath string, healthCheckCode string, healthCheckPeriod, healthCheckTimeOut int) error {
+
+	now := time.Now()
 
 	stmt, e := database.GetConnection().Prepare(sqlAdd)
-	if e!=nil{
+	if e != nil {
 		return e
 	}
 
-	_,err:=stmt.Exec(name,driver,isDefault,desc,config,clusterConfig,healthCheck,healthCheckPath,healthCheckPeriod,healthCheckCode,healthCheckTimeOut,now,now)
+	_, err := stmt.Exec(name, driver, isDefault, desc, config, clusterConfig, healthCheck, healthCheckPath, healthCheckPeriod, healthCheckCode, healthCheckTimeOut, now, now)
 	return err
 }
-

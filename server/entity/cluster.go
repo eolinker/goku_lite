@@ -4,9 +4,9 @@ import "fmt"
 
 //const ClusterDefaultName = "default"
 type Cluster struct {
-	Id    int          `json:"-" yaml:"-"`
-	Name  string       `json:"name" yaml:"name"`
-	Title string       `json:"title" yaml:"title"`
+	Id    int    `json:"-" yaml:"-"`
+	Name  string `json:"name" yaml:"name"`
+	Title string `json:"title" yaml:"title"`
 }
 type ClusterInfo struct {
 	Id    int          `json:"-" yaml:"-"`
@@ -40,12 +40,11 @@ func (c *ClusterDB) GetSource() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8", c.UserName, c.Password, c.Host, c.Port, c.Database)
 }
 
-
-func (c*ClusterInfo)Cluster()*Cluster  {
+func (c *ClusterInfo) Cluster() *Cluster {
 	return &Cluster{
-		Id:c.Id,
-		Name:c.Name,
-		Title:c.Title,
+		Id:    c.Id,
+		Name:  c.Name,
+		Title: c.Title,
 	}
 
 }

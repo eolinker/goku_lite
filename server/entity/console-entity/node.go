@@ -1,10 +1,10 @@
 package entity
 
 type Node struct {
-	NodeID       int    `json:"nodeID"`
-	NodeName     string `json:"nodeName"`
-	NodeIP       string `json:"nodeIP"`
-	NodePort     string `json:"nodePort"`
+	NodeID   int    `json:"nodeID"`
+	NodeName string `json:"nodeName"`
+	NodeIP   string `json:"nodeIP"`
+	NodePort string `json:"nodePort"`
 
 	CreateTime   string `json:"createTime"`
 	UpdateTime   string `json:"updateTime"`
@@ -14,9 +14,9 @@ type Node struct {
 	GroupID      int    `json:"groupID,omitempty"`
 	GroupName    string `json:"groupName,omitempty"`
 	IsUpdate     bool   `json:"isUpdate"`
-	Cluster 	 string `json:"cluster"`
+	Cluster      string `json:"cluster"`
 	ClusterTitle string `json:"cluster_title"`
-	GatewayPath string `json:"gatewayPath"`
+	GatewayPath  string `json:"gatewayPath"`
 	//*SSHInfo
 }
 

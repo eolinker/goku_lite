@@ -27,7 +27,7 @@ func GetAllStrategy() (map[string]*entity.Strategy, *entity.Strategy, error) {
 		s := new(entity.Strategy)
 		err := rows.Scan(&s.StrategyID, &s.StrategyName, &s.Auth, &s.EnableStatus, &s.StrategyType)
 		if err != nil {
-			log.Warn("GetAllStrategy ",err)
+			log.Warn("GetAllStrategy ", err)
 			continue
 		}
 

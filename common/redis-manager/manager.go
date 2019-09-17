@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	redisOfCluster = make(map[string]Redis)
+	redisOfCluster   = make(map[string]Redis)
 	redisConfCluster = make(map[string]RedisConfig)
 
 	locker sync.RWMutex
@@ -28,20 +28,20 @@ func get(name string) (Redis, bool) {
 	return r, h
 }
 func Get(name string) (Redis, bool) {
-	r,has:=get(name)
+	r, has := get(name)
 
-	if has{
-		return r,r!=nil
+	if has {
+		return r, r != nil
 	}
 
 	locker.Lock()
 	defer locker.Unlock()
 	r, has = redisOfCluster[name]
-	if has{
-		return r,has
+	if has {
+		return r, has
 	}
-	c,h:= redisConfCluster[name]
-	if h{
+	c, h := redisConfCluster[name]
+	if h {
 		r = Create(c)
 		redisOfCluster[name] = r
 		return r, h
@@ -49,5 +49,5 @@ func Get(name string) (Redis, bool) {
 
 	redisOfCluster[name] = nil
 
-	return nil,false
+	return nil, false
 }

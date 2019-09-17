@@ -6,8 +6,8 @@ import (
 	database2 "github.com/eolinker/goku/common/database"
 	"github.com/eolinker/goku/utils"
 )
-type permissionsJson map[string]bool
 
+type permissionsJson map[string]bool
 
 // 修改账户信息
 func EditPassword(oldPassword, newPassword string, userID int) (bool, string, error) {
@@ -103,7 +103,7 @@ func CheckUserIsSuperAdmin(userID int) (bool, string, error) {
 	return true, "", nil
 }
 
-func CheckSuperAdminCount() (int,error){
+func CheckSuperAdminCount() (int, error) {
 	db := database2.GetConnection()
 	sql := "SELECT count(*) FROM goku_admin WHERE  userType = 0;"
 	count := 0
@@ -112,8 +112,9 @@ func CheckSuperAdminCount() (int,error){
 		return 0, err
 	}
 
-	return count  , nil
+	return count, nil
 }
+
 // 检查用户权限
 func CheckUserPermission(operationType, operation string, userID int) (bool, string, error) {
 	db := database2.GetConnection()
@@ -149,7 +150,6 @@ func CheckUserPermission(operationType, operation string, userID int) (bool, str
 		}
 	}
 }
-
 
 // 获取具有编辑权限的用户列表
 func GetUserListWithPermission(operationType, operation string) (bool, []map[string]interface{}, error) {

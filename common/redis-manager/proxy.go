@@ -9,18 +9,16 @@ type redisProxy struct {
 	config RedisConfig
 }
 
-
 func (p *redisProxy) Nodes() []string {
 
-
-	ch:= make(chan string,1)
+	ch := make(chan string, 1)
 	switch p.config.GetMode() {
 	case RedisModeCluster:
 		{
 			conn := p.Cmdable.(*redis.ClusterClient)
-			go func(ch chan string ) {
+			go func(ch chan string) {
 				conn.ForEachMaster(func(client *redis.Client) error {
-					ch<-client.Options().Addr
+					ch <- client.Options().Addr
 					return nil
 				})
 				close(ch)
@@ -31,9 +29,9 @@ func (p *redisProxy) Nodes() []string {
 		{
 
 			conn := p.Cmdable.(*redis.SentinelRing)
-			go func(ch chan string ) {
+			go func(ch chan string) {
 				conn.ForEachAddr(func(addr string) error {
-					ch<-addr
+					ch <- addr
 					return nil
 				})
 				close(ch)
@@ -43,9 +41,9 @@ func (p *redisProxy) Nodes() []string {
 		{
 
 			conn := p.Cmdable.(*redis.Ring)
-			go func(ch chan string ) {
+			go func(ch chan string) {
 				conn.ForEachShard(func(client *redis.Client) error {
-					ch<-client.Options().Addr
+					ch <- client.Options().Addr
 					return nil
 				})
 				close(ch)
@@ -53,10 +51,9 @@ func (p *redisProxy) Nodes() []string {
 		}
 	}
 
-
-	 nodes:= make([]string,0,10)
-	for addr:=range ch{
-		nodes = append(nodes,addr)
+	nodes := make([]string, 0, 10)
+	for addr := range ch {
+		nodes = append(nodes, addr)
 	}
 	return nodes
 }

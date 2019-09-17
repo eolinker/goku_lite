@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func gokuCheckPlugin( w http.ResponseWriter,req *http.Request) {
+func gokuCheckPlugin(w http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	pluginName := req.PostFormValue("pluginName")
 

@@ -5,5 +5,3 @@ type Balance struct {
 	Discovery string
 	AppConfig string
 }
-
-

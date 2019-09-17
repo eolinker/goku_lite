@@ -8,11 +8,13 @@ import (
 	"strings"
 	"time"
 )
+
 const (
 	defaultTimestampFormat = time.RFC3339
 )
+
 type LineFormatter struct {
-	TimestampFormat string
+	TimestampFormat  string
 	CallerPrettyfier func(*runtime.Frame) (function string, file string)
 }
 
@@ -30,7 +32,6 @@ func (f *LineFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 		b = &bytes.Buffer{}
 	}
 
-
 	timestampFormat := f.TimestampFormat
 	if timestampFormat == "" {
 		timestampFormat = defaultTimestampFormat
@@ -39,9 +40,8 @@ func (f *LineFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	levelText := strings.ToUpper(entry.Level.String())
 	levelText = levelText[0:4]
 
-	b.WriteString(fmt.Sprint("[", entry.Time.Format(timestampFormat),"] "))
-	b.WriteString(fmt.Sprint("[", levelText,"] "))
-
+	b.WriteString(fmt.Sprint("[", entry.Time.Format(timestampFormat), "] "))
+	b.WriteString(fmt.Sprint("[", levelText, "] "))
 
 	if entry.HasCaller() {
 
@@ -61,23 +61,22 @@ func (f *LineFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 
 	b.WriteString(strings.TrimSuffix(entry.Message, "\n"))
 
+	for k, v := range data {
 
-	for k ,v:= range data {
-
-		appendKeyValue(b,k,v)
+		appendKeyValue(b, k, v)
 	}
 
 	b.WriteByte('\n')
 	return b.Bytes(), nil
 }
 
-func  needsQuoting(text string) bool {
+func needsQuoting(text string) bool {
 
-	if len(text) == 0	{
+	if len(text) == 0 {
 		return true
 	}
 
-	if text[0] =='"' {
+	if text[0] == '"' {
 		return false
 	}
 	for _, ch := range text {
@@ -91,7 +90,7 @@ func  needsQuoting(text string) bool {
 	return false
 }
 
-func   appendKeyValue(b *bytes.Buffer, key string, value interface{}) {
+func appendKeyValue(b *bytes.Buffer, key string, value interface{}) {
 	if b.Len() > 0 {
 		b.WriteByte(' ')
 	}
@@ -100,7 +99,7 @@ func   appendKeyValue(b *bytes.Buffer, key string, value interface{}) {
 	appendValue(b, value)
 }
 
-func   appendValue(b *bytes.Buffer, value interface{}) {
+func appendValue(b *bytes.Buffer, value interface{}) {
 	stringVal, ok := value.(string)
 	if !ok {
 		stringVal = fmt.Sprint(value)
