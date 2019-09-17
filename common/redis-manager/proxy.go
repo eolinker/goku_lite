@@ -1,7 +1,7 @@
 package redis_manager
 
 import (
-	"github.com/eolinker/goku/common/redis"
+	"github.com/go-redis/redis"
 )
 
 type redisProxy struct {
@@ -25,18 +25,7 @@ func (p *redisProxy) Nodes() []string {
 			}(ch)
 
 		}
-	case RedisModeSentinel:
-		{
 
-			conn := p.Cmdable.(*redis.SentinelRing)
-			go func(ch chan string) {
-				conn.ForEachAddr(func(addr string) error {
-					ch <- addr
-					return nil
-				})
-				close(ch)
-			}(ch)
-		}
 	case RedisModeStand:
 		{
 
@@ -65,12 +54,7 @@ func (p *redisProxy) Foreach(fn func(client *redis.Client) error) error {
 			conn := p.Cmdable.(*redis.ClusterClient)
 			return conn.ForEachMaster(fn)
 		}
-	case RedisModeSentinel:
-		{
 
-			conn := p.Cmdable.(*redis.SentinelRing)
-			return conn.ForEachShard(fn)
-		}
 	case RedisModeStand:
 		{
 

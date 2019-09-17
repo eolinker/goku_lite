@@ -2,7 +2,7 @@ package redis_manager
 
 import (
 	"fmt"
-	"github.com/eolinker/goku/common/redis"
+	"github.com/go-redis/redis"
 
 	"sort"
 )
@@ -29,21 +29,7 @@ func Create(config RedisConfig) Redis {
 				config:  config,
 			}
 		}
-	case RedisModeSentinel:
-		{
 
-			option := redis.SentinelRingOptions{
-				Addrs:    config.GetAddrs(),
-				Masters:  config.GetMasters(),
-				Password: config.GetPassword(),
-				DB:       config.GetDbIndex(),
-				PoolSize: _PoolSize,
-			}
-			return &redisProxy{
-				Cmdable: redis.NewSentinelRing(&option),
-				config:  config,
-			}
-		}
 	case RedisModeStand:
 		{
 

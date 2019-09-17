@@ -14,11 +14,12 @@ import (
 var (
 	UserPassword string
 	UserName     string
-	ConfFilepath = "./config/goku.conf"
+	ConfFilePath = "./config/goku.conf"
+
 )
 
 func main() {
-	flag.StringVar(&ConfFilepath, "c", "./config/goku.conf", "Please provide a valid configuration file path")
+	flag.StringVar(&ConfFilePath, "c", "./config/goku.conf", "Please provide a valid configuration file path")
 	flag.StringVar(&UserName, "u", "", "Please provide user name")
 	flag.StringVar(&UserPassword, "p", "", "Please provide user password")
 	isDebug := flag.Bool("debug", false, "")
@@ -28,7 +29,7 @@ func main() {
 		log.StartDebug()
 	}
 	// 初始化配置
-	if err := conf.ReadConfigure(ConfFilepath); err != nil {
+	if err := conf.ReadConfigure(ConfFilePath); err != nil {
 		log.Panic(err)
 		return
 	}

@@ -5,7 +5,7 @@ go 1.12
 require (
 	github.com/360EntSecGroup-Skylar/excelize v1.4.1 // indirect
 	github.com/eolinker/goku-plugin v0.1.3
-	github.com/go-redis/redis v6.15.2+incompatible
+	github.com/go-redis/redis v6.15.5+incompatible
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/hashicorp/consul/api v1.1.0
 	github.com/json-iterator/go v1.1.7

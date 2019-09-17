@@ -1,10 +1,9 @@
 package redis_manager
 
-import "github.com/eolinker/goku/common/redis"
+import "github.com/go-redis/redis"
 
 const (
 	RedisModeCluster  = "cluster"
-	RedisModeSentinel = "sentinel"
 	RedisModeStand    = "stand"
 )
 
