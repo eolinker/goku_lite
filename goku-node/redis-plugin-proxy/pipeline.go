@@ -2,7 +2,7 @@ package redis_plugin_proxy
 
 import (
 	"github.com/eolinker/goku-plugin"
-	"github.com/eolinker/goku/common/redis"
+	"github.com/go-redis/redis"
 )
 
 type PipelineProxy struct {
