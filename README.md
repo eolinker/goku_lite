@@ -93,8 +93,8 @@ cluster:
       password: "123456"            # 数据库密码
       database: "goku_ce"           # 数据库名称
     redis:
-      mode: "sentinel"                  # redis模式，可选项：stand/sentinel/cluster
-      addrs: "127.0.0.1:6379,127.0.0.1:6380"    # sentinel模式下addrs为sentinel地址，多个地址间用英文逗号隔开
+      mode: "cluster"                  # redis模式，可选项：stand/cluster
+      addrs: "127.0.0.1:6379,127.0.0.1:6380"    # 多个地址间用英文逗号隔开
       password: "123456"            # redis密码
       dbIndex: 0                    # redis序号，非必填，默认值为0 
       masters: mymaster             # 当mode为sentinel时，该选项必填
