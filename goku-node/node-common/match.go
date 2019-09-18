@@ -54,7 +54,7 @@ func MatchURI(requestPath string, matchURI string) (bool, string, []string) {
 	}
 	if string(matchURI[len(matchURI)-1]) == "/" {
 		postfix = true
-		matchURI = matchURI[:len(requestPath)-1]
+		matchURI = matchURI[:len(matchURI)-1]
 	}
 
 	requestArray := strings.Split(requestPath, "/")
