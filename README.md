@@ -1,4 +1,4 @@
-![Goku API Gateway 悟空网关](https://data.eolinker.com/Pych6BUe4b2d2d3dbaf20ea5a5233ee5d356689deabc46b.jpg "Goku API Gateway 悟空网关")
+![Goku API Gateway 悟空网关](https://data.eolinker.com/course/gBTEV2s29e16630bb4dc553bec35ad33914d19aa410a8bf "Goku API Gateway 悟空网关")
 
 [![Gitter](https://badges.gitter.im/goku-api-gateway/community.svg)](https://gitter.im/goku-api-gateway/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
