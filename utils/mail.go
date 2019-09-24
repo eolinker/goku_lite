@@ -2,7 +2,7 @@ package utils
 
 import (
 	"crypto/tls"
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 	"net"
 	"net/smtp"
 	"strings"

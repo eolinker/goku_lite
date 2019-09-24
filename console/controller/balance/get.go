@@ -3,8 +3,8 @@ package balance
 import (
 	"net/http"
 
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/balance"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/balance"
 )
 
 // 获取负载信息

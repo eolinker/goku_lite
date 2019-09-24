@@ -3,7 +3,7 @@ package access_log
 import (
 	"bytes"
 	"fmt"
-	access_field "github.com/eolinker/goku/server/access-field"
+	access_field "github.com/eolinker/goku-api-gateway/server/access-field"
 	"github.com/sirupsen/logrus"
 	"sync"
 	"time"

@@ -3,9 +3,9 @@ package monitor_write
 import (
 	"time"
 
-	"github.com/eolinker/goku/common/redis-manager"
-	gateway_manager "github.com/eolinker/goku/goku-node/manager/gateway-manager"
-	monitor_key "github.com/eolinker/goku/server/monitor/monitor-key"
+	"github.com/eolinker/goku-api-gateway/common/redis-manager"
+	gateway_manager "github.com/eolinker/goku-api-gateway/goku-node/manager/gateway-manager"
+	monitor_key "github.com/eolinker/goku-api-gateway/server/monitor/monitor-key"
 )
 
 var (

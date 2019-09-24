@@ -3,22 +3,22 @@ package console
 import (
 	"net/http"
 
-	config_log "github.com/eolinker/goku/console/controller/config-log"
+	config_log "github.com/eolinker/goku-api-gateway/console/controller/config-log"
 
-	"github.com/eolinker/goku/console/controller/account"
-	"github.com/eolinker/goku/console/controller/alert"
-	"github.com/eolinker/goku/console/controller/api"
-	"github.com/eolinker/goku/console/controller/auth"
-	"github.com/eolinker/goku/console/controller/balance"
-	"github.com/eolinker/goku/console/controller/cluster"
-	"github.com/eolinker/goku/console/controller/discovery"
-	"github.com/eolinker/goku/console/controller/gateway"
-	"github.com/eolinker/goku/console/controller/monitor"
-	"github.com/eolinker/goku/console/controller/node"
-	"github.com/eolinker/goku/console/controller/plugin"
-	"github.com/eolinker/goku/console/controller/project"
-	"github.com/eolinker/goku/console/controller/script"
-	"github.com/eolinker/goku/console/controller/strategy"
+	"github.com/eolinker/goku-api-gateway/console/controller/account"
+	"github.com/eolinker/goku-api-gateway/console/controller/alert"
+	"github.com/eolinker/goku-api-gateway/console/controller/api"
+	"github.com/eolinker/goku-api-gateway/console/controller/auth"
+	"github.com/eolinker/goku-api-gateway/console/controller/balance"
+	"github.com/eolinker/goku-api-gateway/console/controller/cluster"
+	"github.com/eolinker/goku-api-gateway/console/controller/discovery"
+	"github.com/eolinker/goku-api-gateway/console/controller/gateway"
+	"github.com/eolinker/goku-api-gateway/console/controller/monitor"
+	"github.com/eolinker/goku-api-gateway/console/controller/node"
+	"github.com/eolinker/goku-api-gateway/console/controller/plugin"
+	"github.com/eolinker/goku-api-gateway/console/controller/project"
+	"github.com/eolinker/goku-api-gateway/console/controller/script"
+	"github.com/eolinker/goku-api-gateway/console/controller/strategy"
 )
 
 func Router() {

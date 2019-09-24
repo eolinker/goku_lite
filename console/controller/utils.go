@@ -7,9 +7,9 @@ import (
 	"reflect"
 	"strconv"
 
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 
-	"github.com/eolinker/goku/console/module/account"
+	"github.com/eolinker/goku-api-gateway/console/module/account"
 )
 
 const (

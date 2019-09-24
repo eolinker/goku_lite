@@ -1,9 +1,9 @@
 package project
 
 import (
-	"github.com/eolinker/goku/server/dao"
-	console_mysql "github.com/eolinker/goku/server/dao/console-mysql"
-	entity "github.com/eolinker/goku/server/entity/console-entity"
+	"github.com/eolinker/goku-api-gateway/server/dao"
+	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
 // 新建项目

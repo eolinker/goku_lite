@@ -2,11 +2,11 @@ package console_mysql
 
 import (
 	"encoding/json"
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 	"time"
 
-	database2 "github.com/eolinker/goku/common/database"
-	"github.com/eolinker/goku/utils"
+	database2 "github.com/eolinker/goku-api-gateway/common/database"
+	"github.com/eolinker/goku-api-gateway/utils"
 )
 
 type basicAuthConf struct {

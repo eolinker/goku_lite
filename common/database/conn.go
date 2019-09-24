@@ -2,7 +2,7 @@ package database
 
 import (
 	"database/sql"
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 	_ "github.com/go-sql-driver/mysql"
 )
 

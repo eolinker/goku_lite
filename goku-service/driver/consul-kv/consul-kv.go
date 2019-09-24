@@ -1,7 +1,7 @@
 package consul_kv
 
 import (
-	"github.com/eolinker/goku/goku-service/discovery"
+	"github.com/eolinker/goku-api-gateway/goku-service/discovery"
 )
 
 type Driver struct {

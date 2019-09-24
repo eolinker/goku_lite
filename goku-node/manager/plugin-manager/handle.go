@@ -1,7 +1,7 @@
 package plugin_manager
 
 import (
-	entity "github.com/eolinker/goku/server/entity/node-entity"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
 
 // 获取默认插件列表

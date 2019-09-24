@@ -1,12 +1,12 @@
 package strategy_api_manager
 
 import (
-	"github.com/eolinker/goku/utils"
+	"github.com/eolinker/goku-api-gateway/utils"
 	"strings"
 
-	api_manager "github.com/eolinker/goku/goku-node/manager/api-manager"
-	node_common "github.com/eolinker/goku/goku-node/node-common"
-	entity "github.com/eolinker/goku/server/entity/node-entity"
+	api_manager "github.com/eolinker/goku-api-gateway/goku-node/manager/api-manager"
+	node_common "github.com/eolinker/goku-api-gateway/goku-node/node-common"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
 
 func CheckApiFromStrategy(strategyId, requestPath string, requestMethod string) (*entity.ApiExtend, string, []string, bool) {

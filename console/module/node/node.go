@@ -1,8 +1,8 @@
 package node
 
 import (
-	console_mysql "github.com/eolinker/goku/server/dao/console-mysql"
-	entity "github.com/eolinker/goku/server/entity/console-entity"
+	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
 // 新增节点信息

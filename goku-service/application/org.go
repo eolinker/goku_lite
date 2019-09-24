@@ -2,7 +2,7 @@ package application
 
 import (
 	"fmt"
-	"github.com/eolinker/goku/utils"
+	"github.com/eolinker/goku-api-gateway/utils"
 	"net/http"
 	"net/url"
 	"time"

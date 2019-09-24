@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"strconv"
 
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 
-	"github.com/eolinker/goku/console/controller"
-	alert_module "github.com/eolinker/goku/console/module/alert"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	alert_module "github.com/eolinker/goku-api-gateway/console/module/alert"
 )
 
 // GetAlertMsgList 获取告警信息列表

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/eolinker/goku/common/auto-form"
-	"github.com/eolinker/goku/console/controller"
-	module "github.com/eolinker/goku/console/module/config-log"
+	"github.com/eolinker/goku-api-gateway/common/auto-form"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	module "github.com/eolinker/goku-api-gateway/console/module/config-log"
 )
 
 type LogHandler struct {

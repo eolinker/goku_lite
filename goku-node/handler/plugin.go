@@ -2,9 +2,9 @@ package handler
 
 import (
 	"encoding/json"
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 
-	plugin_manager "github.com/eolinker/goku/goku-node/manager/plugin-manager"
+	plugin_manager "github.com/eolinker/goku-api-gateway/goku-node/manager/plugin-manager"
 	"net/http"
 )
 

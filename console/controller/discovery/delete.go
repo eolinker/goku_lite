@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/service"
-	dao_service "github.com/eolinker/goku/server/dao/console-mysql/dao-service"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/service"
+	dao_service "github.com/eolinker/goku-api-gateway/server/dao/console-mysql/dao-service"
 )
 
 func delete(w http.ResponseWriter, r *http.Request) {

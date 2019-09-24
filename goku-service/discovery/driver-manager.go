@@ -1,7 +1,7 @@
 package discovery
 
 import (
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 	"strings"
 )
 

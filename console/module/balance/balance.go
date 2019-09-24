@@ -3,13 +3,13 @@ package balance
 import (
 	"errors"
 	"fmt"
-	"github.com/eolinker/goku/console/module/service"
-	driver2 "github.com/eolinker/goku/server/driver"
-	entity "github.com/eolinker/goku/server/entity/balance-entity-service"
+	"github.com/eolinker/goku-api-gateway/console/module/service"
+	driver2 "github.com/eolinker/goku-api-gateway/server/driver"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/balance-entity-service"
 	"time"
 
-	"github.com/eolinker/goku/server/dao"
-	dao_balance "github.com/eolinker/goku/server/dao/dao-balance"
+	"github.com/eolinker/goku-api-gateway/server/dao"
+	dao_balance "github.com/eolinker/goku-api-gateway/server/dao/dao-balance"
 )
 
 func Add(info *Param) (string, error) {

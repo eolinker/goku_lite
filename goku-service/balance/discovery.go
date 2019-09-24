@@ -1,8 +1,8 @@
 package balance
 
 import (
-	"github.com/eolinker/goku/goku-service/application"
-	"github.com/eolinker/goku/goku-service/discovery"
+	"github.com/eolinker/goku-api-gateway/goku-service/application"
+	"github.com/eolinker/goku-api-gateway/goku-service/discovery"
 )
 
 func ResetBalances(balances []*Balance) {

@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/gateway"
-	monitor_read "github.com/eolinker/goku/server/monitor/monitor-read"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/gateway"
+	monitor_read "github.com/eolinker/goku-api-gateway/server/monitor/monitor-read"
 )
 
 func GetGatewayConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {

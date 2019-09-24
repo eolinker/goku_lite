@@ -3,11 +3,11 @@ package static
 import (
 	"errors"
 	"fmt"
-	"github.com/eolinker/goku/goku-service/discovery"
-	"github.com/eolinker/goku/goku-service/health"
+	"github.com/eolinker/goku-api-gateway/goku-service/discovery"
+	"github.com/eolinker/goku-api-gateway/goku-service/health"
 	"time"
 
-	"github.com/eolinker/goku/goku-service/common"
+	"github.com/eolinker/goku-api-gateway/goku-service/common"
 	"strconv"
 	"strings"
 	"unicode"

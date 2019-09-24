@@ -2,9 +2,9 @@ package console_mysql
 
 import (
 	"fmt"
-	"github.com/eolinker/goku/common/database"
-	. "github.com/eolinker/goku/common/version"
-	entity "github.com/eolinker/goku/server/entity/console-entity"
+	"github.com/eolinker/goku-api-gateway/common/database"
+	. "github.com/eolinker/goku-api-gateway/common/version"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 	"strconv"
 	"strings"
 	"time"

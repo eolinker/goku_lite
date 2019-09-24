@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/node"
-	cluster2 "github.com/eolinker/goku/server/cluster"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/node"
+	cluster2 "github.com/eolinker/goku-api-gateway/server/cluster"
 )
 
 func AddNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {

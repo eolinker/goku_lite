@@ -1,10 +1,10 @@
 package dao_strategy
 
 import (
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 
-	"github.com/eolinker/goku/common/database"
-	entity "github.com/eolinker/goku/server/entity/node-entity"
+	"github.com/eolinker/goku-api-gateway/common/database"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
 
 func GetAllStrategy() (map[string]*entity.Strategy, *entity.Strategy, error) {

@@ -1,8 +1,8 @@
 package script
 
 import (
-	"github.com/eolinker/goku/server/dao"
-	console_mysql "github.com/eolinker/goku/server/dao/console-mysql"
+	"github.com/eolinker/goku-api-gateway/server/dao"
+	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
 )
 
 // 新建项目

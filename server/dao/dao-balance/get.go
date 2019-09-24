@@ -2,8 +2,8 @@ package dao_balance
 
 import (
 	"fmt"
-	"github.com/eolinker/goku/common/database"
-	entity "github.com/eolinker/goku/server/entity/balance-entity-service"
+	"github.com/eolinker/goku-api-gateway/common/database"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/balance-entity-service"
 	"strings"
 )
 

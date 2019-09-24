@@ -1,8 +1,8 @@
 package console
 
 import (
-	module "github.com/eolinker/goku/console/module/config-log"
-	log "github.com/eolinker/goku/goku-log"
+	module "github.com/eolinker/goku-api-gateway/console/module/config-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 )
 
 func InitLog() {

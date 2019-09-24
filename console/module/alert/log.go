@@ -3,7 +3,7 @@ package alert
 import (
 	"strconv"
 
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 )
 
 // 记录告警日志

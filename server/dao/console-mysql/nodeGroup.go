@@ -1,7 +1,7 @@
 package console_mysql
 
 import (
-	database2 "github.com/eolinker/goku/common/database"
+	database2 "github.com/eolinker/goku-api-gateway/common/database"
 )
 
 // 新建节点分组

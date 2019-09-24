@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	log "github.com/eolinker/goku/goku-log"
-	node_common "github.com/eolinker/goku/goku-node/node-common"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	node_common "github.com/eolinker/goku-api-gateway/goku-node/node-common"
 	"net/http"
 
 	"time"

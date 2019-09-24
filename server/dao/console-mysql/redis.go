@@ -2,10 +2,10 @@ package console_mysql
 
 import (
 	"encoding/json"
-	database2 "github.com/eolinker/goku/common/database"
-	"github.com/eolinker/goku/common/general"
-	log "github.com/eolinker/goku/goku-log"
-	"github.com/eolinker/goku/server/entity/console-entity"
+	database2 "github.com/eolinker/goku-api-gateway/common/database"
+	"github.com/eolinker/goku-api-gateway/common/general"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	"github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 	"io"
 	"strings"
 	"time"

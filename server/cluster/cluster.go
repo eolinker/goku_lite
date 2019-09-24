@@ -1,6 +1,6 @@
 package cluster
 
-import "github.com/eolinker/goku/server/entity"
+import "github.com/eolinker/goku-api-gateway/server/entity"
 
 var (
 	byName       map[string]*entity.ClusterInfo

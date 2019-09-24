@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	node_common "github.com/eolinker/goku/goku-node/node-common"
+	node_common "github.com/eolinker/goku-api-gateway/goku-node/node-common"
 )
 
 // 新增报警信息

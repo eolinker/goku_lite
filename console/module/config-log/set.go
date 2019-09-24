@@ -2,10 +2,10 @@ package config_log
 
 import (
 	"fmt"
-	log "github.com/eolinker/goku/goku-log"
-	dao2 "github.com/eolinker/goku/server/dao"
-	dao "github.com/eolinker/goku/server/dao/config-log"
-	entity "github.com/eolinker/goku/server/entity/config-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	dao2 "github.com/eolinker/goku-api-gateway/server/dao"
+	dao "github.com/eolinker/goku-api-gateway/server/dao/config-log"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/config-log"
 )
 
 func Set(name string, param *Param) error {

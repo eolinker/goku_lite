@@ -3,8 +3,8 @@ package console_mysql
 import (
 	"encoding/json"
 	"errors"
-	database2 "github.com/eolinker/goku/common/database"
-	"github.com/eolinker/goku/utils"
+	database2 "github.com/eolinker/goku-api-gateway/common/database"
+	"github.com/eolinker/goku-api-gateway/utils"
 )
 
 type permissionsJson map[string]bool

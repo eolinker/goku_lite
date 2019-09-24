@@ -3,9 +3,9 @@ package config_log
 import "C"
 import (
 	"encoding/json"
-	log "github.com/eolinker/goku/goku-log"
-	access_field "github.com/eolinker/goku/server/access-field"
-	entity "github.com/eolinker/goku/server/entity/config-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	access_field "github.com/eolinker/goku-api-gateway/server/access-field"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/config-log"
 	"strings"
 )
 

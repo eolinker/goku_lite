@@ -4,11 +4,11 @@ import (
 	"io/ioutil"
 	"strconv"
 
-	"github.com/eolinker/goku/common/conf"
-	"github.com/eolinker/goku/common/redis-manager"
-	cluster2 "github.com/eolinker/goku/server/cluster"
-	console_mysql "github.com/eolinker/goku/server/dao/console-mysql"
-	"github.com/eolinker/goku/server/entity"
+	"github.com/eolinker/goku-api-gateway/common/conf"
+	"github.com/eolinker/goku-api-gateway/common/redis-manager"
+	cluster2 "github.com/eolinker/goku-api-gateway/server/cluster"
+	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
+	"github.com/eolinker/goku-api-gateway/server/entity"
 	"gopkg.in/yaml.v2"
 )
 

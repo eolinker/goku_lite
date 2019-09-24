@@ -2,7 +2,7 @@ package dao_service
 
 import (
 	"fmt"
-	"github.com/eolinker/goku/common/database"
+	"github.com/eolinker/goku-api-gateway/common/database"
 )
 
 func SetDefault(name string) error {

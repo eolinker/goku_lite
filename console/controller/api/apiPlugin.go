@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/api"
-	"github.com/eolinker/goku/console/module/plugin"
-	plugin_config "github.com/eolinker/goku/console/module/plugin/plugin-config"
-	"github.com/eolinker/goku/console/module/strategy"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/api"
+	"github.com/eolinker/goku-api-gateway/console/module/plugin"
+	plugin_config "github.com/eolinker/goku-api-gateway/console/module/plugin/plugin-config"
+	"github.com/eolinker/goku-api-gateway/console/module/strategy"
 )
 
 // 新增插件到接口

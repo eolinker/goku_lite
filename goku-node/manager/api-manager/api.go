@@ -3,9 +3,9 @@ package api_manager
 import (
 	"sync"
 
-	"github.com/eolinker/goku/goku-node/manager/updater"
-	dao_api "github.com/eolinker/goku/server/dao/node-mysql/dao-api"
-	entity "github.com/eolinker/goku/server/entity/node-entity"
+	"github.com/eolinker/goku-api-gateway/goku-node/manager/updater"
+	dao_api "github.com/eolinker/goku-api-gateway/server/dao/node-mysql/dao-api"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
 
 func init() {

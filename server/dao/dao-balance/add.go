@@ -1,7 +1,7 @@
 package dao_balance
 
 import (
-	"github.com/eolinker/goku/common/database"
+	"github.com/eolinker/goku-api-gateway/common/database"
 )
 
 func Add(name, serviceName, desc, appName, static, staticCluster, now string) (string, error) {

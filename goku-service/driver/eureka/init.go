@@ -1,7 +1,7 @@
 package eureka
 
 import (
-	"github.com/eolinker/goku/goku-service/discovery"
+	"github.com/eolinker/goku-api-gateway/goku-service/discovery"
 )
 
 const DriverName = "eureka"

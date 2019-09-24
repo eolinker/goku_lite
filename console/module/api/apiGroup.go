@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/eolinker/goku/server/dao"
-	console_mysql "github.com/eolinker/goku/server/dao/console-mysql"
+	"github.com/eolinker/goku-api-gateway/server/dao"
+	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
 )
 
 // 新建接口分组

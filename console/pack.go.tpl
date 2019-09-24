@@ -1,6 +1,6 @@
 package console
 
-import "github.com/eolinker/goku/console/controller/account"
+import "github.com/eolinker/goku-api-gateway/console/controller/account"
 
 func init() {
 	account.CLoseRsaCheck()

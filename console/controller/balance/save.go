@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/eolinker/goku/common/auto-form"
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/balance"
+	"github.com/eolinker/goku-api-gateway/common/auto-form"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/balance"
 	"github.com/go-sql-driver/mysql"
 )
 

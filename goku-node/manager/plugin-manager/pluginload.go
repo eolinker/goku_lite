@@ -8,9 +8,9 @@ import (
 	"sync"
 
 	goku_plugin "github.com/eolinker/goku-plugin"
-	node_common "github.com/eolinker/goku/goku-node/node-common"
+	node_common "github.com/eolinker/goku-api-gateway/goku-node/node-common"
 
-	entity "github.com/eolinker/goku/server/entity/node-entity"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
 
 var (

@@ -4,15 +4,15 @@ import (
 	"encoding/json"
 	"errors"
 
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 
 	"net/http"
 	"strconv"
 
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/node"
-	cluster2 "github.com/eolinker/goku/server/cluster"
-	"github.com/eolinker/goku/utils"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/node"
+	cluster2 "github.com/eolinker/goku-api-gateway/server/cluster"
+	"github.com/eolinker/goku-api-gateway/utils"
 )
 
 // 新增节点信息

@@ -2,10 +2,10 @@ package monitor_read
 
 import (
 	"fmt"
-	redis_manager "github.com/eolinker/goku/common/redis-manager"
-	"github.com/eolinker/goku/server/dao/console-mysql/dao-monitor"
-	"github.com/eolinker/goku/server/entity"
-	"github.com/eolinker/goku/server/monitor/monitor-key"
+	redis_manager "github.com/eolinker/goku-api-gateway/common/redis-manager"
+	"github.com/eolinker/goku-api-gateway/server/dao/console-mysql/dao-monitor"
+	"github.com/eolinker/goku-api-gateway/server/entity"
+	"github.com/eolinker/goku-api-gateway/server/monitor/monitor-key"
 	"strconv"
 	"time"
 )

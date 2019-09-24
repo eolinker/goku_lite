@@ -1,9 +1,9 @@
 package dao_balance_update
 
 import (
-	"github.com/eolinker/goku/common/database"
-	dao_service "github.com/eolinker/goku/server/dao/console-mysql/dao-service"
-	entity "github.com/eolinker/goku/server/entity/balance-entity"
+	"github.com/eolinker/goku-api-gateway/common/database"
+	dao_service "github.com/eolinker/goku-api-gateway/server/dao/console-mysql/dao-service"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/balance-entity"
 )
 
 func GetAllOldVerSion() ([]*entity.BalanceInfoEntity, error) {

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/eolinker/goku/common/database"
+	"github.com/eolinker/goku-api-gateway/common/database"
 )
 
 func GetLastUpdateOfApi(tables ...string) (time.Time, error) {

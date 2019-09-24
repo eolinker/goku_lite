@@ -1,8 +1,8 @@
 package config_log
 
 import (
-	"github.com/eolinker/goku/common/database"
-	entity "github.com/eolinker/goku/server/entity/config-log"
+	"github.com/eolinker/goku-api-gateway/common/database"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/config-log"
 )
 
 const sqlSelect = "SELECT `name`,`enable`,`dir`,`file`,`level`,`period`,`expire`,`fields` FROM `goku_config_log` WHERE `name` = ? LIMIT 1;"

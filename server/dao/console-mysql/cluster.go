@@ -1,8 +1,8 @@
 package console_mysql
 
 import (
-	"github.com/eolinker/goku/common/database"
-	"github.com/eolinker/goku/server/entity"
+	"github.com/eolinker/goku-api-gateway/common/database"
+	"github.com/eolinker/goku-api-gateway/server/entity"
 	jsoniter "github.com/json-iterator/go"
 )
 

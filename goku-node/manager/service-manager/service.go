@@ -2,13 +2,13 @@ package service_manager
 
 import (
 	"encoding/json"
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 
-	"github.com/eolinker/goku/goku-node/manager/updater"
-	node_common "github.com/eolinker/goku/goku-node/node-common"
-	"github.com/eolinker/goku/goku-service/discovery"
-	dao_service "github.com/eolinker/goku/server/dao/node-mysql/dao-service"
-	entity "github.com/eolinker/goku/server/entity/node-entity"
+	"github.com/eolinker/goku-api-gateway/goku-node/manager/updater"
+	node_common "github.com/eolinker/goku-api-gateway/goku-node/node-common"
+	"github.com/eolinker/goku-api-gateway/goku-service/discovery"
+	dao_service "github.com/eolinker/goku-api-gateway/server/dao/node-mysql/dao-service"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 	"strings"
 )
 

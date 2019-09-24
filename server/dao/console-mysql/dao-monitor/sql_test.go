@@ -2,7 +2,7 @@ package dao_monitor
 
 import (
 	"fmt"
-	monitor_key "github.com/eolinker/goku/server/monitor/monitor-key"
+	monitor_key "github.com/eolinker/goku-api-gateway/server/monitor/monitor-key"
 	"testing"
 )
 
