@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/api"
-	"github.com/eolinker/goku/console/module/project"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/api"
+	"github.com/eolinker/goku-api-gateway/console/module/project"
 )
 
 // 新建接口分组

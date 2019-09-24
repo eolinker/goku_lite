@@ -2,8 +2,8 @@ package console_mysql
 
 import (
 	SQL "database/sql"
-	"github.com/eolinker/goku/common/database"
-	"github.com/eolinker/goku/utils"
+	"github.com/eolinker/goku-api-gateway/common/database"
+	"github.com/eolinker/goku-api-gateway/utils"
 )
 
 func Login(loginCall, loginPassword string) (bool, int) {

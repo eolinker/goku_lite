@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/auth"
-	log "github.com/eolinker/goku/goku-log"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/auth"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 )
 
 // 获取认证状态

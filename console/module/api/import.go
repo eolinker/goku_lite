@@ -1,9 +1,9 @@
 package api
 
 import (
-	"github.com/eolinker/goku/server/dao"
-	console_mysql "github.com/eolinker/goku/server/dao/console-mysql"
-	entity "github.com/eolinker/goku/server/entity/console-entity"
+	"github.com/eolinker/goku-api-gateway/server/dao"
+	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
 func ImportApiGroupFromAms(projectID, userID int, groupInfo entity.AmsGroupInfo) (bool, string, error) {

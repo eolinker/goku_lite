@@ -1,9 +1,9 @@
 package plugin_flow
 
 import (
-	log "github.com/eolinker/goku/goku-log"
-	"github.com/eolinker/goku/goku-node/common"
-	plugin_manager "github.com/eolinker/goku/goku-node/manager/plugin-manager"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	"github.com/eolinker/goku-api-gateway/goku-node/common"
+	plugin_manager "github.com/eolinker/goku-api-gateway/goku-node/manager/plugin-manager"
 	"reflect"
 	"time"
 )

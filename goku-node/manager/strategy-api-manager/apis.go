@@ -1,6 +1,6 @@
 package strategy_api_manager
 
-import entity "github.com/eolinker/goku/server/entity/node-entity"
+import entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 
 type _ApiMap struct {
 	apis map[int]*entity.StrategyApi

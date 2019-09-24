@@ -3,8 +3,8 @@ package cluster
 import (
 	"net/http"
 
-	"github.com/eolinker/goku/console/controller"
-	cluster2 "github.com/eolinker/goku/server/cluster"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	cluster2 "github.com/eolinker/goku-api-gateway/server/cluster"
 )
 
 func GetClusterList(httpResponse http.ResponseWriter, httpRequest *http.Request) {

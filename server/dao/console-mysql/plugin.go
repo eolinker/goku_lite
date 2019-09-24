@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 
-	database2 "github.com/eolinker/goku/common/database"
-	entity "github.com/eolinker/goku/server/entity/console-entity"
+	database2 "github.com/eolinker/goku-api-gateway/common/database"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
 // 获取插件配置信息

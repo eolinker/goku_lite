@@ -1,7 +1,7 @@
 package account
 
 import (
-	"github.com/eolinker/goku/server/dao/console-mysql"
+	"github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
 )
 
 // 获取具有编辑权限的用户列表

@@ -1,8 +1,8 @@
 package plugin_manager
 
 import (
-	"github.com/eolinker/goku/goku-node/manager/updater"
-	dao_plugin "github.com/eolinker/goku/server/dao/node-mysql/dao-plugin"
+	"github.com/eolinker/goku-api-gateway/goku-node/manager/updater"
+	dao_plugin "github.com/eolinker/goku-api-gateway/server/dao/node-mysql/dao-plugin"
 )
 
 func init() {

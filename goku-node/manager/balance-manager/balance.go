@@ -2,14 +2,14 @@ package balance_manager
 
 import (
 	"encoding/json"
-	log "github.com/eolinker/goku/goku-log"
-	"github.com/eolinker/goku/goku-node/manager/updater"
-	node_common "github.com/eolinker/goku/goku-node/node-common"
-	"github.com/eolinker/goku/goku-service/application"
-	"github.com/eolinker/goku/goku-service/balance"
-	dao_balance "github.com/eolinker/goku/server/dao/node-mysql/dao-balance"
-	"github.com/eolinker/goku/server/driver"
-	entity "github.com/eolinker/goku/server/entity/node-entity"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	"github.com/eolinker/goku-api-gateway/goku-node/manager/updater"
+	node_common "github.com/eolinker/goku-api-gateway/goku-node/node-common"
+	"github.com/eolinker/goku-api-gateway/goku-service/application"
+	"github.com/eolinker/goku-api-gateway/goku-service/balance"
+	dao_balance "github.com/eolinker/goku-api-gateway/server/dao/node-mysql/dao-balance"
+	"github.com/eolinker/goku-api-gateway/server/driver"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 	"strings"
 )
 

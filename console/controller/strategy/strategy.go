@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/strategy"
-	entity "github.com/eolinker/goku/server/entity/console-entity"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/strategy"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
 // 新增策略组

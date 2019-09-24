@@ -1,8 +1,8 @@
 package dao_service
 
 import (
-	"github.com/eolinker/goku/common/database"
-	entity "github.com/eolinker/goku/server/entity/node-entity"
+	"github.com/eolinker/goku-api-gateway/common/database"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
 
 const sqlList = "SELECT `name`,`driver`,`default`,`desc`,`config`,`clusterConfig`,`healthCheck`,`healthCheckPath`,`healthCheckPeriod`,`healthCheckCode`,`healthCheckTimeOut` FROM `goku_service_config`"

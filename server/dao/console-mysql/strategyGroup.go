@@ -1,8 +1,8 @@
 package console_mysql
 
 import (
-	database2 "github.com/eolinker/goku/common/database"
-	log "github.com/eolinker/goku/goku-log"
+	database2 "github.com/eolinker/goku-api-gateway/common/database"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 )
 
 // 新建策略组分组

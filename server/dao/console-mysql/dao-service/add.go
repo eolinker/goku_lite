@@ -1,7 +1,7 @@
 package dao_service
 
 import (
-	"github.com/eolinker/goku/common/database"
+	"github.com/eolinker/goku-api-gateway/common/database"
 	"time"
 )
 

@@ -1,7 +1,7 @@
 package dao_balance
 
 import (
-	"github.com/eolinker/goku/common/database"
+	"github.com/eolinker/goku-api-gateway/common/database"
 )
 
 func GetBalanceNames() (bool, []string, error) {

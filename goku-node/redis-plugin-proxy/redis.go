@@ -2,7 +2,7 @@ package redis_plugin_proxy
 
 import (
 	"github.com/eolinker/goku-plugin"
-	"github.com/eolinker/goku/common/redis-manager"
+	"github.com/eolinker/goku-api-gateway/common/redis-manager"
 )
 
 func Create() goku_plugin.RedisManager {

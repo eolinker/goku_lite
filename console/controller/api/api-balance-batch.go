@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/api"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/api"
 )
 
 func BatchSetBalanceApi(httpResponse http.ResponseWriter, httpRequest *http.Request) {

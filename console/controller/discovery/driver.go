@@ -3,8 +3,8 @@ package discovery
 import (
 	"net/http"
 
-	"github.com/eolinker/goku/console/controller"
-	driver2 "github.com/eolinker/goku/server/driver"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	driver2 "github.com/eolinker/goku-api-gateway/server/driver"
 )
 
 func getDrivices(w http.ResponseWriter, r *http.Request) {

@@ -2,16 +2,16 @@ package strategy_api_plugin_manager
 
 import (
 	"fmt"
-	"github.com/eolinker/goku/goku-node/node-common"
+	"github.com/eolinker/goku-api-gateway/goku-node/node-common"
 	"sort"
 	"strconv"
 	"sync"
 
-	plugin_manager "github.com/eolinker/goku/goku-node/manager/plugin-manager"
-	strategy_plugin_manager "github.com/eolinker/goku/goku-node/manager/strategy-plugin-manager"
-	"github.com/eolinker/goku/goku-node/manager/updater"
-	dao_strategy "github.com/eolinker/goku/server/dao/node-mysql/dao-strategy"
-	entity "github.com/eolinker/goku/server/entity/node-entity"
+	plugin_manager "github.com/eolinker/goku-api-gateway/goku-node/manager/plugin-manager"
+	strategy_plugin_manager "github.com/eolinker/goku-api-gateway/goku-node/manager/strategy-plugin-manager"
+	"github.com/eolinker/goku-api-gateway/goku-node/manager/updater"
+	dao_strategy "github.com/eolinker/goku-api-gateway/server/dao/node-mysql/dao-strategy"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
 
 func init() {

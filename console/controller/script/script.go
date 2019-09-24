@@ -3,9 +3,9 @@ package script
 import (
 	"net/http"
 
-	"github.com/eolinker/goku/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/controller"
 
-	"github.com/eolinker/goku/console/module/script"
+	"github.com/eolinker/goku-api-gateway/console/module/script"
 )
 
 var initTables = []string{"goku_gateway", "goku_plugin", "goku_balance", "goku_gateway_api", "goku_gateway_strategy", "goku_conn_plugin_strategy", "goku_conn_plugin_api", "goku_conn_strategy_api"}

@@ -4,7 +4,7 @@ import (
 	SQL "database/sql"
 	"fmt"
 
-	"github.com/eolinker/goku/common/database"
+	"github.com/eolinker/goku-api-gateway/common/database"
 )
 
 func getCountSQL(sql string, args ...interface{}) int {

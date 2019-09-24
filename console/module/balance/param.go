@@ -2,7 +2,7 @@ package balance
 
 import (
 	"encoding/json"
-	entity "github.com/eolinker/goku/server/entity/balance-entity-service"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/balance-entity-service"
 )
 
 type Param struct {

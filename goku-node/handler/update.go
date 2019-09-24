@@ -2,7 +2,8 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/eolinker/goku/goku-node/manager/updater"
+	. "github.com/eolinker/goku-api-gateway/common/version"
+	"github.com/eolinker/goku-api-gateway/goku-node/manager/updater"
 	"net/http"
 )
 

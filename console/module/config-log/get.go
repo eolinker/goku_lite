@@ -2,9 +2,9 @@ package config_log
 
 import (
 	"fmt"
-	"github.com/eolinker/goku/common/auto-form"
-	log "github.com/eolinker/goku/goku-log"
-	dao "github.com/eolinker/goku/server/dao/config-log"
+	"github.com/eolinker/goku-api-gateway/common/auto-form"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	dao "github.com/eolinker/goku-api-gateway/server/dao/config-log"
 )
 
 func Get(name string) (*LogConfig, error) {

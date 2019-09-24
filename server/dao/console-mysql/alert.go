@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	database2 "github.com/eolinker/goku/common/database"
+	database2 "github.com/eolinker/goku-api-gateway/common/database"
 )
 
 // 获取告警信息列表

@@ -3,7 +3,7 @@ package health
 import (
 	"context"
 	"fmt"
-	"github.com/eolinker/goku/goku-service/common"
+	"github.com/eolinker/goku-api-gateway/goku-service/common"
 	"net/http"
 	"time"
 )

@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/account"
-	"github.com/eolinker/goku/console/module/api"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/account"
+	"github.com/eolinker/goku-api-gateway/console/module/api"
 )
 
 func AddApi(httpResponse http.ResponseWriter, httpRequest *http.Request) {

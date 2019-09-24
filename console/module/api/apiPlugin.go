@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/eolinker/goku/server/dao"
-	console_mysql "github.com/eolinker/goku/server/dao/console-mysql"
+	"github.com/eolinker/goku-api-gateway/server/dao"
+	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
 )
 
 // 批量修改接口插件状态

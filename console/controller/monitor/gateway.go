@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/monitor"
-	"github.com/eolinker/goku/server/cluster"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/monitor"
+	"github.com/eolinker/goku-api-gateway/server/cluster"
 )
 
 func GetGatewayMonitorSummaryByPeriod(httpResponse http.ResponseWriter, httpRequest *http.Request) {

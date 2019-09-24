@@ -3,8 +3,8 @@ package discovery
 import (
 	"net/http"
 
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/service"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/service"
 )
 
 func simple(w http.ResponseWriter, r *http.Request) {

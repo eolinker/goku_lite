@@ -2,10 +2,10 @@ package service
 
 import (
 	"fmt"
-	"github.com/eolinker/goku/server/dao"
-	dao_service "github.com/eolinker/goku/server/dao/console-mysql/dao-service"
-	driver2 "github.com/eolinker/goku/server/driver"
-	entity "github.com/eolinker/goku/server/entity/console-entity"
+	"github.com/eolinker/goku-api-gateway/server/dao"
+	dao_service "github.com/eolinker/goku-api-gateway/server/dao/console-mysql/dao-service"
+	driver2 "github.com/eolinker/goku-api-gateway/server/driver"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
 const _TableName = "goku_service_config"

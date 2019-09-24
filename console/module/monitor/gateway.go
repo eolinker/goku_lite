@@ -1,10 +1,10 @@
 package monitor
 
 import (
-	. "github.com/eolinker/goku/common/version"
-	"github.com/eolinker/goku/server/cluster"
-	console_mysql "github.com/eolinker/goku/server/dao/console-mysql"
-	dao_monitor "github.com/eolinker/goku/server/dao/console-mysql/dao-monitor"
+	. "github.com/eolinker/goku-api-gateway/common/version"
+	"github.com/eolinker/goku-api-gateway/server/cluster"
+	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
+	dao_monitor "github.com/eolinker/goku-api-gateway/server/dao/console-mysql/dao-monitor"
 )
 
 func GetGatewayMonitorSummaryByPeriod(clientId int, beginTime, endTime string, period int) (bool, *SystemInfo, error) {

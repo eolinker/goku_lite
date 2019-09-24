@@ -1,7 +1,7 @@
 package dao_monitor
 
 import (
-	"github.com/eolinker/goku/common/database"
+	"github.com/eolinker/goku-api-gateway/common/database"
 )
 
 func GetStrategyByHour(clusterId int, hours []int) ([]*MonitorValueWidthStrategy, error) {

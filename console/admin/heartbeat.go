@@ -1,8 +1,8 @@
 package admin
 
 import (
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/node"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/node"
 	"net/http"
 	"strconv"
 )

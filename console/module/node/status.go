@@ -2,7 +2,7 @@ package node
 
 import (
 	"fmt"
-	entity "github.com/eolinker/goku/server/entity/console-entity"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 	"sync"
 	"time"
 )

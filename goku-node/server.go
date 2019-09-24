@@ -1,16 +1,16 @@
 package goku_node
 
 import (
-	log "github.com/eolinker/goku/goku-log"
-	config_manager "github.com/eolinker/goku/goku-node/manager/config-manager"
-	"github.com/eolinker/goku/goku-node/manager/updater"
-	node_common "github.com/eolinker/goku/goku-node/node-common"
-	monitor_write "github.com/eolinker/goku/server/monitor/monitor-write"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	config_manager "github.com/eolinker/goku-api-gateway/goku-node/manager/config-manager"
+	"github.com/eolinker/goku-api-gateway/goku-node/manager/updater"
+	node_common "github.com/eolinker/goku-api-gateway/goku-node/node-common"
+	monitor_write "github.com/eolinker/goku-api-gateway/server/monitor/monitor-write"
 
 	goku_plugin "github.com/eolinker/goku-plugin"
-	redis_plugin_proxy "github.com/eolinker/goku/goku-node/redis-plugin-proxy"
+	redis_plugin_proxy "github.com/eolinker/goku-api-gateway/goku-node/redis-plugin-proxy"
 
-	"github.com/eolinker/goku/goku-service/discovery"
+	"github.com/eolinker/goku-api-gateway/goku-service/discovery"
 	"strings"
 )
 

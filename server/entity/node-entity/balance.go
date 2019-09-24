@@ -1,6 +1,6 @@
 package entity
 
-import "github.com/eolinker/goku/server/driver"
+import "github.com/eolinker/goku-api-gateway/server/driver"
 
 type Balance struct {
 	Name          string

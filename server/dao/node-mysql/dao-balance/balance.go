@@ -1,8 +1,8 @@
 package dao_balance
 
 import (
-	"github.com/eolinker/goku/common/database"
-	entity "github.com/eolinker/goku/server/entity/node-entity"
+	"github.com/eolinker/goku-api-gateway/common/database"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
 
 func GetAllBalance() ([]*entity.Balance, error) {

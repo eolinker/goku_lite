@@ -2,14 +2,14 @@ package console_mysql
 
 import (
 	"encoding/json"
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 	"strconv"
 	"strings"
 	"time"
 
-	entity2 "github.com/eolinker/goku/server/entity/balance-entity"
+	entity2 "github.com/eolinker/goku-api-gateway/server/entity/balance-entity"
 
-	database2 "github.com/eolinker/goku/common/database"
+	database2 "github.com/eolinker/goku-api-gateway/common/database"
 )
 
 type balanceConfig struct {

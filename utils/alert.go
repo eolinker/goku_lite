@@ -1,7 +1,7 @@
 package utils
 
 import (
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 	"io/ioutil"
 	"net"
 	"strings"

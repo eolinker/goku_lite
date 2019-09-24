@@ -2,17 +2,17 @@ package visit
 
 import (
 	"encoding/json"
-	log "github.com/eolinker/goku/goku-log"
-	"github.com/eolinker/goku/goku-node/common"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	"github.com/eolinker/goku-api-gateway/goku-node/common"
 	"strconv"
 	"time"
 
-	node_common "github.com/eolinker/goku/goku-node/node-common"
+	node_common "github.com/eolinker/goku-api-gateway/goku-node/node-common"
 
-	"github.com/eolinker/goku/common/redis-manager"
-	cmd2 "github.com/eolinker/goku/goku-node/cmd"
-	gateway_manager "github.com/eolinker/goku/goku-node/manager/gateway-manager"
-	entity "github.com/eolinker/goku/server/entity/node-entity"
+	"github.com/eolinker/goku-api-gateway/common/redis-manager"
+	cmd2 "github.com/eolinker/goku-api-gateway/goku-node/cmd"
+	gateway_manager "github.com/eolinker/goku-api-gateway/goku-node/manager/gateway-manager"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 	jsoniter "github.com/json-iterator/go"
 )
 

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"sync"
 
-	dao_gateway "github.com/eolinker/goku/server/dao/node-mysql/dao-gateway"
+	dao_gateway "github.com/eolinker/goku-api-gateway/server/dao/node-mysql/dao-gateway"
 )
 
 var (

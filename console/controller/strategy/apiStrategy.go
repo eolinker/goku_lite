@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/api"
-	"github.com/eolinker/goku/console/module/strategy"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/api"
+	"github.com/eolinker/goku-api-gateway/console/module/strategy"
 )
 
 // 将接口加入策略组

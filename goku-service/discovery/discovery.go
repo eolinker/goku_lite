@@ -1,7 +1,7 @@
 package discovery
 
 import (
-	"github.com/eolinker/goku/goku-service/common"
+	"github.com/eolinker/goku-api-gateway/goku-service/common"
 )
 
 type Discovery interface {

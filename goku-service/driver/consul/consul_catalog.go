@@ -2,8 +2,8 @@ package consul
 
 import (
 	"context"
-	log "github.com/eolinker/goku/goku-log"
-	"github.com/eolinker/goku/goku-service/common"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	"github.com/eolinker/goku-api-gateway/goku-service/common"
 	"github.com/hashicorp/consul/api"
 	"time"
 )

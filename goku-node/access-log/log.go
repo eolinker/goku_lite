@@ -1,8 +1,8 @@
 package access_log
 
 import (
-	log "github.com/eolinker/goku/goku-log"
-	access_field "github.com/eolinker/goku/server/access-field"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	access_field "github.com/eolinker/goku-api-gateway/server/access-field"
 	"github.com/sirupsen/logrus"
 	"time"
 )

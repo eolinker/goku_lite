@@ -1,7 +1,7 @@
 package console
 
 import (
-	"github.com/eolinker/goku/server/entity"
+	"github.com/eolinker/goku-api-gateway/server/entity"
 	"strings"
 )
 

@@ -1,7 +1,7 @@
 package static
 
 import (
-	"github.com/eolinker/goku/goku-service/discovery"
+	"github.com/eolinker/goku-api-gateway/goku-service/discovery"
 )
 
 const DriverName = "static"

@@ -1,9 +1,9 @@
 package goku_node
 
 import (
-	log "github.com/eolinker/goku/goku-log"
-	"github.com/eolinker/goku/goku-node/common"
-	strategy_manager "github.com/eolinker/goku/goku-node/manager/strategy-manager"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	"github.com/eolinker/goku-api-gateway/goku-node/common"
+	strategy_manager "github.com/eolinker/goku-api-gateway/goku-node/manager/strategy-manager"
 )
 
 func getStrateyID(ctx *common.Context) string {

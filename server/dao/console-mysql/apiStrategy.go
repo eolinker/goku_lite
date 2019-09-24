@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	database2 "github.com/eolinker/goku/common/database"
+	database2 "github.com/eolinker/goku-api-gateway/common/database"
 )
 
 // 将接口加入策略组

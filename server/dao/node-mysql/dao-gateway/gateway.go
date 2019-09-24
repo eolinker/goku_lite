@@ -1,6 +1,6 @@
 package dao_gateway
 
-import "github.com/eolinker/goku/common/database"
+import "github.com/eolinker/goku-api-gateway/common/database"
 
 // 获取网关成功状态码
 func GetGatewayBaseInfo() (string, int) {

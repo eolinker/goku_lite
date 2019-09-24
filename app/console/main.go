@@ -2,13 +2,13 @@ package main
 
 import (
 	"flag"
-	"github.com/eolinker/goku/console/module/account"
-	log "github.com/eolinker/goku/goku-log"
+	"github.com/eolinker/goku-api-gateway/console/module/account"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 
-	"github.com/eolinker/goku/common/conf"
-	"github.com/eolinker/goku/common/general"
-	"github.com/eolinker/goku/console"
-	"github.com/eolinker/goku/utils"
+	"github.com/eolinker/goku-api-gateway/common/conf"
+	"github.com/eolinker/goku-api-gateway/common/general"
+	"github.com/eolinker/goku-api-gateway/console"
+	"github.com/eolinker/goku-api-gateway/utils"
 )
 
 var (

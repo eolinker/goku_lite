@@ -1,7 +1,7 @@
 package node
 
 import (
-	"github.com/eolinker/goku/server/dao/console-mysql"
+	"github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
 )
 
 // 新建节点分组

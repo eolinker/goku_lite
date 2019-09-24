@@ -2,7 +2,7 @@ package config_log
 
 import (
 	"fmt"
-	module "github.com/eolinker/goku/console/module/config-log"
+	module "github.com/eolinker/goku-api-gateway/console/module/config-log"
 	"net/http"
 	"strings"
 )

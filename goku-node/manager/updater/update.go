@@ -7,10 +7,10 @@ import (
 	"sync"
 	"time"
 
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 
-	gateway_manager "github.com/eolinker/goku/goku-node/manager/gateway-manager"
-	"github.com/eolinker/goku/server/dao"
+	gateway_manager "github.com/eolinker/goku-api-gateway/goku-node/manager/gateway-manager"
+	"github.com/eolinker/goku-api-gateway/server/dao"
 )
 
 var (

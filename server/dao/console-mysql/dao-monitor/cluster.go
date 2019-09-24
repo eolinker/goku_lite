@@ -2,8 +2,8 @@ package dao_monitor
 
 import (
 	"fmt"
-	"github.com/eolinker/goku/common/database"
-	monitor_key "github.com/eolinker/goku/server/monitor/monitor-key"
+	"github.com/eolinker/goku-api-gateway/common/database"
+	monitor_key "github.com/eolinker/goku-api-gateway/server/monitor/monitor-key"
 	"strconv"
 )
 

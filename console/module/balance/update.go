@@ -2,9 +2,9 @@ package balance
 
 import (
 	"encoding/json"
-	"github.com/eolinker/goku/common/general"
-	dao_balance_update "github.com/eolinker/goku/server/dao/console-mysql/dao-balance-update"
-	entity "github.com/eolinker/goku/server/entity/balance-entity"
+	"github.com/eolinker/goku-api-gateway/common/general"
+	dao_balance_update "github.com/eolinker/goku-api-gateway/server/dao/console-mysql/dao-balance-update"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/balance-entity"
 )
 
 func init() {

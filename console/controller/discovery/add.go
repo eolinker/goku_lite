@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/eolinker/goku/common/auto-form"
-	"github.com/eolinker/goku/console/controller"
-	"github.com/eolinker/goku/console/module/service"
-	driver2 "github.com/eolinker/goku/server/driver"
+	"github.com/eolinker/goku-api-gateway/common/auto-form"
+	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/service"
+	driver2 "github.com/eolinker/goku-api-gateway/server/driver"
 )
 
 func add(w http.ResponseWriter, r *http.Request) {

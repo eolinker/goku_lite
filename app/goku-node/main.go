@@ -4,18 +4,18 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	endless2 "github.com/eolinker/goku/common/endless"
-	log "github.com/eolinker/goku/goku-log"
-	"github.com/eolinker/goku/goku-node/cmd"
+	endless2 "github.com/eolinker/goku-api-gateway/common/endless"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	"github.com/eolinker/goku-api-gateway/goku-node/cmd"
 	"runtime"
 
-	node_common "github.com/eolinker/goku/goku-node/node-common"
+	node_common "github.com/eolinker/goku-api-gateway/goku-node/node-common"
 
-	"github.com/eolinker/goku/common/database"
-	"github.com/eolinker/goku/common/general"
-	"github.com/eolinker/goku/common/redis-manager"
-	goku_node "github.com/eolinker/goku/goku-node"
-	"github.com/eolinker/goku/server/entity"
+	"github.com/eolinker/goku-api-gateway/common/database"
+	"github.com/eolinker/goku-api-gateway/common/general"
+	"github.com/eolinker/goku-api-gateway/common/redis-manager"
+	goku_node "github.com/eolinker/goku-api-gateway/goku-node"
+	"github.com/eolinker/goku-api-gateway/server/entity"
 )
 
 var (

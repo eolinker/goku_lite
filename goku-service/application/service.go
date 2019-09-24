@@ -2,9 +2,9 @@ package application
 
 import (
 	"fmt"
-	"github.com/eolinker/goku/goku-service/common"
-	"github.com/eolinker/goku/goku-service/health"
-	"github.com/eolinker/goku/utils"
+	"github.com/eolinker/goku-api-gateway/goku-service/common"
+	"github.com/eolinker/goku-api-gateway/goku-service/health"
+	"github.com/eolinker/goku-api-gateway/utils"
 	"net/http"
 	"net/url"
 	"time"

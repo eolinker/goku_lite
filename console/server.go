@@ -3,19 +3,19 @@ package console
 import (
 	"net/http"
 
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 
 	_ "net/http/pprof"
 
-	"github.com/eolinker/goku/console/controller/api"
-	"github.com/eolinker/goku/console/controller/script"
-	"github.com/eolinker/goku/console/controller/strategy"
-	cluster2 "github.com/eolinker/goku/server/cluster"
-	monitor_read "github.com/eolinker/goku/server/monitor/monitor-read"
+	"github.com/eolinker/goku-api-gateway/console/controller/api"
+	"github.com/eolinker/goku-api-gateway/console/controller/script"
+	"github.com/eolinker/goku-api-gateway/console/controller/strategy"
+	cluster2 "github.com/eolinker/goku-api-gateway/server/cluster"
+	monitor_read "github.com/eolinker/goku-api-gateway/server/monitor/monitor-read"
 
-	"github.com/eolinker/goku/common/conf"
-	"github.com/eolinker/goku/console/admin"
-	"github.com/eolinker/goku/console/module/account"
+	"github.com/eolinker/goku-api-gateway/common/conf"
+	"github.com/eolinker/goku-api-gateway/console/admin"
+	"github.com/eolinker/goku-api-gateway/console/module/account"
 )
 
 func Server() {

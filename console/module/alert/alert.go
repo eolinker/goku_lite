@@ -3,11 +3,11 @@ package alert
 import (
 	"strconv"
 
-	config_log "github.com/eolinker/goku/console/module/config-log"
+	config_log "github.com/eolinker/goku-api-gateway/console/module/config-log"
 
-	log "github.com/eolinker/goku/goku-log"
-	console_mysql "github.com/eolinker/goku/server/dao/console-mysql"
-	"github.com/eolinker/goku/utils"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
+	"github.com/eolinker/goku-api-gateway/utils"
 )
 
 // 获取告警信息列表

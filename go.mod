@@ -1,4 +1,4 @@
-module github.com/eolinker/goku
+module github.com/eolinker/goku-api-gateway
 
 go 1.12
 

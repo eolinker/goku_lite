@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"strings"
 
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 
-	database2 "github.com/eolinker/goku/common/database"
+	database2 "github.com/eolinker/goku-api-gateway/common/database"
 
 	"time"
 )

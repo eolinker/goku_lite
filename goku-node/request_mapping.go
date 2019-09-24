@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/eolinker/goku/goku-node/common"
+	"github.com/eolinker/goku-api-gateway/goku-node/common"
 
-	balance_manager "github.com/eolinker/goku/goku-node/manager/balance-manager"
-	entity "github.com/eolinker/goku/server/entity/node-entity"
+	balance_manager "github.com/eolinker/goku-api-gateway/goku-node/manager/balance-manager"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 
 	"strings"
 )

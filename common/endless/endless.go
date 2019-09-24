@@ -4,8 +4,8 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
-	log "github.com/eolinker/goku/goku-log"
-	cmd2 "github.com/eolinker/goku/goku-node/cmd"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+	cmd2 "github.com/eolinker/goku-api-gateway/goku-node/cmd"
 
 	"net"
 	"net/http"

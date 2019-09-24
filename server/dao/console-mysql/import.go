@@ -2,14 +2,14 @@ package console_mysql
 
 import (
 	SQL "database/sql"
-	log "github.com/eolinker/goku/goku-log"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
 
-	database2 "github.com/eolinker/goku/common/database"
-	entity "github.com/eolinker/goku/server/entity/console-entity"
+	database2 "github.com/eolinker/goku-api-gateway/common/database"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
 var method []string = []string{"POST", "GET", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH"}
