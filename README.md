@@ -1,7 +1,7 @@
 ![Goku API Gateway 悟空网关](https://data.eolinker.com/course/gBTEV2s29e16630bb4dc553bec35ad33914d19aa410a8bf "Goku API Gateway 悟空网关")
 
 [![Gitter](https://badges.gitter.im/goku-api-gateway/community.svg)](https://gitter.im/goku-api-gateway/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Go Report Card](https://goreportcard.com/badge/github.com/eolinker/goku-api-gateway)](https://goreportcard.com/report/github.com/eolinker/goku-api-gateway)
-![](https://img.shields.io/badge/License-GPL3.0-blue.svg)
+![](https://img.shields.io/badge/license-GPL3.0-blue.svg)
 
 Goku API Gateway （中文名：悟空 API 网关）是一个基于 Golang 开发的微服务网关，能够实现高性能 HTTP API 转发、多租户管理、API 访问权限控制等目的，拥有强大的自定义插件系统可以自行扩展，并且提供友好的图形化配置界面，能够快速帮助企业进行 API 服务治理、提高 API 服务的稳定性和安全性。
 
@@ -10,7 +10,7 @@ Goku API Gateway （中文名：悟空 API 网关）是一个基于 Golang 开�
 - [为什么要使用Goku](#为什么要使用Goku "为什么要使用Goku")
 - [产品特性](#产品特性 "产品特性")
 - [产品截图](#产品截图 "产品截图")
-- [产品部署](#产品部署 "产品部署")
+- [安装使用](#安装使用 "安装使用")
 - [企业支持](#企业支持 "企业支持")
 - [关于我们](#关于我们 "关于我们")
 - [授权协议](#授权协议 "授权协议")
@@ -89,8 +89,9 @@ Goku API Gateway 的社区版本（CE）拥有完善的使用指南和二次开�
 
 ![](http://data.eolinker.com/course/iyifFJ2809fe63e27df709ddc1a22f94d983c5ecbf8cc29)
 
-# 产品部署
+# 安装使用
 * [部署教程](https://help.eolinker.com/#/tutorial/?groupID=c-351&productID=19 "部署教程")
+* [快速入门教程](https://help.eolinker.com/#/tutorial/?groupID=c-307&productID=19 "快速入门教程")
 * [源码编译教程](https://help.eolinker.com/#/tutorial/?groupID=c-350&productID=19 "源码编译")
 
 # 企业支持
