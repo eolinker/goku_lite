@@ -1,4 +1,4 @@
-![](https://data.eolinker.com/course/TqmXQcg774033e5836ed04f741cfe8e584e5eed1a806a7c)
+![Goku API Gateway](https://data.eolinker.com/course/TqmXQcg774033e5836ed04f741cfe8e584e5eed1a806a7c "Goku API Gateway")
 
 [![Gitter](https://badges.gitter.im/goku-api-gateway/community.svg)](https://gitter.im/goku-api-gateway/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Go Report Card](https://goreportcard.com/badge/github.com/eolinker/goku-api-gateway)](https://goreportcard.com/report/github.com/eolinker/goku-api-gateway) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3214/badge)](https://bestpractices.coreinfrastructure.org/projects/3214) ![](https://img.shields.io/badge/license-GPL3.0-blue.svg)
 
@@ -28,20 +28,20 @@ All in all, Goku API Gateway enables enterprise to focus on their business.
 
 # Product Features
 - **Cluster Management**：Mutiple  Goku API Gateway  node，Configuration information is automatically synchronized and can support multi-cluster deployment.
-- **UI Management Background **: Manage various configurations of the network through clear UI.
-- **Load balancing **: Load balancing for back-end servers.
+- **UI Management Background**: Manage various configurations of the network through clear UI.
+- **Load balancing**: Load balancing for back-end servers.
 - **Service Discovery**: Find back-end servers from registries such as Consul and Eureka.
-- **Forwarding Agent **: Hide Real Backend Services by Forwarding Requests, Support Rest API, Webservice.
-- **Multi-tenant management **: According to different access terminals or users.
+- **Forwarding Agent**: Hide Real Backend Services by Forwarding Requests, Support Rest API, Webservice.
+- **Multi-tenant management**: According to different access terminals or users.
 - **Access Authentication**: Basic, API Key, etc.
 - **API Monitor**：Request data statistics.
-- **API Alert **: Support the webhook and email to alert abnormal services.
-- **Health check **: Dynamic discovery of exceptional network joints and back-end nodes, automatically cut off forwarding traffic and transfer to other normal back-end services.
-- **Exception auto-restart **: When a gateway node is abnormal, it will automatically attempt to restart.
-- **Flexible transmit rules **: support fuzzy matching request path, support rewriting transmit path, etc.
-- **Plug-in system **: Plug-in system based on Go language can rapidly develop high-performance plug-ins.
-- **Performance Extension **: Gateway nodes have good processing performance, supporting the number of horizontal extension nodes to meet different performance requirements.
-- **Log **: Detailed system log, http log, etc.
+- **API Alert**: Support the webhook and email to alert abnormal services.
+- **Health check**: Dynamic discovery of exceptional network joints and back-end nodes, automatically cut off forwarding traffic and transfer to other normal back-end services.
+- **Exception auto-restart**: When a gateway node is abnormal, it will automatically attempt to restart.
+- **Flexible transmit rules**: support fuzzy matching request path, support rewriting transmit path, etc.
+- **Plug-in**: Plug-in system based on Go language can rapidly develop high-performance plug-ins.
+- **Extension**: Gateway nodes have good processing performance, supporting the number of horizontal extension nodes to meet different performance requirements.
+- **Log**: Detailed system log, http log, etc.
 - **Open API**：Provide OPEN API for users to operate on the gateway for easy integration.
 - ...
 
