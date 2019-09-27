@@ -51,18 +51,18 @@ Home page can help users understand the basic information of gateway, such as ac
 
 ![](http://data.eolinker.com/course/nCN4Qifbe6f7d197c26dadae4248664ce30693061049f0f)
 
-* 【Gateway Note】
+* 【Gateway Node】
 Gateway supports cluster management, and access to different clusters can manage the corresponding nodes.
 
 ![](http://data.eolinker.com/course/gJdazCFd5207d6b3b2c8d63cf613e8684a5ce1f3da506fc)
 
-* 【Service Registration Method】
+* 【Registration】
 You can register (discover) your back-end services in a static or dynamic way. After creating a service registration method, you can create one or more loads on the basis of one way or another.（Upstream）。
 
 ![](http://data.eolinker.com/course/Ny7TmGRaf427ef3b63bae01d7856884247d7a11df865803)
 
-* 【Load Configuration】
-Configure the API's transmit target server (load back-end), which can be set to the API's transmit address/load back-end after creation（Target / Upstream）。
+* 【Load Balancing】
+Configure the API's transmit target server (load back-end), which can be set to the API's transmit address/load back-end after creation（Target / Upstream）.
 
 ![](https://camo.githubusercontent.com/2dd6e6c88049dd7182cd2dc81b745a8d96856423/687474703a2f2f646174612e656f6c696e6b65722e636f6d2f636f757273652f4655414b45413764656137373335653961313534356636373764333430313064653838623535633637636336356463)
 
