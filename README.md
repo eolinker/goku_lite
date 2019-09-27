@@ -44,12 +44,12 @@ All in all, Goku API Gateway enables enterprise to focus on their business.
 - **Log**: Detailed system log, http log, etc.
 - **Open API**：Provide OPEN API for users to operate on the gateway for easy integration.
 - ...
+![](http://data.eolinker.com/course/nCN4Qifbe6f7d197c26dadae4248664ce30693061049f0f)
 
 # Console Preview
 * 【Home Page】
 Home page can help users understand the basic information of gateway, such as access policy, API number, etc. It can also help understand the situation of request and forwarding, such as success rate.
 
-![](http://data.eolinker.com/course/nCN4Qifbe6f7d197c26dadae4248664ce30693061049f0f)
 
 * 【Gateway Node】
 Gateway supports cluster management, and access to different clusters can manage the corresponding nodes.
