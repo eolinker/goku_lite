@@ -6,15 +6,15 @@ Goku API Gateway is a Golang-based microservice gateway that enables high-perfor
 
 Goku provides graphic interface and plug-in system to make configuration easier and expand more convenient.
 
-# Summary
+# Summary / [中文介绍](https://github.com/eolinker/goku-api-gateway/blob/master/README_CN.md "中文介绍")
 
-- [Why Goku](#Why Goku)
-- [Features](#Features)
-- [Console Preview](#Console Preview)
-- [Quick Start](#Quick Start)
-- [Enterprise Support](#Enterprise Support)
-- [About Us](#About Us)
-- [License](#License)
+- [WhyGoku](#WhyGoku "WhyGoku")
+- [Features](#Features "Features")
+- [ConsolePreview](#ConsolePreview "ConsolePreview")
+- [QuickStart](#QuickStart "QuickStart")
+- [EnterpriseSupport](#EnterpriseSupport "EnterpriseSupport")
+- [AboutUs](#AboutUs "AboutUs")
+- [License](#License "License")
 
 # Why Goku
 
@@ -98,10 +98,10 @@ Detailed request logs and system running logs are provided. Request logs can cus
 
 # Enterprise Support
 Goku API Gateway EE (Enterprise Version) has more powerful functions, plug-in libraries and professional technical support services. If you want to know more details, you can contact us in the following ways.
-- **Apply for free trial and demonstration of Enterprise Version**：[Appointment trial](https://wj.qq.com/s2/2150032/4b5e "Appointment trial")
-- **Market Cooperation Mail : **：market@eolinker.com
-- **Purchase consultation Mail : **：sales@eolinker.com
-- **Help Center**：[help.eolinker.com](help.eolinker.com "help.eolinker.com")
+- Apply for free trial and demonstration of Enterprise Version：[Appointment trial](https://wj.qq.com/s2/2150032/4b5e "Appointment trial")
+- Market Cooperation Mail：market@eolinker.com
+- Purchase consultation Mail：sales@eolinker.com
+- Help Center：[help.eolinker.com](help.eolinker.com "help.eolinker.com")
 
 # About Us
 EOLINK is a leading API management service provider, providing professional API research and development management, API automated test service, API monitor service, API gateway and other services for more than 3000 enterprises worldwide. It is the first enterprise to formulate API R&D management industry norms for ITSS.
