@@ -1,115 +1,117 @@
-![Goku API Gateway 悟空网关](https://data.eolinker.com/course/gBTEV2s29e16630bb4dc553bec35ad33914d19aa410a8bf "Goku API Gateway 悟空网关")
+![](https://data.eolinker.com/course/TqmXQcg774033e5836ed04f741cfe8e584e5eed1a806a7c)
 
 [![Gitter](https://badges.gitter.im/goku-api-gateway/community.svg)](https://gitter.im/goku-api-gateway/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Go Report Card](https://goreportcard.com/badge/github.com/eolinker/goku-api-gateway)](https://goreportcard.com/report/github.com/eolinker/goku-api-gateway) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3214/badge)](https://bestpractices.coreinfrastructure.org/projects/3214) ![](https://img.shields.io/badge/license-GPL3.0-blue.svg)
 
-Goku API Gateway （中文名：悟空 API 网关）是一个基于 Golang 开发的微服务网关，能够实现高性能 HTTP API 转发、多租户管理、API 访问权限控制等目的，拥有强大的自定义插件系统可以自行扩展，并且提供友好的图形化配置界面，能够快速帮助企业进行 API 服务治理、提高 API 服务的稳定性和安全性。
+Goku API Gateway is a Golang-based microservice gateway that enables high-performance dynamic routing, multi-tenancy management, API access control, etc. It's also suitable for API management under micro-service system. 
 
-# 概况
+Goku provides graphic interface and plug-in system to make configuration easier and expand more convenient.
 
-- [为什么要使用Goku](#为什么要使用Goku "为什么要使用Goku")
-- [产品特性](#产品特性 "产品特性")
-- [产品截图](#产品截图 "产品截图")
-- [安装使用](#安装使用 "安装使用")
-- [企业支持](#企业支持 "企业支持")
-- [关于我们](#关于我们 "关于我们")
-- [授权协议](#授权协议 "授权协议")
+# Summary
 
-# 为什么要使用Goku
-Goku API Gateway （悟空 API 网关）是运行在企业系统服务边界上的微服务网关。当您构建网站、App、IOT甚至是开放API交易时，Goku API Gateway 能够帮你将内部系统中重复的组件抽取出来并放置在Goku网关上运行，如进行用户授权、访问控制、流量监控、防火墙、静态数据缓存、数据转换等。
+- [Why Goku](#Why Goku)
+- [Features](#Features)
+- [Console Preview](#Console Preview)
+- [Quick Start](#Quick Start)
+- [Enterprise Support](#Enterprise Support)
+- [About Us](#About Us)
+- [License](#License)
 
-Goku API Gateway 的社区版本（CE）拥有完善的使用指南和二次开发指南，代码使用纯 Go 语言编写，拥有良好的性能和扩展性，并且内置的插件系统能够让企业针对自身业务进行定制开发。
+# Why Goku
 
-并且 Goku API Gateway 支持与 EOLINKER 旗下的 API Studio 接口管理平台结合，对 API 进行全面的管理、自动化测试、监控和运维。
+Goku API Gateway is a microservice gateway that runs on the boundaries of enterprise system services. When you build websites, apps, IOT, and even API transactions, Goku API Gateway can help you extract duplicate components from your internal system and place them on the Goku gateway, such as user authorization, access control, traffic monitoring, firewalls, data cache, data conversion and so on.
 
-总而言之，Goku API Gateway 能让业务开发团队更加专注地实现业务。
+Goku API Gateway CE provides comprehensive usage guide and customization guide. Goku is written in pure Go language, with good performance and scalability, and the built-in plug-in system enables enterprises to customize development for their own business.
 
-# 产品特性
-- **集群管理**：多个 Goku API Gateway 节点，配置信息自动同步，支持多集群部署。
-- **界面管理后台**：通过清晰的UI界面对网关的各项配置进行管理。
-- **负载均衡**：对后端服务器进行负载均衡。
-- **服务发现**：从 Consul、Eureka 等注册中心发现后端服务器。
-- **转发代理**：通过转发请求来隐藏真实后端服务，支持 Rest API、Webservice。
-- **多租户管理**：根据不同的访问终端或用户来判断。
-- **访问鉴权**：Basic、API Key等。
-- **API监控**：请求数据统计。
-- **API告警**：支持通过API、邮件方式对异常的服务进行告警。
-- **健康检查**：动态发现异常的网关节点以及后端节点，自动切断转发流量并转到其他正常后端服务。
-- **异常自动重启**：网关节点异常时会自动尝试重载重启。
-- **灵活的转发规则**：支持模糊匹配请求路径，支持改写转发路径等。
-- **插件系统**：基于 Go 语言的插件系统，可以快速开发高性能的插件。
-- **性能扩展**：网关节点拥有良好的处理性能，支持水平扩展节点数量满足不同的性能需求。
-- **日志**：详细的系统日志、请求日志等。
-- **Open API**：提供 API 对网关进行操作，便于集成。
+Goku API Gateway also can combine with EOLINK API Studio to enhance API Management,API Monitor and Automated test.
+
+All in all, Goku API Gateway enables enterprise to focus on their business.
+
+# Product Features
+- **Cluster Management**：Mutiple  Goku API Gateway  node，Configuration information is automatically synchronized and can support multi-cluster deployment.
+- **UI Management Background **: Manage various configurations of the network through clear UI.
+- **Load balancing **: Load balancing for back-end servers.
+- **Service Discovery**: Find back-end servers from registries such as Consul and Eureka.
+- **Forwarding Agent **: Hide Real Backend Services by Forwarding Requests, Support Rest API, Webservice.
+- **Multi-tenant management **: According to different access terminals or users.
+- **Access Authentication**: Basic, API Key, etc.
+- **API Monitor**：Request data statistics.
+- **API Alert **: Support the webhook and email to alert abnormal services.
+- **Health check **: Dynamic discovery of exceptional network joints and back-end nodes, automatically cut off forwarding traffic and transfer to other normal back-end services.
+- **Exception auto-restart **: When a gateway node is abnormal, it will automatically attempt to restart.
+- **Flexible transmit rules **: support fuzzy matching request path, support rewriting transmit path, etc.
+- **Plug-in system **: Plug-in system based on Go language can rapidly develop high-performance plug-ins.
+- **Performance Extension **: Gateway nodes have good processing performance, supporting the number of horizontal extension nodes to meet different performance requirements.
+- **Log **: Detailed system log, http log, etc.
+- **Open API**：Provide OPEN API for users to operate on the gateway for easy integration.
 - ...
 
-# 产品截图
-* 【首页】
-首页可以了解网关的基本信息，例如访问策略数、API数等，还可以了解请求和转发的情况，例如成功率等。
+# Console Preview
+* 【Home Page】
+Home page can help users understand the basic information of gateway, such as access policy, API number, etc. It can also help understand the situation of request and forwarding, such as success rate.
 
-![](http://data.eolinker.com/course/p8qL49u6c8adce6b345915b3fd77bf5812a40fe7dd0a8a2)
+![](http://data.eolinker.com/course/nCN4Qifbe6f7d197c26dadae4248664ce30693061049f0f)
 
-* 【网关节点】
-网关支持集群化管理，进入不同的集群可以管理相应的节点。
+* 【Gateway Note】
+Gateway supports cluster management, and access to different clusters can manage the corresponding nodes.
 
-![](http://data.eolinker.com/course/wEa9yEI2bf086f3873b55bbdaec32f3b4ce1eb23dfe44ea)
+![](http://data.eolinker.com/course/gJdazCFd5207d6b3b2c8d63cf613e8684a5ce1f3da506fc)
 
-* 【服务注册方式】
-您可以通过静态或动态的方式来注册（发现）您的后端服务，创建好服务注册方式后，您可以在某个方式的基础上创建一个或多个负载（Upstream）。
+* 【Service Registration Method】
+You can register (discover) your back-end services in a static or dynamic way. After creating a service registration method, you can create one or more loads on the basis of one way or another.（Upstream）。
 
-![](http://data.eolinker.com/course/1elb5mF4d3fd6141919001293e0119557b3d5ef0cea0719)
+![](http://data.eolinker.com/course/Ny7TmGRaf427ef3b63bae01d7856884247d7a11df865803)
 
-* 【负载配置】
-配置API的转发目标服务器（负载后端），创建之后可以设置为 API 的转发地址 / 负载后端（Target / Upstream）。
+* 【Load Configuration】
+Configure the API's transmit target server (load back-end), which can be set to the API's transmit address/load back-end after creation（Target / Upstream）。
 
-![](http://data.eolinker.com/course/4tHYXR23abc26b914ca763aac4871ed9d60a3aeb819941f)
+![](http://data.eolinker.com/course/FUAKEA7dea7735e9a1545f677d34010de88b55c67cc65dc)
 
-* 【接口管理】
-支持创建并管理API文档，并且支持导入API文档项目。
+* 【API Mangement】
+Support the creation and management of API documents, and support the import of API document projects.
 
-![](http://data.eolinker.com/course/WlTJ2kB1cd03ddf839ea1d489890a0bd5b0572efeff6043)
+![](http://data.eolinker.com/course/7nb8KKEafffa070b5e510b67b1eeb1027c16654bc72f464)
 
-* 【访问策略】
-您可以给不同的调用方或应用设置访问策略，不同的访问策略可以设置不同的 API 访问权限、鉴权方式以及插件功能等。
+* 【Strategy】
+You can set access strategies for different callers or applications. Different access strategies can set different API access rights, authentication and plug-in functions.
 
-![](http://data.eolinker.com/course/fUrHmVd0d2d88b7f72d985b0e93e434ed528648d2dd34db)
+![](http://data.eolinker.com/course/e122iUe133714876f2cce05e591dda7adb9e5501ebf7b27)
 
-* 【告警设置】
-针对异常API可以设置告警提醒，支持邮件和Webhook通知。
+* 【Alarm Settings】
+Alerts can be set for exception APIs to support email and Webhook notifications.
 
-![](http://data.eolinker.com/course/9eQ3Lmv64e5cedc1ad4745dfa2895f6657441d874f6c7f4)
+![](http://data.eolinker.com/course/cW6ILWw7c2eae26101ea8d1cc74661e020c98c403d35605)
 
-* 【扩展插件】
-插件系统除了提供官方插件，也可以添加自定义的网关插件。
+* 【Extension Plug-in】
+In addition to providing official plug-ins, plug-in systems can also add custom gateway plug-ins.
 
-![](http://data.eolinker.com/course/sQhUflpcebf65dc43cb7e2e838e8d1ecf3e52e9a5a6c566)
+![](http://data.eolinker.com/course/RzGPX43202ea2aef58c43fd245f1ff0eca122e880a306b1)
 
-* 【日志设置】
-提供详细的请求日志和系统运行日志，请求日志可以自定义记录字段；运行日志可以根据情况调整记录等级：ERROR、INFO、DEBUG等。
+* 【Log Setting】
+Detailed request logs and system running logs are provided. Request logs can customize recording fields. Running logs can adjust recording levels according to circumstances: ERROR, INFO, DEBUG, etc.
 
-![](http://data.eolinker.com/course/iyifFJ2809fe63e27df709ddc1a22f94d983c5ecbf8cc29)
+![](http://data.eolinker.com/course/EHNCLtd8f8bee31f86968ee4dfcd8eeff946fe199195dfc)
 
-# 安装使用
-* [部署教程](https://help.eolinker.com/#/tutorial/?groupID=c-351&productID=19 "部署教程")
-* [快速入门教程](https://help.eolinker.com/#/tutorial/?groupID=c-307&productID=19 "快速入门教程")
-* [源码编译教程](https://help.eolinker.com/#/tutorial/?groupID=c-350&productID=19 "源码编译")
+# Quick Start
+* [Deployment Tutorial](https://help.eolinker.com/#/tutorial/?groupID=c-351&productID=19 "Deployment Tutorial")
+* [Quick Start](https://help.eolinker.com/#/tutorial/?groupID=c-307&productID=19 "Quick Start Tutorial")
+* [Source Code Compilation](https://help.eolinker.com/#/tutorial/?groupID=c-350&productID=19 "Source Code Compilation")
 
-# 企业支持
-Goku API Gateway EE（企业版本）拥有更强大的功能、插件库以及专业的技术支持服务，如您需要了解可以通过以下方式联系我们。
-- **中国大陆服务支持电话**：400-616-0330 法定工作日（9:30-18:00）
-- **申请企业版免费试用及演示**：[预约试用](https://wj.qq.com/s2/2150032/4b5e "预约试用")
-- **市场合作邮箱**：market@eolinker.com
-- **购买咨询邮箱**：sales@eolinker.com
-- **帮助文档**：[help.eolinker.com](help.eolinker.com "help.eolinker.com")
+# Enterprise Support
+Goku API Gateway EE (Enterprise Version) has more powerful functions, plug-in libraries and professional technical support services. If you want to know more details, you can contact us in the following ways.
+- **Apply for free trial and demonstration of Enterprise Version**：[Appointment trial](https://wj.qq.com/s2/2150032/4b5e "Appointment trial")
+- **Market Cooperation Mail : **：market@eolinker.com
+- **Purchase consultation Mail : **：sales@eolinker.com
+- **Help Center**：[help.eolinker.com](help.eolinker.com "help.eolinker.com")
 
-# 关于我们
-EOLINKER 是领先的 API 管理服务供应商，为全球超过3000家企业提供专业的 API 研发管理、API自动化测试、API监控、API网关等服务。是首家为ITSS（中国电子工业标准化技术协会）制定API研发管理行业规范的企业。
+# About Us
+EOLINK is a leading API management service provider, providing professional API research and development management, API automated test service, API monitor service, API gateway and other services for more than 3000 enterprises worldwide. It is the first enterprise to formulate API R&D management industry norms for ITSS.
 
-官方网站：[https://www.eolinker.com](https://www.eolinker.com "EOLINKER官方网站")
-免费下载PC桌面端：[https://www.eolinker.com/pc/](https://www.eolinker.com/pc/ "免费下载PC客户端")
+Official website :[https://www.eolinker.com](https://www.eolinker.com "EOLINK Official Site")
+Free download of PC client :[https://www.eolinker.com/pc](https://www.eolinker.com/pc/ "Free download of PC client")
 
-# 授权协议
+# License
 ```
-Copyright 2017-2019 Eolinker Inc.
+Copyright 2017-2019 Eolink Inc.
 
 Licensed under the GNU General Public License v3.0 (the "License");
 you may not use this file except in compliance with the License.
