@@ -1,4 +1,4 @@
-![GOKU API Gateway](https://camo.githubusercontent.com/f859a59b436a665a1551c2909393a91615344836/68747470733a2f2f646174612e656f6c696e6b65722e636f6d2f636f757273652f36486c4658786263323833333934376462666136383430626262613334383731346466626533333031386664366363 "GOKU API Gateway")
+
 
 [![Gitter](https://badges.gitter.im/goku-api-gateway/community.svg)](https://gitter.im/goku-api-gateway/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Go Report Card](https://goreportcard.com/badge/github.com/eolinker/goku-api-gateway)](https://goreportcard.com/report/github.com/eolinker/goku-api-gateway) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3214/badge)](https://bestpractices.coreinfrastructure.org/projects/3214) ![](https://img.shields.io/badge/license-GPL3.0-blue.svg)
 
