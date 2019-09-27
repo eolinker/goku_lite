@@ -1,4 +1,4 @@
-![GOKU API Gateway](https://data.eolinker.com/course/6HlFXxbc2833947dbfa6840bbba348714dfbe33018fd6cc "GOKU API Gateway")
+![GOKU API Gateway](https://camo.githubusercontent.com/f859a59b436a665a1551c2909393a91615344836/68747470733a2f2f646174612e656f6c696e6b65722e636f6d2f636f757273652f36486c4658786263323833333934376462666136383430626262613334383731346466626533333031386664366363 "GOKU API Gateway")
 
 [![Gitter](https://badges.gitter.im/goku-api-gateway/community.svg)](https://gitter.im/goku-api-gateway/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Go Report Card](https://goreportcard.com/badge/github.com/eolinker/goku-api-gateway)](https://goreportcard.com/report/github.com/eolinker/goku-api-gateway) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3214/badge)](https://bestpractices.coreinfrastructure.org/projects/3214) ![](https://img.shields.io/badge/license-GPL3.0-blue.svg)
 
@@ -64,7 +64,7 @@ You can register (discover) your back-end services in a static or dynamic way. A
 * 【Load Configuration】
 Configure the API's transmit target server (load back-end), which can be set to the API's transmit address/load back-end after creation（Target / Upstream）。
 
-![](http://data.eolinker.com/course/FUAKEA7dea7735e9a1545f677d34010de88b55c67cc65dc)
+![](https://camo.githubusercontent.com/2dd6e6c88049dd7182cd2dc81b745a8d96856423/687474703a2f2f646174612e656f6c696e6b65722e636f6d2f636f757273652f4655414b45413764656137373335653961313534356636373764333430313064653838623535633637636336356463)
 
 * 【API Mangement】
 Support the creation and management of API documents, and support the import of API document projects.
@@ -84,7 +84,7 @@ Alerts can be set for exception APIs to support email and Webhook notifications.
 * 【Extension Plug-in】
 In addition to providing official plug-ins, plug-in systems can also add custom gateway plug-ins.
 
-![](http://data.eolinker.com/course/RzGPX43202ea2aef58c43fd245f1ff0eca122e880a306b1)
+![](https://camo.githubusercontent.com/1496eb6ea6a594c843d50ec243d6f850a8d41b04/687474703a2f2f646174612e656f6c696e6b65722e636f6d2f636f757273652f527a475058343332303265613261656635386334336664323435663166663065636131323265383830613330366231)
 
 * 【Log Setting】
 Detailed request logs and system running logs are provided. Request logs can customize recording fields. Running logs can adjust recording levels according to circumstances: ERROR, INFO, DEBUG, etc.
