@@ -89,7 +89,7 @@ In addition to providing official plug-ins, plug-in systems can also add custom 
 * 【Log Setting】
 Detailed request logs and system running logs are provided. Request logs can customize recording fields. Running logs can adjust recording levels according to circumstances: ERROR, INFO, DEBUG, etc.
 
-![](http://data.eolinker.com/course/EHNCLtd8f8bee31f86968ee4dfcd8eeff946fe199195dfc)
+![](https://camo.githubusercontent.com/b61782902b1dab06f5a99019a1f724b8b36411d1/687474703a2f2f646174612e656f6c696e6b65722e636f6d2f636f757273652f45484e434c746438663862656533316638363936386565346466636438656566663934366665313939313935646663)
 
 # Quick Start
 * [Deployment Tutorial](https://help.eolinker.com/#/tutorial/?groupID=c-351&productID=19 "Deployment Tutorial")
