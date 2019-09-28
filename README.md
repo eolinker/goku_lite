@@ -10,6 +10,7 @@ Goku provides graphic interface and plug-in system to make configuration easier 
 
 - [WhyGoku](#WhyGoku "WhyGoku")
 - [Features](#Features "Features")
+- [Benchmark](#Benchmark "Benchmark")
 - [ConsolePreview](#ConsolePreview "ConsolePreview")
 - [QuickStart](#QuickStart "QuickStart")
 - [EnterpriseSupport](#EnterpriseSupport "EnterpriseSupport")
@@ -46,6 +47,9 @@ All in all, Goku API Gateway enables enterprise to focus on their business.
 - **Log**: Detailed system log, http log, etc.
 - **Open API**：Provide OPEN API for users to operate on the gateway for easy integration.
 - ...
+
+# Benchmark
+[Benchmark Detail](https://help.eolinker.com/#/tutorial/?groupID=c-362&productID=19#tip7 "Benchmark Detail")
 
 # Console Preview
 [See Console Preview](https://github.com/eolinker/goku-api-gateway/blob/master/docs/CONSOLE_PREVIEW.md "See Console Preview")
