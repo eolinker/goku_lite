@@ -1,8 +1,9 @@
 package entity
 
-type Api struct {
-	ApiID            int             `json:"apiID"`
-	ApiName          string          `json:"apiName"`
+//API 接口
+type API struct {
+	APIID            int             `json:"apiID"`
+	APIName          string          `json:"apiName"`
 	GroupID          int             `json:"groupID,omitempty"`
 	ProjectID        int             `json:"projectID,omitempty"`
 	RequestURL       string          `json:"requestURL"`
@@ -26,6 +27,7 @@ type Api struct {
 	*ManagerInfo
 }
 
+//ManagerInfo 管理者信息
 type ManagerInfo struct {
 	ManagerID      int    `json:"managerID"`
 	UpdaterID      int    `json:"updaterID"`
@@ -35,14 +37,16 @@ type ManagerInfo struct {
 	CreateUserName string `json:"createUserName"`
 }
 
+//RequestParam 请求参数
 type RequestParam struct {
 	Key         string `json:"key"`
 	KeyPosition string `json:"keyPosition"`
 	NotEmpty    bool   `json:"notEmpty"`
 }
 
-type ApiPlugin struct {
-	*Api
+//APIPlugin 接口插件
+type APIPlugin struct {
+	*API
 	StrategyID         string
 	PluginList         []*PluginParams
 	StrategyPluginList []*PluginParams

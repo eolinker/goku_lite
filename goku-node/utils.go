@@ -1,14 +1,12 @@
-package goku_node
+package gokunode
 
 import (
-	"bytes"
 	"math/rand"
-	"runtime"
 	"strings"
 	"time"
 )
 
-//生成随机字符串
+// GetRandomString 生成随机字符串
 func GetRandomString(num int) string {
 	str := "123456789abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ"
 	bytes := []byte(str)
@@ -20,6 +18,7 @@ func GetRandomString(num int) string {
 	return string(result)
 }
 
+//Intercept 过滤子字符串
 func Intercept(str, substr string) string {
 	result := strings.Index(str, substr)
 	var rs string
@@ -29,25 +28,4 @@ func Intercept(str, substr string) string {
 		rs = str
 	}
 	return rs
-}
-func PanicTrace(kb int) []byte {
-	s := []byte("/src/runtime/panic.go")
-	e := []byte("\ngoroutine ")
-	line := []byte("\n")
-	stack := make([]byte, kb<<10) //4KB
-	length := runtime.Stack(stack, true)
-	start := bytes.Index(stack, s)
-	stack = stack[start:length]
-	start = bytes.Index(stack, line) + 1
-	stack = stack[start:]
-	end := bytes.LastIndex(stack, line)
-	if end != -1 {
-		stack = stack[:end]
-	}
-	end = bytes.Index(stack, e)
-	if end != -1 {
-		stack = stack[:end]
-	}
-	stack = bytes.TrimRight(stack, "\n")
-	return stack
 }

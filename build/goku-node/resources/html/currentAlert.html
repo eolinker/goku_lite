@@ -14,23 +14,28 @@
         </tr>
         <tr>
             <td style="line-height: 1.75em;">
-                <h2>GoKu告警：节点自动重启失败，请及时重启节点。</h2>
+                <h2>GoKu告警：$requestURL接口在$alertPeriod分钟内转发失败$alertCount次</h2>
             </td>
         </tr>
         <tr>
             <td>
-                <p style="color:#333;font-size:14px;margin:15px 0 40px 0;">GoKu接口网关于 <b>$alertTime</b>
-                    检测到以下节点重启失败，详细日志内容请于 <b>./log/nodeMonitorLog</b> 文件查看。
+                <p style="color:#333;font-size:14px;margin:15px 0 40px 0;">GoKu接口网关于 <b>$alertTime</b> 监控到<b>
+                        $requestURL </b>接口在 <b>$alertPeriod</b> 分钟内转发失败达到 <b>$alertCount</b> 次，详细告警内容请于
+                    <b>$alertLogPath</b> 文件夹查看。</p>
             </td>
         </tr>
         <tr>
             <td style="padding:40px 0 5px 0;line-height: 1.75em;border-top:1px solid #e5e5e5;">
-                <h3>自动重启失败的节点列表</h3>
+                <h3>接口基本信息</h3>
             </td>
         </tr>
         <tr>
             <td style="line-height: 1.75em; padding-bottom: 40px;">
-                $nodeList
+                <p>接口名称：$apiName</p>
+                <p>apiID：$apiID</p>
+                <p>请求路径：$requestURL</p>
+                <p>转发路径：$targetServer</p>
+                <p>映射路径：$proxyURL</p>
             </td>
         </tr>
         </tbody>

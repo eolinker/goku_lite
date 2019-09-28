@@ -1,12 +1,12 @@
-package strategy_api_manager
+package strategyapimanager
 
 import entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 
-type _ApiMap struct {
-	apis map[int]*entity.StrategyApi
+type _APIMap struct {
+	apis map[int]*entity.StrategyAPI
 }
 
-func (m *_ApiMap) Get(id int) (*entity.StrategyApi, bool) {
+func (m *_APIMap) Get(id int) (*entity.StrategyAPI, bool) {
 	api, has := m.apis[id]
 	return api, has
 }

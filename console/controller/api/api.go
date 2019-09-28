@@ -11,7 +11,8 @@ import (
 	"github.com/eolinker/goku-api-gateway/console/module/api"
 )
 
-func AddApi(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//AddAPI 新增接口
+func AddAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -106,7 +107,7 @@ func AddApi(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	// 	return
 
 	// }
-	flag, id, err := api.AddApi(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol, pjID, gID, t, count, apiValve, mgID, userID)
+	flag, id, err := api.AddAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol, pjID, gID, t, count, apiValve, mgID, userID)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -118,7 +119,8 @@ func AddApi(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-func EditApi(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//EditAPI 编辑接口
+func EditAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -216,7 +218,7 @@ func EditApi(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	// 	return
 
 	// }
-	flag, err := api.EditApi(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol, pjID, gID, t, count, apiValve, aID, mgID, userID)
+	flag, err := api.EditAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol, pjID, gID, t, count, apiValve, aID, mgID, userID)
 	if !flag {
 
 		controller.WriteError(httpResponse, "190000", "api", "[ERROR]apiID does not exist!", err)
@@ -229,8 +231,8 @@ func EditApi(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 获取接口信息
-func GetApiInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//GetAPIInfo 获取接口信息
+func GetAPIInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
 	if e != nil {
 		return
@@ -244,7 +246,7 @@ func GetApiInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		return
 
 	}
-	flag, result, err := api.GetApiInfo(aID)
+	flag, result, err := api.GetAPIInfo(aID)
 	if !flag {
 		controller.WriteError(httpResponse, "190000", "api", "[ERROR]The api does not exist!", err)
 		return
@@ -302,7 +304,8 @@ func GetAPIIDList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-func GetApiList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//GetAPIList 获取接口列表
+func GetAPIList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
 	if e != nil {
 		return
@@ -362,8 +365,8 @@ func GetApiList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// BatchEditApiGroup 批量修改接口分组
-func BatchEditApiGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+// BatchEditAPIGroup 批量修改接口分组
+func BatchEditAPIGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -376,7 +379,7 @@ func BatchEditApiGroup(httpResponse http.ResponseWriter, httpRequest *http.Reque
 		controller.WriteError(httpResponse, "190015", "api", "[ERROR]Illegal groupID!", nil)
 		return
 	}
-	flag, result, err := api.BatchEditApiGroup(strings.Split(apiIDList, ","), gID)
+	flag, result, err := api.BatchEditAPIGroup(strings.Split(apiIDList, ","), gID)
 	if !flag {
 		controller.WriteError(httpResponse, "190015", "api", result, err)
 		return
@@ -386,8 +389,8 @@ func BatchEditApiGroup(httpResponse http.ResponseWriter, httpRequest *http.Reque
 	return
 }
 
-// 批量删除接口
-func BatchDeleteApi(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//BatchDeleteAPI 批量删除接口
+func BatchDeleteAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -395,7 +398,7 @@ func BatchDeleteApi(httpResponse http.ResponseWriter, httpRequest *http.Request)
 
 	apiIDList := httpRequest.PostFormValue("apiIDList")
 
-	flag, result, err := api.BatchDeleteApi(apiIDList)
+	flag, result, err := api.BatchDeleteAPI(apiIDList)
 	if !flag {
 
 		controller.WriteError(httpResponse, "190000", "api", result, err)
@@ -407,8 +410,8 @@ func BatchDeleteApi(httpResponse http.ResponseWriter, httpRequest *http.Request)
 	return
 }
 
-// 获取接口负责人列表
-func GetApiManagerList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//GetAPIManagerList 获取接口负责人列表
+func GetAPIManagerList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
 	if e != nil {
 		return
@@ -423,7 +426,8 @@ func GetApiManagerList(httpResponse http.ResponseWriter, httpRequest *http.Reque
 	return
 }
 
-func CopyApi(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//CopyAPI 接口复制
+func CopyAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -471,12 +475,12 @@ func CopyApi(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		return
 
 	}
-	flag, apiInfo, err := api.GetApiInfo(aID)
+	flag, apiInfo, err := api.GetAPIInfo(aID)
 	if !flag {
 		controller.WriteError(httpResponse, "190000", "api", "[ERROR]apiID does not exist!", nil)
 		return
 	}
-	flag, id, err := api.AddApi(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, strconv.FormatBool(apiInfo.StripPrefix), strconv.FormatBool(apiInfo.StripSlash), balanceName, protocol, pjID, gID, apiInfo.Timeout, apiInfo.RetryConut, apiInfo.Valve, apiInfo.ManagerID, userID)
+	flag, id, err := api.AddAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, strconv.FormatBool(apiInfo.StripPrefix), strconv.FormatBool(apiInfo.StripSlash), balanceName, protocol, pjID, gID, apiInfo.Timeout, apiInfo.RetryConut, apiInfo.Valve, apiInfo.ManagerID, userID)
 	if !flag {
 		controller.WriteError(httpResponse, "190000", "api", "[ERROR]Fail to add api!", err)
 		return

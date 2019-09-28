@@ -8,7 +8,7 @@ import (
 	"github.com/eolinker/goku-api-gateway/console/module/balance"
 )
 
-// 获取负载列表
+//GetBalanceList 获取负载列表
 func GetBalanceList(w http.ResponseWriter, r *http.Request) {
 	_, e := controller.CheckLogin(w, r, controller.OperationLoadBalance, controller.OperationREAD)
 	if e != nil {

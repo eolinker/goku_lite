@@ -13,7 +13,7 @@ import (
 
 	"github.com/eolinker/goku-api-gateway/common/database"
 	"github.com/eolinker/goku-api-gateway/common/general"
-	"github.com/eolinker/goku-api-gateway/common/redis-manager"
+	redis_manager "github.com/eolinker/goku-api-gateway/common/redis-manager"
 	goku_node "github.com/eolinker/goku-api-gateway/goku-node"
 	"github.com/eolinker/goku-api-gateway/server/entity"
 )
@@ -69,11 +69,11 @@ func main() {
 		return
 	}
 	goku_node.InitLog()
-	log.Debug("goku_node.InitLog")
+	log.Debug("gokNode.InitLog")
 	r := redis_manager.Create(&config.Redis)
 	redis_manager.SetDefault(r)
 
-	log.Debug("redis_manager.SetDefault")
+	log.Debug("redis-manager.SetDefault")
 	// 其他需要初始化的模块
 	_ = general.General()
 

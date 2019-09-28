@@ -10,7 +10,7 @@ import (
 	"github.com/eolinker/goku-api-gateway/utils"
 )
 
-// 新增告警信息
+// AddAlertMsg 新增告警信息
 func AddAlertMsg(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	nodeIP := httpRequest.RemoteAddr

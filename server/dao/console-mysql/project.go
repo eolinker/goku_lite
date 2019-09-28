@@ -1,4 +1,4 @@
-package console_mysql
+package consolemysql
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
-// 新建项目
+//AddProject 新建项目
 func AddProject(projectName string) (bool, interface{}, error) {
 	now := time.Now().Format("2006-01-02 15:04:05")
 	db := database2.GetConnection()
@@ -29,7 +29,7 @@ func AddProject(projectName string) (bool, interface{}, error) {
 	return true, projectID, nil
 }
 
-// 修改项目信息
+//EditProject 修改项目信息
 func EditProject(projectName string, projectID int) (bool, string, error) {
 	now := time.Now().Format("2006-01-02 15:04:05")
 	db := database2.GetConnection()
@@ -46,7 +46,7 @@ func EditProject(projectName string, projectID int) (bool, string, error) {
 	return true, "", nil
 }
 
-// 修改项目信息
+//DeleteProject 修改项目信息
 func DeleteProject(projectID int) (bool, string, error) {
 	db := database2.GetConnection()
 	Tx, _ := db.Begin()
@@ -152,7 +152,7 @@ func DeleteProject(projectID int) (bool, string, error) {
 	return true, "", nil
 }
 
-// 批量删除项目
+//BatchDeleteProject 批量删除项目
 func BatchDeleteProject(projectIDList string) (bool, string, error) {
 	db := database2.GetConnection()
 	Tx, _ := db.Begin()
@@ -226,13 +226,6 @@ func BatchDeleteProject(projectIDList string) (bool, string, error) {
 			return false, "[ERROR]Fail to excute SQL statement!", err
 		}
 
-		//sql = "DELETE FROM goku_gateway_api_cache WHERE apiID IN (" + apiIDList + ");"
-		//_, err = Tx.Exec(sql)
-		//if err != nil {
-		//	Tx.Rollback()
-		//	return false, "[ERROR]Fail to excute SQL statement!", err
-		//}
-
 		sql = "DELETE FROM goku_conn_plugin_api WHERE apiID IN (" + apiIDList + ");"
 		_, err = Tx.Exec(sql)
 		if err != nil {
@@ -252,7 +245,7 @@ func BatchDeleteProject(projectIDList string) (bool, string, error) {
 	return true, "", nil
 }
 
-// 获取项目信息
+//GetProjectInfo 获取项目信息
 func GetProjectInfo(projectID int) (bool, entity.Project, error) {
 	db := database2.GetConnection()
 	var project entity.Project
@@ -264,7 +257,7 @@ func GetProjectInfo(projectID int) (bool, entity.Project, error) {
 	return true, project, nil
 }
 
-// 获取项目列表
+//GetProjectList 获取项目列表
 func GetProjectList(keyword string) (bool, []*entity.Project, error) {
 
 	sql := "SELECT `projectID`,`projectName`,`updateTime` FROM `goku_gateway_project` %s ORDER BY `updateTime` DESC;"
@@ -303,7 +296,7 @@ func GetProjectList(keyword string) (bool, []*entity.Project, error) {
 
 }
 
-// 检查项目是否存在
+//CheckProjectIsExist 检查项目是否存在
 func CheckProjectIsExist(projectID int) (bool, error) {
 	db := database2.GetConnection()
 	sql := "SELECT projectID FROM goku_gateway_project WHERE projectID = ?;"
@@ -311,13 +304,12 @@ func CheckProjectIsExist(projectID int) (bool, error) {
 	err := db.QueryRow(sql, projectID).Scan(&id)
 	if err != nil {
 		return false, err
-	} else {
-		return true, err
 	}
+	return true, err
 }
 
-// 获取项目列表中没有被策略组绑定的接口
-func GetApiListFromProjectNotInStrategy() (bool, []map[string]interface{}, error) {
+//GetAPIListFromProjectNotInStrategy 获取项目列表中没有被策略组绑定的接口
+func GetAPIListFromProjectNotInStrategy() (bool, []map[string]interface{}, error) {
 	db := database2.GetConnection()
 	sql := "SELECT projectID,projectName FROM goku_gateway_project;"
 	projectRows, err := db.Query(sql)
@@ -345,33 +337,28 @@ func GetApiListFromProjectNotInStrategy() (bool, []map[string]interface{}, error
 		}
 		defer rows.Close()
 		//获取记录列
-		if _, err = rows.Columns(); err != nil {
-			log.Info(err)
-			return false, nil, err
-		} else {
-			groupList := make([]map[string]interface{}, 0, 20)
-			for rows.Next() {
-				var groupID, parentGroupID, groupDepth int
-				var groupName string
-				err = rows.Scan(&groupID, &groupName, &parentGroupID, &groupDepth)
-				if err != nil {
-					return false, nil, err
-				}
-				groupInfo := map[string]interface{}{
-					"groupID":       groupID,
-					"groupName":     groupName,
-					"groupDepth":    groupDepth,
-					"parentGroupID": parentGroupID,
-				}
-				groupList = append(groupList, groupInfo)
+		groupList := make([]map[string]interface{}, 0, 20)
+		for rows.Next() {
+			var groupID, parentGroupID, groupDepth int
+			var groupName string
+			err = rows.Scan(&groupID, &groupName, &parentGroupID, &groupDepth)
+			if err != nil {
+				return false, nil, err
 			}
-			projectInfo := map[string]interface{}{
-				"projectID":   projectID,
-				"projectName": projectName,
-				"groupList":   groupList,
+			groupInfo := map[string]interface{}{
+				"groupID":       groupID,
+				"groupName":     groupName,
+				"groupDepth":    groupDepth,
+				"parentGroupID": parentGroupID,
 			}
-			projectList = append(projectList, projectInfo)
+			groupList = append(groupList, groupInfo)
 		}
+		projectInfo := map[string]interface{}{
+			"projectID":   projectID,
+			"projectName": projectName,
+			"groupList":   groupList,
+		}
+		projectList = append(projectList, projectInfo)
 	}
 	return true, projectList, nil
 

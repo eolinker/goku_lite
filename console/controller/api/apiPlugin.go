@@ -12,8 +12,8 @@ import (
 	"github.com/eolinker/goku-api-gateway/console/module/strategy"
 )
 
-// 新增插件到接口
-func AddPluginToApi(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//AddPluginToAPI 新增插件到接口
+func AddPluginToAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -41,7 +41,7 @@ func AddPluginToApi(httpResponse http.ResponseWriter, httpRequest *http.Request)
 		controller.WriteError(httpResponse, "240005", "apiPlugin", "[ERROR]The plugin does not exist!", err)
 		return
 	}
-	flag, err = api.CheckApiIsExist(aID)
+	flag, err = api.CheckAPIIsExist(aID)
 	if !flag {
 
 		controller.WriteError(httpResponse, "240012", "apiPlugin", "[ERROR]The api does not exist!", err)
@@ -56,17 +56,17 @@ func AddPluginToApi(httpResponse http.ResponseWriter, httpRequest *http.Request)
 	}
 
 	id := 0
-	exist, err := api.CheckPluginIsExistInApi(strategyID, pluginName, aID)
+	exist, err := api.CheckPluginIsExistInAPI(strategyID, pluginName, aID)
 
 	if exist {
-		flag, resultDesc, err := api.EditApiPluginConfig(pluginName, pluginConfig, strategyID, aID, userID)
+		flag, resultDesc, err := api.EditAPIPluginConfig(pluginName, pluginConfig, strategyID, aID, userID)
 		if !flag {
 			controller.WriteError(httpResponse, "240000", "apiPlugin", resultDesc.(string), err)
 			return
 		}
 		id = resultDesc.(int)
 	} else {
-		flag, resultDesc, err := api.AddPluginToApi(pluginName, pluginConfig, strategyID, aID, userID)
+		flag, resultDesc, err := api.AddPluginToAPI(pluginName, pluginConfig, strategyID, aID, userID)
 		if !flag {
 			controller.WriteError(httpResponse, "240000", "apiPlugin", resultDesc.(string), err)
 			return
@@ -79,8 +79,8 @@ func AddPluginToApi(httpResponse http.ResponseWriter, httpRequest *http.Request)
 	return
 }
 
-// 修改接口插件
-func EditApiPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//EditAPIPluginConfig 修改接口插件
+func EditAPIPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -117,7 +117,7 @@ func EditApiPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Req
 		return
 
 	}
-	flag, err = api.CheckApiIsExist(aID)
+	flag, err = api.CheckAPIIsExist(aID)
 	if !flag {
 		controller.WriteError(httpResponse,
 			"240012",
@@ -137,7 +137,7 @@ func EditApiPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Req
 		return
 
 	}
-	flag, resultDesc, err := api.EditApiPluginConfig(pluginName, pluginConfig, strategyID, aID, userID)
+	flag, resultDesc, err := api.EditAPIPluginConfig(pluginName, pluginConfig, strategyID, aID, userID)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -151,8 +151,8 @@ func EditApiPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Req
 	return
 }
 
-// 获取接口插件配置
-func GetApiPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//GetAPIPluginConfig 获取接口插件配置
+func GetAPIPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
 	if e != nil {
 		return
@@ -172,7 +172,7 @@ func GetApiPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Requ
 		return
 
 	}
-	flag, result, err := api.GetApiPluginConfig(aID, strategyID, pluginName)
+	flag, result, err := api.GetAPIPluginConfig(aID, strategyID, pluginName)
 	if !flag {
 		resultByte, _ := json.Marshal(map[string]interface{}{
 			"type":            "apiPlugin",
@@ -196,8 +196,8 @@ func GetApiPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Requ
 
 }
 
-// 获取接口插件配置
-func GetApiPluginList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//GetAPIPluginList 获取接口插件配置
+func GetAPIPluginList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
 	if e != nil {
 		return
@@ -215,7 +215,7 @@ func GetApiPluginList(httpResponse http.ResponseWriter, httpRequest *http.Reques
 		return
 
 	}
-	flag, result, err := api.GetApiPluginList(aID, strategyID)
+	flag, result, err := api.GetAPIPluginList(aID, strategyID)
 	if !flag {
 		controller.WriteError(httpResponse,
 			"240000",
@@ -278,8 +278,8 @@ func GetAPIPluginInStrategyByAPIID(httpResponse http.ResponseWriter, httpRequest
 	// controller.WriteResultInfo(httpResponse, "apiPlugin", "apiPluginList", result)
 }
 
-// 获取策略组中所有接口插件列表
-func GetAllApiPluginInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//GetAllAPIPluginInStrategy 获取策略组中所有接口插件列表
+func GetAllAPIPluginInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
 	if e != nil {
 		return
@@ -287,7 +287,7 @@ func GetAllApiPluginInStrategy(httpResponse http.ResponseWriter, httpRequest *ht
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 
-	flag, result, err := api.GetAllApiPluginInStrategy(strategyID)
+	flag, result, err := api.GetAllAPIPluginInStrategy(strategyID)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -303,8 +303,8 @@ func GetAllApiPluginInStrategy(httpResponse http.ResponseWriter, httpRequest *ht
 	return
 }
 
-// 批量修改策略组插件状态
-func BatchStartApiPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//BatchStartAPIPlugin 批量修改策略组插件状态
+func BatchStartAPIPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -321,7 +321,7 @@ func BatchStartApiPlugin(httpResponse http.ResponseWriter, httpRequest *http.Req
 		return
 
 	}
-	flag, result, err := api.BatchEditApiPluginStatus(connIDList, strategyID, 1, userID)
+	flag, result, err := api.BatchEditAPIPluginStatus(connIDList, strategyID, 1, userID)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -336,8 +336,8 @@ func BatchStartApiPlugin(httpResponse http.ResponseWriter, httpRequest *http.Req
 	return
 }
 
-// 批量修改策略组插件状态
-func BatchStopApiPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//BatchStopAPIPlugin 批量修改策略组插件状态
+func BatchStopAPIPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -354,7 +354,7 @@ func BatchStopApiPlugin(httpResponse http.ResponseWriter, httpRequest *http.Requ
 		return
 
 	}
-	flag, _, err := api.BatchEditApiPluginStatus(connIDList, strategyID, 0, userID)
+	flag, _, err := api.BatchEditAPIPluginStatus(connIDList, strategyID, 0, userID)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -369,8 +369,8 @@ func BatchStopApiPlugin(httpResponse http.ResponseWriter, httpRequest *http.Requ
 	return
 }
 
-// 批量删除策略组插件
-func BatchDeleteApiPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//BatchDeleteAPIPlugin 批量删除策略组插件
+func BatchDeleteAPIPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -387,7 +387,7 @@ func BatchDeleteApiPlugin(httpResponse http.ResponseWriter, httpRequest *http.Re
 		return
 
 	}
-	flag, result, err := api.BatchDeleteApiPlugin(connIDList, strategyID)
+	flag, result, err := api.BatchDeleteAPIPlugin(connIDList, strategyID)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -399,7 +399,8 @@ func BatchDeleteApiPlugin(httpResponse http.ResponseWriter, httpRequest *http.Re
 	controller.WriteResultInfo(httpResponse, "apiPlugin", "", nil)
 }
 
-func GetApiPluginListWithNotAssignApiList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//GetAPIPluginListWithNotAssignAPIList 获取没有绑定接口插件的接口列表
+func GetAPIPluginListWithNotAssignAPIList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
 	if e != nil {
 		return
@@ -414,7 +415,7 @@ func GetApiPluginListWithNotAssignApiList(httpResponse http.ResponseWriter, http
 			nil)
 		return
 	}
-	flag, result, err := api.GetApiPluginListWithNotAssignApiList(strategyID)
+	flag, result, err := api.GetAPIPluginListWithNotAssignAPIList(strategyID)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -428,6 +429,7 @@ func GetApiPluginListWithNotAssignApiList(httpResponse http.ResponseWriter, http
 
 }
 
-func UpdateAllApiPluginUpdateTag() error {
-	return api.UpdateAllApiPluginUpdateTag()
+//UpdateAllAPIPluginUpdateTag 更新所有标识
+func UpdateAllAPIPluginUpdateTag() error {
+	return api.UpdateAllAPIPluginUpdateTag()
 }

@@ -1,4 +1,4 @@
-package strategy_api_manager
+package strategyapimanager
 
 import (
 	"github.com/eolinker/goku-api-gateway/utils"
@@ -9,13 +9,14 @@ import (
 	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
 
-func CheckApiFromStrategy(strategyId, requestPath string, requestMethod string) (*entity.ApiExtend, string, []string, bool) {
-	apiMap, has := getAPis(strategyId)
+//CheckAPIFromStrategy 判断接口是否在策略中
+func CheckAPIFromStrategy(strategyID, requestPath string, requestMethod string) (*entity.APIExtend, string, []string, bool) {
+	apiMap, has := getAPis(strategyID)
 	if !has {
 		return nil, "", nil, false
 	}
-	for _, strategyApi := range apiMap.apis {
-		apiInfo, has := api_manager.GetAPI(strategyApi.ApiId)
+	for _, strategyAPI := range apiMap.apis {
+		apiInfo, has := api_manager.GetAPI(strategyAPI.APIID)
 		if !has {
 			continue
 		}
@@ -28,17 +29,16 @@ func CheckApiFromStrategy(strategyId, requestPath string, requestMethod string) 
 		if isMatch {
 			method := strings.ToUpper(apiInfo.RequestMethod)
 			if strings.Contains(method, requestMethod) {
-				apiextend := &entity.ApiExtend{Api: apiInfo}
+				apiextend := &entity.APIExtend{API: apiInfo}
 
-				if strategyApi.Target != "" {
-					apiextend.Target = strategyApi.Target
+				if strategyAPI.Target != "" {
+					apiextend.Target = strategyAPI.Target
 				} else {
 					apiextend.Target = apiInfo.BalanceName
 				}
 
 				apiextend.Target = utils.TrimSuffixAll(apiextend.Target, "/")
 
-				//apiextend.TargetServer = balance_manager.ParseTargetServer(apiextend.Target)
 				return apiextend, splitURL, param, true
 			}
 		}

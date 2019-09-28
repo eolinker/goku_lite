@@ -2,20 +2,21 @@ package script
 
 import (
 	"github.com/eolinker/goku-api-gateway/server/dao"
-	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
+	consolemysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
 )
 
-// 新建项目
-func RefreshApiInfo() bool {
-	//return console_mysql.RefreshApiInfo()
+//RefreshAPIInfo 刷新接口信息
+func RefreshAPIInfo() bool {
+	//return consolemysql.RefreshAPIInfo()
 	return true
 }
 
-// 新建项目
+//RefreshGatewayAlertConfig 刷新网关告警配置
 func RefreshGatewayAlertConfig() bool {
-	return console_mysql.RefreshGatewayAlertConfig()
+	return consolemysql.RefreshGatewayAlertConfig()
 }
 
+//UpdateTables 更新表
 func UpdateTables(names []string) {
 	for _, name := range names {
 		dao.UpdateTable(name)

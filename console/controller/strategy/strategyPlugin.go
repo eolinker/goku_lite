@@ -10,7 +10,7 @@ import (
 	"github.com/eolinker/goku-api-gateway/console/module/strategy"
 )
 
-// 新增插件到接口
+//AddPluginToStrategy 新增插件到接口
 func AddPluginToStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
@@ -67,7 +67,7 @@ func AddPluginToStrategy(httpResponse http.ResponseWriter, httpRequest *http.Req
 
 }
 
-// 修改插件信息
+//EditStrategyPluginConfig 修改插件信息
 func EditStrategyPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
@@ -109,7 +109,7 @@ func EditStrategyPluginConfig(httpResponse http.ResponseWriter, httpRequest *htt
 
 }
 
-// 获取策略组插件列表
+//GetStrategyPluginList 获取策略组插件列表
 func GetStrategyPluginList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
 	if e != nil {
@@ -139,7 +139,7 @@ func GetStrategyPluginList(httpResponse http.ResponseWriter, httpRequest *http.R
 	controller.WriteResultInfo(httpResponse, "strategyPlugin", "strategyPluginList", result)
 }
 
-// 获取策略组插件信息
+//GetStrategyPluginConfig 获取策略组插件信息
 func GetStrategyPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
 	if e != nil {
@@ -154,7 +154,7 @@ func GetStrategyPluginConfig(httpResponse http.ResponseWriter, httpRequest *http
 
 }
 
-// 检查策略组是否绑定插件
+//CheckPluginIsExistInStrategy 检查策略组是否绑定插件
 func CheckPluginIsExistInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
 	if e != nil {
@@ -188,7 +188,7 @@ func CheckPluginIsExistInStrategy(httpResponse http.ResponseWriter, httpRequest 
 	controller.WriteResultInfo(httpResponse, "strategyPlugin", "", nil)
 }
 
-// 检查策略组插件是否开启
+//GetStrategyPluginStatus 检查策略组插件是否开启
 func GetStrategyPluginStatus(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
 	if e != nil {
@@ -224,7 +224,7 @@ func GetStrategyPluginStatus(httpResponse http.ResponseWriter, httpRequest *http
 
 }
 
-// 批量开启策略组插件
+//BatchStartStrategyPlugin 批量开启策略组插件
 func BatchStartStrategyPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
@@ -254,7 +254,7 @@ func BatchStartStrategyPlugin(httpResponse http.ResponseWriter, httpRequest *htt
 	controller.WriteResultInfo(httpResponse, "strategyPlugin", "", nil)
 }
 
-// 批量修改策略组插件状态
+//BatchStopStrategyPlugin 批量修改策略组插件状态
 func BatchStopStrategyPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
@@ -283,7 +283,7 @@ func BatchStopStrategyPlugin(httpResponse http.ResponseWriter, httpRequest *http
 	controller.WriteResultInfo(httpResponse, "strategyPlugin", "", nil)
 }
 
-// 批量删除策略组插件
+//BatchDeleteStrategyPlugin 批量删除策略组插件
 func BatchDeleteStrategyPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
@@ -314,6 +314,7 @@ func BatchDeleteStrategyPlugin(httpResponse http.ResponseWriter, httpRequest *ht
 	controller.WriteResultInfo(httpResponse, "strategyPlugin", "", nil)
 }
 
+//UpdateAllStrategyPluginUpdateTag 更新所有策略插件标志位
 func UpdateAllStrategyPluginUpdateTag() error {
 	return strategy.UpdateAllStrategyPluginUpdateTag()
 }

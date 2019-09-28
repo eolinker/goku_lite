@@ -9,8 +9,8 @@ import (
 	"github.com/eolinker/goku-api-gateway/console/module/project"
 )
 
-// 新建接口分组
-func AddApiGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//AddAPIGroup 新建接口分组
+func AddAPIGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -51,7 +51,7 @@ func AddApiGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		return
 
 	}
-	flag, result, err := api.AddApiGroup(groupName, pjID, pgID)
+	flag, result, err := api.AddAPIGroup(groupName, pjID, pgID)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -66,8 +66,8 @@ func AddApiGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 修改接口分组
-func EditApiGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//EditAPIGroup 修改接口分组
+func EditAPIGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -107,7 +107,7 @@ func EditApiGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		return
 
 	}
-	flag, result, err := api.EditApiGroup(groupName, gID, pjID)
+	flag, result, err := api.EditAPIGroup(groupName, gID, pjID)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -118,8 +118,8 @@ func EditApiGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 删除接口分组
-func DeleteApiGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//DeleteAPIGroup 删除接口分组
+func DeleteAPIGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -144,7 +144,7 @@ func DeleteApiGroup(httpResponse http.ResponseWriter, httpRequest *http.Request)
 		return
 
 	}
-	flag, result, err := api.DeleteApiGroup(pjID, gID)
+	flag, result, err := api.DeleteAPIGroup(pjID, gID)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -156,8 +156,8 @@ func DeleteApiGroup(httpResponse http.ResponseWriter, httpRequest *http.Request)
 	return
 }
 
-// 获取接口分组列表
-func GetApiGroupList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//GetAPIGroupList 获取接口分组列表
+func GetAPIGroupList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
 	if e != nil {
 		return
@@ -172,7 +172,7 @@ func GetApiGroupList(httpResponse http.ResponseWriter, httpRequest *http.Request
 		return
 
 	}
-	flag, result, err := api.GetApiGroupList(pjID)
+	flag, result, err := api.GetAPIGroupList(pjID)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -186,6 +186,7 @@ func GetApiGroupList(httpResponse http.ResponseWriter, httpRequest *http.Request
 	return
 }
 
-func UpdateApiGroupScript(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	api.UpdateApiGroupScript()
+//UpdateAPIGroupScript 更新接口分组脚本
+func UpdateAPIGroupScript(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+	api.UpdateAPIGroupScript()
 }

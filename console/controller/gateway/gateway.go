@@ -9,6 +9,7 @@ import (
 	monitor_read "github.com/eolinker/goku-api-gateway/server/monitor/monitor-read"
 )
 
+//GetGatewayConfig 获取网关配置
 func GetGatewayConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationGatewayConfig, controller.OperationREAD)
 	if e != nil {
@@ -30,6 +31,7 @@ func GetGatewayConfig(httpResponse http.ResponseWriter, httpRequest *http.Reques
 	return
 }
 
+//EditGatewayBaseConfig 获取网关基本配置
 func EditGatewayBaseConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationGatewayConfig, controller.OperationEDIT)
 	if e != nil {
@@ -94,6 +96,7 @@ func EditGatewayBaseConfig(httpResponse http.ResponseWriter, httpRequest *http.R
 	return
 }
 
+//EditGatewayAlarmConfig 编辑网关告警配置
 func EditGatewayAlarmConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationGatewayConfig, controller.OperationEDIT)
 	if e != nil {

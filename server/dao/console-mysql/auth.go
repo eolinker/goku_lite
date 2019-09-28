@@ -1,4 +1,4 @@
-package console_mysql
+package consolemysql
 
 import (
 	"encoding/json"
@@ -16,6 +16,7 @@ type basicAuthConf struct {
 	Remark         string `json:"remark"`
 }
 
+//APIKeyConf apiKey配置
 type APIKeyConf struct {
 	APIKey         string `json:"Apikey"`
 	TokenPlace     string `json:"tokenPlace"`
@@ -23,6 +24,7 @@ type APIKeyConf struct {
 	Remark         string `json:"remark"`
 }
 
+//OAuth2GlobalConf oauth2全局配置
 type OAuth2GlobalConf struct {
 	oauth2Conf
 	Oauth2CredentialList []*oauth2Credential `json:"oauth2CredentialList"`
@@ -36,7 +38,7 @@ type oauth2Conf struct {
 	EnableImplicitGrant           bool     `json:"enableImplicitGrant"`           //enable_implicit_grant = { required = true, type = "boolean", default = false },
 	EnableClientCredentials       bool     `json:"enableClientCredentials"`       //enable_client_credentials = { required = true, type = "boolean", default = false },
 	HideCredentials               bool     `json:"hideCredentials"`               //hide_credentials = { type = "boolean", default = false },
-	AcceptHttpIfAlreadyTerminated bool     `json:"acceptHttpIfAlreadyTerminated"` //accept_http_if_already_terminated = { required = false, type = "boolean", default = false },
+	AcceptHTTPIfAlreadyTerminated bool     `json:"acceptHttpIfAlreadyTerminated"` //accept_http_if_already_terminated = { required = false, type = "boolean", default = false },
 	RefreshTokenTTL               int      `json:"refreshTokenTTL"`               //refresh_token_ttl = {required = true, type = "number", default = 1209600} -- original hardcoded value - 14 days
 }
 
@@ -64,7 +66,7 @@ type oauth2Credential struct {
 	Remark       string `json:"remark"`
 }
 
-// 获取认证信息
+// GetAuthStatus 获取鉴权状态信息
 func GetAuthStatus(strategyID string) (bool, map[string]interface{}, error) {
 	db := database2.GetConnection()
 	var basicStatus, apikeyStatus, jwtStatus, oAuthStatus int
@@ -97,7 +99,7 @@ func GetAuthStatus(strategyID string) (bool, map[string]interface{}, error) {
 	return true, authInfo, err
 }
 
-// 获取认证信息
+// GetAuthInfo 获取认证信息
 func GetAuthInfo(strategyID string) (bool, map[string]interface{}, error) {
 	db := database2.GetConnection()
 	var strategyName, auth string
@@ -169,7 +171,7 @@ func GetAuthInfo(strategyID string) (bool, map[string]interface{}, error) {
 	return true, authInfo, nil
 }
 
-// 编辑认证信息
+// EditAuthInfo 编辑认证信息
 func EditAuthInfo(strategyID, strategyName, basicAuthList, apikeyList, jwtCredentialList, oauth2CredentialList string, delClientIDList []string) (bool, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
@@ -227,12 +229,12 @@ func EditAuthInfo(strategyID, strategyName, basicAuthList, apikeyList, jwtCreden
 		return false, err
 	}
 	jwtConf.JwtCredentials = jwtList
-	jwtJson, err := json.Marshal(jwtConf)
+	jwtJSON, err := json.Marshal(jwtConf)
 	if err != nil {
 		Tx.Rollback()
 		return false, err
 	}
-	_, err = Tx.Exec("UPDATE goku_conn_plugin_strategy SET pluginConfig = ?,updateTime = ? WHERE strategyID = ? AND pluginName = ? AND pluginStatus = 1 ", jwtJson, now, strategyID, "goku-jwt_auth")
+	_, err = Tx.Exec("UPDATE goku_conn_plugin_strategy SET pluginConfig = ?,updateTime = ? WHERE strategyID = ? AND pluginName = ? AND pluginStatus = 1 ", jwtJSON, now, strategyID, "goku-jwt_auth")
 	if err != nil {
 		Tx.Rollback()
 		return false, err

@@ -1,4 +1,4 @@
-package strategy_api_plugin_manager
+package strategyapipluginmanager
 
 import (
 	"fmt"
@@ -15,26 +15,28 @@ import (
 )
 
 func init() {
-	updater.Add(loadStategyApiPlugin, 8, "goku_conn_plugin_strategy", "goku_conn_plugin_api", "goku_conn_strategy_api", "goku_gateway_strategy", "goku_gateway_api", "goku_plugin")
+	updater.Add(loadStategyAPIPlugin, 8, "goku_conn_plugin_strategy", "goku_conn_plugin_api", "goku_conn_strategy_api", "goku_gateway_strategy", "goku_gateway_api", "goku_plugin")
 }
 
 var (
-	pluginsOfApi = make(map[string][]*entity.PluginHandlerExce)
+	pluginsOfAPI = make(map[string][]*entity.PluginHandlerExce)
 	locker       sync.RWMutex
 )
 
-func get(strategyId string, apiId int) ([]*entity.PluginHandlerExce, bool) {
+func get(strategyID string, apiID int) ([]*entity.PluginHandlerExce, bool) {
 	locker.RLock()
 	defer locker.RUnlock()
-	key := strategyId + ":" + strconv.Itoa(apiId)
-	p, has := pluginsOfApi[key]
+	key := strategyID + ":" + strconv.Itoa(apiID)
+	p, has := pluginsOfAPI[key]
 	return p, has
 
 }
-func GetPluginsOfApi(strategyId string, apiId int) ([]*entity.PluginHandlerExce, bool) {
-	p, has := get(strategyId, apiId)
+
+//GetPluginsOfAPI 获取接口插件
+func GetPluginsOfAPI(strategyID string, apiID int) ([]*entity.PluginHandlerExce, bool) {
+	p, has := get(strategyID, apiID)
 	if !has {
-		return strategy_plugin_manager.GetPluginsOfStrategy(strategyId)
+		return strategy_plugin_manager.GetPluginsOfStrategy(strategyID)
 	}
 	return p, true
 }
@@ -47,19 +49,19 @@ func reset(plugins map[string][]*entity.PluginHandlerExce) {
 	locker.Lock()
 	defer locker.Unlock()
 
-	pluginsOfApi = plugins
+	pluginsOfAPI = plugins
 
 }
 
-func loadStategyApiPlugin() {
-	plugins, err := dao_strategy.GetApiPlugin()
+func loadStategyAPIPlugin() {
+	plugins, err := dao_strategy.GetAPIPlugin()
 	if err != nil {
 		return
 	}
 
 	phsa := make(map[string]map[int][]*entity.PluginHandlerExce)
 	for _, p := range plugins {
-		apiId, _ := strconv.Atoi(p.ApiId)
+		apiID, _ := strconv.Atoi(p.APIId)
 
 		phs, has := phsa[p.StrategyID]
 		if !has {
@@ -72,7 +74,7 @@ func loadStategyApiPlugin() {
 			continue
 		}
 
-		obj, err := handle.Factory.Create(p.PluginConfig, node_common.ClusterName(), p.UpdateTag, p.StrategyID, apiId)
+		obj, err := handle.Factory.Create(p.PluginConfig, nodecommon.ClusterName(), p.UpdateTag, p.StrategyID, apiID)
 		if err != nil {
 			continue
 		}
@@ -82,21 +84,21 @@ func loadStategyApiPlugin() {
 			Name:      p.PluginName,
 			IsStop:    handle.Info.IsStop,
 		}
-		list, has := phsa[p.StrategyID][apiId]
+		list, has := phsa[p.StrategyID][apiID]
 		if !has {
 			list = make([]*entity.PluginHandlerExce, 0)
-			phsa[p.StrategyID][apiId] = list
+			phsa[p.StrategyID][apiID] = list
 		}
-		phsa[p.StrategyID][apiId] = append(list, handleExec)
+		phsa[p.StrategyID][apiID] = append(list, handleExec)
 
 	}
 
 	phl := make(map[string][]*entity.PluginHandlerExce)
-	for strategyId, pla := range phsa {
-		pls, ok := strategy_plugin_manager.GetPluginsOfStrategy(strategyId)
+	for strategyID, pla := range phsa {
+		pls, ok := strategy_plugin_manager.GetPluginsOfStrategy(strategyID)
 
-		for apiId, list := range pla {
-			key := fmt.Sprintf("%s:%d", strategyId, apiId)
+		for apiID, list := range pla {
+			key := fmt.Sprintf("%s:%d", strategyID, apiID)
 
 			if ok {
 				list = append(list, pls...)

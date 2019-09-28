@@ -1,4 +1,4 @@
-package config_log
+package configlog
 
 import (
 	"fmt"
@@ -9,6 +9,7 @@ import (
 	module "github.com/eolinker/goku-api-gateway/console/module/config-log"
 )
 
+//LogHandler 日志处理器
 type LogHandler struct {
 	name string
 }

@@ -1,4 +1,4 @@
-package goku_log
+package gokulog
 
 import (
 	"bufio"
@@ -12,6 +12,7 @@ import (
 	"time"
 )
 
+//MaxBufferd 最大缓存数值
 const MaxBufferd = 1024 * 500
 
 var (
@@ -22,6 +23,7 @@ var (
 	}
 )
 
+//FileWriterByPeriod 文件输出对象
 type FileWriterByPeriod struct {
 	wC         chan *bytes.Buffer
 	dir        string
@@ -34,6 +36,7 @@ type FileWriterByPeriod struct {
 	expire     time.Duration
 }
 
+//NewFileWriteBytePeriod 创建文件输出对象
 func NewFileWriteBytePeriod() *FileWriterByPeriod {
 	w := &FileWriterByPeriod{
 		locker: sync.Mutex{},
@@ -49,6 +52,8 @@ func (w *FileWriterByPeriod) getExpire() time.Duration {
 	w.locker.Unlock()
 	return expire
 }
+
+//Set 设置对象信息
 func (w *FileWriterByPeriod) Set(dir, file string, period LogPeriod, expire time.Duration) {
 	fileName := strings.TrimSuffix(file, ".log")
 
@@ -59,6 +64,8 @@ func (w *FileWriterByPeriod) Set(dir, file string, period LogPeriod, expire time
 	w.expire = expire
 	w.locker.Unlock()
 }
+
+//Open 打开文件
 func (w *FileWriterByPeriod) Open() {
 	w.locker.Lock()
 	defer w.locker.Unlock()
@@ -74,6 +81,8 @@ func (w *FileWriterByPeriod) Open() {
 	w.enable = true
 	go w.do(ctx)
 }
+
+//Close 关闭对象
 func (w *FileWriterByPeriod) Close() {
 
 	isClose := false

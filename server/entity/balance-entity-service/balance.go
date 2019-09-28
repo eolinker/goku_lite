@@ -2,6 +2,7 @@ package entity
 
 import "github.com/eolinker/goku-api-gateway/server/driver"
 
+//Balance 负载
 type Balance struct {
 	Name          string
 	ServiceName   string
@@ -15,6 +16,7 @@ type Balance struct {
 	UpdateTime    string
 }
 
+//Type 获取负载类型
 func (e *Balance) Type() *Balance {
 
 	if e != nil {

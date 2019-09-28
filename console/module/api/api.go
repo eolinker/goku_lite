@@ -6,30 +6,30 @@ import (
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
-// 新增接口
-func AddApi(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol string, projectID, groupID, timeout, retryCount, alertValve, managerID, userID int) (bool, int, error) {
+//AddAPI 新增接口
+func AddAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol string, projectID, groupID, timeout, retryCount, alertValve, managerID, userID int) (bool, int, error) {
 	name := "goku_gateway_api"
 
-	flag, result, err := console_mysql.AddApi(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol, projectID, groupID, timeout, retryCount, alertValve, managerID, userID)
+	flag, result, err := console_mysql.AddAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol, projectID, groupID, timeout, retryCount, alertValve, managerID, userID)
 	if flag {
 		dao.UpdateTable(name)
 	}
 	return flag, result, err
 }
 
-// 新增接口
-func EditApi(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol string, projectID, groupID, timeout, retryCount, alertValve, apiID, managerID, userID int) (bool, error) {
+//EditAPI 新增接口
+func EditAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol string, projectID, groupID, timeout, retryCount, alertValve, apiID, managerID, userID int) (bool, error) {
 	name := "goku_gateway_api"
-	flag, err := console_mysql.EditApi(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol, projectID, groupID, timeout, retryCount, alertValve, apiID, managerID, userID)
+	flag, err := console_mysql.EditAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol, projectID, groupID, timeout, retryCount, alertValve, apiID, managerID, userID)
 	if flag {
 		dao.UpdateTable(name)
 	}
 	return flag, err
 }
 
-// 获取接口信息
-func GetApiInfo(apiID int) (bool, *entity.Api, error) {
-	return console_mysql.GetApiInfo(apiID)
+//GetAPIInfo 获取接口信息
+func GetAPIInfo(apiID int) (bool, *entity.API, error) {
+	return console_mysql.GetAPIInfo(apiID)
 }
 
 // GetAPIIDList 获取接口ID列表
@@ -42,27 +42,27 @@ func GetAPIList(projectID int, groupID int, keyword string, condition, page, pag
 	return console_mysql.GetAPIList(projectID, groupID, keyword, condition, page, pageSize, ids)
 }
 
-// 接口路径是否存在
+//CheckURLIsExist 接口路径是否存在
 func CheckURLIsExist(requestURL, requestMethod string, projectID, apiID int) bool {
 	return console_mysql.CheckURLIsExist(requestURL, requestMethod, projectID, apiID)
 }
 
-// 检查接口是否存在
-func CheckApiIsExist(apiID int) (bool, error) {
-	return console_mysql.CheckApiIsExist(apiID)
+//CheckAPIIsExist 检查接口是否存在
+func CheckAPIIsExist(apiID int) (bool, error) {
+	return console_mysql.CheckAPIIsExist(apiID)
 }
 
-// 批量修改接口分组
-func BatchEditApiGroup(apiIDList []string, groupID int) (bool, string, error) {
-	r, e := console_mysql.BatchEditApiGroup(apiIDList, groupID)
+//BatchEditAPIGroup 批量修改接口分组
+func BatchEditAPIGroup(apiIDList []string, groupID int) (bool, string, error) {
+	r, e := console_mysql.BatchEditAPIGroup(apiIDList, groupID)
 
 	return e == nil, r, e
 }
 
-// 批量修改接口负载
-func BatchEditApiBalance(apiIDList []string, balance string) (string, error) {
+//BatchEditAPIBalance 批量修改接口负载
+func BatchEditAPIBalance(apiIDList []string, balance string) (string, error) {
 
-	r, err := console_mysql.BatchEditApiBalance(apiIDList, balance)
+	r, err := console_mysql.BatchEditAPIBalance(apiIDList, balance)
 	if err != nil {
 		name := "goku_gateway_api"
 		dao.UpdateTable(name)
@@ -70,10 +70,10 @@ func BatchEditApiBalance(apiIDList []string, balance string) (string, error) {
 	return r, err
 }
 
-// 批量删除接口
-func BatchDeleteApi(apiIDList string) (bool, string, error) {
+//BatchDeleteAPI 批量删除接口
+func BatchDeleteAPI(apiIDList string) (bool, string, error) {
 
-	flag, result, err := console_mysql.BatchDeleteApi(apiIDList)
+	flag, result, err := console_mysql.BatchDeleteAPI(apiIDList)
 	if flag {
 		name := "goku_gateway_api"
 		dao.UpdateTable(name)

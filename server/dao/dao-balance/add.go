@@ -1,9 +1,10 @@
-package dao_balance
+package daobalance
 
 import (
 	"github.com/eolinker/goku-api-gateway/common/database"
 )
 
+//Add 新增负载
 func Add(name, serviceName, desc, appName, static, staticCluster, now string) (string, error) {
 
 	//const sql = "INSERT INTO goku_balance (`balanceName`,`serviceName`,`appName`,`balanceDesc`,`static`,`staticCluster`,`createTime`,`updateTime`) VALUES (?,?,?,?,?,?,?,?,);"
@@ -20,6 +21,8 @@ func Add(name, serviceName, desc, appName, static, staticCluster, now string) (s
 	//}
 	return "", nil
 }
+
+//AddStatic 新增静态
 func AddStatic(name, serviceName, static, staticCluster, desc, now string) (string, error) {
 
 	const sql = "INSERT INTO goku_balance (`balanceName`,`serviceName`,`static`,`staticCluster`,`balanceDesc`,`createTime`,`updateTime`,`appName`,`defaultConfig`,`clusterConfig`,`balanceConfig`) VALUES (?,?,?,?,?,?,?,'','','','');"
@@ -36,6 +39,8 @@ func AddStatic(name, serviceName, static, staticCluster, desc, now string) (stri
 	}
 	return "", nil
 }
+
+//AddDiscovery 新增服务发现
 func AddDiscovery(name, serviceName, appName, desc, now string) (string, error) {
 
 	const sql = "INSERT INTO goku_balance (`balanceName`,`serviceName`,`appName`,`balanceDesc`,`createTime`,`updateTime`,`static`,`staticCluster`,`defaultConfig`,`clusterConfig`,`balanceConfig`) VALUES (?,?,?,?,?,?,'','','','','');"
@@ -52,6 +57,8 @@ func AddDiscovery(name, serviceName, appName, desc, now string) (string, error) 
 	}
 	return "", nil
 }
+
+//SaveStatic 保存静态
 func SaveStatic(name, serviceName, static, staticCluster, desc string, now string) (string, error) {
 	const sql = "UPDATE `goku_balance` SET `serviceName`=? ,`static` = ?,`staticCluster`=?,`balanceDesc` =?,`updateTime`=? WHERE `balanceName`=?;"
 	db := database.GetConnection()
@@ -66,6 +73,8 @@ func SaveStatic(name, serviceName, static, staticCluster, desc string, now strin
 	}
 	return "", nil
 }
+
+//SaveDiscover 保存服务发现
 func SaveDiscover(name, serviceName, appName, desc string, now string) (string, error) {
 	const sql = "UPDATE `goku_balance` SET `serviceName`=? ,`appName` = ?,`balanceDesc` =?,`updateTime`=? WHERE `balanceName`=?;"
 	db := database.GetConnection()
@@ -80,6 +89,8 @@ func SaveDiscover(name, serviceName, appName, desc string, now string) (string, 
 	}
 	return "", nil
 }
+
+//Save 保存
 func Save(name, desc, static, staticCluster, now string) (string, error) {
 	//const sql = "UPDATE `goku_balance` SET `balanceDesc` = ?,`static` =?,`staticCluster`=?,`updateTime`=? WHERE `balanceName` = ?;"
 	//
@@ -96,6 +107,7 @@ func Save(name, desc, static, staticCluster, now string) (string, error) {
 	return "", nil
 }
 
+//Delete 删除
 func Delete(name string) (string, error) {
 	const sql = "DELETE FROM `goku_balance` WHERE  `balanceName`= ?;"
 	db := database.GetConnection()
@@ -111,7 +123,7 @@ func Delete(name string) (string, error) {
 
 }
 
-// 批量删除负载
+//BatchDelete 批量删除负载
 func BatchDelete(balanceNames []string) (string, error) {
 	db := database.GetConnection()
 	sql := "DELETE FROM `goku_balance` WHERE  `balanceName` = ?;"

@@ -6,7 +6,7 @@ import (
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 )
 
-// 记录告警日志
+//AlertLog 记录告警日志
 func AlertLog(requestURL, targetServer, targetURL, requestMethod, proxyMethod, headerList, queryParamList, formParamList, responseHeaderList string, responseStatus int, host, strategyID, strategyName, requestID string) {
 
 	fields := log.Fields{

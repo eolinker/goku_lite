@@ -1,8 +1,9 @@
 package entity
 
+//MonitorConfig 监控配置
 type MonitorConfig struct {
-	ApiMonitorStatus           int
+	APIMonitorStatus           int
 	StrategyMonitorStatus      int
-	StrategyMonitorStatusInApi int
-	ApiMonitorStatusInStrategy int
+	StrategyMonitorStatusInAPI int
+	APIMonitorStatusInStrategy int
 }

@@ -1,4 +1,4 @@
-package console_mysql
+package consolemysql
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 	database2 "github.com/eolinker/goku-api-gateway/common/database"
 )
 
-// 获取告警信息列表
+// GetAlertMsgList 获取告警信息列表
 func GetAlertMsgList(page, pageSize int) (bool, []map[string]interface{}, int, error) {
 	db := database2.GetConnection()
 	var count int
@@ -41,7 +41,7 @@ func GetAlertMsgList(page, pageSize int) (bool, []map[string]interface{}, int, e
 		} else if alertPeriodType == 4 {
 			period = "60"
 		}
-		var msg string = "网关转发失败" + period + "分钟达到" + strconv.Itoa(alertCount) + "次"
+		var msg  = "网关转发失败" + period + "分钟达到" + strconv.Itoa(alertCount) + "次"
 		alertInfo := map[string]interface{}{
 			"alertID":      alertID,
 			"requestURL":   requestURL,
@@ -58,7 +58,7 @@ func GetAlertMsgList(page, pageSize int) (bool, []map[string]interface{}, int, e
 	return true, alertList, count, nil
 }
 
-// 清空告警信息列表
+// ClearAlertMsg 清空告警信息列表
 func ClearAlertMsg() (bool, string, error) {
 	db := database2.GetConnection()
 	sql := "DELETE FROM goku_gateway_alert;"
@@ -69,7 +69,7 @@ func ClearAlertMsg() (bool, string, error) {
 	return true, "", nil
 }
 
-// 删除告警信息
+// DeleteAlertMsg 删除告警信息
 func DeleteAlertMsg(alertID int) (bool, string, error) {
 	db := database2.GetConnection()
 	sql := "DELETE FROM goku_gateway_alert WHERE alertID = ?;"
@@ -80,7 +80,7 @@ func DeleteAlertMsg(alertID int) (bool, string, error) {
 	return true, "", nil
 }
 
-// 新增告警信息
+// AddAlertMsg 新增告警信息
 func AddAlertMsg(requestURL, targetServer, targetURL, ip, clusterName string, alertPeriodType, alertCount int) (bool, string, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
@@ -92,6 +92,7 @@ func AddAlertMsg(requestURL, targetServer, targetURL, ip, clusterName string, al
 	return true, "", nil
 }
 
+//GetAlertConfig 获取告警配置
 func GetAlertConfig() (bool, map[string]interface{}, error) {
 	db := database2.GetConnection()
 	var apiAlertInfo, sender, senderPassword, smtpAddress string
@@ -102,14 +103,14 @@ func GetAlertConfig() (bool, map[string]interface{}, error) {
 		return false, nil, err
 	}
 
-	apiAlertInfoJson := map[string]interface{}{}
+	apiAlertInfoJSON := map[string]interface{}{}
 
 	if apiAlertInfo == "" || apiAlertInfo == "{}" {
-		apiAlertInfoJson["alertPeriodType"] = 0
-		apiAlertInfoJson["alertAddr"] = ""
-		apiAlertInfoJson["receiverList"] = ""
+		apiAlertInfoJSON["alertPeriodType"] = 0
+		apiAlertInfoJSON["alertAddr"] = ""
+		apiAlertInfoJSON["receiverList"] = ""
 	} else {
-		err = json.Unmarshal([]byte(apiAlertInfo), &apiAlertInfoJson)
+		err = json.Unmarshal([]byte(apiAlertInfo), &apiAlertInfoJSON)
 		if err != nil {
 			return false, nil, err
 		}
@@ -122,7 +123,7 @@ func GetAlertConfig() (bool, map[string]interface{}, error) {
 		"smtpAddress":    smtpAddress,
 		"smtpPort":       smtpPort,
 		"smtpProtocol":   smtpProtocol,
-		"apiAlertInfo":   apiAlertInfoJson,
+		"apiAlertInfo":   apiAlertInfoJSON,
 	}
 	return true, gatewayConfig, nil
 }

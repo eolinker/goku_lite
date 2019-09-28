@@ -1,4 +1,4 @@
-package config_manager
+package configmanager
 
 import (
 	"encoding/json"
@@ -11,8 +11,10 @@ import (
 )
 
 const (
+	//AccessLog access日志
 	AccessLog = "access"
-	NodeLog   = "node"
+	//NodeLog 节点日志
+	NodeLog = "node"
 )
 
 func init() {
@@ -39,6 +41,8 @@ func defaultNodeAppLogConfig() *entity.LogConfig {
 		Period: "hour",
 	}
 }
+
+//InitLog 初始化日志
 func InitLog() {
 	reloadLogConfig()
 }

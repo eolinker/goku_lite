@@ -1,5 +1,6 @@
 package entity
 
+//Strategy 策略
 type Strategy struct {
 	StrategyID     string `json:"strategyID"`
 	StrategyName   string `json:"strategyName"`

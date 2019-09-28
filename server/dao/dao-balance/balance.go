@@ -1,9 +1,10 @@
-package dao_balance
+package daobalance
 
 import (
 	"github.com/eolinker/goku-api-gateway/common/database"
 )
 
+//GetBalanceNames 获取负载名称列表
 func GetBalanceNames() (bool, []string, error) {
 	db := database.GetConnection()
 	sql := "SELECT balanceName FROM goku_balance ;"

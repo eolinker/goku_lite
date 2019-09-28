@@ -10,6 +10,8 @@ import (
 func init() {
 	general.RegeditLater(Update)
 }
+
+//Update 更新
 func Update() error {
 
 	l, e := dao_balance_update.GetAllOldVerSion()

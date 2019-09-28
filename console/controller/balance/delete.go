@@ -8,7 +8,7 @@ import (
 	"github.com/eolinker/goku-api-gateway/console/module/balance"
 )
 
-// 删除负载配置
+//DeleteBalance 删除负载配置
 func DeleteBalance(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationLoadBalance, controller.OperationEDIT)
 	if e != nil {
@@ -34,7 +34,7 @@ func DeleteBalance(httpResponse http.ResponseWriter, httpRequest *http.Request) 
 	return
 }
 
-// 批量删除负载
+//BatchDeleteBalance 批量删除负载
 func BatchDeleteBalance(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationLoadBalance, controller.OperationEDIT)

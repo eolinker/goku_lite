@@ -1,8 +1,9 @@
 package entity
 
-var GlobalPlugin map[string]*Plugin = make(map[string]*Plugin)
+//GlobalPlugin 全局插件
+var GlobalPlugin = make(map[string]*Plugin)
 
-// 插件
+// Plugin 插件
 type Plugin struct {
 	PluginID     int    `json:"pluginID"`
 	PluginName   string `json:"pluginName"`
@@ -19,10 +20,12 @@ type Plugin struct {
 	IsCheck    int    `json:"isCheck"`
 }
 
+//PluginList 插件列表
 type PluginList struct {
 	PluginList []*PluginParams `json:"pluginList"`
 }
 
+//PluginParams 插件参数
 type PluginParams struct {
 	PluginName   string            `json:"pluginName"`
 	PluginConfig string            `json:"pluginConfig"`
@@ -30,6 +33,7 @@ type PluginParams struct {
 	PluginInfo   map[string]string `json:"pluginInfo"`
 }
 
+//PluginSlice 插件切片
 type PluginSlice []*Plugin
 
 func (p PluginSlice) Len() int { // 重写 Len() 方法
@@ -42,6 +46,7 @@ func (p PluginSlice) Less(i, j int) bool { // 重写 Less() 方法， 从小到�
 	return p[i].PluginIndex < p[j].PluginIndex
 }
 
+//ProxyCachingConf 转发缓存配置
 type ProxyCachingConf struct {
 	ResponseCodes  string `json:"responseCodes"`  //缓存条件：返回的HTTP状态码在该状态码列表中
 	RequestMethods string `json:"requestMethods"` //缓存条件：请求的Method在该列表中

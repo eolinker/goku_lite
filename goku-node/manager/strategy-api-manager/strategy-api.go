@@ -1,4 +1,4 @@
-package strategy_api_manager
+package strategyapimanager
 
 import (
 	"sync"
@@ -9,50 +9,50 @@ import (
 )
 
 func init() {
-	updater.Add(loadStategyApi, 6, "goku_conn_strategy_api", "goku_gateway_strategy", "goku_gateway_api")
+	updater.Add(loadStategyAPI, 6, "goku_conn_strategy_api", "goku_gateway_strategy", "goku_gateway_api")
 }
 
 var (
-	apiOfStrategy = make(map[string]*_ApiMap)
+	apiOfStrategy = make(map[string]*_APIMap)
 	apiLocker     sync.RWMutex
 )
 
 //GetAPIForStategy 获取指定策略、API 对应的 配置
-func GetAPIForStategy(stategyId string, apiId int) (*entity.StrategyApi, bool) {
-	apis, has := getAPis(stategyId)
+func GetAPIForStategy(stategyID string, apiID int) (*entity.StrategyAPI, bool) {
+	apis, has := getAPis(stategyID)
 	if !has {
 		return nil, false
 	}
-	return apis.Get(apiId)
+	return apis.Get(apiID)
 }
 
-func getAPis(strategyId string) (*_ApiMap, bool) {
-	apis, has := apiOfStrategy[strategyId]
+func getAPis(strategyID string) (*_APIMap, bool) {
+	apis, has := apiOfStrategy[strategyID]
 	return apis, has
 }
-func resetApis(apis map[string]*_ApiMap) {
+func resetAPIs(apis map[string]*_APIMap) {
 	apiLocker.Lock()
 	defer apiLocker.Unlock()
 
 	apiOfStrategy = apis
 }
-func loadStategyApi() {
-	apis, e := dao_strategy.GetAllStrategyApi()
+func loadStategyAPI() {
+	apis, e := dao_strategy.GetAllStrategyAPI()
 	if e != nil {
 		return
 	}
 
-	tem := make(map[string]*_ApiMap)
+	tem := make(map[string]*_APIMap)
 	for _, api := range apis {
 
 		as, has := tem[api.StrategyID]
 		if !has {
-			as = &_ApiMap{
-				apis: make(map[int]*entity.StrategyApi),
+			as = &_APIMap{
+				apis: make(map[int]*entity.StrategyAPI),
 			}
 		}
-		as.apis[api.ApiId] = api
+		as.apis[api.APIID] = api
 		tem[api.StrategyID] = as
 	}
-	resetApis(tem)
+	resetAPIs(tem)
 }

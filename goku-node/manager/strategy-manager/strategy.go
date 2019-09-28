@@ -1,4 +1,4 @@
-package strategy_manager
+package strategymanager
 
 import (
 	"sync"
@@ -13,7 +13,7 @@ func init() {
 	// loadStategy()
 }
 
-//GetAnonymous: 获取匿名策略
+//GetAnonymous 获取匿名策略
 //return: 开放策略ID，是否有效
 func GetAnonymous() (*entity.Strategy, bool) {
 	if defStrategy == nil || defStrategy.EnableStatus != 1 {
@@ -22,17 +22,17 @@ func GetAnonymous() (*entity.Strategy, bool) {
 	return defStrategy, true
 }
 
-//CheckStategy 测试策略Id是否生效
-func CheckStategy(stategyId string) bool {
+//CheckStategy 测试策略ID是否生效
+func CheckStategy(stategyID string) bool {
 	lockerStategy.RLock()
 	defer lockerStategy.RUnlock()
-	_, has := strategys[stategyId]
+	_, has := strategys[stategyID]
 	return has
 }
 
 var (
-	strategys                      = make(map[string]*entity.Strategy)
-	defStrategy   *entity.Strategy = nil
+	strategys     = make(map[string]*entity.Strategy)
+	defStrategy   *entity.Strategy
 	lockerStategy sync.RWMutex
 )
 
@@ -43,6 +43,7 @@ func reset(s map[string]*entity.Strategy, def *entity.Strategy) {
 	defStrategy = def
 }
 
+//Get get
 func Get(id string) (*entity.Strategy, bool) {
 	lockerStategy.RLock()
 	defer lockerStategy.RUnlock()
@@ -50,6 +51,7 @@ func Get(id string) (*entity.Strategy, bool) {
 	return s, has
 }
 
+//Has has
 func Has(id string) bool {
 	lockerStategy.RLock()
 	defer lockerStategy.RUnlock()

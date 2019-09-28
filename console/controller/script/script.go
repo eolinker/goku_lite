@@ -10,8 +10,8 @@ import (
 
 var initTables = []string{"goku_gateway", "goku_plugin", "goku_balance", "goku_gateway_api", "goku_gateway_strategy", "goku_conn_plugin_strategy", "goku_conn_plugin_api", "goku_conn_strategy_api"}
 
-// 新建项目
-func RefreshApiInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//RefreshAPIInfo 新建项目
+func RefreshAPIInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	hashCode := httpRequest.PostFormValue("hashCode")
 
 	if hashCode != "cf70df9de35d556cb5eea88e422ec6cb" {
@@ -19,7 +19,7 @@ func RefreshApiInfo(httpResponse http.ResponseWriter, httpRequest *http.Request)
 		controller.WriteError(httpResponse, "800000", "script", "[Error] Illegal hashCode", nil)
 		return
 	}
-	if !script.RefreshApiInfo() {
+	if !script.RefreshAPIInfo() {
 
 		controller.WriteError(httpResponse, "800000", "script", "[Error] Fail to refresh!", nil)
 
@@ -28,7 +28,7 @@ func RefreshApiInfo(httpResponse http.ResponseWriter, httpRequest *http.Request)
 	controller.WriteResultInfo(httpResponse, "script", "", nil)
 }
 
-// 刷新网关告警信息
+//RefreshGatewayAlertConfig 刷新网关告警信息
 func RefreshGatewayAlertConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	hashCode := httpRequest.PostFormValue("hashCode")
 
@@ -46,6 +46,7 @@ func RefreshGatewayAlertConfig(httpResponse http.ResponseWriter, httpRequest *ht
 	controller.WriteResultInfo(httpResponse, "script", "", nil)
 }
 
+//UpdateTables 更新表
 func UpdateTables() {
 	script.UpdateTables(initTables)
 }

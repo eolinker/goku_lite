@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+//HeartBeatProid heartBeatProid
 const HeartBeatProid = time.Second * 5
 
 var (
@@ -16,6 +17,7 @@ var (
 	closeChan  chan bool
 )
 
+//Heartbeat heartBeat
 func Heartbeat(port int) {
 	closeChan = make(chan bool)
 	serverPort = port
@@ -38,18 +40,19 @@ func Heartbeat(port int) {
 
 func sendHeartBeat(port int) {
 
-	addr := node_common.GetAdminUrl(fmt.Sprintf("node/heartbeat?port=%d", port))
+	addr := node_common.GetAdminURL(fmt.Sprintf("node/heartbeat?port=%d", port))
 	_, err := http.Get(addr)
 	if err != nil {
 		log.Warn("fail to send heartbeat:", err)
 	}
 }
 
+//StopNode stopNode
 func StopNode() {
 	close(closeChan)
 
 	log.Debug("stop node")
-	addr := node_common.GetAdminUrl(fmt.Sprintf("node/stop?port=%d", serverPort))
+	addr := node_common.GetAdminURL(fmt.Sprintf("node/stop?port=%d", serverPort))
 	_, err := http.Get(addr)
 	if err != nil {
 		log.Warn("fail to send heartbeat:", err)

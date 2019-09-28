@@ -1,4 +1,4 @@
-package plugin_manager
+package pluginmanager
 
 import (
 	"fmt"
@@ -7,8 +7,8 @@ import (
 	"reflect"
 	"sync"
 
-	goku_plugin "github.com/eolinker/goku-plugin"
 	node_common "github.com/eolinker/goku-api-gateway/goku-node/node-common"
+	goku_plugin "github.com/eolinker/goku-plugin"
 
 	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
@@ -36,7 +36,7 @@ func (m *_GlodPluginManager) check(name string) (int, error) {
 		return code, err
 	}
 
-	_, e, errorCode := m.loadPlugin(name)
+	_, errorCode, e := m.loadPlugin(name)
 	return errorCode, e
 
 }
@@ -59,14 +59,14 @@ func (m *_GlodPluginManager) getPluginHandle(name string) (goku_plugin.PluginFac
 	return p, has
 }
 
-// 获取所有插件列表
+//LoadPlugin 获取所有插件列表
 func LoadPlugin(pis map[string]*entity.PluginInfo) (allFactory map[string]*entity.PluginFactoryHandler, defaultPlugins []*entity.PluginHandlerExce, beforMatchs []*entity.PluginHandlerExce) {
 	plugins := make(map[string]*entity.PluginFactoryHandler)
 	def := make([]*entity.PluginHandlerExce, 0, len(pis))
 	before := make([]*entity.PluginHandlerExce, 0, len(pis))
 
 	for key, value := range pis {
-		handle, err, _ := globalPluginManager.loadPlugin(key)
+		handle, _, err := globalPluginManager.loadPlugin(key)
 		if err != nil {
 			goku_plugin.Warn("LoadPlugin:", err.Error())
 			continue
@@ -105,18 +105,18 @@ func LoadPlugin(pis map[string]*entity.PluginInfo) (allFactory map[string]*entit
 	return plugins, def, before
 }
 
-// 加载动态库
-func (m *_GlodPluginManager) loadPlugin(name string) (goku_plugin.PluginFactory, error, int) {
+//loadPlugin 加载动态库
+func (m *_GlodPluginManager) loadPlugin(name string) (goku_plugin.PluginFactory, int, error) {
 	handle, has := m.getPluginHandle(name)
 	if has {
-		return handle, nil, 0
+		return handle, 0, nil
 	}
 	m.gloadPluginLocker.Lock()
 	defer m.gloadPluginLocker.Unlock()
 
 	handle, has = m.gloadPlugin[name]
 	if has {
-		return handle, nil, LoadOk
+		return handle, LoadOk, nil
 	}
 
 	path, _ := filepath.Abs(fmt.Sprintf("plugin/%s.so", name))
@@ -125,7 +125,7 @@ func (m *_GlodPluginManager) loadPlugin(name string) (goku_plugin.PluginFactory,
 		e := fmt.Errorf("The plugin file named '%s.so' can not be found in plugin:%s ", name, err.Error())
 		m.errors[name] = e
 		m.errorCodes[name] = LoadFileError
-		return nil, e, LoadFileError
+		return nil, LoadFileError, e
 	}
 
 	//structName := strings.Replace(name, "-", "_", -1)
@@ -139,7 +139,7 @@ func (m *_GlodPluginManager) loadPlugin(name string) (goku_plugin.PluginFactory,
 		m.errors[name] = e
 		m.errorCodes[name] = LoadLookupError
 
-		return nil, e, LoadLookupError
+		return nil, LoadLookupError, e
 	}
 
 	vp, ok := v.(func() goku_plugin.PluginFactory)
@@ -147,18 +147,18 @@ func (m *_GlodPluginManager) loadPlugin(name string) (goku_plugin.PluginFactory,
 		e := fmt.Errorf("The builder func  can not  implemented interface named goku_plugin.PluginFactory:%s ", name)
 		m.errors[name] = e
 		m.errorCodes[name] = LoadInterFaceError
-		return nil, e, LoadInterFaceError
+		return nil, LoadInterFaceError, e
 	}
 	factory := vp()
 	if factory == nil || reflect.ValueOf(factory).IsNil() {
 		e := fmt.Errorf("The builder result is nil:%s ", name)
 		m.errors[name] = e
 		m.errorCodes[name] = LoadInterFaceError
-		return nil, e, LoadInterFaceError
+		return nil, LoadInterFaceError, e
 	}
 	m.gloadPlugin[name] = factory
 	m.errorCodes[name] = LoadOk
 	m.errors[name] = nil
-	return factory, nil, LoadOk
+	return factory, LoadOk, nil
 
 }

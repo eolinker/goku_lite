@@ -1,27 +1,32 @@
 package entity
 
+//AmsProject ams项目
 type AmsProject struct {
 	ProjectInfo  AmsProjectInfo `json:"projectInfo"`
-	ApiGroupList []AmsGroupInfo `json:"apiGroupList"`
+	APIGroupList []AmsGroupInfo `json:"apiGroupList"`
 }
 
+//AmsProjectInfo ams项目信息
 type AmsProjectInfo struct {
 	ProjectName string `json:"projectName"`
 }
 
+//AmsGroupInfo ams分组信息
 type AmsGroupInfo struct {
 	GroupName         string         `json:"groupName"`
 	ChildGroupList    []AmsGroupInfo `json:"childGroupList"`
-	ApiList           []AmsApiInfo   `json:"apiList"`
-	ApiGroupChildList []AmsGroupInfo `json:"apiGroupChildList"`
+	APIList           []AmsAPIInfo   `json:"apiList"`
+	APIGroupChildList []AmsGroupInfo `json:"apiGroupChildList"`
 }
 
-type AmsApiInfo struct {
-	BaseInfo AmsApi `json:"baseInfo"`
+//AmsAPIInfo ams接口信息
+type AmsAPIInfo struct {
+	BaseInfo AmsAPI `json:"baseInfo"`
 }
 
-type AmsApi struct {
-	ApiName        string `json:"apiName"`
-	ApiURI         string `json:"apiURI"`
-	ApiRequestType int    `json:"apiRequestType"`
+//AmsAPI ams接口
+type AmsAPI struct {
+	APIName        string `json:"apiName"`
+	APIURI         string `json:"apiURI"`
+	APIRequestType int    `json:"apiRequestType"`
 }

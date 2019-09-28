@@ -1,5 +1,6 @@
 package entity
 
+//Strategy strategy
 type Strategy struct {
 	StrategyID   string
 	StrategyName string
@@ -13,6 +14,7 @@ type Strategy struct {
 //	return s.EnableStatus ==1
 //}
 
+//StrategyPluginItem strategy plugin item
 type StrategyPluginItem struct {
 	StrategyID   string
 	PluginName   string
@@ -21,15 +23,19 @@ type StrategyPluginItem struct {
 	//PluginInfo string
 	//PluginStatus int
 }
-type StrategyApiPlugin struct {
-	ApiId        string
+
+//StrategyAPIPlugin 策略接口插件
+type StrategyAPIPlugin struct {
+	APIId        string
 	StrategyID   string
 	PluginName   string
 	PluginConfig string
 	UpdateTag    string
 }
-type StrategyApi struct {
-	ApiId      int
+
+//StrategyAPI 策略接口
+type StrategyAPI struct {
+	APIID      int
 	StrategyID string
 	Target     string
 }

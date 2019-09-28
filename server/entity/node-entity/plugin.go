@@ -5,11 +5,15 @@ import (
 )
 
 const (
-	PluginTypeGateway  = 0
+	//PluginTypeGateway 全局插件
+	PluginTypeGateway = 0
+	//PluginTypeStrategy 策略插件
 	PluginTypeStrategy = 1
-	PluginTypeApi      = 2
+	//PluginTypeAPI 接口插件
+	PluginTypeAPI = 2
 )
 
+//PluginInfo 插件信息
 type PluginInfo struct {
 	Name      string
 	Priority  int
@@ -18,8 +22,11 @@ type PluginInfo struct {
 	Type      int
 	UpdateTag string
 }
+
+//MapString map string
 type MapString map[string]string
 
+//PluginFactoryHandler 插件处理factory
 type PluginFactoryHandler struct {
 	Info    *PluginInfo
 	Factory goku_plugin.PluginFactory
@@ -28,6 +35,7 @@ type PluginFactoryHandler struct {
 	//UpdateTag string
 }
 
+//PluginHandlerExce plugin handler exec
 type PluginHandlerExce struct {
 	PluginObj *goku_plugin.PluginObj
 	Name      string
@@ -35,6 +43,7 @@ type PluginHandlerExce struct {
 	IsStop    bool
 }
 
+//PluginSlice 插件切片
 type PluginSlice []*PluginHandlerExce
 
 func (p PluginSlice) Len() int { // 重写 Len() 方法

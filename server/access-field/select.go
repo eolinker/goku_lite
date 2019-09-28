@@ -1,12 +1,12 @@
-package access_field
+package accessfield
 
 var (
 	defaultFields = []AccessFieldKey{
-		RequestId,
+		RequestID,
 
 		TimeIso8601,
 		Strategy,
-		Api,
+		API,
 		Host,
 		Request,
 		Balance,
@@ -16,7 +16,7 @@ var (
 		ProxyStatusCode,
 		RequestTime,
 		RemoteAddr,
-		HttpXForwardedFor,
+		HTTPXForwardedFor,
 		Retry,
 	}
 
@@ -28,11 +28,15 @@ func init() {
 		defaultSet[k] = true
 	}
 }
+
+//IsDefault 是否有默认值
 func IsDefault(k AccessFieldKey) bool {
 	_, has := defaultSet[k]
 	return has
 
 }
+
+//Default 获取默认的字段
 func Default() []AccessFieldKey {
 	return defaultFields
 

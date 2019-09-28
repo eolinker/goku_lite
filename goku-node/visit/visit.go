@@ -9,7 +9,7 @@ import (
 
 	node_common "github.com/eolinker/goku-api-gateway/goku-node/node-common"
 
-	"github.com/eolinker/goku-api-gateway/common/redis-manager"
+	redis_manager "github.com/eolinker/goku-api-gateway/common/redis-manager"
 	cmd2 "github.com/eolinker/goku-api-gateway/goku-node/cmd"
 	gateway_manager "github.com/eolinker/goku-api-gateway/goku-node/manager/gateway-manager"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
@@ -22,8 +22,8 @@ type alertInfo struct {
 	ReceiveList     string `json:"receiveList"`
 }
 
-// 更新网关转发失败次数
-func UpdateProxyFailureCount(apiInfo *entity.ApiExtend,
+//UpdateProxyFailureCount 更新网关转发失败次数
+func UpdateProxyFailureCount(apiInfo *entity.APIExtend,
 	requestMethod string,
 	proxyMethod string,
 	headers map[string][]string,
@@ -66,7 +66,7 @@ func UpdateProxyFailureCount(apiInfo *entity.ApiExtend,
 		}
 
 		// 获取当前告警时间信息
-		redisKey := clusterName + ":gokuFailureCount:" + strconv.Itoa(apiInfo.ApiID)
+		redisKey := clusterName + ":gokuFailureCount:" + strconv.Itoa(apiInfo.APIID)
 		// 获取key信息
 		result, err := redisConn.Get(redisKey).Result()
 		if err != nil {
@@ -129,8 +129,8 @@ func UpdateProxyFailureCount(apiInfo *entity.ApiExtend,
 
 		if count >= apiInfo.AlertValve {
 
-			_, _, _ = cmd2.AddAlertMessage(apiInfo.ApiID,
-				apiInfo.ApiName,
+			_, _, _ = cmd2.AddAlertMessage(apiInfo.APIID,
+				apiInfo.APIName,
 				apiInfo.RequestURL,
 				ctx.FinalTargetServer(),
 				apiInfo.TargetURL,
@@ -173,7 +173,7 @@ func UpdateProxyFailureCount(apiInfo *entity.ApiExtend,
 				period = "60"
 			}
 			msg := "[Alert] GoKu Gateway failed to proxy requests for " + period + " minute " + strconv.Itoa(apiInfo.AlertValve) + " times"
-			cmd2.SendRequestToAlertAddress(alertAddress, apiInfo.RequestURL, ctx.FinalTargetServer(), apiInfo.TargetURL, msg, apiInfo.ApiName, apiInfo.ApiID)
+			cmd2.SendRequestToAlertAddress(alertAddress, apiInfo.RequestURL, ctx.FinalTargetServer(), apiInfo.TargetURL, msg, apiInfo.APIName, apiInfo.APIID)
 
 			_, err = redisConn.Set(redisKey, 1, time.Duration(expire)*time.Second).Result()
 			if err != nil {
@@ -181,8 +181,8 @@ func UpdateProxyFailureCount(apiInfo *entity.ApiExtend,
 			}
 		} else {
 			_, _, _ = cmd2.AddAlertMessage(
-				apiInfo.ApiID,
-				apiInfo.ApiName,
+				apiInfo.APIID,
+				apiInfo.APIName,
 				apiInfo.RequestURL,
 				ctx.FinalTargetServer(),
 				apiInfo.TargetURL,
@@ -223,7 +223,7 @@ func UpdateProxyFailureCount(apiInfo *entity.ApiExtend,
 	}
 }
 
-// 记录告警日志
+//AlertLog 记录告警日志
 func AlertLog(requestURL, targetServer, targetURL, requestMethod, proxyMethod, headerList, queryParamList, formParamList, responseHeaderList string, responseStatus int, strategyID string, strategyName, requestID string) {
 	log.WithFields(log.Fields{
 		"request_id":          requestID,

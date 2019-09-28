@@ -1,4 +1,4 @@
-package redis_manager
+package redismanager
 
 import (
 	"fmt"
@@ -11,6 +11,7 @@ const (
 	_PoolSize = 2000
 )
 
+//Create 创建
 func Create(config RedisConfig) Redis {
 
 	switch config.GetMode() {

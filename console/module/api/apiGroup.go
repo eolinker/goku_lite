@@ -2,22 +2,22 @@ package api
 
 import (
 	"github.com/eolinker/goku-api-gateway/server/dao"
-	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
+	consolemysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
 )
 
-// 新建接口分组
-func AddApiGroup(groupName string, projectID, parentGroupID int) (bool, interface{}, error) {
-	return console_mysql.AddApiGroup(groupName, projectID, parentGroupID)
+//AddAPIGroup 新建接口分组
+func AddAPIGroup(groupName string, projectID, parentGroupID int) (bool, interface{}, error) {
+	return consolemysql.AddAPIGroup(groupName, projectID, parentGroupID)
 }
 
-// 修改接口分组
-func EditApiGroup(groupName string, groupID, projectID int) (bool, string, error) {
-	return console_mysql.EditApiGroup(groupName, groupID, projectID)
+//EditAPIGroup 修改接口分组
+func EditAPIGroup(groupName string, groupID, projectID int) (bool, string, error) {
+	return consolemysql.EditAPIGroup(groupName, groupID, projectID)
 }
 
-// 删除接口分组
-func DeleteApiGroup(projectID, groupID int) (bool, string, error) {
-	flag, result, err := console_mysql.DeleteApiGroup(projectID, groupID)
+//DeleteAPIGroup 删除接口分组
+func DeleteAPIGroup(projectID, groupID int) (bool, string, error) {
+	flag, result, err := consolemysql.DeleteAPIGroup(projectID, groupID)
 	if flag {
 		dao.UpdateTable("goku_gateway_strategy")
 		dao.UpdateTable("goku_gateway_api")
@@ -28,11 +28,12 @@ func DeleteApiGroup(projectID, groupID int) (bool, string, error) {
 	return flag, result, err
 }
 
-// 获取接口分组列表
-func GetApiGroupList(projectID int) (bool, []map[string]interface{}, error) {
-	return console_mysql.GetApiGroupList(projectID)
+//GetAPIGroupList 获取接口分组列表
+func GetAPIGroupList(projectID int) (bool, []map[string]interface{}, error) {
+	return consolemysql.GetAPIGroupList(projectID)
 }
 
-func UpdateApiGroupScript() bool {
-	return console_mysql.UpdateApiGroupScript()
+//UpdateAPIGroupScript 更新接口分组脚本
+func UpdateAPIGroupScript() bool {
+	return consolemysql.UpdateAPIGroupScript()
 }

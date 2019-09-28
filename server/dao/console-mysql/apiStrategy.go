@@ -1,4 +1,4 @@
-package console_mysql
+package consolemysql
 
 import (
 	"fmt"
@@ -9,8 +9,8 @@ import (
 	database2 "github.com/eolinker/goku-api-gateway/common/database"
 )
 
-// 将接口加入策略组
-func AddApiToStrategy(apiList []string, strategyID string) (bool, string, error) {
+// AddAPIToStrategy 将接口加入策略组
+func AddAPIToStrategy(apiList []string, strategyID string) (bool, string, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
 	sql2 := "SELECT apiID FROM goku_conn_strategy_api WHERE apiID = ? AND strategyID = ?"
@@ -56,8 +56,8 @@ func AddApiToStrategy(apiList []string, strategyID string) (bool, string, error)
 	return true, "", nil
 }
 
-// SetApiTargetOfStrategy 重定向接口负载
-func SetApiTargetOfStrategy(apiId int, strategyID string, target string) (bool, string, error) {
+// SetAPITargetOfStrategy 重定向接口负载
+func SetAPITargetOfStrategy(apiID int, strategyID string, target string) (bool, string, error) {
 	db := database2.GetConnection()
 	sql := "UPDATE goku_conn_strategy_api SET `target` = ? where apiID = ? AND strategyID = ? "
 	stmt, err := db.Prepare(sql)
@@ -65,7 +65,7 @@ func SetApiTargetOfStrategy(apiId int, strategyID string, target string) (bool, 
 		return false, err.Error(), err
 	}
 
-	_, e := stmt.Exec(target, apiId, strategyID)
+	_, e := stmt.Exec(target, apiID, strategyID)
 
 	if e != nil {
 		return false, e.Error(), e
@@ -74,8 +74,8 @@ func SetApiTargetOfStrategy(apiId int, strategyID string, target string) (bool, 
 	return true, "", nil
 }
 
-// BatchSetApiTargetOfStrategy 批量重定向接口负载
-func BatchSetApiTargetOfStrategy(apiIds []int, strategyID string, target string) (bool, string, error) {
+// BatchSetAPITargetOfStrategy 批量重定向接口负载
+func BatchSetAPITargetOfStrategy(apiIds []int, strategyID string, target string) (bool, string, error) {
 	idLen := len(apiIds)
 	s := make([]interface{}, 0, idLen+2)
 	c := ""
@@ -286,8 +286,8 @@ func GetAPIListFromStrategy(strategyID, keyword string, condition, page, pageSiz
 	return true, apiList, count, nil
 }
 
-// CheckIsExistApiInStrategy 检查插件是否添加进策略组
-func CheckIsExistApiInStrategy(apiID int, strategyID string) (bool, string, error) {
+// CheckIsExistAPIInStrategy 检查插件是否添加进策略组
+func CheckIsExistAPIInStrategy(apiID int, strategyID string) (bool, string, error) {
 	db := database2.GetConnection()
 	var id int
 	sql := "SELECT connID FROM goku_conn_strategy_api WHERE apiID = ? AND strategyID = ?"
@@ -319,7 +319,7 @@ func getSimpleAPIListInStrategy(strategyID string, projectID int) map[string]str
 	return simpleMap
 }
 
-// GetAPIIDListNotInStrategyByProject 获取未被该策略组绑定的接口ID列表(通过项目)
+// GetAPIIDListNotInStrategy 获取未被该策略组绑定的接口ID列表(通过项目)
 func GetAPIIDListNotInStrategy(strategyID string, projectID, groupID int, keyword string) (bool, []int, error) {
 	requestMap := getSimpleAPIListInStrategy(strategyID, projectID)
 	rule := make([]string, 0, 3)
@@ -376,22 +376,21 @@ func getAPIGroupRule(projectID, groupID int) (string, error) {
 			return groupRule, nil
 		}
 		return "", nil
-	} else {
-		var groupPath string
-		sql := "SELECT groupPath FROM goku_gateway_api_group WHERE groupID = ?;"
-		err := db.QueryRow(sql, groupID).Scan(&groupPath)
-		if err != nil {
-			return "", err
-		}
-		// 获取分组ID列表
-		sql = "SELECT GROUP_CONCAT(DISTINCT groupID) AS groupID FROM goku_gateway_api_group WHERE projectID = ? AND groupPath LIKE ?;"
-		groupIDList := ""
-		err = db.QueryRow(sql, projectID, groupPath+"%").Scan(&groupIDList)
-		if err != nil {
-			return "", err
-		}
-		return fmt.Sprintf("A.groupID IN (%s)", groupIDList), nil
 	}
+	var groupPath string
+	sql := "SELECT groupPath FROM goku_gateway_api_group WHERE groupID = ?;"
+	err := db.QueryRow(sql, groupID).Scan(&groupPath)
+	if err != nil {
+		return "", err
+	}
+	// 获取分组ID列表
+	sql = "SELECT GROUP_CONCAT(DISTINCT groupID) AS groupID FROM goku_gateway_api_group WHERE projectID = ? AND groupPath LIKE ?;"
+	groupIDList := ""
+	err = db.QueryRow(sql, projectID, groupPath+"%").Scan(&groupIDList)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("A.groupID IN (%s)", groupIDList), nil
 }
 
 // GetAPIListNotInStrategy 获取未被该策略组绑定的接口列表(通过项目)
@@ -438,7 +437,7 @@ func GetAPIListNotInStrategy(strategyID string, projectID, groupID, page, pageSi
 		}
 		if value, ok := requestMap[requestURL]; ok {
 			if strings.Contains(strings.ToUpper(value), strings.ToUpper(requestMethod)) {
-				count -= 1
+				count = count - 1
 				continue
 			}
 		}
@@ -459,8 +458,8 @@ func GetAPIListNotInStrategy(strategyID string, projectID, groupID, page, pageSi
 	return true, apiList, count, nil
 }
 
-// 批量删除策略组接口
-func BatchDeleteApiInStrategy(apiIDList, strategyID string) (bool, string, error) {
+// BatchDeleteAPIInStrategy 批量删除策略组接口
+func BatchDeleteAPIInStrategy(apiIDList, strategyID string) (bool, string, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()

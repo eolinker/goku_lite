@@ -1,4 +1,4 @@
-package goku_log
+package gokulog
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// StartDebug 启用debug钩子
 func StartDebug() {
 
 	logger.AddHook(new(debugHook))

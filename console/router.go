@@ -21,6 +21,7 @@ import (
 	"github.com/eolinker/goku-api-gateway/console/controller/strategy"
 )
 
+//Router 路由
 func Router() {
 
 	// 游客
@@ -51,38 +52,38 @@ func Router() {
 	http.HandleFunc("/project/delete", project.DeleteProject)
 	http.HandleFunc("/project/getInfo", project.GetProjectInfo)
 	http.HandleFunc("/project/getList", project.GetProjectList)
-	http.HandleFunc("/project/strategy/getList", project.GetApiListFromProjectNotInStrategy)
+	http.HandleFunc("/project/strategy/getList", project.GetAPIListFromProjectNotInStrategy)
 	http.HandleFunc("/project/batchDelete", project.BatchDeleteProject)
 
 	// 接口分组
-	http.HandleFunc("/apis/group/add", api.AddApiGroup)
-	http.HandleFunc("/apis/group/edit", api.EditApiGroup)
-	http.HandleFunc("/apis/group/delete", api.DeleteApiGroup)
-	http.HandleFunc("/apis/group/getList", api.GetApiGroupList)
-	http.HandleFunc("/apis/group/update", api.UpdateApiGroupScript)
+	http.HandleFunc("/apis/group/add", api.AddAPIGroup)
+	http.HandleFunc("/apis/group/edit", api.EditAPIGroup)
+	http.HandleFunc("/apis/group/delete", api.DeleteAPIGroup)
+	http.HandleFunc("/apis/group/getList", api.GetAPIGroupList)
+	http.HandleFunc("/apis/group/update", api.UpdateAPIGroupScript)
 
 	// API
-	http.HandleFunc("/apis/add", api.AddApi)
-	http.HandleFunc("/apis/edit", api.EditApi)
-	http.HandleFunc("/apis/copy", api.CopyApi)
-	http.HandleFunc("/apis/getInfo", api.GetApiInfo)
-	http.HandleFunc("/apis/getList", api.GetApiList)
-	http.HandleFunc("/apis/batchEditGroup", api.BatchEditApiGroup)
-	http.HandleFunc("/apis/batchDelete", api.BatchDeleteApi)
-	http.HandleFunc("/apis/batchEditBalance", api.BatchSetBalanceApi)
+	http.HandleFunc("/apis/add", api.AddAPI)
+	http.HandleFunc("/apis/edit", api.EditAPI)
+	http.HandleFunc("/apis/copy", api.CopyAPI)
+	http.HandleFunc("/apis/getInfo", api.GetAPIInfo)
+	http.HandleFunc("/apis/getList", api.GetAPIList)
+	http.HandleFunc("/apis/batchEditGroup", api.BatchEditAPIGroup)
+	http.HandleFunc("/apis/batchDelete", api.BatchDeleteAPI)
+	http.HandleFunc("/apis/batchEditBalance", api.BatchSetBalanceAPI)
 
-	http.HandleFunc("/apis/manager/getList", api.GetApiManagerList)
+	http.HandleFunc("/apis/manager/getList", api.GetAPIManagerList)
 
 	// API绑定插件
-	http.HandleFunc("/plugin/api/addPluginToApi", api.AddPluginToApi)
-	http.HandleFunc("/plugin/api/edit", api.EditApiPluginConfig)
-	http.HandleFunc("/plugin/api/getInfo", api.GetApiPluginConfig)
-	http.HandleFunc("/plugin/api/getList", api.GetApiPluginList)
-	http.HandleFunc("/plugin/api/getListByStrategy", api.GetAllApiPluginInStrategy)
-	http.HandleFunc("/plugin/api/batchStart", api.BatchStartApiPlugin)
-	http.HandleFunc("/plugin/api/batchStop", api.BatchStopApiPlugin)
-	http.HandleFunc("/plugin/api/batchDelete", api.BatchDeleteApiPlugin)
-	http.HandleFunc("/plugin/api/notAssign/getList", api.GetApiPluginListWithNotAssignApiList)
+	http.HandleFunc("/plugin/api/addPluginToAPI", api.AddPluginToAPI)
+	http.HandleFunc("/plugin/api/edit", api.EditAPIPluginConfig)
+	http.HandleFunc("/plugin/api/getInfo", api.GetAPIPluginConfig)
+	http.HandleFunc("/plugin/api/getList", api.GetAPIPluginList)
+	http.HandleFunc("/plugin/api/getListByStrategy", api.GetAllAPIPluginInStrategy)
+	http.HandleFunc("/plugin/api/batchStart", api.BatchStartAPIPlugin)
+	http.HandleFunc("/plugin/api/batchStop", api.BatchStopAPIPlugin)
+	http.HandleFunc("/plugin/api/batchDelete", api.BatchDeleteAPIPlugin)
+	http.HandleFunc("/plugin/api/notAssign/getList", api.GetAPIPluginListWithNotAssignAPIList)
 
 	// 策略绑定插件
 	http.HandleFunc("/plugin/strategy/addPluginToStrategy", strategy.AddPluginToStrategy)
@@ -136,12 +137,12 @@ func Router() {
 	http.HandleFunc("/strategy/group/getList", strategy.GetStrategyGroupList)
 
 	// 接口策略组
-	http.HandleFunc("/strategy/api/add", strategy.AddApiToStrategy)
-	http.HandleFunc("/strategy/api/target", strategy.ResetApiTargetOfStrategy)
-	http.HandleFunc("/strategy/api/batchEditTarget", strategy.BatchResetApiTargetOfStrategy)
-	http.HandleFunc("/strategy/api/getList", strategy.GetApiListFromStrategy)
-	http.HandleFunc("/strategy/api/getNotInList", strategy.GetApiListNotInStrategy)
-	http.HandleFunc("/strategy/api/batchDelete", strategy.BatchDeleteApiInStrategy)
+	http.HandleFunc("/strategy/api/add", strategy.AddAPIToStrategy)
+	http.HandleFunc("/strategy/api/target", strategy.ResetAPITargetOfStrategy)
+	http.HandleFunc("/strategy/api/batchEditTarget", strategy.BatchResetAPITargetOfStrategy)
+	http.HandleFunc("/strategy/api/getList", strategy.GetAPIListFromStrategy)
+	http.HandleFunc("/strategy/api/getNotInList", strategy.GetAPIListNotInStrategy)
+	http.HandleFunc("/strategy/api/batchDelete", strategy.BatchDeleteAPIInStrategy)
 	http.HandleFunc("/strategy/api/plugin/getList", api.GetAPIPluginInStrategyByAPIID)
 
 	http.HandleFunc("/strategy/balance/getList", strategy.GetBalanceListInStrategy)
@@ -182,8 +183,8 @@ func Router() {
 	http.HandleFunc("/auth/editInfo", auth.EditAuthInfo)
 
 	// 导入
-	http.HandleFunc("/import/ams/api", api.ImportApiFromAms)
-	http.HandleFunc("/import/ams/group", api.ImportApiGroupFromAms)
+	http.HandleFunc("/import/ams/api", api.ImportAPIFromAms)
+	http.HandleFunc("/import/ams/group", api.ImportAPIGroupFromAms)
 	http.HandleFunc("/import/ams/project", api.ImportProjectFromAms)
 
 	// 	集群
@@ -192,7 +193,7 @@ func Router() {
 	http.HandleFunc("/cluster/simpleList", cluster.GetClusterList)
 
 	// 脚本
-	http.HandleFunc("/scrpit/refreshApiInfo", script.RefreshApiInfo)
+	http.HandleFunc("/scrpit/refreshAPIInfo", script.RefreshAPIInfo)
 	http.HandleFunc("/scrpit/refreshGatewayAlertConfig", script.RefreshGatewayAlertConfig)
 	// 配置
 	http.Handle("/config/log/", config_log.Handle("/config/log/"))

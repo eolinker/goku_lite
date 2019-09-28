@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+//ResponseReader 响应读取器
 type ResponseReader struct {
 	*CookiesHandler
 	*Header

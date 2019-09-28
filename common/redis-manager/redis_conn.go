@@ -1,4 +1,4 @@
-package redis_manager
+package redismanager
 
 import (
 	"sync"
@@ -10,11 +10,12 @@ var (
 	defLocker     sync.Locker
 )
 
+//SetDefault 设置默认redis
 func SetDefault(r Redis) {
 	def = r
 }
 
-// 获取redis连接
+//GetConnection 获取redis连接
 func GetConnection() Redis {
 	if def != nil {
 		return def

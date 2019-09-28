@@ -11,6 +11,7 @@ import (
 	"github.com/eolinker/goku-api-gateway/server/cluster"
 )
 
+//GetGatewayMonitorSummaryByPeriod 获取网关概况
 func GetGatewayMonitorSummaryByPeriod(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
 	if e != nil {
@@ -18,7 +19,7 @@ func GetGatewayMonitorSummaryByPeriod(httpResponse http.ResponseWriter, httpRequ
 	}
 
 	clusterName := httpRequest.PostFormValue("cluster")
-	clusterId, has := cluster.GetId(clusterName)
+	clusterID, has := cluster.GetID(clusterName)
 	if !has && clusterName != "" {
 		controller.WriteError(httpResponse, "340003", "", "[ERROR]Illegal cluster!", nil)
 		return
@@ -60,7 +61,7 @@ func GetGatewayMonitorSummaryByPeriod(httpResponse http.ResponseWriter, httpRequ
 		return
 
 	}
-	flag, result, err := monitor.GetGatewayMonitorSummaryByPeriod(clusterId, beginTime, endTime, p)
+	flag, result, err := monitor.GetGatewayMonitorSummaryByPeriod(clusterID, beginTime, endTime, p)
 	if !flag {
 		controller.WriteError(httpResponse,
 			"340000",

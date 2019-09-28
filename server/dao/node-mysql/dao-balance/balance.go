@@ -1,10 +1,11 @@
-package dao_balance
+package daobalance
 
 import (
 	"github.com/eolinker/goku-api-gateway/common/database"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
 
+//GetAllBalance 获取负载列表
 func GetAllBalance() ([]*entity.Balance, error) {
 	const sql = "SELECT A.`balanceName`,A.`serviceName`,IFNULL(B.`driver`,''),A.`appName`,IFNULL(A.`static`,''),IFNULL(A.`staticCluster`,'') FROM `goku_balance` A LEFT JOIN `goku_service_config` B ON A.`serviceName` = B.`name`;"
 	db := database.GetConnection()

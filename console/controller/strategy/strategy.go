@@ -9,7 +9,7 @@ import (
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
-// 新增策略组
+//AddStrategy 新增策略组
 func AddStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
@@ -52,7 +52,7 @@ func AddStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 修改策略组信息
+//EditStrategy 修改策略组信息
 func EditStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
@@ -93,7 +93,7 @@ func EditStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	controller.WriteResultInfo(httpResponse, "strategy", "strategyID", result)
 }
 
-// 删除策略组
+//DeleteStrategy 删除策略组
 func DeleteStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
@@ -137,7 +137,7 @@ func GetOpenStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request
 	controller.WriteResultInfo(httpResponse, "strategy", "strategyInfo", result)
 }
 
-// 获取策略组列表
+//GetStrategyList 获取策略组列表
 func GetStrategyList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
 	if e != nil {
@@ -230,7 +230,7 @@ func GetStrategyInfo(httpResponse http.ResponseWriter, httpRequest *http.Request
 	controller.WriteResultInfo(httpResponse, "strategy", "strategyInfo", result)
 }
 
-// 批量修改策略组分组
+//BatchEditStrategyGroup 批量修改策略组分组
 func BatchEditStrategyGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
@@ -272,7 +272,7 @@ func BatchEditStrategyGroup(httpResponse http.ResponseWriter, httpRequest *http.
 	return
 }
 
-// 批量修改策略组
+//BatchDeleteStrategy 批量修改策略组
 func BatchDeleteStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
@@ -301,7 +301,7 @@ func BatchDeleteStrategy(httpResponse http.ResponseWriter, httpRequest *http.Req
 	controller.WriteResultInfo(httpResponse, "strategy", "", nil)
 }
 
-// 更新策略启用状态
+//BatchStartStrategy 更新策略启用状态
 func BatchStartStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
@@ -330,7 +330,7 @@ func BatchStartStrategy(httpResponse http.ResponseWriter, httpRequest *http.Requ
 	controller.WriteResultInfo(httpResponse, "strategy", "", nil)
 }
 
-// 更新策略启用状态
+//BatchStopStrategy 更新策略启用状态
 func BatchStopStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {

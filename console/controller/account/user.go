@@ -11,7 +11,7 @@ import (
 	"github.com/eolinker/goku-api-gateway/utils"
 )
 
-// 用户注销
+//Logout 用户注销
 func Logout(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	userIDCookie := http.Cookie{Name: "userID", Path: "/", MaxAge: -1}
@@ -23,7 +23,7 @@ func Logout(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 修改账户信息
+//EditPassword 修改账户信息
 func EditPassword(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationEDIT)
 	if e != nil {
@@ -37,8 +37,8 @@ func EditPassword(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		controller.WriteError(httpResponse,
 			"110005",
 			"user",
-			"[ERROR]Illegal oldPassword!",
-			errors.New("[ERROR]Illegal oldPassword!"))
+			"[error]illegal oldPassword!",
+			errors.New("[error]illegal oldPassword"))
 		return
 	}
 	if flag, _ := regexp.MatchString("^[0-9a-zA-Z]{32}$", newPassword); !flag {
@@ -46,8 +46,8 @@ func EditPassword(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		controller.WriteError(httpResponse,
 			"110006",
 			"user",
-			"[ERROR]Illegal newPassword!",
-			errors.New("[ERROR]Illegal newPassword!"))
+			"[error]illegal newPassword!",
+			errors.New("[error]illegal newPassword"))
 		return
 	}
 	flag, result, err := account.EditPassword(oldPassword, newPassword, userID)
@@ -70,7 +70,7 @@ func EditPassword(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 获取用户信息
+//GetUserInfo 获取用户信息
 func GetUserInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationEDIT)
 	if e != nil {
@@ -89,7 +89,7 @@ func GetUserInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 获取用户类型
+//GetUserType 获取用户类型
 func GetUserType(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationEDIT)
 	if e != nil {
@@ -107,7 +107,7 @@ func GetUserType(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 判断是否是管理员
+//CheckUserIsAdmin 判断是否是管理员
 func CheckUserIsAdmin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationEDIT)
 	if e != nil {
@@ -130,7 +130,7 @@ func CheckUserIsAdmin(httpResponse http.ResponseWriter, httpRequest *http.Reques
 	return
 }
 
-// 判断是否是超级管理员
+//CheckUserIsSuperAdmin 判断是否是超级管理员
 func CheckUserIsSuperAdmin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationEDIT)
 	if e != nil {
@@ -154,7 +154,7 @@ func CheckUserIsSuperAdmin(httpResponse http.ResponseWriter, httpRequest *http.R
 	return
 }
 
-// 检查用户权限
+//CheckUserPermission 检查用户权限
 func CheckUserPermission(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationEDIT)
 	if e != nil {

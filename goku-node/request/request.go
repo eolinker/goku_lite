@@ -10,8 +10,9 @@ import (
 	"time"
 )
 
-var Version string = "2.0"
+const requestVersion = "2.0"
 
+//Request request
 type Request struct {
 	client  *http.Client
 	method  string
@@ -24,7 +25,7 @@ type Request struct {
 	timeout int
 }
 
-// 创建新请求
+//NewRequest 创建新请求
 func NewRequest(method string, URL *url.URL) (*Request, error) {
 	if method != "GET" && method != "POST" && method != "PUT" && method != "DELETE" &&
 		method != "HEAD" && method != "OPTIONS" && method != "PATCH" {
@@ -51,58 +52,58 @@ func newRequest(method string, URL *url.URL) (*Request, error) {
 	return r, nil
 }
 
-// 设置请求头
-func (this *Request) SetHeader(key string, values ...string) {
+//SetHeader 设置请求头
+func (rq *Request) SetHeader(key string, values ...string) {
 	if len(values) > 0 {
-		this.headers[key] = values[:]
+		rq.headers[key] = values[:]
 	} else {
-		delete(this.headers, key)
+		delete(rq.headers, key)
 	}
 }
 
-// 获取请求头
-func (this *Request) Headers() map[string][]string {
+//Headers 获取请求头
+func (rq *Request) Headers() map[string][]string {
 	headers := make(map[string][]string)
-	for key, values := range this.headers {
+	for key, values := range rq.headers {
 		headers[key] = values[:]
 	}
 	return headers
 }
 
-// 设置Query参数
-func (this *Request) SetQueryParam(key string, values ...string) {
+//SetQueryParam 设置Query参数
+func (rq *Request) SetQueryParam(key string, values ...string) {
 	if len(values) > 0 {
-		this.queryParams[key] = values[:]
+		rq.queryParams[key] = values[:]
 	} else {
-		delete(this.queryParams, key)
+		delete(rq.queryParams, key)
 	}
 }
 
-// 设置请求超时时间
-func (this *Request) SetTimeout(timeout int) {
-	this.timeout = timeout
+//SetTimeout 设置请求超时时间
+func (rq *Request) SetTimeout(timeout int) {
+	rq.timeout = timeout
 }
 
-// 获取请求超时时间
-func (this *Request) GetTimeout() int {
-	return this.timeout
+//GetTimeout 获取请求超时时间
+func (rq *Request) GetTimeout() int {
+	return rq.timeout
 }
 
-// 发送请求
-func (this *Request) Send() (*http.Response, error) {
+//Send 发送请求
+func (rq *Request) Send() (*http.Response, error) {
 	// now := time.Now()
-	req, err := this.parseBody()
+	req, err := rq.parseBody()
 	// fmt.Println("Parse body",time.Since(now))
 	if err != nil {
 		return nil, err
 	}
 	req.Header.Set("Accept-Encoding", "gzip")
 	// now = time.Now()
-	req.Header = parseHeaders(this.headers)
+	req.Header = parseHeaders(rq.headers)
 
-	this.client.Timeout = time.Duration(this.timeout) * time.Millisecond
+	rq.client.Timeout = time.Duration(rq.timeout) * time.Millisecond
 
-	httpResponse, err := this.client.Do(req)
+	httpResponse, err := rq.client.Do(req)
 
 	if err != nil {
 		return nil, err
@@ -111,32 +112,31 @@ func (this *Request) Send() (*http.Response, error) {
 
 }
 
-// 获取query参数
-func (this *Request) QueryParams() map[string][]string {
+//QueryParams 获取query参数
+func (rq *Request) QueryParams() map[string][]string {
 	params := make(map[string][]string)
-	for key, values := range this.queryParams {
+	for key, values := range rq.queryParams {
 		params[key] = values[:]
 	}
 	return params
 }
 
-// 获取完整的URL路径
-func (this *Request) UrlPath() string {
-	if len(this.queryParams) > 0 {
-		return this.URL + "?" + parseParams(this.queryParams).Encode()
-	} else {
-		return this.URL
+//URLPath 获取完整的URL路径
+func (rq *Request) URLPath() string {
+	if len(rq.queryParams) > 0 {
+		return rq.URL + "?" + parseParams(rq.queryParams).Encode()
 	}
+	return rq.URL
 }
 
-// 设置URL
-func (this *Request) SetURL(url string) {
-	this.URL = url
+//SetURL 设置URL
+func (rq *Request) SetURL(url string) {
+	rq.URL = url
 }
 
-// 设置源数据
-func (this *Request) SetRawBody(body []byte) {
-	this.body = body
+//SetRawBody 设置源数据
+func (rq *Request) SetRawBody(body []byte) {
+	rq.body = body
 }
 
 // 解析请求头
@@ -154,42 +154,42 @@ func parseHeaders(headers map[string][]string) http.Header {
 	}
 	_, hasAgent := h["User-Agent"]
 	if !hasAgent {
-		h.Add("User-Agent", "goku-requests/"+Version)
+		h.Add("User-Agent", "goku-requests/"+requestVersion)
 	}
 	return h
 }
 
 // 解析请求体
-func (this *Request) parseBody() (req *http.Request, err error) {
+func (rq *Request) parseBody() (req *http.Request, err error) {
 	var body io.Reader = nil
-	if len(this.body) > 0 {
-		body = bytes.NewBuffer(this.body)
+	if len(rq.body) > 0 {
+		body = bytes.NewBuffer(rq.body)
 
 	}
-	req, err = http.NewRequest(this.method, this.UrlPath(), body)
+	req, err = http.NewRequest(rq.method, rq.URLPath(), body)
 	return
-	//if this.method == "GET" || this.method == "TRACE" {
-	//	req, err = http.NewRequest(this.method, this.UrlPath(), nil)
+	//if rq.method == "GET" || rq.method == "TRACE" {
+	//	req, err = http.NewRequest(rq.method, rq.URLPath(), nil)
 	//}
 	//
-	//if len(this.body) > 0 {
+	//if len(rq.body) > 0 {
 	//
-	//	if this.isJSON {
-	//		if _, ok := this.headers["Content-Type"]; !ok {
-	//			this.headers["Content-Type"] = []string{"application/json"}
+	//	if rq.isJSON {
+	//		if _, ok := rq.headers["Content-Type"]; !ok {
+	//			rq.headers["Content-Type"] = []string{"application/json"}
 	//		}
-	//		req, err = http.NewRequest(this.method, this.UrlPath(),
-	//			strings.NewReader(string(this.body)))
+	//		req, err = http.NewRequest(rq.method, rq.URLPath(),
+	//			strings.NewReader(string(rq.body)))
 	//	} else {
 	//		var body *bytes.Buffer
-	//		body = bytes.NewBuffer(this.body)
+	//		body = bytes.NewBuffer(rq.body)
 	//
 	//	}
-	//} else if len(this.files) > 0 {
+	//} else if len(rq.files) > 0 {
 	//	body := new(bytes.Buffer)
 	//	writer := multipart.NewWriter(body)
 	//	var part io.Writer
-	//	for fieldname, file := range this.files {
+	//	for fieldname, file := range rq.files {
 	//		part, err = writer.CreateFormFile(fieldname, file.filename)
 	//		if err != nil {
 	//			return
@@ -199,7 +199,7 @@ func (this *Request) parseBody() (req *http.Request, err error) {
 	//			return
 	//		}
 	//	}
-	//	for fieldname, values := range this.formParams {
+	//	for fieldname, values := range rq.formParams {
 	//		temp := make(map[string][]string)
 	//		temp[fieldname] = values
 	//		value := parseParams(temp).Encode()
@@ -212,17 +212,17 @@ func (this *Request) parseBody() (req *http.Request, err error) {
 	//	if err != nil {
 	//		return
 	//	}
-	//	this.headers["Content-Type"] = []string{writer.FormDataContentType()}
-	//	req, err = http.NewRequest(this.method, this.UrlPath(), body)
+	//	rq.headers["Content-Type"] = []string{writer.FormDataContentType()}
+	//	req, err = http.NewRequest(rq.method, rq.URLPath(), body)
 	//} else {
-	//	this.headers["Content-Type"] = []string{"application/x-www-form-urlencoded"}
-	//	req, err = http.NewRequest(this.method, this.UrlPath(),
-	//		strings.NewReader(parseParams(this.formParams).Encode()))
+	//	rq.headers["Content-Type"] = []string{"application/x-www-form-urlencoded"}
+	//	req, err = http.NewRequest(rq.method, rq.URLPath(),
+	//		strings.NewReader(parseParams(rq.formParams).Encode()))
 	//}
 	//return
 }
 
-// 解析参数
+//parseParams 解析参数
 func parseParams(params map[string][]string) url.Values {
 	v := url.Values{}
 	for key, values := range params {
@@ -233,7 +233,7 @@ func parseParams(params map[string][]string) url.Values {
 	return v
 }
 
-// 解析URL
+//parseURL 解析URL
 func parseURL(urlPath string) (URL *url.URL, err error) {
 	URL, err = url.Parse(urlPath)
 	if err != nil {

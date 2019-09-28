@@ -1,4 +1,4 @@
-package console_mysql
+package consolemysql
 
 import (
 	SQL "database/sql"
@@ -12,20 +12,18 @@ import (
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
-var method []string = []string{"POST", "GET", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH"}
+var method = []string{"POST", "GET", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH"}
 
-// 导入分组信息
-func importApiGroupInfo(Tx *SQL.Tx, groupName, groupPath string, parentGroupID, projectID, groupDepth int) (bool, int, string) {
+// importAPIGroupInfo 导入分组信息
+func importAPIGroupInfo(Tx *SQL.Tx, groupName, groupPath string, parentGroupID, projectID, groupDepth int) (bool, int, string) {
 	result, err := Tx.Exec("INSERT INTO goku_gateway_api_group (projectID,groupName,parentGroupID,groupDepth) VALUES (?,?,?,?);", projectID, groupName, parentGroupID, groupDepth)
 	if err != nil {
-		// Tx.Rollback()
 		info := err.Error()
 		log.Info(info)
 		return false, 0, ""
 	}
 	groupID, err := result.LastInsertId()
 	if err != nil {
-		// Tx.Rollback()
 		info := err.Error()
 		log.Info(info)
 		return false, 0, ""
@@ -35,7 +33,6 @@ func importApiGroupInfo(Tx *SQL.Tx, groupName, groupPath string, parentGroupID, 
 	// 更新groupPath
 	_, err = Tx.Exec("UPDATE goku_gateway_api_group SET groupPath = ? WHERE groupID = ?;", groupPath, id)
 	if err != nil {
-		// Tx.Rollback()
 		info := err.Error()
 		log.Info(info)
 		return false, 0, ""
@@ -43,13 +40,13 @@ func importApiGroupInfo(Tx *SQL.Tx, groupName, groupPath string, parentGroupID, 
 	return true, id, groupPath
 }
 
-// 导入接口信息
-func importApiInfo(Tx *SQL.Tx, api entity.AmsApiInfo, projectID, groupID, userID int) bool {
+// importAPIInfo 导入接口信息
+func importAPIInfo(Tx *SQL.Tx, api entity.AmsAPIInfo, projectID, groupID, userID int) bool {
 	// 新增API
 	requestURL := ""
 	host := ""
 	protocol := "http"
-	u, err := url.ParseRequestURI(api.BaseInfo.ApiURI)
+	u, err := url.ParseRequestURI(api.BaseInfo.APIURI)
 	if err == nil {
 		requestURL = u.Path
 		if u.Scheme != "" {
@@ -59,23 +56,22 @@ func importApiInfo(Tx *SQL.Tx, api entity.AmsApiInfo, projectID, groupID, userID
 			}
 		}
 	} else {
-		requestURL = api.BaseInfo.ApiURI
+		requestURL = api.BaseInfo.APIURI
 	}
 	stripSlash := true
 	log.Debug(protocol, host, stripSlash)
 	now := time.Now().Format("2006-01-02 15:04:05")
-	requestMethod := method[api.BaseInfo.ApiRequestType]
-	_, err = Tx.Exec("INSERT INTO goku_gateway_api (projectID,groupID,apiName,requestURL,targetURL,requestMethod,targetMethod,isFollow,stripPrefix,timeout,retryCount,createTime,updateTime,managerID,lastUpdateUserID,createUserID,protocol,balanceName,stripSlash) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", projectID, groupID, api.BaseInfo.ApiName, requestURL, requestURL, requestMethod, requestMethod, "true", "true", 2000, 0, now, now, userID, userID, userID, protocol, host, stripSlash)
+	requestMethod := method[api.BaseInfo.APIRequestType]
+	_, err = Tx.Exec("INSERT INTO goku_gateway_api (projectID,groupID,apiName,requestURL,targetURL,requestMethod,targetMethod,isFollow,stripPrefix,timeout,retryCount,createTime,updateTime,managerID,lastUpdateUserID,createUserID,protocol,balanceName,stripSlash) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", projectID, groupID, api.BaseInfo.APIName, requestURL, requestURL, requestMethod, requestMethod, "true", "true", 2000, 0, now, now, userID, userID, userID, protocol, host, stripSlash)
 	if err != nil {
-		// Tx.Rollback()
-
 		log.Error(err)
 		return false
 	}
 	return true
 }
 
-func ImportApiGroupFromAms(projectID, userID int, groupInfo entity.AmsGroupInfo) (bool, string, error) {
+//ImportAPIGroupFromAms 导入接口分组
+func ImportAPIGroupFromAms(projectID, userID int, groupInfo entity.AmsGroupInfo) (bool, string, error) {
 	db := database2.GetConnection()
 	Tx, _ := db.Begin()
 	now := time.Now().Format("2006-01-02 15:04:05")
@@ -102,55 +98,55 @@ func ImportApiGroupFromAms(projectID, userID int, groupInfo entity.AmsGroupInfo)
 	}
 	// 插入子分组信息
 	for _, value := range groupInfo.ChildGroupList {
-		flag, secGroupID, secgroupPath := importApiGroupInfo(Tx, value.GroupName, groupPath, int(groupID), projectID, 2)
+		flag, secGroupID, secgroupPath := importAPIGroupInfo(Tx, value.GroupName, groupPath, int(groupID), projectID, 2)
 		if !flag {
 			continue
 		}
 		for _, v := range value.ChildGroupList {
-			flag, thirdGroupID, thirdgroupPath := importApiGroupInfo(Tx, v.GroupName, secgroupPath, secGroupID, projectID, 3)
+			flag, thirdGroupID, thirdgroupPath := importAPIGroupInfo(Tx, v.GroupName, secgroupPath, secGroupID, projectID, 3)
 			if !flag {
 				continue
 			}
 			for _, vv := range v.ChildGroupList {
-				flag, fourthGroupID, fourthgroupPath := importApiGroupInfo(Tx, vv.GroupName, thirdgroupPath, thirdGroupID, projectID, 4)
+				flag, fourthGroupID, fourthgroupPath := importAPIGroupInfo(Tx, vv.GroupName, thirdgroupPath, thirdGroupID, projectID, 4)
 				if !flag {
 					continue
 				}
 				for _, vvv := range vv.ChildGroupList {
-					flag, fifthGroupID, _ := importApiGroupInfo(Tx, vvv.GroupName, fourthgroupPath, fourthGroupID, projectID, 5)
+					flag, fifthGroupID, _ := importAPIGroupInfo(Tx, vvv.GroupName, fourthgroupPath, fourthGroupID, projectID, 5)
 					if !flag {
 						continue
 					}
-					for _, aaa := range vvv.ApiList {
-						flag = importApiInfo(Tx, aaa, projectID, fifthGroupID, userID)
+					for _, aaa := range vvv.APIList {
+						flag = importAPIInfo(Tx, aaa, projectID, fifthGroupID, userID)
 						if !flag {
 							continue
 						}
 					}
 				}
-				for _, aa := range vv.ApiList {
-					flag = importApiInfo(Tx, aa, projectID, fourthGroupID, userID)
+				for _, aa := range vv.APIList {
+					flag = importAPIInfo(Tx, aa, projectID, fourthGroupID, userID)
 					if !flag {
 						continue
 					}
 				}
 			}
-			for _, a := range v.ApiList {
-				flag = importApiInfo(Tx, a, projectID, thirdGroupID, userID)
+			for _, a := range v.APIList {
+				flag = importAPIInfo(Tx, a, projectID, thirdGroupID, userID)
 				if !flag {
 					continue
 				}
 			}
 		}
-		for _, api := range value.ApiList {
-			flag := importApiInfo(Tx, api, projectID, secGroupID, userID)
+		for _, api := range value.APIList {
+			flag := importAPIInfo(Tx, api, projectID, secGroupID, userID)
 			if !flag {
 				continue
 			}
 		}
 	}
-	for _, apiInfo := range groupInfo.ApiList {
-		flag := importApiInfo(Tx, apiInfo, projectID, int(groupID), userID)
+	for _, apiInfo := range groupInfo.APIList {
+		flag := importAPIInfo(Tx, apiInfo, projectID, int(groupID), userID)
 		if !flag {
 			continue
 		}
@@ -165,7 +161,7 @@ func ImportApiGroupFromAms(projectID, userID int, groupInfo entity.AmsGroupInfo)
 	return true, "", nil
 }
 
-// 导入项目
+// ImportProjectFromAms 导入项目
 func ImportProjectFromAms(userID int, projectInfo entity.AmsProject) (bool, string, error) {
 	db := database2.GetConnection()
 	Tx, _ := db.Begin()
@@ -182,7 +178,7 @@ func ImportProjectFromAms(userID int, projectInfo entity.AmsProject) (bool, stri
 		log.Info(err.Error())
 	}
 	id := int(projectID)
-	for _, groupInfo := range projectInfo.ApiGroupList {
+	for _, groupInfo := range projectInfo.APIGroupList {
 		// 插入分组信息
 		result, err := Tx.Exec("INSERT INTO goku_gateway_api_group (projectID,groupName,groupDepth) VALUES (?,?,1);", projectID, groupInfo.GroupName)
 		if err != nil {
@@ -204,56 +200,56 @@ func ImportProjectFromAms(userID int, projectInfo entity.AmsProject) (bool, stri
 		}
 
 		// 插入子分组信息
-		for _, value := range groupInfo.ApiGroupChildList {
-			flag, secGroupID, secgroupPath := importApiGroupInfo(Tx, value.GroupName, groupPath, int(groupID), id, 2)
+		for _, value := range groupInfo.APIGroupChildList {
+			flag, secGroupID, secgroupPath := importAPIGroupInfo(Tx, value.GroupName, groupPath, int(groupID), id, 2)
 			if !flag {
 				continue
 			}
-			for _, v := range value.ApiGroupChildList {
-				flag, thirdGroupID, thirdgroupPath := importApiGroupInfo(Tx, v.GroupName, secgroupPath, secGroupID, id, 3)
+			for _, v := range value.APIGroupChildList {
+				flag, thirdGroupID, thirdgroupPath := importAPIGroupInfo(Tx, v.GroupName, secgroupPath, secGroupID, id, 3)
 				if !flag {
 					continue
 				}
-				for _, vv := range v.ApiGroupChildList {
-					flag, fourthGroupID, fourthgroupPath := importApiGroupInfo(Tx, vv.GroupName, thirdgroupPath, thirdGroupID, id, 4)
+				for _, vv := range v.APIGroupChildList {
+					flag, fourthGroupID, fourthgroupPath := importAPIGroupInfo(Tx, vv.GroupName, thirdgroupPath, thirdGroupID, id, 4)
 					if !flag {
 						continue
 					}
-					for _, vvv := range vv.ApiGroupChildList {
-						flag, fifthGroupID, _ := importApiGroupInfo(Tx, vvv.GroupName, fourthgroupPath, fourthGroupID, id, 5)
+					for _, vvv := range vv.APIGroupChildList {
+						flag, fifthGroupID, _ := importAPIGroupInfo(Tx, vvv.GroupName, fourthgroupPath, fourthGroupID, id, 5)
 						if !flag {
 							continue
 						}
-						for _, aaa := range v.ApiList {
-							flag = importApiInfo(Tx, aaa, id, fifthGroupID, userID)
+						for _, aaa := range v.APIList {
+							flag = importAPIInfo(Tx, aaa, id, fifthGroupID, userID)
 							if !flag {
 								continue
 							}
 						}
 					}
-					for _, aa := range v.ApiList {
-						flag = importApiInfo(Tx, aa, id, fourthGroupID, userID)
+					for _, aa := range v.APIList {
+						flag = importAPIInfo(Tx, aa, id, fourthGroupID, userID)
 						if !flag {
 							continue
 						}
 					}
 				}
-				for _, a := range v.ApiList {
-					flag = importApiInfo(Tx, a, id, thirdGroupID, userID)
+				for _, a := range v.APIList {
+					flag = importAPIInfo(Tx, a, id, thirdGroupID, userID)
 					if !flag {
 						continue
 					}
 				}
 			}
-			for _, api := range value.ApiList {
-				flag = importApiInfo(Tx, api, id, secGroupID, userID)
+			for _, api := range value.APIList {
+				flag = importAPIInfo(Tx, api, id, secGroupID, userID)
 				if !flag {
 					continue
 				}
 			}
 		}
-		for _, apiInfo := range groupInfo.ApiList {
-			flag := importApiInfo(Tx, apiInfo, id, int(groupID), userID)
+		for _, apiInfo := range groupInfo.APIList {
+			flag := importAPIInfo(Tx, apiInfo, id, int(groupID), userID)
 			if !flag {
 				continue
 			}
@@ -263,7 +259,8 @@ func ImportProjectFromAms(userID int, projectInfo entity.AmsProject) (bool, stri
 	return true, "", nil
 }
 
-func ImportApiFromAms(projectID, groupID, userID int, apiList []entity.AmsApiInfo) (bool, string, error) {
+//ImportAPIFromAms 导入接口
+func ImportAPIFromAms(projectID, groupID, userID int, apiList []entity.AmsAPIInfo) (bool, string, error) {
 	db := database2.GetConnection()
 	Tx, _ := db.Begin()
 	now := time.Now().Format("2006-01-02 15:04:05")
@@ -271,18 +268,18 @@ func ImportApiFromAms(projectID, groupID, userID int, apiList []entity.AmsApiInf
 		// 新增API
 		requestURL := ""
 		host := ""
-		u, err := url.ParseRequestURI(apiInfo.BaseInfo.ApiURI)
+		u, err := url.ParseRequestURI(apiInfo.BaseInfo.APIURI)
 		if err == nil {
 			requestURL = u.Path
 			if u.Scheme != "" && u.Host != "" {
 				host = u.Scheme + "://" + u.Host
 			}
 		} else {
-			requestURL = apiInfo.BaseInfo.ApiURI
+			requestURL = apiInfo.BaseInfo.APIURI
 		}
 		now = time.Now().Format("2006-01-02 15:04:05")
-		requestMethod := method[apiInfo.BaseInfo.ApiRequestType]
-		_, err = Tx.Exec("INSERT INTO goku_gateway_api (projectID,groupID,apiName,requestURL,targetURL,requestMethod,targetServer,targetMethod,isFollow,stripPrefix,timeout,retryCount,createTime,updateTime,managerID,lastUpdateUserID,createUserID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", projectID, groupID, apiInfo.BaseInfo.ApiName, requestURL, requestURL, requestMethod, host, requestMethod, "true", "true", 2000, 0, now, now, userID, userID, userID)
+		requestMethod := method[apiInfo.BaseInfo.APIRequestType]
+		_, err = Tx.Exec("INSERT INTO goku_gateway_api (projectID,groupID,apiName,requestURL,targetURL,requestMethod,targetServer,targetMethod,isFollow,stripPrefix,timeout,retryCount,createTime,updateTime,managerID,lastUpdateUserID,createUserID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", projectID, groupID, apiInfo.BaseInfo.APIName, requestURL, requestURL, requestMethod, host, requestMethod, "true", "true", 2000, 0, now, now, userID, userID, userID)
 		if err != nil {
 			Tx.Rollback()
 			log.Info(err.Error())

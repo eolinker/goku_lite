@@ -1,4 +1,4 @@
-package console_mysql
+package consolemysql
 
 import (
 	SQL "database/sql"
@@ -9,8 +9,8 @@ import (
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 )
 
-// 新建接口分组
-func AddApiGroup(groupName string, projectID, parentGroupID int) (bool, interface{}, error) {
+// AddAPIGroup 新建接口分组
+func AddAPIGroup(groupName string, projectID, parentGroupID int) (bool, interface{}, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
@@ -48,8 +48,8 @@ func AddApiGroup(groupName string, projectID, parentGroupID int) (bool, interfac
 	if groupPath == "" {
 		groupPath = strconv.Itoa(int(groupID))
 	} else {
-		groupDepth += 1
-		groupPath += "," + strconv.Itoa(int(groupID))
+		groupDepth = groupDepth + 1
+		groupPath = groupPath + "," + strconv.Itoa(int(groupID))
 	}
 
 	// 更新groupDepth和groupPath
@@ -69,8 +69,8 @@ func AddApiGroup(groupName string, projectID, parentGroupID int) (bool, interfac
 	return true, groupID, nil
 }
 
-// 修改接口分组
-func EditApiGroup(groupName string, groupID, projectID int) (bool, string, error) {
+// EditAPIGroup 修改接口分组
+func EditAPIGroup(groupName string, groupID, projectID int) (bool, string, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
@@ -90,8 +90,8 @@ func EditApiGroup(groupName string, groupID, projectID int) (bool, string, error
 	return true, "", nil
 }
 
-// 删除接口分组
-func DeleteApiGroup(projectID, groupID int) (bool, string, error) {
+// DeleteAPIGroup 删除接口分组
+func DeleteAPIGroup(projectID, groupID int) (bool, string, error) {
 	db := database2.GetConnection()
 	Tx, _ := db.Begin()
 	var groupPath string
@@ -115,7 +115,7 @@ func DeleteApiGroup(projectID, groupID int) (bool, string, error) {
 		Tx.Rollback()
 		return false, "[ERROR]Fail to delete data!", err
 	}
-	flag, apiList, _ := GetApiListByGroupList(projectID, concatGroupID)
+	flag, apiList, _ := GetAPIListByGroupList(projectID, concatGroupID)
 	if flag {
 		listLen := len(apiList)
 		if listLen > 0 {
@@ -172,8 +172,8 @@ func DeleteApiGroup(projectID, groupID int) (bool, string, error) {
 	return true, "", nil
 }
 
-// 获取接口分组列表
-func GetApiGroupList(projectID int) (bool, []map[string]interface{}, error) {
+// GetAPIGroupList 获取接口分组列表
+func GetAPIGroupList(projectID int) (bool, []map[string]interface{}, error) {
 	db := database2.GetConnection()
 	sql := "SELECT groupID,groupName,parentGroupID,groupDepth FROM goku_gateway_api_group WHERE projectID = ?;"
 	rows, err := db.Query(sql, projectID)
@@ -186,29 +186,28 @@ func GetApiGroupList(projectID int) (bool, []map[string]interface{}, error) {
 		info := err.Error()
 		log.Info(info)
 		return false, make([]map[string]interface{}, 0), err
-	} else {
-		groupList := make([]map[string]interface{}, 0)
-		for rows.Next() {
-			var groupID, parentGroupID, groupDepth int
-			var groupName string
-			err = rows.Scan(&groupID, &groupName, &parentGroupID, &groupDepth)
-			if err != nil {
-				return false, make([]map[string]interface{}, 0), err
-			}
-			groupInfo := map[string]interface{}{
-				"groupID":       groupID,
-				"groupName":     groupName,
-				"groupDepth":    groupDepth,
-				"parentGroupID": parentGroupID,
-			}
-			groupList = append(groupList, groupInfo)
-		}
-		return true, groupList, nil
 	}
+	groupList := make([]map[string]interface{}, 0)
+	for rows.Next() {
+		var groupID, parentGroupID, groupDepth int
+		var groupName string
+		err = rows.Scan(&groupID, &groupName, &parentGroupID, &groupDepth)
+		if err != nil {
+			return false, make([]map[string]interface{}, 0), err
+		}
+		groupInfo := map[string]interface{}{
+			"groupID":       groupID,
+			"groupName":     groupName,
+			"groupDepth":    groupDepth,
+			"parentGroupID": parentGroupID,
+		}
+		groupList = append(groupList, groupInfo)
+	}
+	return true, groupList, nil
 }
 
-// 更新接口分组脚本
-func UpdateApiGroupScript() bool {
+// UpdateAPIGroupScript 更新接口分组脚本
+func UpdateAPIGroupScript() bool {
 	db := database2.GetConnection()
 	// 获取一级分组
 	sql := "SELECT groupID,groupName,parentGroupID FROM goku_gateway_api_group WHERE isChild = ?;"
@@ -220,86 +219,78 @@ func UpdateApiGroupScript() bool {
 	//获取记录列
 	if _, err = rows.Columns(); err != nil {
 		return false
-	} else {
-		groupList := make([]map[string]interface{}, 0)
-		for rows.Next() {
-			var groupID, parentGroupID int
-			var groupName, groupPath string
-			err = rows.Scan(&groupID, &groupName, &parentGroupID)
-			if err != nil {
-				return false
-			}
-			sql = "SELECT groupID,groupName,parentGroupID FROM goku_gateway_api_group WHERE isChild = ? AND parentGroupID = ?;"
-			r, err := db.Query(sql, 1, groupID)
-			if err != nil {
-				return false
-			}
-			groupPath = strconv.Itoa(groupID)
-			defer r.Close()
-			if _, err = r.Columns(); err != nil {
-				return false
-			} else {
-				for r.Next() {
-					var childGroupID, childParentGroupID int
-					var childGroupName, childGroupPath string
-					err = r.Scan(&childGroupID, &childGroupName, &childParentGroupID)
-					if err != nil {
-						return false
-					}
-					childGroupPath = groupPath + "," + strconv.Itoa(childGroupID)
-					sql = "SELECT groupID,groupName,parentGroupID FROM goku_gateway_api_group WHERE isChild = ? AND parentGroupID = ?;"
-					rw, err := db.Query(sql, 2, childGroupID)
-					if err != nil {
-						return false
-					}
-					defer rw.Close()
-					if _, err = rw.Columns(); err != nil {
-						return false
-					} else {
-						for rw.Next() {
-							var secChildGroupID, secChildParentGroupID int
-							var secChildGroupName, secChildGroupPath string
-							err = rw.Scan(&secChildGroupID, &secChildGroupName, &secChildParentGroupID)
-							if err != nil {
-								return false
-							}
-							secChildGroupPath = childGroupPath + "," + strconv.Itoa(secChildGroupID)
-							groupList = append(groupList, map[string]interface{}{
-								"groupID":       secChildGroupID,
-								"groupName":     secChildGroupName,
-								"groupDepth":    3,
-								"parentGroupID": secChildParentGroupID,
-								"groupPath":     secChildGroupPath,
-							})
-						}
-					}
-					groupList = append(groupList, map[string]interface{}{
-						"groupID":       childGroupID,
-						"groupName":     childGroupName,
-						"groupDepth":    2,
-						"parentGroupID": childParentGroupID,
-						"groupPath":     childGroupPath,
-					})
-				}
-			}
-			groupInfo := map[string]interface{}{
-				"groupID":       groupID,
-				"groupName":     groupName,
-				"groupDepth":    1,
-				"parentGroupID": parentGroupID,
-				"groupPath":     groupPath,
-			}
-			groupList = append(groupList, groupInfo)
-		}
-		Tx, _ := db.Begin()
-		for _, groupInfo := range groupList {
-			_, err = Tx.Exec("UPDATE goku_gateway_api_group SET groupPath = ?,groupDepth =? WHERE groupID = ?;", groupInfo["groupPath"].(string), groupInfo["groupDepth"].(int), groupInfo["groupID"].(int))
-			if err != nil {
-				Tx.Rollback()
-
-			}
-		}
-		Tx.Commit()
-		return true
 	}
+	groupList := make([]map[string]interface{}, 0)
+	for rows.Next() {
+		var groupID, parentGroupID int
+		var groupName, groupPath string
+		err = rows.Scan(&groupID, &groupName, &parentGroupID)
+		if err != nil {
+			return false
+		}
+		sql = "SELECT groupID,groupName,parentGroupID FROM goku_gateway_api_group WHERE isChild = ? AND parentGroupID = ?;"
+		r, err := db.Query(sql, 1, groupID)
+		if err != nil {
+			return false
+		}
+		groupPath = strconv.Itoa(groupID)
+		defer r.Close()
+
+		for r.Next() {
+			var childGroupID, childParentGroupID int
+			var childGroupName, childGroupPath string
+			err = r.Scan(&childGroupID, &childGroupName, &childParentGroupID)
+			if err != nil {
+				return false
+			}
+			childGroupPath = groupPath + "," + strconv.Itoa(childGroupID)
+			sql = "SELECT groupID,groupName,parentGroupID FROM goku_gateway_api_group WHERE isChild = ? AND parentGroupID = ?;"
+			rw, err := db.Query(sql, 2, childGroupID)
+			if err != nil {
+				return false
+			}
+			defer rw.Close()
+			for rw.Next() {
+				var secChildGroupID, secChildParentGroupID int
+				var secChildGroupName, secChildGroupPath string
+				err = rw.Scan(&secChildGroupID, &secChildGroupName, &secChildParentGroupID)
+				if err != nil {
+					return false
+				}
+				secChildGroupPath = childGroupPath + "," + strconv.Itoa(secChildGroupID)
+				groupList = append(groupList, map[string]interface{}{
+					"groupID":       secChildGroupID,
+					"groupName":     secChildGroupName,
+					"groupDepth":    3,
+					"parentGroupID": secChildParentGroupID,
+					"groupPath":     secChildGroupPath,
+				})
+			}
+			groupList = append(groupList, map[string]interface{}{
+				"groupID":       childGroupID,
+				"groupName":     childGroupName,
+				"groupDepth":    2,
+				"parentGroupID": childParentGroupID,
+				"groupPath":     childGroupPath,
+			})
+		}
+		groupInfo := map[string]interface{}{
+			"groupID":       groupID,
+			"groupName":     groupName,
+			"groupDepth":    1,
+			"parentGroupID": parentGroupID,
+			"groupPath":     groupPath,
+		}
+		groupList = append(groupList, groupInfo)
+	}
+	Tx, _ := db.Begin()
+	for _, groupInfo := range groupList {
+		_, err = Tx.Exec("UPDATE goku_gateway_api_group SET groupPath = ?,groupDepth =? WHERE groupID = ?;", groupInfo["groupPath"].(string), groupInfo["groupDepth"].(int), groupInfo["groupID"].(int))
+		if err != nil {
+			Tx.Rollback()
+
+		}
+	}
+	Tx.Commit()
+	return true
 }

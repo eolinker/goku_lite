@@ -20,6 +20,7 @@ func init() {
 	currentAlertBody = string(body)
 }
 
+//SendAlertMail 发送告警邮件
 func SendAlertMail(sender, senderPassword, smtpAddress, smtpPort, smtpProtocol, receiverMail, requestURL, alertLogPath, alertPeriod, alertCount, apiName, apiID, targetServer, proxyURL string) (bool, error) {
 	alertTime := time.Now().Format("2006-01-02 15:04:05")
 

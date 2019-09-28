@@ -1,4 +1,4 @@
-package console_mysql
+package consolemysql
 
 import (
 	SQL "database/sql"
@@ -14,7 +14,7 @@ import (
 
 var strategyPlugins = []string{"goku-oauth2_auth", "goku-rate_limiting", "goku-replay_attack_defender"}
 
-// 新增策略组插件
+//AddPluginToStrategy 新增策略组插件
 func AddPluginToStrategy(pluginName, config, strategyID string) (bool, interface{}, error) {
 	db := database2.GetConnection()
 	// 查询接口是否添加该插件
@@ -47,7 +47,7 @@ func AddPluginToStrategy(pluginName, config, strategyID string) (bool, interface
 	return true, connID, nil
 }
 
-// 新增策略组插件配置
+//EditStrategyPluginConfig 新增策略组插件配置
 func EditStrategyPluginConfig(pluginName, config, strategyID string) (bool, string, error) {
 	db := database2.GetConnection()
 	// 查询策略组是否添加该插件
@@ -125,7 +125,7 @@ func GetStrategyPluginList(strategyID, keyword string, condition int) (bool, []m
 	return true, pluginList, nil
 }
 
-// 通过策略组ID获取配置信息
+//GetStrategyPluginConfig 通过策略组ID获取配置信息
 func GetStrategyPluginConfig(strategyID, pluginName string) (bool, string, error) {
 	db := database2.GetConnection()
 	sql := "SELECT pluginConfig FROM goku_conn_plugin_strategy WHERE strategyID = ? AND pluginName = ?;"
@@ -134,16 +134,13 @@ func GetStrategyPluginConfig(strategyID, pluginName string) (bool, string, error
 	if err != nil {
 		if err == SQL.ErrNoRows {
 			return false, "", errors.New("[ERROR]Can not find the plugin")
-		} else {
-			return false, "", err
 		}
-
-	} else {
-		return true, p, nil
+		return false, "", err
 	}
+	return true, p, nil
 }
 
-// 检查策略组是否绑定插件
+//CheckPluginIsExistInStrategy 检查策略组是否绑定插件
 func CheckPluginIsExistInStrategy(strategyID, pluginName string) (bool, error) {
 	db := database2.GetConnection()
 	sql := "SELECT strategyID FROM goku_conn_plugin_strategy WHERE strategyID = ? AND pluginName = ?;"
@@ -151,12 +148,11 @@ func CheckPluginIsExistInStrategy(strategyID, pluginName string) (bool, error) {
 	err := db.QueryRow(sql, strategyID, pluginName).Scan(&id)
 	if err != nil {
 		return false, err
-	} else {
-		return true, err
 	}
+	return true, err
 }
 
-// 检查策略组插件是否开启
+//GetStrategyPluginStatus 检查策略组插件是否开启
 func GetStrategyPluginStatus(strategyID, pluginName string) (bool, error) {
 	db := database2.GetConnection()
 	sql := "SELECT pluginStatus FROM goku_conn_plugin_strategy WHERE strategyID = ? AND pluginName = ?;"
@@ -164,15 +160,14 @@ func GetStrategyPluginStatus(strategyID, pluginName string) (bool, error) {
 	err := db.QueryRow(sql, strategyID, pluginName).Scan(&pluginStatus)
 	if err != nil {
 		return false, err
-	} else {
-		if pluginStatus != 1 {
-			return false, nil
-		}
-		return true, nil
 	}
+	if pluginStatus != 1 {
+		return false, nil
+	}
+	return true, nil
 }
 
-// 获取Connid
+// GetConnIDFromStrategyPlugin 获取ConnID
 func GetConnIDFromStrategyPlugin(pluginName, strategyID string) (bool, int, error) {
 	db := database2.GetConnection()
 	sql := "SELECT connID FROM goku_conn_plugin_strategy WHERE strategyID = ? AND pluginName = ?;"
@@ -180,12 +175,11 @@ func GetConnIDFromStrategyPlugin(pluginName, strategyID string) (bool, int, erro
 	err := db.QueryRow(sql, strategyID, pluginName).Scan(&connID)
 	if err != nil {
 		return false, 0, err
-	} else {
-		return true, connID, nil
 	}
+	return true, connID, nil
 }
 
-// 批量修改策略组插件状态
+//BatchEditStrategyPluginStatus 批量修改策略组插件状态
 func BatchEditStrategyPluginStatus(connIDList, strategyID string, pluginStatus int) (bool, string, error) {
 	db := database2.GetConnection()
 	t := time.Now()
@@ -209,7 +203,7 @@ func BatchEditStrategyPluginStatus(connIDList, strategyID string, pluginStatus i
 	return true, "", nil
 }
 
-// 批量删除策略组插件
+//BatchDeleteStrategyPlugin 批量删除策略组插件
 func BatchDeleteStrategyPlugin(connIDList, strategyID string) (bool, string, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
@@ -231,7 +225,7 @@ func BatchDeleteStrategyPlugin(connIDList, strategyID string) (bool, string, err
 	return true, "", nil
 }
 
-// 通过connIDList判断插件是否存在
+//CheckStrategyPluginIsExistByConnIDList 通过connIDList判断插件是否存在
 func CheckStrategyPluginIsExistByConnIDList(connIDList, pluginName string) (bool, error) {
 	db := database2.GetConnection()
 	sql := "SELECT pluginStatus FROM goku_conn_plugin_strategy WHERE connID IN (" + connIDList + ") AND pluginName = ?;"
@@ -239,11 +233,11 @@ func CheckStrategyPluginIsExistByConnIDList(connIDList, pluginName string) (bool
 	err := db.QueryRow(sql, pluginName).Scan(&pluginStatus)
 	if err != nil {
 		return false, err
-	} else {
-		return true, nil
 	}
+	return true, nil
 }
 
+//UpdateStrategyTagByPluginName 更新策略插件标志位
 func UpdateStrategyTagByPluginName(strategyID string, pluginNameList string) error {
 	db := database2.GetConnection()
 	plugins := strings.Split(pluginNameList, ",")
@@ -264,6 +258,7 @@ func UpdateStrategyTagByPluginName(strategyID string, pluginNameList string) err
 	return nil
 }
 
+//BatchUpdateStrategyPluginUpdateTag 批量更新策略插件更新标志位
 func BatchUpdateStrategyPluginUpdateTag(strategyIDList string) error {
 	db := database2.GetConnection()
 	strategyIDs := strings.Split(strategyIDList, ",")
@@ -290,19 +285,12 @@ func BatchUpdateStrategyPluginUpdateTag(strategyIDList string) error {
 	return nil
 }
 
+//UpdateAllStrategyPluginUpdateTag 更新策略插件更新标志位
 func UpdateAllStrategyPluginUpdateTag() error {
 	db := database2.GetConnection()
-	// code := make([]string, 0, len(strategyPlugins))
 	updateTag := time.Now().Format("20060102150405")
-	// s := make([]interface{}, 0, len(strategyPlugins)+1)
-	// s = append(s, updateTag)
-	// for i := 0; i < len(strategyPlugins); i++ {
-	// 	code = append(code, "?")
-	// 	s = append(s, strategyPlugins[i])
-	// }
-	// sql := "UPDATE goku_conn_plugin_strategy SET updateTag = ? WHERE pluginName IN (" + strings.Join(code, ",") + ");"
+
 	sql := "UPDATE goku_conn_plugin_strategy SET updateTag = ?;"
-	// _, err := db.Exec(sql, s...)
 	_, err := db.Exec(sql, updateTag)
 	if err != nil {
 		return err

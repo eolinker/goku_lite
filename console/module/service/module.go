@@ -10,6 +10,7 @@ import (
 
 const _TableName = "goku_service_config"
 
+//Add add
 func Add(param *AddParam) error {
 
 	err := dao_service.Add(param.Name, param.Driver, param.Desc, param.Config, param.ClusterConfig, false, param.HealthCheck, param.HealthCheckPath, param.HealthCheckCode, param.HealthCheckPeriod, param.HealthCheckTimeOut)
@@ -20,6 +21,7 @@ func Add(param *AddParam) error {
 	return err
 }
 
+//Save save
 func Save(param *AddParam) error {
 
 	v, e := dao_service.Get(param.Name)
@@ -37,6 +39,8 @@ func Save(param *AddParam) error {
 	}
 	return err
 }
+
+//Get get
 func Get(name string) (*Info, error) {
 	v, err := dao_service.Get(name)
 	if err != nil {
@@ -54,6 +58,7 @@ func Get(name string) (*Info, error) {
 	}, nil
 }
 
+//Delete delete
 func Delete(names []string) error {
 
 	for _, n := range names {
@@ -65,6 +70,7 @@ func Delete(names []string) error {
 	return dao_service.Delete(names)
 }
 
+//SetDefaut 设置默认值
 func SetDefaut(name string) error {
 	return dao_service.SetDefault(name)
 }
@@ -91,6 +97,8 @@ func tran(v *entity.Service) *Service {
 	}
 	return s
 }
+
+//List 获取列表
 func List(keyword string) ([]*Service, error) {
 	vs, e := dao_service.List(keyword)
 	if e != nil {
@@ -106,6 +114,7 @@ func List(keyword string) ([]*Service, error) {
 	return list, nil
 }
 
+//SimpleList 获取简易列表
 func SimpleList() ([]*Simple, string, error) {
 	vs, e := dao_service.List("")
 	if e != nil {

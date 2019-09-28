@@ -1,4 +1,4 @@
-package dao_balance
+package daobalance
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+//Get 获取负载信息
 func Get(name string) (*entity.Balance, error) {
 	const sql = "SELECT A.`balanceName`,A.`serviceName`,IFNULL(B.`driver`,''),A.`appName`,IFNULL(A.`static`,''),IFNULL(A.`staticCluster`,''),A.`balanceDesc`,A.`updateTime`,A.`createTime` FROM `goku_balance` A LEFT JOIN `goku_service_config` B ON A.`serviceName` = B.`NAME` WHERE A.`balanceName`= ?;"
 	db := database.GetConnection()
@@ -19,6 +20,7 @@ func Get(name string) (*entity.Balance, error) {
 	return v.Type(), nil
 }
 
+//GetAll 获取负载列表
 func GetAll() ([]*entity.Balance, error) {
 	const sql = "SELECT A.`balanceName`,A.`serviceName`,IFNULL(B.`driver`,''),A.`appName`,IFNULL(A.`static`,''),IFNULL(A.`staticCluster`,''),A.`balanceDesc`,A.`updateTime`,A.`createTime` FROM `goku_balance` A LEFT JOIN `goku_service_config` B ON A.`serviceName` = B.`name` ORDER BY `updateTime` DESC;"
 	db := database.GetConnection()
@@ -40,6 +42,7 @@ func GetAll() ([]*entity.Balance, error) {
 	return r, nil
 }
 
+//Search 查询
 func Search(keyword string) ([]*entity.Balance, error) {
 	const sqlTpl = "SELECT A.`balanceName`,A.`serviceName`,IFNULL(B.`driver`,''),A.`appName`,IFNULL(A.`static`,''),IFNULL(A.`staticCluster`,''),A.`balanceDesc`,A.`updateTime`,A.`createTime` FROM `goku_balance` A LEFT JOIN `goku_service_config` B ON A.`serviceName` = B.`name` %s ORDER BY `updateTime` DESC;"
 

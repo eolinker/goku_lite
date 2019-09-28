@@ -1,1 +1,1 @@
-package goku_log
+package gokulog

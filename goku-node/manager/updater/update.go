@@ -22,6 +22,7 @@ var (
 	handlerExecs = make([]*updateHandlerExec, 0)
 )
 
+//UpdateHandleFunc update handle func
 type UpdateHandleFunc func()
 
 func init() {
@@ -41,6 +42,7 @@ func updatePeriod(period int) {
 	periodCh <- period
 }
 
+//Add add
 func Add(handler UpdateHandleFunc, priority int, tables ...string) {
 	sort.Strings(tables)
 	key := strings.Join(tables, ":")
@@ -64,10 +66,12 @@ func Add(handler UpdateHandleFunc, priority int, tables ...string) {
 	handlers[key] = hfs
 }
 
+//Update update
 func Update() {
 	ch <- true
 }
 
+//InitUpdate init update
 func InitUpdate() {
 	locker.Lock()
 	defer locker.Unlock()
@@ -130,8 +134,9 @@ func updates() {
 	}
 }
 
+//CheckUpdate check update
 func CheckUpdate(last time.Time, tables ...string) (bool, time.Time) {
-	t, err := dao.GetLastUpdateOfApi(tables...)
+	t, err := dao.GetLastUpdateOfAPI(tables...)
 	if err != nil {
 		return false, last
 	}

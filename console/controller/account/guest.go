@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-// 用户登录
+//Login 用户登录
 func Login(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	//resultInfo := entity2.ResultInfo{}

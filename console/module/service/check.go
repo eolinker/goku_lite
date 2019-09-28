@@ -22,6 +22,8 @@ func init() {
 func f(r rune) bool {
 	return !nameLetters[r]
 }
+
+//ValidateName 判断名称是否合法
 func ValidateName(name string) bool {
 	if name == "" {
 		return false

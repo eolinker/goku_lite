@@ -2,7 +2,7 @@ package common
 
 import "net/url"
 
-// 转发内容
+//Request 转发内容
 type Request struct {
 	*Header
 	*CookiesHandler
@@ -13,22 +13,32 @@ type Request struct {
 	Method       string
 }
 
+//TargetURL 转发URL
 func (r *Request) TargetURL() string {
 	return r.targetURL
 }
+
+//SetTargetURL 设置转发URL
 func (r *Request) SetTargetURL(targetURL string) {
 	r.targetURL = targetURL
 }
+
+//TargetServer 获取转发服务器地址
 func (r *Request) TargetServer() string {
 	return r.targetServer
 }
+
+//SetTargetServer 设置转发服务器地址
 func (r *Request) SetTargetServer(targetServer string) {
 	r.targetServer = targetServer
 }
+
+//Querys 获取query参数
 func (r *Request) Querys() url.Values {
 	return r.querys
 }
 
+//NewRequest 新请求
 func NewRequest(r *RequestReader) *Request {
 	if r == nil {
 		return nil

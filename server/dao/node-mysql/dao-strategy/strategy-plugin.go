@@ -1,14 +1,13 @@
-package dao_strategy
+package daostrategy
 
 import (
 	"github.com/eolinker/goku-api-gateway/common/database"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
 
-// 获取策略组插件列表
+// GetAllStrategyPluginList 获取策略组插件列表
 func GetAllStrategyPluginList() ([]*entity.StrategyPluginItem, error) {
 
-	//sql := "SELECT  A.`strategyID`,A.`pluginName`,A.`pluginConfig` FROM `goku_conn_plugin_strategy` A INNER JOIN `goku_gateway_strategy` S ON S.`enableStatus` =1  AND A.`strategyID` = S.`strategyID` INNER JOIN `goku_plugin` P ON P.`isCheck` = TRUE AND P.`pluginStatus` = 1 AND A.`pluginName` = P.`pluginName` WHERE A.`pluginStatus` = 1;"
 	sql := "SELECT  A.`strategyID`,A.`pluginName`,A.`pluginConfig`,IFNULL(A.`updateTag`,'') FROM `goku_conn_plugin_strategy` A INNER JOIN `goku_gateway_strategy` S ON  A.`strategyID` = S.`strategyID` INNER JOIN `goku_plugin` P ON P.`isCheck` = TRUE AND P.`pluginStatus` = 1 AND A.`pluginName` = P.`pluginName` WHERE A.`pluginStatus` = 1;"
 
 	stmt, e := database.GetConnection().Prepare(sql)
