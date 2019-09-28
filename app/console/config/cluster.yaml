@@ -1,34 +1,17 @@
 cluster:
   -
-    name: "GZ"
-    title: "广州机房"
-    note: "广州机房"
+    name: "Default"
+    title: "默认机房"
+    note: "默认机房"
     db:
       driver: "mysql"
-      host: "47.106.231.246"
-      port: 30006
+      host: "127.0.0.1"
+      port: 3306
       userName: "root"
-      password: "Key123qaz:mysql"
-      database: "goku-ee-tmp"
+      password: "123456"
+      database: "goku_ee"
     redis:
       mode: "stand"
-      addrs: "47.95.203.198:6379"
-      password: "Key123qazredis"
-      dbIndex: 0
-  #      masters: xxx,xxx
-  -
-    name: "BJ"
-    title: "北京机房"
-    note: "北京机房"
-    db:
-      driver: "mysql"
-      host: "47.106.231.246"
-      port: 30006
-      userName: "root"
-      password: "Key123qaz:mysql"
-      database: "goku-ee-tmp"
-    redis:
-      mode: "stand"
-      addrs: "47.95.203.198:6379"
-      password: "Key123qazredis"
+      addrs: "127.0.0.1:6379"    # stand、cluster模式下addrs为redis地址，多个地址间用英文逗号隔开
+      password: "123456"
       dbIndex: 0
