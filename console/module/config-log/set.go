@@ -1,4 +1,4 @@
-package config_log
+package configlog
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 	entity "github.com/eolinker/goku-api-gateway/server/entity/config-log"
 )
 
+//Set set
 func Set(name string, param *Param) error {
 	if _, has := logNames[name]; !has {
 		return fmt.Errorf("not has that log config of %s", name)

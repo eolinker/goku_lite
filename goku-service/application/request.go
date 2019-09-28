@@ -121,7 +121,7 @@ func (this *Request) QueryParams() map[string][]string {
 }
 
 // 获取完整的URL路径
-func (this *Request) UrlPath() string {
+func (this *Request) URLPath() string {
 	if len(this.queryParams) > 0 {
 		return this.URL + "?" + parseParams(this.queryParams).Encode()
 	} else {
@@ -166,10 +166,10 @@ func (this *Request) parseBody() (req *http.Request, err error) {
 		body = bytes.NewBuffer(this.body)
 
 	}
-	req, err = http.NewRequest(this.method, this.UrlPath(), body)
+	req, err = http.NewRequest(this.method, this.URLPath(), body)
 	return
 	//if this.method == "GET" || this.method == "TRACE" {
-	//	req, err = http.NewRequest(this.method, this.UrlPath(), nil)
+	//	req, err = http.NewRequest(this.method, this.URLPath(), nil)
 	//}
 	//
 	//if len(this.body) > 0 {
@@ -178,7 +178,7 @@ func (this *Request) parseBody() (req *http.Request, err error) {
 	//		if _, ok := this.headers["Content-Type"]; !ok {
 	//			this.headers["Content-Type"] = []string{"application/json"}
 	//		}
-	//		req, err = http.NewRequest(this.method, this.UrlPath(),
+	//		req, err = http.NewRequest(this.method, this.URLPath(),
 	//			strings.NewReader(string(this.body)))
 	//	} else {
 	//		var body *bytes.Buffer
@@ -213,10 +213,10 @@ func (this *Request) parseBody() (req *http.Request, err error) {
 	//		return
 	//	}
 	//	this.headers["Content-Type"] = []string{writer.FormDataContentType()}
-	//	req, err = http.NewRequest(this.method, this.UrlPath(), body)
+	//	req, err = http.NewRequest(this.method, this.URLPath(), body)
 	//} else {
 	//	this.headers["Content-Type"] = []string{"application/x-www-form-urlencoded"}
-	//	req, err = http.NewRequest(this.method, this.UrlPath(),
+	//	req, err = http.NewRequest(this.method, this.URLPath(),
 	//		strings.NewReader(parseParams(this.formParams).Encode()))
 	//}
 	//return

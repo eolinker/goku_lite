@@ -1,4 +1,4 @@
-package console_mysql
+package consolemysql
 
 import (
 	SQL "database/sql"
@@ -15,8 +15,8 @@ import (
 
 var apiPlugins = []string{"goku-proxy_caching", "goku-circuit_breaker"}
 
-// 新增插件到接口
-func AddPluginToApi(pluginName, config, strategyID string, apiID, userID int) (bool, interface{}, error) {
+// AddPluginToAPI 新增插件到接口
+func AddPluginToAPI(pluginName, config, strategyID string, apiID, userID int) (bool, interface{}, error) {
 	db := database2.GetConnection()
 	// 查询接口是否添加该插件
 	sql := "SELECT apiID FROM goku_conn_plugin_api WHERE strategyID = ? AND pluginName = ? AND apiID = ?;"
@@ -43,8 +43,8 @@ func AddPluginToApi(pluginName, config, strategyID string, apiID, userID int) (b
 	return true, int(connID), nil
 }
 
-// 修改接口插件配置
-func EditApiPluginConfig(pluginName, config, strategyID string, apiID, userID int) (bool, interface{}, error) {
+// EditAPIPluginConfig 修改接口插件配置
+func EditAPIPluginConfig(pluginName, config, strategyID string, apiID, userID int) (bool, interface{}, error) {
 	db := database2.GetConnection()
 	// 查询接口是否添加该插件
 	t := time.Now()
@@ -74,7 +74,8 @@ func EditApiPluginConfig(pluginName, config, strategyID string, apiID, userID in
 	return true, id, nil
 }
 
-func GetApiPluginList(apiID int, strategyID string) (bool, []map[string]interface{}, error) {
+//GetAPIPluginList 获取接口插件列表
+func GetAPIPluginList(apiID int, strategyID string) (bool, []map[string]interface{}, error) {
 	db := database2.GetConnection()
 	sql := `SELECT goku_conn_plugin_api.connID,goku_conn_plugin_api.pluginName,IFNULL(goku_conn_plugin_api.createTime,""),IFNULL(goku_conn_plugin_api.updateTime,""),goku_conn_plugin_api.pluginConfig,goku_plugin.pluginPriority, IF(goku_plugin.pluginStatus=0,-1,goku_conn_plugin_api.pluginStatus) as pluginStatus,goku_gateway_api.requestURL FROM goku_conn_plugin_api INNER JOIN goku_plugin ON goku_plugin.pluginName = goku_conn_plugin_api.pluginName INNER goku_gateway_api.apiID = goku_conn_plugin_api.apiID WHERE goku_conn_plugin_api.apiID = ? AND goku_conn_plugin_api.strategyID = ? ORDER BY pluginStatus DESC,goku_conn_plugin_api.updateTime DESC;`
 	rows, err := db.Query(sql, apiID, strategyID)
@@ -84,34 +85,30 @@ func GetApiPluginList(apiID int, strategyID string) (bool, []map[string]interfac
 	defer rows.Close()
 	pluginList := make([]map[string]interface{}, 0)
 	//获取记录列
-	if _, err = rows.Columns(); err != nil {
-		return false, nil, err
-	} else {
-		for rows.Next() {
-			var pluginPriority, pluginStatus, connID int
-			var pluginName, pluginConfig, createTime, updateTime, requestURL string
-			err = rows.Scan(&connID, &pluginName, &pluginConfig, &createTime, &updateTime, &pluginPriority, &pluginStatus, &requestURL)
-			if err != nil {
-				info := err.Error()
-				log.Info(info)
-			}
-			pluginInfo := map[string]interface{}{
-				"connID":         connID,
-				"pluginName":     pluginName,
-				"pluginConfig":   pluginConfig,
-				"pluginPriority": pluginPriority,
-				"pluginStatus":   pluginStatus,
-				"createTime":     createTime,
-				"updateTime":     updateTime,
-				"requestURL":     requestURL,
-			}
-			pluginList = append(pluginList, pluginInfo)
+	for rows.Next() {
+		var pluginPriority, pluginStatus, connID int
+		var pluginName, pluginConfig, createTime, updateTime, requestURL string
+		err = rows.Scan(&connID, &pluginName, &pluginConfig, &createTime, &updateTime, &pluginPriority, &pluginStatus, &requestURL)
+		if err != nil {
+			info := err.Error()
+			log.Info(info)
 		}
-		return true, pluginList, nil
+		pluginInfo := map[string]interface{}{
+			"connID":         connID,
+			"pluginName":     pluginName,
+			"pluginConfig":   pluginConfig,
+			"pluginPriority": pluginPriority,
+			"pluginStatus":   pluginStatus,
+			"createTime":     createTime,
+			"updateTime":     updateTime,
+			"requestURL":     requestURL,
+		}
+		pluginList = append(pluginList, pluginInfo)
 	}
+	return true, pluginList, nil
 }
 
-// 获取插件优先级
+// GetPluginIndex 获取插件优先级
 func GetPluginIndex(pluginName string) (bool, int, error) {
 	db := database2.GetConnection()
 	var pluginPriority int
@@ -123,8 +120,8 @@ func GetPluginIndex(pluginName string) (bool, int, error) {
 	return true, pluginPriority, nil
 }
 
-// 通过ApiID获取配置信息
-func GetApiPluginConfig(apiID int, strategyID, pluginName string) (bool, map[string]string, error) {
+// GetAPIPluginConfig 通过APIID获取配置信息
+func GetAPIPluginConfig(apiID int, strategyID, pluginName string) (bool, map[string]string, error) {
 	db := database2.GetConnection()
 	sql := "SELECT goku_gateway_api.apiName,goku_gateway_api.requestURL,goku_conn_plugin_api.pluginConfig FROM goku_conn_plugin_api INNER JOIN goku_gateway_api ON goku_gateway_api.apiID = goku_conn_plugin_api.apiID WHERE goku_conn_plugin_api.apiID = ? AND goku_conn_plugin_api.strategyID = ? AND goku_conn_plugin_api.pluginName = ?;"
 	var p, apiName, requestURL string
@@ -132,31 +129,28 @@ func GetApiPluginConfig(apiID int, strategyID, pluginName string) (bool, map[str
 	if err != nil {
 		if err == SQL.ErrNoRows {
 			return false, nil, errors.New("[ERROR]Can not find the plugin")
-		} else {
-			return false, nil, err
 		}
+		return false, nil, err
 
-	} else {
-		apiPluginInfo := map[string]string{
-			"pluginConfig": p,
-			"apiName":      apiName,
-			"requestURL":   requestURL,
-		}
-		return true, apiPluginInfo, nil
 	}
+	apiPluginInfo := map[string]string{
+		"pluginConfig": p,
+		"apiName":      apiName,
+		"requestURL":   requestURL,
+	}
+	return true, apiPluginInfo, nil
 }
 
-// 检查策略组是否绑定插件
-func CheckPluginIsExistInApi(strategyID, pluginName string, apiID int) (bool, error) {
+// CheckPluginIsExistInAPI 检查策略组是否绑定插件
+func CheckPluginIsExistInAPI(strategyID, pluginName string, apiID int) (bool, error) {
 	db := database2.GetConnection()
 	sql := "SELECT apiID FROM goku_conn_plugin_api WHERE strategyID = ? AND pluginName = ? AND apiID = ?;"
 	var id int
 	err := db.QueryRow(sql, strategyID, pluginName, apiID).Scan(&id)
 	if err != nil {
 		return false, err
-	} else {
-		return true, err
 	}
+	return true, err
 }
 
 // GetAPIPluginInStrategyByAPIID 通过接口ID获取策略组中接口插件列表
@@ -230,8 +224,8 @@ func GetAPIPluginInStrategyByAPIID(strategyID string, apiID int, keyword string,
 	return true, pluginList, apiInfo, nil
 }
 
-// 获取策略组中所有接口插件列表
-func GetAllApiPluginInStrategy(strategyID string) (bool, []map[string]interface{}, error) {
+// GetAllAPIPluginInStrategy 获取策略组中所有接口插件列表
+func GetAllAPIPluginInStrategy(strategyID string) (bool, []map[string]interface{}, error) {
 	db := database2.GetConnection()
 	sql := `SELECT goku_conn_plugin_api.connID,goku_conn_plugin_api.apiID,goku_gateway_api.apiName,goku_gateway_api.requestURL,goku_conn_plugin_api.pluginName,IFNULL(goku_conn_plugin_api.createTime,""),IFNULL(goku_conn_plugin_api.updateTime,""),IF(goku_plugin.pluginStatus=0,-1,goku_conn_plugin_api.pluginStatus) as pluginStatus,IFNULL(goku_plugin.pluginDesc,"") FROM goku_conn_plugin_api INNER JOIN goku_gateway_api ON goku_gateway_api.apiID = goku_conn_plugin_api.apiID INNER JOIN goku_plugin ON goku_plugin.pluginName = goku_conn_plugin_api.pluginName WHERE goku_conn_plugin_api.strategyID = ? ORDER BY pluginStatus DESC,goku_conn_plugin_api.updateTime DESC;`
 	rows, err := db.Query(sql, strategyID)
@@ -241,35 +235,31 @@ func GetAllApiPluginInStrategy(strategyID string) (bool, []map[string]interface{
 	defer rows.Close()
 	pluginList := make([]map[string]interface{}, 0)
 	//获取记录列
-	if _, err = rows.Columns(); err != nil {
-		return false, make([]map[string]interface{}, 0), err
-	} else {
-		for rows.Next() {
-			var pluginStatus, apiID, connID int
-			var apiName, pluginName, pluginDesc, createTime, updateTime, requestURL string
-			err = rows.Scan(&connID, &apiID, &apiName, &requestURL, &pluginName, &createTime, &updateTime, &pluginStatus, &pluginDesc)
-			if err != nil {
-				return false, make([]map[string]interface{}, 0), err
-			}
-			pluginInfo := map[string]interface{}{
-				"connID":       connID,
-				"apiID":        apiID,
-				"apiName":      apiName,
-				"pluginName":   pluginName,
-				"pluginStatus": pluginStatus,
-				"createTime":   createTime,
-				"updateTime":   updateTime,
-				"requestURL":   requestURL,
-				"pluginDesc":   pluginDesc,
-			}
-			pluginList = append(pluginList, pluginInfo)
+	for rows.Next() {
+		var pluginStatus, apiID, connID int
+		var apiName, pluginName, pluginDesc, createTime, updateTime, requestURL string
+		err = rows.Scan(&connID, &apiID, &apiName, &requestURL, &pluginName, &createTime, &updateTime, &pluginStatus, &pluginDesc)
+		if err != nil {
+			return false, make([]map[string]interface{}, 0), err
 		}
-		return true, pluginList, nil
+		pluginInfo := map[string]interface{}{
+			"connID":       connID,
+			"apiID":        apiID,
+			"apiName":      apiName,
+			"pluginName":   pluginName,
+			"pluginStatus": pluginStatus,
+			"createTime":   createTime,
+			"updateTime":   updateTime,
+			"requestURL":   requestURL,
+			"pluginDesc":   pluginDesc,
+		}
+		pluginList = append(pluginList, pluginInfo)
 	}
+	return true, pluginList, nil
 }
 
-// 批量修改策略组插件状态
-func BatchEditApiPluginStatus(connIDList, strategyID string, pluginStatus, userID int) (bool, string, error) {
+// BatchEditAPIPluginStatus 批量修改策略组插件状态
+func BatchEditAPIPluginStatus(connIDList, strategyID string, pluginStatus, userID int) (bool, string, error) {
 	db := database2.GetConnection()
 	t := time.Now()
 	now := t.Format("2006-01-02 15:04:05")
@@ -291,31 +281,26 @@ func BatchEditApiPluginStatus(connIDList, strategyID string, pluginStatus, userI
 	}
 	defer rows.Close()
 	//获取记录列
-	if _, err = rows.Columns(); err != nil {
-		Tx.Rollback()
-		return false, "[ERROR]Fail to get data!", err
-	} else {
-		for rows.Next() {
-			var apiID int
-			err = rows.Scan(&apiID)
-			if err != nil {
-				Tx.Rollback()
-				return false, "[ERROR]Fail to get data!", err
-			}
-		}
-		sql = "UPDATE goku_gateway_strategy SET updateTime = ? WHERE strategyID = ?;"
-		_, err = Tx.Exec(sql, now, strategyID)
+	for rows.Next() {
+		var apiID int
+		err = rows.Scan(&apiID)
 		if err != nil {
 			Tx.Rollback()
-			return false, "[ERROR]Fail to update data!", err
+			return false, "[ERROR]Fail to get data!", err
 		}
-		Tx.Commit()
 	}
+	sql = "UPDATE goku_gateway_strategy SET updateTime = ? WHERE strategyID = ?;"
+	_, err = Tx.Exec(sql, now, strategyID)
+	if err != nil {
+		Tx.Rollback()
+		return false, "[ERROR]Fail to update data!", err
+	}
+	Tx.Commit()
 	return true, "", nil
 }
 
-// 批量删除策略组插件
-func BatchDeleteApiPlugin(connIDList, strategyID string) (bool, string, error) {
+// BatchDeleteAPIPlugin 批量删除策略组插件
+func BatchDeleteAPIPlugin(connIDList, strategyID string) (bool, string, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
@@ -329,19 +314,14 @@ func BatchDeleteApiPlugin(connIDList, strategyID string) (bool, string, error) {
 	}
 	defer rows.Close()
 	//获取记录列
-	if _, err = rows.Columns(); err != nil {
-		Tx.Rollback()
-		return false, "[ERROR]Fail to get data!", err
-	} else {
-		for rows.Next() {
-			var apiID int
-			err = rows.Scan(&apiID)
-			if err != nil {
-				Tx.Rollback()
-				return false, "[ERROR]Fail to get data!", err
-			}
-			apiIDList = append(apiIDList, apiID)
+	for rows.Next() {
+		var apiID int
+		err = rows.Scan(&apiID)
+		if err != nil {
+			Tx.Rollback()
+			return false, "[ERROR]Fail to get data!", err
 		}
+		apiIDList = append(apiIDList, apiID)
 	}
 	sql = "DELETE FROM goku_conn_plugin_api WHERE connID IN (" + connIDList + ");"
 	_, err = Tx.Exec(sql)
@@ -360,8 +340,8 @@ func BatchDeleteApiPlugin(connIDList, strategyID string) (bool, string, error) {
 	return true, "", nil
 }
 
-// 通过connID获取插件名称
-func GetApiPluginName(connID int) (bool, string, error) {
+// GetAPIPluginName 通过connID获取插件名称
+func GetAPIPluginName(connID int) (bool, string, error) {
 	db := database2.GetConnection()
 	var pluginName string
 	sql := "SELECT pluginName FROM goku_conn_plugin_api WHERE connID = ?"
@@ -372,8 +352,8 @@ func GetApiPluginName(connID int) (bool, string, error) {
 	return true, "", nil
 }
 
-// 通过connIDList判断插件是否存在
-func CheckApiPluginIsExistByConnIDList(connIDList, pluginName string) (bool, []int, error) {
+// CheckAPIPluginIsExistByConnIDList 通过connIDList判断插件是否存在
+func CheckAPIPluginIsExistByConnIDList(connIDList, pluginName string) (bool, []int, error) {
 	db := database2.GetConnection()
 	sql := "SELECT apiID FROM goku_conn_plugin_api WHERE connID IN (" + connIDList + ") AND pluginName = ?;"
 	rows, err := db.Query(sql, pluginName)
@@ -382,23 +362,20 @@ func CheckApiPluginIsExistByConnIDList(connIDList, pluginName string) (bool, []i
 	}
 	defer rows.Close()
 	apiIDList := make([]int, 0)
-	if _, err = rows.Columns(); err != nil {
-		return false, make([]int, 0), err
-	} else {
-		for rows.Next() {
-			var apiID int
-			err = rows.Scan(&apiID)
-			if err != nil {
-				return false, make([]int, 0), err
-			}
-			apiIDList = append(apiIDList, apiID)
+
+	for rows.Next() {
+		var apiID int
+		err = rows.Scan(&apiID)
+		if err != nil {
+			return false, make([]int, 0), err
 		}
+		apiIDList = append(apiIDList, apiID)
 	}
 	return true, apiIDList, nil
 }
 
-// 获取没有绑定嵌套插件列表
-func GetApiPluginListWithNotAssignApiList(strategyID string) (bool, []map[string]interface{}, error) {
+// GetAPIPluginListWithNotAssignAPIList 获取没有绑定嵌套插件列表
+func GetAPIPluginListWithNotAssignAPIList(strategyID string) (bool, []map[string]interface{}, error) {
 	db := database2.GetConnection()
 	sql := "SELECT pluginID,pluginDesc,pluginName FROM goku_plugin WHERE pluginType = 2 AND pluginStatus = 1;"
 	rows, err := db.Query(sql)
@@ -408,55 +385,52 @@ func GetApiPluginListWithNotAssignApiList(strategyID string) (bool, []map[string
 	defer rows.Close()
 	pluginList := make([]map[string]interface{}, 0)
 	//获取记录列
-	if _, err = rows.Columns(); err != nil {
-		return false, make([]map[string]interface{}, 0), err
-	} else {
-		sql = "SELECT goku_gateway_api.apiID,goku_gateway_api.apiName,goku_gateway_api.requestURL FROM goku_gateway_api INNER JOIN goku_conn_strategy_api ON goku_gateway_api.apiID = goku_conn_strategy_api.apiID WHERE goku_conn_strategy_api.strategyID = ? AND goku_gateway_api.apiID NOT IN (SELECT goku_conn_plugin_api.apiID FROM goku_conn_plugin_api WHERE goku_conn_plugin_api.strategyID = ? AND goku_conn_plugin_api.pluginName = ?);"
-		for rows.Next() {
-			var pluginID int
-			var pluginName, chineseName string
-			err = rows.Scan(&pluginID, &chineseName, &pluginName)
-			if err != nil {
-				info := err.Error()
-				log.Info(info)
-				return false, make([]map[string]interface{}, 0), err
-			}
-			r, err := db.Query(sql, strategyID, strategyID, pluginName)
-			if err != nil {
-				return false, make([]map[string]interface{}, 0), err
-			}
-			defer r.Close()
-			apiList := make([]map[string]interface{}, 0)
-			for r.Next() {
-				var (
-					apiID      int
-					apiName    string
-					requestURL string
-				)
-				err = r.Scan(&apiID, &apiName, &requestURL)
-				if err != nil {
-					return false, make([]map[string]interface{}, 0), err
-				}
-				apiList = append(apiList, map[string]interface{}{
-					"apiID":      apiID,
-					"apiName":    apiName,
-					"requestURL": requestURL,
-				})
-
-			}
-			pluginInfo := map[string]interface{}{
-				"chineseName": chineseName,
-				"pluginName":  pluginName,
-				"pluginID":    pluginID,
-				"apiList":     apiList,
-			}
-			pluginList = append(pluginList, pluginInfo)
+	sql = "SELECT goku_gateway_api.apiID,goku_gateway_api.apiName,goku_gateway_api.requestURL FROM goku_gateway_api INNER JOIN goku_conn_strategy_api ON goku_gateway_api.apiID = goku_conn_strategy_api.apiID WHERE goku_conn_strategy_api.strategyID = ? AND goku_gateway_api.apiID NOT IN (SELECT goku_conn_plugin_api.apiID FROM goku_conn_plugin_api WHERE goku_conn_plugin_api.strategyID = ? AND goku_conn_plugin_api.pluginName = ?);"
+	for rows.Next() {
+		var pluginID int
+		var pluginName, chineseName string
+		err = rows.Scan(&pluginID, &chineseName, &pluginName)
+		if err != nil {
+			info := err.Error()
+			log.Info(info)
+			return false, make([]map[string]interface{}, 0), err
 		}
-		return true, pluginList, nil
+		r, err := db.Query(sql, strategyID, strategyID, pluginName)
+		if err != nil {
+			return false, make([]map[string]interface{}, 0), err
+		}
+		defer r.Close()
+		apiList := make([]map[string]interface{}, 0)
+		for r.Next() {
+			var (
+				apiID      int
+				apiName    string
+				requestURL string
+			)
+			err = r.Scan(&apiID, &apiName, &requestURL)
+			if err != nil {
+				return false, make([]map[string]interface{}, 0), err
+			}
+			apiList = append(apiList, map[string]interface{}{
+				"apiID":      apiID,
+				"apiName":    apiName,
+				"requestURL": requestURL,
+			})
+
+		}
+		pluginInfo := map[string]interface{}{
+			"chineseName": chineseName,
+			"pluginName":  pluginName,
+			"pluginID":    pluginID,
+			"apiList":     apiList,
+		}
+		pluginList = append(pluginList, pluginInfo)
 	}
+	return true, pluginList, nil
 }
 
-func BatchUpdateApiPluginUpdateTag(strategyIDList string) error {
+//BatchUpdateAPIPluginUpdateTag 批量更新插件更新标识
+func BatchUpdateAPIPluginUpdateTag(strategyIDList string) error {
 	db := database2.GetConnection()
 	code := make([]string, 0, len(apiPlugins))
 	strategyIDs := strings.Split(strategyIDList, ",")
@@ -481,7 +455,8 @@ func BatchUpdateApiPluginUpdateTag(strategyIDList string) error {
 	return nil
 }
 
-func UpdateApiTagByPluginName(strategyID string, apiIDList string, pluginList string) error {
+//UpdateAPITagByPluginName 通过插件名称更新接口插件标识
+func UpdateAPITagByPluginName(strategyID string, apiIDList string, pluginList string) error {
 	db := database2.GetConnection()
 	plugins := strings.Split(pluginList, ",")
 	code := make([]string, 0, len(plugins))
@@ -501,19 +476,12 @@ func UpdateApiTagByPluginName(strategyID string, apiIDList string, pluginList st
 	return nil
 }
 
-func UpdateAllApiPluginUpdateTag() error {
+//UpdateAllAPIPluginUpdateTag 更新所有接口插件更新标识
+func UpdateAllAPIPluginUpdateTag() error {
 	db := database2.GetConnection()
-	// code := make([]string, 0, len(apiPlugins))
 	updateTag := time.Now().Format("20060102150405")
-	// s := make([]interface{}, 0, len(apiPlugins)+1)
-	// s = append(s, updateTag)
-	// for i := 0; i < len(apiPlugins); i++ {
-	// 	code = append(code, "?")
-	// 	s = append(s, apiPlugins[i])
-	// }
-	// sql := "UPDATE goku_conn_plugin_api SET updateTag = ? WHERE pluginName IN (" + strings.Join(code, ",") + ");"
+	// s := make([]interface{}
 	sql := "UPDATE goku_conn_plugin_api SET updateTag = ?;"
-	// _, err := db.Exec(sql, s...)
 	_, err := db.Exec(sql, updateTag)
 	if err != nil {
 		return err

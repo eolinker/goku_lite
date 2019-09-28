@@ -2,28 +2,34 @@ package common
 
 import goku_plugin "github.com/eolinker/goku-plugin"
 
+//Store 存储器
 type Store struct {
 	value interface{}
 }
 
+//Set set
 func (s *Store) Set(value interface{}) {
 	s.value = value
 }
 
+//Get get
 func (s *Store) Get() (value interface{}) {
 	return s.value
 }
 
+//StoreHandler 存储处理器
 type StoreHandler struct {
 	Cache             map[string]interface{}
 	Stores            map[string]goku_plugin.Store
 	CurrentPluginName string
 }
 
+//SetPlugin 设置插件
 func (s *StoreHandler) SetPlugin(name string) {
 	s.CurrentPluginName = name
 }
 
+//SetCache 设置缓存
 func (s *StoreHandler) SetCache(name string, value interface{}) {
 	if s.Cache == nil {
 		s.Cache = make(map[string]interface{})
@@ -31,6 +37,7 @@ func (s *StoreHandler) SetCache(name string, value interface{}) {
 	s.Cache[name] = value
 }
 
+//GetCache 获取缓存
 func (s *StoreHandler) GetCache(name string) (value interface{}, has bool) {
 	if s.Cache == nil {
 		return nil, false
@@ -39,6 +46,7 @@ func (s *StoreHandler) GetCache(name string) (value interface{}, has bool) {
 	return
 }
 
+//Store 存储器
 func (s *StoreHandler) Store() goku_plugin.Store {
 	if s.Stores == nil {
 		s.Stores = make(map[string]goku_plugin.Store)
@@ -52,6 +60,7 @@ func (s *StoreHandler) Store() goku_plugin.Store {
 	return store
 }
 
+//NewStoreHandler 创建存储处理器
 func NewStoreHandler() *StoreHandler {
 	return new(StoreHandler)
 }

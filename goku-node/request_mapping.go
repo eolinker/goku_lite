@@ -1,4 +1,4 @@
-package goku_node
+package gokunode
 
 import (
 	"fmt"
@@ -13,13 +13,13 @@ import (
 	"strings"
 )
 
-// 创建转发请求
-func CreateRequest(ctx *common.Context, apiInfo *entity.ApiExtend, timeout, retry int) (error, *http.Response) {
+// CreateRequest 创建转发请求
+func CreateRequest(ctx *common.Context, apiInfo *entity.APIExtend, timeout, retry int) (*http.Response, error) {
 
 	app, has := balance_manager.Get(apiInfo.Target)
 	if !has {
 		err := fmt.Errorf("get balance error:%s", apiInfo.Target)
-		return err, nil
+		return nil, err
 	}
 	rawbody, _ := ctx.ProxyRequest.RawBody()
 
@@ -29,8 +29,8 @@ func CreateRequest(ctx *common.Context, apiInfo *entity.ApiExtend, timeout, retr
 	ctx.SetFinalTargetServer(finalTargetServer)
 
 	if err != nil {
-		return err, nil
+		return nil, err
 	}
-	return nil, response
+	return response, nil
 
 }

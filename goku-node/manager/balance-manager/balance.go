@@ -1,4 +1,4 @@
-package balance_manager
+package balancemanager
 
 import (
 	"encoding/json"
@@ -17,6 +17,7 @@ func init() {
 	updater.Add(loadBalanceInfo, 3, "goku_balance")
 }
 
+//Get get
 func Get(name string) (application.IHttpApplication, bool) {
 
 	return balance.GetByName(name)

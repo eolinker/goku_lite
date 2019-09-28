@@ -1,16 +1,20 @@
-package goku_log
+package gokulog
 
 import (
 	"fmt"
 	"strings"
 )
 
+//LogPeriod 日志周期对象
 type LogPeriod interface {
 	String() string
 	FormatLayout() string
 }
+
+//LogPeriodType 日志周期类型
 type LogPeriodType int
 
+//ParsePeriod 解析周期
 func ParsePeriod(v string) (LogPeriod, error) {
 	switch strings.ToLower(v) {
 	case "month":
@@ -37,11 +41,15 @@ func (period LogPeriodType) String() string {
 }
 
 const (
+	//PeriodMonth 月
 	PeriodMonth LogPeriodType = iota
+	//PeriodDay 天
 	PeriodDay
+	//PeriodHour 时
 	PeriodHour
 )
 
+//FormatLayout 设置时间格式
 func (period LogPeriodType) FormatLayout() string {
 	switch period {
 	case PeriodHour:

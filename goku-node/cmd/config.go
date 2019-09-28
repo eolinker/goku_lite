@@ -12,12 +12,12 @@ import (
 	"time"
 )
 
-// 获取节点配置
+//GetConfig 获取节点配置
 func GetConfig(listenPort int) (bool, *entity.ClusterInfo) {
 	client := &http.Client{
 		Timeout: time.Second * 10,
 	}
-	addr := node_common.GetAdminUrl(fmt.Sprintf("/register?port=%d", listenPort))
+	addr := node_common.GetAdminURL(fmt.Sprintf("/register?port=%d", listenPort))
 	reader := bytes.NewReader([]byte(""))
 	request, err := http.NewRequest("GET", addr, reader)
 	if err != nil {

@@ -1,4 +1,4 @@
-package config_log
+package configlog
 
 import "C"
 import (
@@ -10,9 +10,13 @@ import (
 )
 
 const (
-	ConsoleLog    = "console"
-	NodeLog       = "node"
-	AccessLog     = "access"
+	// ConsoleLog 控制台log
+	ConsoleLog = "console"
+	//NodeLog 节点log
+	NodeLog = "node"
+	//AccessLog access log
+	AccessLog = "access"
+	//ExpireDefault 默认过期时间
 	ExpireDefault = 3
 )
 
@@ -22,6 +26,7 @@ var (
 		NodeLog:    1,
 		AccessLog:  1,
 	}
+	//Expires 过期配置
 	Expires = []ValueTitle{
 		{
 			Value: 3,
@@ -44,6 +49,7 @@ var (
 			Title: "180天",
 		},
 	}
+	//Periods 周期
 	Periods = []NameTitle{
 		{
 			Name:  log.PeriodDay.String(),
@@ -54,6 +60,7 @@ var (
 			Title: "小时",
 		},
 	}
+	//Levels 层级
 	Levels = []NameTitle{
 		{
 			Name:  log.ErrorLevel.String(),
@@ -73,15 +80,19 @@ var (
 	}
 )
 
+//NameTitle name title
 type NameTitle struct {
 	Name  string `json:"name"`
 	Title string `json:"title"`
 }
 
+//ValueTitle value title
 type ValueTitle struct {
 	Value int    `json:"value"`
 	Title string `json:"title"`
 }
+
+//Param param
 type Param struct {
 	Enable bool
 	Dir    string
@@ -92,6 +103,7 @@ type Param struct {
 	Expire int
 }
 
+//PutParam put param
 type PutParam struct {
 	Enable bool   `opt:"enable,require"`
 	Dir    string `opt:"dir,require"`
@@ -101,6 +113,7 @@ type PutParam struct {
 	Expire int    `opt:"expire,require"`
 }
 
+//Format 格式化
 func (p *PutParam) Format() (*Param, error) {
 	l, err := log.ParseLevel(p.Level)
 	if err != nil {
@@ -122,6 +135,7 @@ func (p *PutParam) Format() (*Param, error) {
 
 }
 
+//AccessParam access param
 type AccessParam struct {
 	Enable bool   `opt:"enable,require" `
 	Dir    string `opt:"dir,require"`
@@ -131,6 +145,7 @@ type AccessParam struct {
 	Expire int    `opt:"expire,require"`
 }
 
+//Format 格式化
 func (p *AccessParam) Format() (*Param, error) {
 	period, err := log.ParsePeriod(p.Period)
 	if err != nil {
@@ -147,6 +162,7 @@ func (p *AccessParam) Format() (*Param, error) {
 	}, nil
 }
 
+//LogConfig 日志配置
 type LogConfig struct {
 	Name    string       `json:"-"`
 	Enable  bool         `json:"enable" opt:"enable" default:"true"`
@@ -174,6 +190,7 @@ func (c *LogConfig) Read(ent *entity.LogConfig) {
 	}
 }
 
+//AccessConfig access配置
 type AccessConfig struct {
 	Name    string         `json:"-"`
 	Enable  bool           `json:"enable" opt:"enable" default:"true"`
@@ -185,12 +202,15 @@ type AccessConfig struct {
 	Expires []ValueTitle   `json:"expires"`
 	Fields  []*AccessField `json:"fields"`
 }
+
+//AccessField access日志字段
 type AccessField struct {
 	Name   string `json:"name"`
 	Select bool   `json:"select"`
 	Desc   string `json:"desc"`
 }
 
+//InitFields 初始化字段
 func (c *AccessConfig) InitFields() {
 	// 如果有新增的字段，按默认顺序拼接到末尾
 	c.Fields = make([]*AccessField, 0, access_field.Size())

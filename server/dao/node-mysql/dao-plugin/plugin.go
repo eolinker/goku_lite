@@ -1,10 +1,11 @@
-package dao_plugin
+package daoplugin
 
 import (
 	"github.com/eolinker/goku-api-gateway/common/database"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
 
+//GetAll 获取所有插件
 func GetAll() (map[string]*entity.PluginInfo, error) {
 
 	const sql = "SELECT P.`pluginName`,P.`pluginPriority`,IFNULL(P.`pluginConfig`,''),P.`isStop`,P.`pluginType` FROM `goku_plugin` P WHERE P.`isCheck` = TRUE AND P.`pluginStatus` = 1;"

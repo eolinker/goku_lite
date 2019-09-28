@@ -1,4 +1,4 @@
-package dao_service
+package daoservice
 
 import (
 	"github.com/eolinker/goku-api-gateway/common/database"
@@ -7,6 +7,7 @@ import (
 
 const sqlList = "SELECT `name`,`driver`,`default`,`desc`,`config`,`clusterConfig`,`healthCheck`,`healthCheckPath`,`healthCheckPeriod`,`healthCheckCode`,`healthCheckTimeOut` FROM `goku_service_config`"
 
+//GetAll 获取所有服务发现配置
 func GetAll() ([]*entity.Service, error) {
 
 	stmt, e := database.GetConnection().Prepare(sqlList)
@@ -37,7 +38,6 @@ func GetAll() ([]*entity.Service, error) {
 			&v.HealthCheckPeriod,
 			&v.HealthCheckCode,
 			&v.HealthCheckTimeOut,
-
 		)
 		if er != nil {
 			return nil, er

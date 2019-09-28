@@ -1,8 +1,8 @@
-package dao_gateway
+package daogateway
 
 import "github.com/eolinker/goku-api-gateway/common/database"
 
-// 获取网关成功状态码
+//GetGatewayBaseInfo 获取网关成功状态码
 func GetGatewayBaseInfo() (string, int) {
 	db := database.GetConnection()
 	var successCode string
@@ -15,7 +15,7 @@ func GetGatewayBaseInfo() (string, int) {
 	return successCode, updatePeriod
 }
 
-// 获取节点告警信息
+//GetGatewayAlertInfo 获取节点告警信息
 func GetGatewayAlertInfo() (string, int) {
 	db := database.GetConnection()
 	var apiAlertInfo string

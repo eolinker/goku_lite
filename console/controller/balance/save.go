@@ -10,7 +10,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
-// 新增负载配置
+//SaveBalance 新增负载配置
 func SaveBalance(w http.ResponseWriter, r *http.Request) {
 
 	_, e := controller.CheckLogin(w, r, controller.OperationLoadBalance, controller.OperationEDIT)

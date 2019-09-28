@@ -15,7 +15,7 @@ import (
 	"github.com/eolinker/goku-api-gateway/utils"
 )
 
-// 新增节点信息
+//AddNode 新增节点信息
 func AddNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationEDIT)
@@ -25,7 +25,7 @@ func AddNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	cluserName := httpRequest.PostFormValue("cluster")
 
-	clusterId, has := cluster2.GetId(cluserName)
+	clusterID, has := cluster2.GetID(cluserName)
 	if !has {
 		controller.WriteError(httpResponse, "340003", "", "[ERROR]Illegal cluster!", nil)
 		return
@@ -79,7 +79,7 @@ func AddNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		return
 	}
 
-	flag, result, err := node.AddNode(clusterId, nodeName, nodeIP, nodePort, gatewayPath, gID)
+	flag, result, err := node.AddNode(clusterID, nodeName, nodeIP, nodePort, gatewayPath, gID)
 
 	if !flag {
 		controller.WriteError(httpResponse,
@@ -102,7 +102,7 @@ func AddNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	httpResponse.Write(data)
 }
 
-// 修改节点信息
+//EditNode 修改节点信息
 func EditNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationEDIT)
@@ -122,7 +122,7 @@ func EditNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	flag := utils.ValidateRemoteAddr(nodeIP + ":" + nodePort)
 	if !flag {
 
-		controller.WriteError(httpResponse, "230006", "node", "[ERROR]Illegal remote address!", errors.New("[ERROR]Illegal remote address!"))
+		controller.WriteError(httpResponse, "230006", "node", "[ERROR]Illegal remote address!", errors.New("[error]illegal remote address"))
 		return
 	}
 
@@ -172,7 +172,7 @@ func EditNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 删除节点信息
+//DeleteNode 删除节点信息
 func DeleteNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationEDIT)
@@ -228,7 +228,7 @@ func GetNodeList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		gID = -1
 	}
 
-	clusterID, has := cluster2.GetId(cluserName)
+	clusterID, has := cluster2.GetID(cluserName)
 	if !has {
 		controller.WriteError(httpResponse, "330003", "node", "[ERROR]The cluster dosen't exist!", nil)
 		return
@@ -249,7 +249,7 @@ func GetNodeList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 }
 
-// 获取节点信息
+//GetNodeInfo 获取节点信息
 func GetNodeInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationREAD)
 	if e != nil {
@@ -285,7 +285,7 @@ func GetNodeInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 节点IP查重
+//CheckIsExistRemoteAddr 节点IP查重
 func CheckIsExistRemoteAddr(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationREAD)
@@ -323,7 +323,7 @@ func CheckIsExistRemoteAddr(httpResponse http.ResponseWriter, httpRequest *http.
 	return
 }
 
-// 批量修改节点分组
+//BatchEditNodeGroup 批量修改节点分组
 func BatchEditNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationEDIT)
@@ -361,7 +361,7 @@ func BatchEditNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Requ
 	return
 }
 
-// 批量删除节点
+//BatchDeleteNode 批量删除节点
 func BatchDeleteNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationEDIT)

@@ -1,9 +1,9 @@
-package monitor_write
+package monitorwrite
 
 import (
 	"time"
 
-	"github.com/eolinker/goku-api-gateway/common/redis-manager"
+	redis_manager "github.com/eolinker/goku-api-gateway/common/redis-manager"
 	gateway_manager "github.com/eolinker/goku-api-gateway/goku-node/manager/gateway-manager"
 	monitor_key "github.com/eolinker/goku-api-gateway/server/monitor/monitor-key"
 )
@@ -17,8 +17,8 @@ var (
 )
 
 type _Action struct {
-	StrategyId string
-	ApiId      string
+	StrategyID string
+	APIID      string
 	Keys       []monitor_key.MonitorKeyType
 }
 type _MonitorMap struct {
@@ -29,6 +29,7 @@ type _StrategyInfo struct {
 	values map[string]monitor_key.MonitorValues
 }
 
+//InitMonitorWrite 初始化监控写入器
 func InitMonitorWrite(clusterName string) {
 	cluster = clusterName
 	go saveLoop()
@@ -48,16 +49,16 @@ func saveLoop() {
 				tnow := m.now.Format("2006010215")
 
 				strategyMapKey := monitor_key.StrategyMapKey(cluster, tnow)
-				for strategyId, strategy := range m.strategys {
-					pipeline.HSetNX(strategyMapKey, strategyId, 1)
+				for strategyID, strategy := range m.strategys {
+					pipeline.HSetNX(strategyMapKey, strategyID, 1)
 
-					apisOfStrategyKey := monitor_key.APiMapKey(cluster, strategyId, tnow)
+					apisOfStrategyKey := monitor_key.APIMapKey(cluster, strategyID, tnow)
 
-					for apiId, values := range strategy.values {
+					for apiID, values := range strategy.values {
 
-						pipeline.HSetNX(apisOfStrategyKey, apiId, 1)
+						pipeline.HSetNX(apisOfStrategyKey, apiID, 1)
 
-						key := monitor_key.ApiValueKey(cluster, strategyId, apiId, tnow)
+						key := monitor_key.APIValueKey(cluster, strategyID, apiID, tnow)
 						for k, v := range values {
 							if v > 0 {
 								pipeline.HIncrBy(key, monitor_key.ToString(k), v)
@@ -96,18 +97,18 @@ func temporaryStorage() {
 				return
 			}
 
-			strategy, has := ts.strategys[action.StrategyId]
+			strategy, has := ts.strategys[action.StrategyID]
 			if !has {
 				strategy = &_StrategyInfo{
 					values: make(map[string]monitor_key.MonitorValues),
 				}
-				ts.strategys[action.StrategyId] = strategy
+				ts.strategys[action.StrategyID] = strategy
 			}
 
-			apivalue, has := strategy.values[action.ApiId]
+			apivalue, has := strategy.values[action.APIID]
 			if !has {
 				apivalue = monitor_key.MakeValue()
-				strategy.values[action.ApiId] = apivalue
+				strategy.values[action.APIID] = apivalue
 			}
 
 			for _, i := range action.Keys {
@@ -117,13 +118,14 @@ func temporaryStorage() {
 	}
 }
 
-func AddMonitor(strategyId string, apiId string, proxyStatusCode int, gatewayStatusCode int) {
+//AddMonitor 新增监控
+func AddMonitor(strategyID string, apiID string, proxyStatusCode int, gatewayStatusCode int) {
 
 	keys := createField(proxyStatusCode, gatewayStatusCode)
 
 	add(&_Action{
-		StrategyId: strategyId,
-		ApiId:      apiId,
+		StrategyID: strategyID,
+		APIID:      apiID,
 		Keys:       keys,
 	})
 	// proxyStatusCode == 0 没有进行转发

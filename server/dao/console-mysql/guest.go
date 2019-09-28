@@ -1,4 +1,4 @@
-package console_mysql
+package consolemysql
 
 import (
 	SQL "database/sql"
@@ -6,6 +6,7 @@ import (
 	"github.com/eolinker/goku-api-gateway/utils"
 )
 
+//Login 登录
 func Login(loginCall, loginPassword string) (bool, int) {
 	db := database.GetConnection()
 	var userID int
@@ -16,7 +17,7 @@ func Login(loginCall, loginPassword string) (bool, int) {
 	return true, userID
 }
 
-// 检查用户是否登录
+// CheckLogin 检查用户是否登录
 func CheckLogin(userToken string, userID int) bool {
 	db := database.GetConnection()
 	var loginPassword, loginCall string
@@ -26,12 +27,11 @@ func CheckLogin(userToken string, userID int) bool {
 	}
 	if utils.Md5(loginCall+loginPassword) == userToken {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
-// 用户注册
+//Register 用户注册
 func Register(loginCall, loginPassword string) bool {
 	db := database.GetConnection()
 	sql := "SELECT userID,loginPassword FROM goku_admin WHERE loginCall = ?;"
@@ -58,7 +58,6 @@ func Register(loginCall, loginPassword string) bool {
 	affectRow, _ := rows.RowsAffected()
 	if affectRow > 0 {
 		return true
-	} else {
-		return false
 	}
+	return false
 }

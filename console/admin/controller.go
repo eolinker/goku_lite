@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+//GetIpPort 获取IP端口
 func GetIpPort(r *http.Request) (string, int, error) {
 	ip := r.RemoteAddr
 	ip = ip[:strings.Index(ip, ":")]

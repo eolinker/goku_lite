@@ -5,6 +5,7 @@ import (
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 )
 
+//InitLog 初始化日志
 func InitLog() {
 	c, _ := module.Get(module.ConsoleLog)
 

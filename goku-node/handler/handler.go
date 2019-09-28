@@ -4,6 +4,7 @@ import (
 	"net/http"
 )
 
+//Entry entry
 type Entry struct {
 	Pattern     string
 	HandlerFunc func(w http.ResponseWriter, r *http.Request)
@@ -12,6 +13,8 @@ type Entry struct {
 func init() {
 
 }
+
+//Handler handler
 func Handler() []Entry {
 
 	return []Entry{

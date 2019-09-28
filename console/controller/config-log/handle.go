@@ -1,4 +1,4 @@
-package config_log
+package configlog
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+//Handle 处理器
 func Handle(prefix string) http.Handler {
 
 	pre := strings.TrimSuffix(prefix, "/")
@@ -21,9 +22,7 @@ func Handle(prefix string) http.Handler {
 	}
 	serveMux.Handle(fmt.Sprintf("%s/%s", pre, "node"), nodeLogHandler)
 
-	accessLogHandler := &AccessLogHandler{
-
-	}
+	accessLogHandler := &AccessLogHandler{}
 
 	serveMux.Handle(fmt.Sprintf("%s/%s", pre, "access"), accessLogHandler)
 

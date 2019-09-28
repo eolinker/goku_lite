@@ -1,4 +1,4 @@
-package plugin_manager
+package pluginmanager
 
 import (
 	"github.com/eolinker/goku-api-gateway/goku-node/manager/updater"

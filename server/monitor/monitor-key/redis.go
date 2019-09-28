@@ -1,22 +1,27 @@
-package monitor_key
+package monitorkey
 
 import (
 	"bytes"
 )
 
+//StrategyMapKey 策略字典Key
 func StrategyMapKey(cluster, now string) string {
 	key := splicing("monitor-strategy:", cluster, ":", now)
 	//fmt.Println("StrategyMapKey:",key)
 	return key
 }
-func APiMapKey(cluster, strategyId, now string) string {
-	key := splicing("monitor-api:", cluster, ":", strategyId, ":", now)
-	//fmt.Println("APiMapKey:",key)
+
+//APIMapKey 接口字典key
+func APIMapKey(cluster, strategyID, now string) string {
+	key := splicing("monitor-api:", cluster, ":", strategyID, ":", now)
+	//fmt.Println("APIMapKey:",key)
 	return key
 }
-func ApiValueKey(cluster, strategyId string, apiId string, now string) string {
-	key := splicing("monitor-value:", cluster, ":", strategyId, ":", apiId, ":", now)
-	//fmt.Println("ApiValueKey:",key)
+
+//APIValueKey api value key
+func APIValueKey(cluster, strategyID string, apiID string, now string) string {
+	key := splicing("monitor-value:", cluster, ":", strategyID, ":", apiID, ":", now)
+	//fmt.Println("APIValueKey:",key)
 	return key
 }
 

@@ -1,4 +1,4 @@
-package config_log
+package configlog
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 	dao "github.com/eolinker/goku-api-gateway/server/dao/config-log"
 )
 
+//Get 获取日志配置
 func Get(name string) (*LogConfig, error) {
 	if _, has := logNames[name]; !has {
 		return nil, fmt.Errorf("not has that log config of %s", name)
@@ -32,6 +33,7 @@ func Get(name string) (*LogConfig, error) {
 	return c, nil
 }
 
+//GetAccess 获取access配置
 func GetAccess() (*AccessConfig, error) {
 	config, e := dao.Get(AccessLog)
 	c := new(AccessConfig)

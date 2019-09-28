@@ -1,9 +1,10 @@
-package console_mysql
+package consolemysql
 
 import (
 	database2 "github.com/eolinker/goku-api-gateway/common/database"
 )
 
+//GetGatewayConfig 获取网关配置
 func GetGatewayConfig() (map[string]interface{}, error) {
 	db := database2.GetConnection()
 	var successCode string
@@ -22,7 +23,7 @@ func GetGatewayConfig() (map[string]interface{}, error) {
 	return gatewayConfig, nil
 }
 
-// 编辑网关基本配置
+// EditGatewayBaseConfig 编辑网关基本配置
 func EditGatewayBaseConfig(successCode string, nodeUpdatePeriod, monitorUpdatePeriod, monitorTimeout int) (bool, string, error) {
 	db := database2.GetConnection()
 	sql := "SELECT successCode FROM goku_gateway WHERE id = 1;"
@@ -44,7 +45,7 @@ func EditGatewayBaseConfig(successCode string, nodeUpdatePeriod, monitorUpdatePe
 	return true, "", nil
 }
 
-// 编辑网关告警配置
+// EditGatewayAlarmConfig 编辑网关告警配置
 func EditGatewayAlarmConfig(apiAlertInfo, sender, senderPassword, smtpAddress string, alertStatus, smtpPort, smtpProtocol int) (bool, string, error) {
 	db := database2.GetConnection()
 	sql := "SELECT successCode FROM goku_gateway WHERE id = 1;"

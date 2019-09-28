@@ -1,4 +1,4 @@
-package monitor_read
+package monitorread
 
 import (
 	"fmt"
@@ -14,9 +14,12 @@ var (
 	period = 30 * time.Second
 )
 
+//SetPeriod 设置更新周期
 func SetPeriod(sec int) {
 	period = time.Duration(sec) * time.Second
 }
+
+//InitMonitorRead init monitor read
 func InitMonitorRead(clusters []*entity.Cluster) error {
 	for _, c := range clusters {
 		_, has := redis_manager.Get(c.Name)
@@ -25,12 +28,12 @@ func InitMonitorRead(clusters []*entity.Cluster) error {
 		}
 	}
 	for _, c := range clusters {
-		go doLoopForCluster(c.Name, c.Id)
+		go doLoopForCluster(c.Name, c.ID)
 	}
 	return nil
 }
 
-func doLoopForCluster(clusterName string, clusterId int) {
+func doLoopForCluster(clusterName string, clusterID int) {
 
 	t := time.NewTimer(period)
 
@@ -38,58 +41,57 @@ func doLoopForCluster(clusterName string, clusterId int) {
 		select {
 		case <-t.C:
 			{
-				read(clusterName, clusterId, time.Now())
+				read(clusterName, clusterID, time.Now())
 			}
 		}
 		t.Reset(period)
 	}
 
 }
-func read(clusterName string, clusterId int, t time.Time) {
+func read(clusterName string, clusterID int, t time.Time) {
 	hour := t.Format("2006010215")
 	now := t.Format("2006-01-02 15:04:05")
 
 	hourValue, _ := strconv.Atoi(hour)
 
 	// 包含 strate == ""
-	strategyIds, err := readStrategyId(hour, clusterName)
+	strategyIds, err := readStrategyID(hour, clusterName)
 	if err != nil {
 		return
 	}
-	for _, strategyId := range strategyIds {
+	for _, strategyID := range strategyIds {
 
-		apiIds, err := readApiId(hour, clusterName, strategyId)
+		apiIds, err := readAPIId(hour, clusterName, strategyID)
 		if err != nil {
 			continue
 		}
 
-		for _, apiId := range apiIds {
+		for _, apiID := range apiIds {
 
-			valus, err := readValue(hour, clusterName, strategyId, apiId)
+			valus, err := readValue(hour, clusterName, strategyID, apiID)
 			if err != nil {
 				continue
 			}
-			apiID, _ := strconv.Atoi(apiId)
+			apiID, _ := strconv.Atoi(apiID)
 
-			dao_monitor.Save(strategyId, apiID, clusterId, hourValue, now, valus)
+			dao_monitor.Save(strategyID, apiID, clusterID, hourValue, now, valus)
 		}
 	}
 
 }
-func readStrategyId(now, cluster string) ([]string, error) {
-	key := monitor_key.StrategyMapKey(cluster, now)
+func readStrategyID(now, cluster string) ([]string, error) {
+	key := monitorkey.StrategyMapKey(cluster, now)
 	conn, _ := redis_manager.Get(cluster)
 	return conn.HKeys(key).Result()
 
 }
-func readApiId(now, cluster, strategyId string) ([]string, error) {
-	key := monitor_key.APiMapKey(cluster, strategyId, now)
+func readAPIId(now, cluster, strategyID string) ([]string, error) {
+	key := monitorkey.APIMapKey(cluster, strategyID, now)
 	conn, _ := redis_manager.Get(cluster)
 	return conn.HKeys(key).Result()
 }
-func readValue(now, cluster, strategyId string, apiId string) (map[string]string, error) {
+func readValue(now, cluster, strategyID string, apiID string) (map[string]string, error) {
 	conn, _ := redis_manager.Get(cluster)
-	key := monitor_key.ApiValueKey(cluster, strategyId, apiId, now)
+	key := monitorkey.APIValueKey(cluster, strategyID, apiID, now)
 	return conn.HGetAll(key).Result()
-
 }

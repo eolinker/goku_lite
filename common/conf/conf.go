@@ -1,4 +1,3 @@
-// 读取配置信息
 package conf
 
 import (
@@ -13,20 +12,28 @@ var (
 	lastFile   = ""
 )
 
+//Get get
 func Get(name string) (string, bool) {
 	v, has := _Configure[name]
 	return v, has
 }
+
+//Set set
 func Set(name, value string) {
 	_Configure[name] = value
 }
 
+//Value value
 func Value(name string) string {
 	return _Configure[name]
 }
+
+//Reload reload
 func Reload() {
 	ReadConfigure(lastFile)
 }
+
+//MastValue mastValue
 func MastValue(name string, def string) string {
 	v, h := _Configure[name]
 	if h {
@@ -34,6 +41,8 @@ func MastValue(name string, def string) string {
 	}
 	return def
 }
+
+//ReadConfigure 读取配置
 func ReadConfigure(filepath string) error {
 	file, err := os.Open(filepath)
 	if err != nil {
@@ -53,14 +62,8 @@ func ReadConfigure(filepath string) error {
 	return nil
 }
 
-// 更新配置文件
+//Save 更新配置文件
 func Save() (bool, error) {
-	//file, err := os.OpenFile(lastFile, os.O_CREATE|os.O_WRONLY, 0666)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//defer file.Close()
-
 	confStr, err := yaml.Marshal(_Configure)
 	if err != nil {
 		return false, err

@@ -1,4 +1,4 @@
-package goku_node
+package gokunode
 
 import (
 	log "github.com/eolinker/goku-api-gateway/goku-log"

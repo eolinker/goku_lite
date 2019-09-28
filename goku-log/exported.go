@@ -1,4 +1,4 @@
-package goku_log
+package gokulog
 
 import (
 	"fmt"
@@ -8,26 +8,39 @@ import (
 )
 
 const (
+	//PanicLevel panic
 	PanicLevel = logrus.PanicLevel
+	//FatalLevel fatal
 	FatalLevel = logrus.FatalLevel
+	//ErrorLevel error
 	ErrorLevel = logrus.ErrorLevel
+	//WarnLevel warn
 	WarnLevel  = logrus.WarnLevel
+	//InfoLevel info
 	InfoLevel  = logrus.InfoLevel
+	//DebugLevel debug
 	DebugLevel = logrus.DebugLevel
+	//TraceLevel trace
 	TraceLevel = logrus.TraceLevel
 )
 
 var (
-	writer *FileWriterByPeriod = nil
+	writer *FileWriterByPeriod
 	logger                     = logrus.New()
 
 	logEnable = true
 )
 
+//Level level
 type Level = logrus.Level
+
+//Fields fields
 type Fields = logrus.Fields
+
+//Entry entry
 type Entry = logrus.Entry
 
+//ParseLevel 转换层级
 func ParseLevel(lvl string) (Level, error) {
 	return logrus.ParseLevel(lvl)
 }
@@ -45,14 +58,20 @@ func init() {
 		Close()
 	})
 }
+
+//GetLogger 获取日志对象
 func GetLogger() *logrus.Logger {
 	return logger
 }
+
+//SetLevel 设置日志层级
 func SetLevel(level Level) {
 
 	logger.SetLevel(level)
 
 }
+
+//SetOutPut 输出设置
 func SetOutPut(enable bool, dir, file string, period LogPeriod, expire int) {
 	logEnable = enable
 	logger.SetOutput(writer)
@@ -64,9 +83,12 @@ func SetOutPut(enable bool, dir, file string, period LogPeriod, expire int) {
 	}
 }
 
+//Close 关闭流
 func Close() {
 	writer.Close()
 }
+
+//WithFields 设置日志需要的字段名称
 func WithFields(fields Fields) *Entry {
 
 	return logger.WithFields(fields)
@@ -235,7 +257,7 @@ func Debugln(args ...interface{}) {
 	logger.Debugln(args...)
 }
 
-// 无视lever输出一段trace 信息
+// Print 无视lever输出一段trace 信息
 func Print(args ...interface{}) {
 
 	s, e := encode(TraceLevel, args...)

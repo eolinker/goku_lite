@@ -1,5 +1,6 @@
 package entity
 
+//Node 节点
 type Node struct {
 	NodeID   int    `json:"nodeID"`
 	NodeName string `json:"nodeName"`

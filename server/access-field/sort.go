@@ -1,13 +1,13 @@
-package access_field
+package accessfield
 
 var (
 	all = []AccessFieldKey{
-		RequestId,
+		RequestID,
 		Msec,
 		TimeLocal,
 		TimeIso8601,
 		Strategy,
-		Api,
+		API,
 		Host,
 		Request,
 		Balance,
@@ -17,18 +17,21 @@ var (
 		ProxyStatusCode,
 		RequestTime,
 		RemoteAddr,
-		HttpXForwardedFor,
+		HTTPXForwardedFor,
 		Retry,
 		BodyBytesSent,
-		HttpReferer,
-		HttpUserAgent,
+		HTTPReferer,
+		HTTPUserAgent,
 	}
 	size = len(all)
 )
 
+//Size 返回size
 func Size() int {
 	return size
 }
+
+//All all
 func All() []AccessFieldKey {
 	return all
 }

@@ -8,7 +8,8 @@ import (
 	"github.com/eolinker/goku-api-gateway/common/database"
 )
 
-func GetLastUpdateOfApi(tables ...string) (time.Time, error) {
+//GetLastUpdateOfAPI 获取最后更新的接口记录
+func GetLastUpdateOfAPI(tables ...string) (time.Time, error) {
 	t := time.Time{}
 	var updateTime string
 	tb := make([]string, len(tables))
@@ -30,6 +31,7 @@ func GetLastUpdateOfApi(tables ...string) (time.Time, error) {
 	return t, nil
 }
 
+//UpdateTable 更新goku_table_update_record的updateTime字段
 func UpdateTable(name string) error {
 	db := database.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")

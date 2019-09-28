@@ -1,4 +1,4 @@
-package strategy_plugin_manager
+package strategypluginmanager
 
 import (
 	"github.com/eolinker/goku-api-gateway/goku-node/node-common"
@@ -20,10 +20,11 @@ var (
 	locker            sync.RWMutex
 )
 
-func GetPluginsOfStrategy(strategyId string) ([]*entity.PluginHandlerExce, bool) {
+//GetPluginsOfStrategy 获取策略插件
+func GetPluginsOfStrategy(strategyID string) ([]*entity.PluginHandlerExce, bool) {
 	locker.RLock()
 	defer locker.RUnlock()
-	p, has := pluginsOfStrategy[strategyId]
+	p, has := pluginsOfStrategy[strategyID]
 	if !has {
 		return nil, false
 	}
@@ -31,7 +32,6 @@ func GetPluginsOfStrategy(strategyId string) ([]*entity.PluginHandlerExce, bool)
 }
 
 func reset(plugins map[string][]*entity.PluginHandlerExce) {
-	//def:=plugin_manager.GetDefaultPlugins()
 	for name := range plugins {
 		//plugins[name] = append(list,def...)
 		sort.Sort(sort.Reverse(entity.PluginSlice(plugins[name])))
@@ -57,7 +57,7 @@ func loadStategyPlugin() {
 		if handle == nil {
 			continue
 		}
-		excer, err := handle.Factory.Create(p.PluginConfig, node_common.ClusterName(), p.UpdateTag, p.StrategyID, 0)
+		excer, err := handle.Factory.Create(p.PluginConfig, nodecommon.ClusterName(), p.UpdateTag, p.StrategyID, 0)
 		if err != nil {
 
 			continue

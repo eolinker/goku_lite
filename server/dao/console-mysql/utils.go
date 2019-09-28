@@ -1,4 +1,4 @@
-package console_mysql
+package consolemysql
 
 import (
 	SQL "database/sql"

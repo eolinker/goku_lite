@@ -4,6 +4,7 @@ import (
 	"net/http"
 )
 
+//Handle 处理器
 func Handle(prefix string) http.Handler {
 
 	serveMux := http.NewServeMux()

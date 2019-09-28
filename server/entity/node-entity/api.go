@@ -1,8 +1,9 @@
 package entity
 
-type Api struct {
-	ApiID         int
-	ApiName       string
+//API api
+type API struct {
+	APIID         int
+	APIName       string
 	RequestURL    string
 	RequestMethod string
 	Protocol      string
@@ -17,7 +18,8 @@ type Api struct {
 	StripSlash    bool // 是否过滤斜杠
 }
 
-type ApiExtend struct {
-	*Api
+//APIExtend api extend
+type APIExtend struct {
+	*API
 	Target string
 }

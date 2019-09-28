@@ -1,5 +1,6 @@
 package entity
 
+//LogConfig 日志配置
 type LogConfig struct {
 	Name   string
 	Enable int

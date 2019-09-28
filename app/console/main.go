@@ -12,8 +12,11 @@ import (
 )
 
 var (
+	// UserPassword 用户密码
 	UserPassword string
+	// UserName 用户名
 	UserName     string
+	// ConfFilePath 配置文件地址
 	ConfFilePath = "./config/goku.conf"
 
 )

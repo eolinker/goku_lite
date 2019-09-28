@@ -6,6 +6,7 @@ import (
 	monitor_key "github.com/eolinker/goku-api-gateway/server/monitor/monitor-key"
 )
 
+//GatewayRequestInfo 网关请求数量信息
 type GatewayRequestInfo struct {
 	GatewayRequestCount   int64   `json:"gatewayRequestCount"`
 	GatewaySuccessCount   int64   `json:"gatewaySuccessCount"`
@@ -28,6 +29,7 @@ func (i *GatewayRequestInfo) read(values monitor_key.MonitorValues) {
 	i.GatewaySuccessRateStr = fmt.Sprintf("%.2f%%", i.GatewaySuccessRate*100)
 }
 
+//ProxyInfo 转发数量信息
 type ProxyInfo struct {
 	ProxyRequestCount   int64   `json:"proxyRequestCount"`
 	ProxySuccessCount   int64   `json:"proxySuccessCount"`
@@ -57,28 +59,33 @@ func (i *ProxyInfo) read(values monitor_key.MonitorValues) {
 	i.ProxySuccessRateStr = fmt.Sprintf("%.2f%%", i.ProxySuccessRate*100)
 }
 
+//BaseGatewayInfo 网关基本信息
 type BaseGatewayInfo struct {
 	NodeCount      int    `json:"nodeCount"`
 	NodeStartCount int    `json:"-"`
 	NodeStopCount  int    `json:"-"`
 	ProjectCount   int    `json:"projectCount"`
-	ApiCount       int    `json:"apiCount"`
+	APICount       int    `json:"apiCount"`
 	StrategyCount  int    `json:"strategyCount"`
 	Version        string `json:"version"`
 	ClusterCount   int    `json:"clusterCount"`
 	RedisCount     int    `json:"redisCount"`
 }
+
+//SystemInfo 系统信息
 type SystemInfo struct {
 	GatewayRequestInfo GatewayRequestInfo `json:"gatewayRequestInfo"`
 	ProxyInfo          ProxyInfo          `json:"proxyRequestInfo"`
 	BaseInfo           BaseGatewayInfo    `json:"baseInfo"`
 }
 
+//Info info
 type Info struct {
 	GatewayRequestInfo
 	ProxyInfo
 }
 
+//Get get
 func (i *Info) Get(key string) interface{} {
 	switch key {
 	case "gatewayRequestCount":
@@ -112,6 +119,8 @@ func (i *Info) Get(key string) interface{} {
 	}
 	return ""
 }
+
+//Value value
 func (i *Info) Value(key string) int64 {
 	switch key {
 	case "gatewayRequestCount":
@@ -151,17 +160,19 @@ func (i *Info) read(values monitor_key.MonitorValues) {
 	i.ProxyInfo.read(values)
 }
 
+//APIInfo 接口信息
 type APIInfo struct {
 	Info
-	Id   int    `json:"apiID"`
+	ID   int    `json:"apiID"`
 	Name string `json:"apiName"`
 	URL  string `json:"requestURL"`
 }
 
+//Get get
 func (i *APIInfo) Get(key string) interface{} {
 	switch key {
 	case "id":
-		return i.Id
+		return i.ID
 	case "name":
 		return i.Name
 	case "url":
@@ -170,18 +181,20 @@ func (i *APIInfo) Get(key string) interface{} {
 	return i.Info.Get(key)
 }
 
+//StrategyInfo 策略信息
 type StrategyInfo struct {
 	Info
-	Id     string `json:"strategyID"`
+	ID     string `json:"strategyID"`
 	Name   string `json:"strategyName"`
 	Status string `json:"-"`
 }
 
+//Get get
 func (s *StrategyInfo) Get(key string) interface{} {
 
 	switch key {
 	case "id":
-		return s.Id
+		return s.ID
 	case "name":
 		return s.Name
 	case "status":
@@ -191,30 +204,38 @@ func (s *StrategyInfo) Get(key string) interface{} {
 
 }
 
+//StrategyInfoList 策略信息列表
 type StrategyInfoList []*StrategyInfo
 
+//Value value
 func (l StrategyInfoList) Value(i int, key string) int64 {
 	return l[i].Value(key)
 }
 
+//Len len
 func (l StrategyInfoList) Len() int {
 	return len(l)
 }
 
+//Swap swap
 func (l StrategyInfoList) Swap(i, j int) {
 	l[i], l[j] = l[j], l[i]
 }
 
+//APIInfoList 接口信息列表
 type APIInfoList []*APIInfo
 
+//Value value
 func (l APIInfoList) Value(i int, key string) int64 {
 	return l[i].Value(key)
 }
 
+//Len len
 func (l APIInfoList) Len() int {
 	return len(l)
 }
 
+//Swap swap
 func (l APIInfoList) Swap(i, j int) {
 	l[i], l[j] = l[j], l[i]
 }

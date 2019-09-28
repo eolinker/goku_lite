@@ -1,4 +1,4 @@
-package console_mysql
+package consolemysql
 
 import (
 	SQL "database/sql"
@@ -13,7 +13,7 @@ import (
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
-// 获取插件配置信息
+//GetPluginInfo 获取插件配置信息
 func GetPluginInfo(pluginName string) (bool, *entity.Plugin, error) {
 	db := database2.GetConnection()
 	sql := `SELECT pluginID,pluginName,pluginStatus,IFNULL(pluginConfig,""),pluginPriority,isStop,IFNULL(pluginDesc,""),IFNULL(version,""),pluginType FROM goku_plugin WHERE pluginName = ?;`
@@ -51,20 +51,17 @@ func GetPluginList(keyword string, condition int) (bool, []*entity.Plugin, error
 	defer rows.Close()
 	//获取记录列
 	pluginList := make([]*entity.Plugin, 0)
-	if _, err = rows.Columns(); err != nil {
-		return false, make([]*entity.Plugin, 0), err
-	} else {
-		for rows.Next() {
-			var plugin entity.Plugin
-			err = rows.Scan(&plugin.PluginID, &plugin.ChineseName, &plugin.PluginName, &plugin.PluginStatus, &plugin.PluginIndex, &plugin.PluginDesc, &plugin.IsStop, &plugin.PluginType, &plugin.Version, &plugin.IsCheck)
-			if err != nil {
-				return false, make([]*entity.Plugin, 0), err
-			}
-			pluginList = append(pluginList, &plugin)
+
+	for rows.Next() {
+		var plugin entity.Plugin
+		err = rows.Scan(&plugin.PluginID, &plugin.ChineseName, &plugin.PluginName, &plugin.PluginStatus, &plugin.PluginIndex, &plugin.PluginDesc, &plugin.IsStop, &plugin.PluginType, &plugin.Version, &plugin.IsCheck)
+		if err != nil {
+			return false, make([]*entity.Plugin, 0), err
 		}
-		// sort.Sort(sort.Reverse(entity.PluginSlice(pluginList)))
-		return true, pluginList, nil
+		pluginList = append(pluginList, &plugin)
 	}
+	// sort.Sort(sort.Reverse(entity.PluginSlice(pluginList)))
+	return true, pluginList, nil
 }
 
 // AddPlugin 新增插件信息
@@ -79,9 +76,8 @@ func AddPlugin(pluginName, pluginConfig, pluginDesc, version string, pluginPrior
 	if err != nil {
 		panic(err)
 		return false, "[ERROR]Failed to insert data!", err
-	} else {
-		return true, "", nil
 	}
+	return true, "", nil
 }
 
 // EditPlugin 修改插件信息
@@ -132,7 +128,7 @@ func DeletePlugin(pluginName string) (bool, string, error) {
 		return false, "[ERROR]The plugin is not exist!", err
 	}
 	if official == "true" {
-		return false, "[ERROR]Can not delete goku plugin!", errors.New("[ERROR]Can not delete goku plugin!")
+		return false, "[error]can not delete goku plugin!", errors.New("[error]can not delete goku plugin")
 	}
 	Tx, _ := db.Begin()
 	_, err = Tx.Exec(`DELETE FROM goku_plugin WHERE pluginName = ?`, pluginName)
@@ -150,7 +146,7 @@ func DeletePlugin(pluginName string) (bool, string, error) {
 	return true, "", nil
 }
 
-// 判断插件ID是否存在
+//CheckIndexIsExist 判断插件ID是否存在
 func CheckIndexIsExist(pluginName string, pluginPriority int) (bool, error) {
 	db := database2.GetConnection()
 	sql := "SELECT pluginName FROM goku_plugin WHERE pluginPriority = ?;"
@@ -158,15 +154,14 @@ func CheckIndexIsExist(pluginName string, pluginPriority int) (bool, error) {
 	err := db.QueryRow(sql, pluginPriority).Scan(&p)
 	if err != nil {
 		return false, err
-	} else {
-		if pluginName == p {
-			return false, err
-		}
-		return true, nil
 	}
+	if pluginName == p {
+		return false, err
+	}
+	return true, nil
 }
 
-// 获取插件配置及插件信息
+//GetPluginConfig 获取插件配置及插件信息
 func GetPluginConfig(pluginName string) (bool, string, error) {
 	db := database2.GetConnection()
 	sql := `SELECT IFNULL(pluginConfig,"") FROM goku_plugin WHERE pluginName = ?`
@@ -178,7 +173,7 @@ func GetPluginConfig(pluginName string) (bool, string, error) {
 	return true, pluginConfig, nil
 }
 
-// 检查插件名称是否存在
+//CheckNameIsExist 检查插件名称是否存在
 func CheckNameIsExist(pluginName string) (bool, error) {
 	db := database2.GetConnection()
 	sql := "SELECT pluginName FROM goku_plugin WHERE pluginName = ?;"
@@ -186,12 +181,11 @@ func CheckNameIsExist(pluginName string) (bool, error) {
 	err := db.QueryRow(sql, pluginName).Scan(&p)
 	if err != nil {
 		return false, err
-	} else {
-		return true, err
 	}
+	return true, err
 }
 
-// 修改插件开启状态
+//EditPluginStatus 修改插件开启状态
 func EditPluginStatus(pluginName string, pluginStatus int) (bool, error) {
 	db := database2.GetConnection()
 	Tx, _ := db.Begin()
@@ -208,14 +202,13 @@ func EditPluginStatus(pluginName string, pluginStatus int) (bool, error) {
 	if err != nil {
 		Tx.Rollback()
 		return false, err
-	} else {
-		// 获取使用该插件的策略组列表
-		Tx.Commit()
-		return true, nil
 	}
+	// 获取使用该插件的策略组列表
+	Tx.Commit()
+	return true, nil
 }
 
-// 获取不同类型的插件列表
+//GetPluginListByPluginType 获取不同类型的插件列表
 func GetPluginListByPluginType(pluginType int) (bool, []map[string]interface{}, error) {
 	db := database2.GetConnection()
 	sql := `SELECT pluginID,pluginName,pluginDesc FROM goku_plugin WHERE pluginType = ? AND pluginStatus = 1;`
@@ -228,29 +221,25 @@ func GetPluginListByPluginType(pluginType int) (bool, []map[string]interface{}, 
 	defer rows.Close()
 	//获取记录列
 	pluginList := make([]map[string]interface{}, 0)
-	if _, err = rows.Columns(); err != nil {
-		return false, make([]map[string]interface{}, 0), err
-	} else {
-		for rows.Next() {
-			var pluginID int
-			var pluginName, chineseName string
-			err = rows.Scan(&pluginID, &pluginName, &chineseName)
-			if err != nil {
-				return false, make([]map[string]interface{}, 0), err
-			}
-			plugin := map[string]interface{}{
-				"pluginID":    pluginID,
-				"pluginName":  pluginName,
-				"pluginType":  pluginType,
-				"chineseName": chineseName,
-			}
-			pluginList = append(pluginList, plugin)
+	for rows.Next() {
+		var pluginID int
+		var pluginName, chineseName string
+		err = rows.Scan(&pluginID, &pluginName, &chineseName)
+		if err != nil {
+			return false, make([]map[string]interface{}, 0), err
 		}
-		return true, pluginList, nil
+		plugin := map[string]interface{}{
+			"pluginID":    pluginID,
+			"pluginName":  pluginName,
+			"pluginType":  pluginType,
+			"chineseName": chineseName,
+		}
+		pluginList = append(pluginList, plugin)
 	}
+	return true, pluginList, nil
 }
 
-// 批量关闭插件
+//BatchStopPlugin 批量关闭插件
 func BatchStopPlugin(pluginNameList string) (bool, string, error) {
 	db := database2.GetConnection()
 	Tx, _ := db.Begin()
@@ -274,7 +263,7 @@ func BatchStopPlugin(pluginNameList string) (bool, string, error) {
 	return true, "", nil
 }
 
-// 批量关闭插件
+//BatchStartPlugin 批量关闭插件
 func BatchStartPlugin(pluginNameList string) (bool, string, error) {
 	db := database2.GetConnection()
 	Tx, _ := db.Begin()
@@ -298,7 +287,7 @@ func BatchStartPlugin(pluginNameList string) (bool, string, error) {
 	return true, "", nil
 }
 
-// 将插件配置写进缓存表中
+//EditPluginCache 将插件配置写进缓存表中
 func EditPluginCache(pluginName string, oldPluginType, pluginType int, Tx *SQL.Tx) (bool, error) {
 
 	if oldPluginType == 1 {
@@ -312,28 +301,25 @@ func EditPluginCache(pluginName string, oldPluginType, pluginType int, Tx *SQL.T
 		//延时关闭Rows
 		defer rows.Close()
 		//获取记录列
-		if _, err = rows.Columns(); err != nil {
-			return false, err
-		} else {
-			for rows.Next() {
-				var strategyID string
-				err = rows.Scan(&strategyID)
+
+		for rows.Next() {
+			var strategyID string
+			err = rows.Scan(&strategyID)
+			if err != nil {
+				return false, err
+			}
+			strategyIDList = append(strategyIDList, strategyID)
+		}
+		if len(strategyIDList) > 0 {
+			if oldPluginType != pluginType {
+				// 删除策略组插件
+				_, err = Tx.Exec("DELETE FROM goku_conn_plugin_strategy WHERE strategyID AND pluginName = ?;", pluginName)
 				if err != nil {
 					return false, err
 				}
-				strategyIDList = append(strategyIDList, strategyID)
 			}
-			if len(strategyIDList) > 0 {
-				if oldPluginType != pluginType {
-					// 删除策略组插件
-					_, err = Tx.Exec("DELETE FROM goku_conn_plugin_strategy WHERE strategyID AND pluginName = ?;", pluginName)
-					if err != nil {
-						return false, err
-					}
-				}
-			}
-			return true, nil
 		}
+		return true, nil
 	} else if oldPluginType == 2 {
 		// 获取策略ID列表
 		sql := "SELECT strategyID,apiID FROM goku_conn_plugin_api WHERE pluginName = ?;"
@@ -345,48 +331,45 @@ func EditPluginCache(pluginName string, oldPluginType, pluginType int, Tx *SQL.T
 		//延时关闭Rows
 		defer rows.Close()
 		//获取记录列
-		if _, err = rows.Columns(); err != nil {
-			return false, err
-		} else {
-			for rows.Next() {
-				var strategyID string
-				var apiID int
-				err = rows.Scan(&strategyID, &apiID)
+
+		for rows.Next() {
+			var strategyID string
+			var apiID int
+			err = rows.Scan(&strategyID, &apiID)
+			if err != nil {
+				return false, err
+			}
+			connList = append(connList, map[string]interface{}{
+				"strategyID": strategyID,
+				"apiID":      apiID,
+			})
+		}
+		if len(connList) > 0 {
+			if oldPluginType != pluginType {
+				// 删除接口插件
+				_, err = Tx.Exec("DELETE FROM goku_conn_plugin_api WHERE pluginName = ?;", pluginName)
 				if err != nil {
 					return false, err
 				}
-				connList = append(connList, map[string]interface{}{
-					"strategyID": strategyID,
-					"apiID":      apiID,
-				})
 			}
-			if len(connList) > 0 {
-				if oldPluginType != pluginType {
-					// 删除接口插件
-					_, err = Tx.Exec("DELETE FROM goku_conn_plugin_api WHERE pluginName = ?;", pluginName)
-					if err != nil {
-						return false, err
-					}
-				}
-			}
-			return true, nil
 		}
+		return true, nil
 	}
 	return true, nil
 }
 
-// 更新插件检测状态
+//EditPluginCheckStatus 更新插件检测状态
 func EditPluginCheckStatus(pluginName string, isCheck int) (bool, string, error) {
 	db := database2.GetConnection()
 	sql := "UPDATE goku_plugin SET isCheck = ? WHERE pluginName = ?;"
 	_, err := db.Exec(sql, isCheck, pluginName)
 	if err != nil {
 		return false, "[ERROR]Fail to update data", err
-	} else {
-		return true, "", nil
 	}
+	return true, "", nil
 }
 
+//UpdatePluginTagByPluginName 更新插件标志位
 func UpdatePluginTagByPluginName(pluginList string) error {
 	db := database2.GetConnection()
 	plugins := strings.Split(pluginList, ",")

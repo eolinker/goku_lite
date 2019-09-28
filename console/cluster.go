@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/eolinker/goku-api-gateway/common/conf"
-	"github.com/eolinker/goku-api-gateway/common/redis-manager"
+	redis_manager "github.com/eolinker/goku-api-gateway/common/redis-manager"
 	cluster2 "github.com/eolinker/goku-api-gateway/server/cluster"
 	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
 	"github.com/eolinker/goku-api-gateway/server/entity"
@@ -49,6 +49,8 @@ func getDefaultDatabase() (*entity.ClusterDB, error) {
 		Database: conf.Value("db_name"),
 	}, nil
 }
+
+//InitClusters 初始化集群
 func InitClusters() {
 
 	infos, err := loadCluster(conf.MastValue("cluster_config", "config/cluster.yaml"))

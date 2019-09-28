@@ -1,4 +1,4 @@
-package goku_node
+package gokunode
 
 import (
 	log "github.com/eolinker/goku-api-gateway/goku-log"
@@ -14,19 +14,26 @@ import (
 	"strings"
 )
 
+//InitPluginUtils 初始化插件工具
 func InitPluginUtils() {
 	goku_plugin.SetRedisManager(redis_plugin_proxy.Create())
 	goku_plugin.InitLog(log.GetLogger())
 	//goku_plugin.SetLog(new(log_plugin_proxy.LoggerGeneral))
 }
+
+//InitDiscovery 初始化服务发现
 func InitDiscovery() {
 
 	all := discovery.AllDrivers()
 	log.Infof("install service discovery driver:[%s]\n", strings.Join(all, ","))
 }
+
+//InitLog 初始化日志模块
 func InitLog() {
 	config_manager.InitLog()
 }
+
+//InitServer 初始化Server
 func InitServer() {
 	log.Debug("init InitServer start")
 

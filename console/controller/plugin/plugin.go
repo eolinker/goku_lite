@@ -40,7 +40,7 @@ func GetPluginList(httpResponse http.ResponseWriter, httpRequest *http.Request) 
 	return
 }
 
-// 新增插件信息
+//AddPlugin 新增插件信息
 func AddPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
 	if e != nil {
@@ -106,7 +106,7 @@ func AddPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 修改插件信息
+//EditPlugin 修改插件信息
 func EditPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
 	if e != nil {
@@ -162,7 +162,7 @@ func EditPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	controller.WriteResultInfo(httpResponse, "plugin", "", nil)
 }
 
-// 删除插件信息
+//DeletePlugin 删除插件信息
 func DeletePlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
 	if e != nil {
@@ -195,7 +195,7 @@ func DeletePlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 获取插件信息
+//GetPluginInfo 获取插件信息
 func GetPluginInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationREAD)
 	if e != nil {
@@ -228,7 +228,7 @@ func GetPluginInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) 
 	controller.WriteResultInfo(httpResponse, "plugin", "pluginInfo", result)
 }
 
-// 获取插件配置
+//GetPluginConfig 获取插件配置
 func GetPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationREAD)
 	if e != nil {
@@ -252,7 +252,7 @@ func GetPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Request
 	return
 }
 
-// 判断插件优先级是否存在
+//CheckIndexIsExist 判断插件优先级是否存在
 func CheckIndexIsExist(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
 	if e != nil {
@@ -286,7 +286,7 @@ func CheckIndexIsExist(httpResponse http.ResponseWriter, httpRequest *http.Reque
 	return
 }
 
-// 检查插件名称是否存在
+//CheckNameIsExist 检查插件名称是否存在
 func CheckNameIsExist(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
 	if e != nil {
@@ -309,7 +309,7 @@ func CheckNameIsExist(httpResponse http.ResponseWriter, httpRequest *http.Reques
 
 }
 
-// 开启插件
+//StartPlugin 开启插件
 func StartPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
 	if e != nil {
@@ -332,7 +332,7 @@ func StartPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	controller.WriteResultInfo(httpResponse, "plugin", "", nil)
 }
 
-// 关闭插件
+//StopPlugin 关闭插件
 func StopPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
 	if e != nil {
@@ -354,7 +354,7 @@ func StopPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	controller.WriteResultInfo(httpResponse, "plugin", "", nil)
 }
 
-// 获取不同类型的插件列表
+//GetPluginListByPluginType 获取不同类型的插件列表
 func GetPluginListByPluginType(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationREAD)
 	if e != nil {
@@ -387,7 +387,7 @@ func GetPluginListByPluginType(httpResponse http.ResponseWriter, httpRequest *ht
 	controller.WriteResultInfo(httpResponse, "plugin", "pluginList", result)
 }
 
-// 批量关闭插件
+//BatchStopPlugin 批量关闭插件
 func BatchStopPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
 	if e != nil {
@@ -411,7 +411,7 @@ func BatchStopPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request
 	return
 }
 
-// 批量关闭插件
+//BatchStartPlugin 批量关闭插件
 func BatchStartPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
 	if e != nil {
@@ -435,6 +435,7 @@ func BatchStartPlugin(httpResponse http.ResponseWriter, httpRequest *http.Reques
 
 }
 
+//CheckPluginIsAvailable 判断插件是否可用
 func CheckPluginIsAvailable(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
 	if e != nil {

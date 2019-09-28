@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+//EXPIRE 过期时间
 const EXPIRE = time.Second * 10
 
 var (
@@ -45,16 +46,19 @@ func (m *_StatusManager) get(id string) (time.Time, bool) {
 	return t, b
 }
 
+//Refresh 刷新
 func Refresh(ip string, port string) {
 	id := fmt.Sprintf("%s:%d", ip, port)
 	manager.refresh(id)
 }
 
+//NodeStop 停止节点
 func NodeStop(ip, port string) {
 	id := fmt.Sprintf("%s:%d", ip, port)
 	manager.stop(id)
 }
 
+//IsLive 是否正常
 func IsLive(ip string, port string) bool {
 	id := fmt.Sprintf("%s:%d", ip, port)
 	t, has := manager.get(id)
@@ -67,6 +71,8 @@ func IsLive(ip string, port string) bool {
 	}
 	return true
 }
+
+//ResetNodeStatus 重置节点状态
 func ResetNodeStatus(nodes ...*entity.Node) {
 	for _, node := range nodes {
 

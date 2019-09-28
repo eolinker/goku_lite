@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	log "github.com/eolinker/goku-api-gateway/goku-log"
+	// mysql包
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -14,6 +15,7 @@ var (
 	defaultDB *sql.DB
 )
 
+//InitConnection 初始化连接
 func InitConnection(config Config) error {
 	db, e := getConnection(config)
 	defaultDB = db
@@ -45,6 +47,7 @@ func getConnection(config Config) (*sql.DB, error) {
 
 }
 
+//GetConnection 获取连接
 func GetConnection() *sql.DB {
 
 	return defaultDB

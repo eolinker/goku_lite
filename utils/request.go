@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// 检查插件是否可用
+//CheckPluginIsAvailiable  检查插件是否可用
 func CheckPluginIsAvailiable(pluginName string, nodeList []map[string]interface{}) (bool, []map[string]interface{}) {
 	errNodeList := make([]map[string]interface{}, 0)
 	for _, v := range nodeList {
@@ -19,7 +19,7 @@ func CheckPluginIsAvailiable(pluginName string, nodeList []map[string]interface{
 		client := &http.Client{
 			Timeout: time.Second * 15,
 		}
-		var data url.Values = url.Values{}
+		var data = url.Values{}
 		data.Add("pluginName", pluginName)
 
 		request, err := http.NewRequest("POST", "http://"+v["nodeIP"].(string)+":"+v["nodePort"].(string)+"/goku-check_plugin", strings.NewReader(data.Encode()))
@@ -54,8 +54,8 @@ func CheckPluginIsAvailiable(pluginName string, nodeList []map[string]interface{
 			continue
 		}
 		resp.Body.Close()
-		var bodyJson map[string]string
-		err = json.Unmarshal(body, &bodyJson)
+		var bodyJSON map[string]string
+		err = json.Unmarshal(body, &bodyJSON)
 		if err != nil {
 			errNode := map[string]interface{}{
 				"nodeAddress":     v["nodeIP"].(string) + ":" + v["nodePort"].(string),
@@ -65,7 +65,7 @@ func CheckPluginIsAvailiable(pluginName string, nodeList []map[string]interface{
 			errNodeList = append(errNodeList, errNode)
 			continue
 		}
-		if _, ok := bodyJson["statusCode"]; !ok {
+		if _, ok := bodyJSON["statusCode"]; !ok {
 			errNode := map[string]interface{}{
 				"nodeAddress":     v["nodeIP"].(string) + ":" + v["nodePort"].(string),
 				"error":           "[ERROR] Fail to get statusCode",
@@ -74,11 +74,11 @@ func CheckPluginIsAvailiable(pluginName string, nodeList []map[string]interface{
 			errNodeList = append(errNodeList, errNode)
 			continue
 		}
-		if bodyJson["statusCode"] != "000000" {
+		if bodyJSON["statusCode"] != "000000" {
 			errNode := map[string]interface{}{
 				"nodeAddress":     v["nodeIP"].(string) + ":" + v["nodePort"].(string),
-				"error":           bodyJson["resultDesc"],
-				"errorStatusCode": bodyJson["statusCode"],
+				"error":           bodyJSON["resultDesc"],
+				"errorStatusCode": bodyJSON["statusCode"],
 			}
 			errNodeList = append(errNodeList, errNode)
 			continue
@@ -86,7 +86,6 @@ func CheckPluginIsAvailiable(pluginName string, nodeList []map[string]interface{
 	}
 	if len(errNodeList) > 0 {
 		return false, errNodeList
-	} else {
-		return true, errNodeList
 	}
+	return true, errNodeList
 }

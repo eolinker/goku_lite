@@ -1,4 +1,4 @@
-package plugin_manager
+package pluginmanager
 
 import (
 	"sort"
@@ -16,7 +16,7 @@ var (
 	beforPlugins []*entity.PluginHandlerExce
 )
 
-// 获取单一插件handle
+//GetPluginHandle 获取单一插件handle
 func GetPluginHandle(name string) *entity.PluginFactoryHandler {
 	locker.RLock()
 	handle := pluginHandles[name]

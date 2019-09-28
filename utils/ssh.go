@@ -8,6 +8,7 @@ import (
 	// "io/ioutil"
 )
 
+//Connect ssh连接
 func Connect(user, password, host, key string, port int, cipherList []string) (*ssh.Session, error) {
 	var (
 		auth         []ssh.AuthMethod
@@ -23,11 +24,6 @@ func Connect(user, password, host, key string, port int, cipherList []string) (*
 	if key == "" {
 		auth = append(auth, ssh.Password(password))
 	} else {
-		// pemBytes, err := ioutil.ReadFile(key)
-		// if err != nil {
-		//   return nil, err
-		// }
-		// fmt.Println(key)
 
 		pemBytes := []byte(key)
 		var signer ssh.Signer

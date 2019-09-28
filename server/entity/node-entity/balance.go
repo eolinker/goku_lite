@@ -2,6 +2,7 @@ package entity
 
 import "github.com/eolinker/goku-api-gateway/server/driver"
 
+//Balance balance
 type Balance struct {
 	Name          string
 	ServiceName   string
@@ -12,6 +13,7 @@ type Balance struct {
 	StaticCluster string
 }
 
+//Type type
 func (e *Balance) Type() *Balance {
 
 	if e != nil {

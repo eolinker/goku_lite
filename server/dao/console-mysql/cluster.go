@@ -1,4 +1,4 @@
-package console_mysql
+package consolemysql
 
 import (
 	"github.com/eolinker/goku-api-gateway/common/database"
@@ -6,6 +6,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
+//InsertClusters 插入集群信息
 func InsertClusters(cs []*entity.ClusterInfo) error {
 	db := database.GetConnection()
 	stmt, e := db.Prepare("INSERT INTO `goku_cluster`(`name`,`title`,`note`,`db`,`redis`) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE `title`=VALUES(`title`),`note`=VALUES(`note`),`db`=VALUES(`db`),`redis`=VALUES(`redis`)")
@@ -20,6 +21,8 @@ func InsertClusters(cs []*entity.ClusterInfo) error {
 
 	return nil
 }
+
+//LoadClusters 加载集群列表
 func LoadClusters() (map[string]*entity.ClusterInfo, error) {
 	db := database.GetConnection()
 	sql := "select `id`, `name`,`title`,`note`,`db`,`redis` from `goku_cluster`;"
@@ -38,7 +41,7 @@ func LoadClusters() (map[string]*entity.ClusterInfo, error) {
 		v := new(entity.ClusterInfo)
 		db := ""
 		redis := ""
-		err := rows.Scan(&v.Id, &v.Name, &v.Title, &v.Note, &db, &redis)
+		err := rows.Scan(&v.ID, &v.Name, &v.Title, &v.Note, &db, &redis)
 		if err != nil {
 			return nil, nil
 		}

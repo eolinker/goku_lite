@@ -1,4 +1,4 @@
-package gateway_manager
+package gatewaymanager
 
 import (
 	"strconv"
@@ -16,24 +16,28 @@ var (
 	_AlertInfo    = "{\"alertAddr\":\"\",\"alertPeriodType\":0,\"logPath\":\"./log/apiAlert\",\"receiverList\":\"\"}"
 )
 
+//GetUpdatePeriod 获取更新周期
 func GetUpdatePeriod() int {
 	locker.RLock()
 	defer locker.RUnlock()
 	return _UpdatePeriod
 }
 
+//GetAlertStatus 获取告警状态
 func GetAlertStatus() int {
 	locker.RLock()
 	defer locker.RUnlock()
 	return _AlertStatus
 }
 
+//GetAlertInfo 获取告警信息
 func GetAlertInfo() string {
 	locker.RLock()
 	defer locker.RUnlock()
 	return _AlertInfo
 }
 
+//LoadGatewayConfig 加载网关配置
 func LoadGatewayConfig() {
 	code, period := dao_gateway.GetGatewayBaseInfo()
 	alertInfo, alrtStatus := dao_gateway.GetGatewayAlertInfo()
@@ -45,6 +49,7 @@ func LoadGatewayConfig() {
 	_AlertInfo = alertInfo
 }
 
+//IsSucess 是否成功
 func IsSucess(statusCode int) bool {
 	locker.RLock()
 	defer locker.RUnlock()

@@ -9,6 +9,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
+//BalanceInfoEntity 负载信息结构体
 type BalanceInfoEntity struct {
 	Name string
 	Desc string
@@ -20,6 +21,8 @@ type BalanceInfoEntity struct {
 	CreateTime string
 	UpdateTime string
 }
+
+//BalanceInfo 负载信息
 type BalanceInfo struct {
 	Name string `json:"balanceName"`
 	Desc string `json:"balanceDesc"`
@@ -29,14 +32,17 @@ type BalanceInfo struct {
 	CreateTime string                    `json:"createTime"`
 	UpdateTime string                    `json:"updateTime"`
 }
+
+//BalanceConfig 负载配置
 type BalanceConfig struct {
-	DiscoveryId      int64                  `json:"serviceDiscoveryID"`
+	DiscoveryID      int64                  `json:"serviceDiscoveryID"`
 	ServiceName      string                 `json:"serviceName"`
 	Servers          []*BalanceServerConfig `json:"-"`
 	ServersConfig    []string               `json:"static"`
 	ServersConfigOrg string                 `json:"staticOrg"`
 }
 
+//BalanceServerConfig 负载服务器配置
 type BalanceServerConfig struct {
 	Server string `json:"server"`
 	Weight int    `json:"weight"`
@@ -60,6 +66,7 @@ type _OldVersionBalanceInfo struct {
 //
 //}
 
+//Decode 解码
 func (ent *BalanceInfoEntity) Decode() (*BalanceInfo, error) {
 	info := new(BalanceInfo)
 	info.Name = ent.Name
@@ -81,7 +88,7 @@ func (ent *BalanceInfoEntity) Decode() (*BalanceInfo, error) {
 		}
 
 		info.Default = &BalanceConfig{
-			DiscoveryId:   0,
+			DiscoveryID:   0,
 			ServiceName:   "",
 			Servers:       config,
 			ServersConfig: FormatServers(config),
@@ -102,6 +109,7 @@ func (ent *BalanceInfoEntity) Decode() (*BalanceInfo, error) {
 
 }
 
+//TryOld try old config
 func TryOld(oldversionConfig string) ([]*BalanceServerConfig, error) {
 	if oldversionConfig == "" {
 		return nil, nil
@@ -121,6 +129,7 @@ func TryOld(oldversionConfig string) ([]*BalanceServerConfig, error) {
 	//return Default, err
 }
 
+//GetConfig 获取配置
 func (info *BalanceInfo) GetConfig(clusterName string) *BalanceConfig {
 	c, has := info.Cluster[clusterName]
 	if !has || len(c.Servers) < 1 {
@@ -129,6 +138,8 @@ func (info *BalanceInfo) GetConfig(clusterName string) *BalanceConfig {
 	// todo: 服务发现需要另外处理，暂时不接入
 	return c
 }
+
+//FormatServers 格式化
 func FormatServers(servers []*BalanceServerConfig) []string {
 	if len(servers) == 0 {
 		return nil
@@ -163,13 +174,15 @@ func fields(str string) []string {
 	})
 	return words
 }
+
+//Decode 解析配置
 func (c *BalanceConfig) Decode() error {
 
 	words := fields(c.ServersConfigOrg)
 
 	s := make([]*BalanceServerConfig, 0, 5)
 
-	var node *BalanceServerConfig = nil
+	var node *BalanceServerConfig
 	index := 0
 	for _, word := range words {
 		if word == ";" {

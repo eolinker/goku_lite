@@ -10,6 +10,7 @@ import (
 	"strconv"
 )
 
+//Register 注册
 func Register(w http.ResponseWriter, r *http.Request) {
 
 	ip, port, err := GetIpPort(r)
@@ -28,7 +29,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 func regedister(ip string, port int) (*entity.ClusterInfo, error) {
 
-	has, node, err := node.GetNodeInfoByIpPort(ip, port)
+	has, node, err := node.GetNodeInfoByIPPort(ip, port)
 	if err != nil {
 		return nil, err
 	}

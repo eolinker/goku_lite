@@ -39,7 +39,7 @@ func GetAlertMsgList(httpResponse http.ResponseWriter, httpRequest *http.Request
 	return
 }
 
-// 清空告警信息列表
+//ClearAlertMsg 清空告警信息列表
 func ClearAlertMsg(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAlert, controller.OperationEDIT)
 	if e != nil {
@@ -61,7 +61,7 @@ func ClearAlertMsg(httpResponse http.ResponseWriter, httpRequest *http.Request) 
 	return
 }
 
-// 删除告警信息
+//DeleteAlertMsg 删除告警信息
 func DeleteAlertMsg(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAlert, controller.OperationEDIT)
 	if e != nil {
@@ -98,6 +98,7 @@ func DeleteAlertMsg(httpResponse http.ResponseWriter, httpRequest *http.Request)
 	return
 }
 
+//GetAlertConfig 获取告警配置
 func GetAlertConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAlert, controller.OperationREAD)
 	if e != nil {

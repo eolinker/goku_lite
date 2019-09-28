@@ -1,4 +1,4 @@
-package config_log
+package configlog
 
 import (
 	"github.com/eolinker/goku-api-gateway/common/database"
@@ -8,6 +8,7 @@ import (
 const sqlSelect = "SELECT `name`,`enable`,`dir`,`file`,`level`,`period`,`expire`,`fields` FROM `goku_config_log` WHERE `name` = ? LIMIT 1;"
 const sqlInsert = "INSERT  INTO `goku_config_log`(`name`,`enable`,`dir`,`file`,`level`,`period`,`expire`,`fields`)VALUES(?,?,?,?,?,?,?,?)ON DUPLICATE KEY UPDATE `enable`=VALUES(`enable`),`dir`=VALUES(`dir`),`file`=VALUES(`file`),`level`=VALUES(`level`),`period`=VALUES(`period`),`expire`=VALUES(`expire`),`fields`=VALUES(`fields`);"
 
+//Get 通过名称获取日志配置
 func Get(name string) (*entity.LogConfig, error) {
 	stmt, e := database.GetConnection().Prepare(sqlSelect)
 	if e != nil {
@@ -30,6 +31,7 @@ func Get(name string) (*entity.LogConfig, error) {
 	return ent, nil
 }
 
+//Set 设置日志配置
 func Set(ent *entity.LogConfig) error {
 	stmt, e := database.GetConnection().Prepare(sqlInsert)
 	if e != nil {

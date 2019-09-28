@@ -7,6 +7,7 @@ import (
 	cluster2 "github.com/eolinker/goku-api-gateway/server/cluster"
 )
 
+//GetClusterList 获取集群列表
 func GetClusterList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
 	if e != nil {
@@ -21,6 +22,7 @@ func GetClusterList(httpResponse http.ResponseWriter, httpRequest *http.Request)
 
 }
 
+//GetClusterInfoList 获取集群信息列表
 func GetClusterInfoList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)

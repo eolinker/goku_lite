@@ -2,6 +2,7 @@ package service
 
 import "encoding/json"
 
+//Simple simple
 type Simple struct {
 	Name        string `json:"name"`
 	Driver      string `json:"driver"`
@@ -9,6 +10,7 @@ type Simple struct {
 	Type        string `json:"type"`
 }
 
+//Service service
 type Service struct {
 	Simple
 
@@ -19,6 +21,7 @@ type Service struct {
 	CreateTime  string `json:"createTime"`
 }
 
+//Info info
 type Info struct {
 	*Service
 	Config             string            `json:"config"`
@@ -30,10 +33,12 @@ type Info struct {
 	HealthCheckTimeOut int               `json:"healthCheckTimeOut"`
 }
 
+//Decode 解码
 func (i *Info) Decode() {
 	json.Unmarshal([]byte(i.ClusterConfig), &i.ClusterConfigObj)
 }
 
+//AddParam add param
 type AddParam struct {
 	Name          string `opt:"name,require"`
 	Driver        string `opt:"driver" default:"static"`

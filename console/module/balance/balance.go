@@ -12,6 +12,7 @@ import (
 	dao_balance "github.com/eolinker/goku-api-gateway/server/dao/dao-balance"
 )
 
+//Add 新增负载
 func Add(info *Param) (string, error) {
 	const TableName = "goku_balance"
 	serviceInfo, err := service.Get(info.ServiceName)
@@ -49,6 +50,7 @@ func Add(info *Param) (string, error) {
 	return "无效serviceName", errors.New("invalid serviceName")
 }
 
+//Save 保存负载
 func Save(info *Param) (string, error) {
 	const TableName = "goku_balance"
 	serviceInfo, err := service.Get(info.ServiceName)
@@ -85,6 +87,8 @@ func Save(info *Param) (string, error) {
 
 	return "无效serviceName", errors.New("invalid serviceName")
 }
+
+//Get 获取负载
 func Get(name string) (*Info, error) {
 	b, e := dao_balance.Get(name)
 	if e != nil {
@@ -93,6 +97,8 @@ func Get(name string) (*Info, error) {
 
 	return ReadInfo(b), nil
 }
+
+//Search 查询
 func Search(keyworkd string) ([]*Info, error) {
 	var entities []*entity.Balance
 	if keyworkd == "" {
@@ -116,6 +122,8 @@ func Search(keyworkd string) ([]*Info, error) {
 	}
 	return infos, nil
 }
+
+//GetAll 获取所有负载信息
 func GetAll() ([]*Info, error) {
 
 	entities, e := dao_balance.GetAll()
@@ -130,6 +138,7 @@ func GetAll() ([]*Info, error) {
 	return infos, nil
 }
 
+//Delete 删除
 func Delete(name string) (string, error) {
 	tableName := "goku_balance"
 	result, err := dao_balance.Delete(name)
@@ -139,11 +148,12 @@ func Delete(name string) (string, error) {
 	return result, err
 }
 
+//GetBalancNames 获取所有负载名称
 func GetBalancNames() (bool, []string, error) {
 	return dao_balance.GetBalanceNames()
 }
 
-// 批量删除负载
+//BatchDeleteBalance 批量删除负载
 func BatchDeleteBalance(balanceNames []string) (string, error) {
 	tableName := "goku_balance"
 	result, err := dao_balance.BatchDelete(balanceNames)

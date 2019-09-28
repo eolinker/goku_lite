@@ -8,22 +8,21 @@ import (
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
-// 新增策略组
+//AddStrategy 新增策略组
 func AddStrategy(strategyName string, groupID int) (bool, string, error) {
 	flag := console_mysql.CheckIsOpenGroup(groupID)
 	if flag {
 		return false, "[ERROR]The group is an open group", errors.New("[ERROR]The group is an open group")
-	} else {
-		flag, result, err := console_mysql.AddStrategy(strategyName, groupID)
-		if flag {
-			tableName := "goku_gateway_strategy"
-			dao.UpdateTable(tableName)
-		}
-		return flag, result, err
 	}
+	flag, result, err := console_mysql.AddStrategy(strategyName, groupID)
+	if flag {
+		tableName := "goku_gateway_strategy"
+		dao.UpdateTable(tableName)
+	}
+	return flag, result, err
 }
 
-// 修改策略组信息
+//EditStrategy 修改策略组信息
 func EditStrategy(strategyID, strategyName string, groupID int) (bool, string, error) {
 	return console_mysql.EditStrategy(strategyID, strategyName, groupID)
 }
@@ -33,14 +32,13 @@ func DeleteStrategy(strategyID string) (bool, string, error) {
 	flag := console_mysql.CheckIsOpenStrategy(strategyID)
 	if flag {
 		return false, "[ERROR]The strategy is an open strategy", errors.New("[ERROR]The strategy is an open strategy")
-	} else {
-		tableName := "goku_gateway_strategy"
-		flag, result, err := console_mysql.DeleteStrategy(strategyID)
-		if flag {
-			dao.UpdateTable(tableName)
-		}
-		return flag, result, err
 	}
+	tableName := "goku_gateway_strategy"
+	flag, result, err := console_mysql.DeleteStrategy(strategyID)
+	if flag {
+		dao.UpdateTable(tableName)
+	}
+	return flag, result, err
 }
 
 // GetOpenStrategy 获取策略组列表
@@ -78,18 +76,19 @@ func BatchDeleteStrategy(strategyIDList string) (bool, string, error) {
 	return flag, result, err
 }
 
+//CheckIsOpenStrategy 是否是开放策略
 func CheckIsOpenStrategy(strategyID string) bool {
 	return console_mysql.CheckIsOpenStrategy(strategyID)
 }
 
-// 更新策略启用状态
+//BatchUpdateStrategyEnableStatus 更新策略启用状态
 func BatchUpdateStrategyEnableStatus(strategyIDList string, enableStatus int) (bool, string, error) {
 	tableName := "goku_gateway_strategy"
 	flag, result, err := console_mysql.BatchUpdateStrategyEnableStatus(strategyIDList, enableStatus)
 	if flag {
 		dao.UpdateTable(tableName)
 		console_mysql.BatchUpdateStrategyPluginUpdateTag(strategyIDList)
-		console_mysql.BatchUpdateApiPluginUpdateTag(strategyIDList)
+		console_mysql.BatchUpdateAPIPluginUpdateTag(strategyIDList)
 	}
 	return flag, result, err
 }

@@ -1,4 +1,4 @@
-package console_mysql
+package consolemysql
 
 import (
 	SQL "database/sql"
@@ -11,8 +11,8 @@ import (
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
-// AddApi 新增接口
-func AddApi(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol string, projectID, groupID, timeout, retryCount, alertValve, managerID, userID int) (bool, int, error) {
+// AddAPI 新增接口
+func AddAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol string, projectID, groupID, timeout, retryCount, alertValve, managerID, userID int) (bool, int, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
@@ -21,21 +21,20 @@ func AddApi(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollo
 	if err != nil {
 		Tx.Rollback()
 		return false, 0, err
-	} else {
-		apiID, _ := res.LastInsertId()
-		// 更新项目更新时间
-		_, err = Tx.Exec("UPDATE goku_gateway_project SET updateTime = ? WHERE projectID = ?;", now, projectID)
-		if err != nil {
-			Tx.Rollback()
-			return false, 0, err
-		}
-		Tx.Commit()
-		return true, int(apiID), nil
 	}
+	apiID, _ := res.LastInsertId()
+	// 更新项目更新时间
+	_, err = Tx.Exec("UPDATE goku_gateway_project SET updateTime = ? WHERE projectID = ?;", now, projectID)
+	if err != nil {
+		Tx.Rollback()
+		return false, 0, err
+	}
+	Tx.Commit()
+	return true, int(apiID), nil
 }
 
-// EditApi 新增接口
-func EditApi(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol string, projectID, groupID, timeout, retryCount, alertValve, apiID, managerID, userID int) (bool, error) {
+// EditAPI 新增接口
+func EditAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol string, projectID, groupID, timeout, retryCount, alertValve, apiID, managerID, userID int) (bool, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
@@ -44,28 +43,27 @@ func EditApi(apiName, requestURL, targetURL, requestMethod, targetMethod, isFoll
 	if err != nil {
 		Tx.Rollback()
 		return false, err
-	} else {
-		// 更新项目更新时间
-		_, err = Tx.Exec("UPDATE goku_gateway_project SET updateTime = ? WHERE projectID = ?;", now, projectID)
-		if err != nil {
-			Tx.Rollback()
-			return false, err
-		}
-		Tx.Commit()
-		return true, nil
 	}
+	// 更新项目更新时间
+	_, err = Tx.Exec("UPDATE goku_gateway_project SET updateTime = ? WHERE projectID = ?;", now, projectID)
+	if err != nil {
+		Tx.Rollback()
+		return false, err
+	}
+	Tx.Commit()
+	return true, nil
 }
 
-// GetApiInfo 获取接口信息
-func GetApiInfo(apiID int) (bool, *entity.Api, error) {
+// GetAPIInfo 获取接口信息
+func GetAPIInfo(apiID int) (bool, *entity.API, error) {
 	db := database2.GetConnection()
 	sql := `SELECT goku_gateway_api.apiID,goku_gateway_api.groupID,goku_gateway_api.apiName,goku_gateway_api.requestURL,goku_gateway_api.targetURL,goku_gateway_api.requestMethod,goku_gateway_api.targetMethod,IFNULL(goku_gateway_api.protocol,"http"),goku_gateway_api.stripSlash,IFNULL(goku_gateway_api.balanceName,""),goku_gateway_api.isFollow,goku_gateway_api.stripPrefix,goku_gateway_api.timeout,goku_gateway_api.retryCount,goku_gateway_api.alertValve,goku_gateway_api.createTime,goku_gateway_api.updateTime,goku_gateway_api.managerID,goku_gateway_api.lastUpdateUserID,goku_gateway_api.createUserID,IFNULL(goku_gateway_api_group.groupPath,"0") FROM goku_gateway_api LEFT JOIN goku_gateway_api_group ON goku_gateway_api.groupID = goku_gateway_api_group.groupID WHERE goku_gateway_api.apiID = ?`
-	api := &entity.Api{}
+	api := &entity.API{}
 	var managerInfo entity.ManagerInfo
-	err := db.QueryRow(sql, apiID).Scan(&api.ApiID, &api.GroupID, &api.ApiName, &api.RequestURL, &api.ProxyURL, &api.RequestMethod, &api.TargetMethod, &api.Protocol, &api.StripSlash, &api.BalanceName, &api.IsFollow, &api.StripPrefix, &api.Timeout, &api.RetryConut, &api.Valve, &api.CreateTime, &api.UpdateTime, &managerInfo.ManagerID, &managerInfo.UpdaterID, &managerInfo.CreateUserID, &api.GroupPath)
+	err := db.QueryRow(sql, apiID).Scan(&api.APIID, &api.GroupID, &api.APIName, &api.RequestURL, &api.ProxyURL, &api.RequestMethod, &api.TargetMethod, &api.Protocol, &api.StripSlash, &api.BalanceName, &api.IsFollow, &api.StripPrefix, &api.Timeout, &api.RetryConut, &api.Valve, &api.CreateTime, &api.UpdateTime, &managerInfo.ManagerID, &managerInfo.UpdaterID, &managerInfo.CreateUserID, &api.GroupPath)
 	if err != nil {
 		panic(err)
-		return false, &entity.Api{}, err
+		return false, &entity.API{}, err
 	}
 
 	api.RequestMethod = strings.ToUpper(api.RequestMethod)
@@ -74,13 +72,13 @@ func GetApiInfo(apiID int) (bool, *entity.Api, error) {
 	err = db.QueryRow(sql, managerInfo.ManagerID).Scan(&managerInfo.ManagerName)
 	if err != nil {
 		if err != SQL.ErrNoRows {
-			return false, &entity.Api{}, err
+			return false, &entity.API{}, err
 		}
 	}
 	err = db.QueryRow(sql, managerInfo.UpdaterID).Scan(&managerInfo.UpdaterName)
 	if err != nil {
 		if err != SQL.ErrNoRows {
-			return false, &entity.Api{}, err
+			return false, &entity.API{}, err
 		}
 	}
 	err = db.QueryRow(sql, managerInfo.CreateUserID).Scan(&managerInfo.CreateUserName)
@@ -93,8 +91,8 @@ func GetApiInfo(apiID int) (bool, *entity.Api, error) {
 	return true, api, nil
 }
 
-// 通过分组列表获取接口列表
-func GetApiListByGroupList(projectID int, groupIDList string) (bool, []map[string]interface{}, error) {
+// GetAPIListByGroupList 通过分组列表获取接口列表
+func GetAPIListByGroupList(projectID int, groupIDList string) (bool, []map[string]interface{}, error) {
 	db := database2.GetConnection()
 	// 获取分组ID列表
 	sql := `SELECT goku_gateway_api.apiID,goku_gateway_api.apiName,goku_gateway_api.requestURL,IFNULL(goku_gateway_api.updateTime,""),goku_gateway_api.lastUpdateUserID,goku_gateway_api.managerID FROM goku_gateway_api WHERE goku_gateway_api.projectID = ? AND goku_gateway_api.groupID IN (` + groupIDList + `) ORDER BY goku_gateway_api.updateTime DESC;`
@@ -108,37 +106,36 @@ func GetApiListByGroupList(projectID int, groupIDList string) (bool, []map[strin
 	//获取记录列
 	if _, err = rows.Columns(); err != nil {
 		return false, make([]map[string]interface{}, 0), err
-	} else {
-		for rows.Next() {
-			var apiID, updaterID, managerID int
-			var apiName, requestURL, updateTime, managerName, updaterName string
-			err = rows.Scan(&apiID, &apiName, &requestURL, &updateTime, &updaterID, &managerID)
-			if err != nil {
+	}
+	for rows.Next() {
+		var apiID, updaterID, managerID int
+		var apiName, requestURL, updateTime, managerName, updaterName string
+		err = rows.Scan(&apiID, &apiName, &requestURL, &updateTime, &updaterID, &managerID)
+		if err != nil {
+			return false, make([]map[string]interface{}, 0), err
+		}
+		sql = `SELECT IFNULL(remark,loginCall) as userName FROM goku_admin WHERE userID = ?;`
+		err = db.QueryRow(sql, managerID).Scan(&managerName)
+		if err != nil {
+			if err != SQL.ErrNoRows {
 				return false, make([]map[string]interface{}, 0), err
 			}
-			sql = `SELECT IFNULL(remark,loginCall) as userName FROM goku_admin WHERE userID = ?;`
-			err = db.QueryRow(sql, managerID).Scan(&managerName)
-			if err != nil {
-				if err != SQL.ErrNoRows {
-					return false, make([]map[string]interface{}, 0), err
-				}
-			}
-			err = db.QueryRow(sql, updaterID).Scan(&updaterName)
-			if err != nil {
-				if err != SQL.ErrNoRows {
-					return false, make([]map[string]interface{}, 0), err
-				}
-			}
-			apiInfo := map[string]interface{}{
-				"apiID":       apiID,
-				"apiName":     apiName,
-				"requestURL":  requestURL,
-				"updateTime":  updateTime,
-				"updaterName": updaterName,
-				"managerName": managerName,
-			}
-			apiList = append(apiList, apiInfo)
 		}
+		err = db.QueryRow(sql, updaterID).Scan(&updaterName)
+		if err != nil {
+			if err != SQL.ErrNoRows {
+				return false, make([]map[string]interface{}, 0), err
+			}
+		}
+		apiInfo := map[string]interface{}{
+			"apiID":       apiID,
+			"apiName":     apiName,
+			"requestURL":  requestURL,
+			"updateTime":  updateTime,
+			"updaterName": updaterName,
+			"managerName": managerName,
+		}
+		apiList = append(apiList, apiInfo)
 	}
 	return true, apiList, nil
 }
@@ -311,7 +308,7 @@ func GetAPIList(projectID int, groupID int, keyword string, condition, page, pag
 	return true, apiList, count, nil
 }
 
-// 接口路径是否存在
+// CheckURLIsExist 接口路径是否存在
 func CheckURLIsExist(requestURL, requestMethod string, projectID, apiID int) bool {
 	db := database2.GetConnection()
 	var id int
@@ -336,21 +333,20 @@ func CheckURLIsExist(requestURL, requestMethod string, projectID, apiID int) boo
 	return false
 }
 
-// 检查接口是否存在
-func CheckApiIsExist(apiID int) (bool, error) {
+// CheckAPIIsExist CheckAPIIsExist 检查接口是否存在
+func CheckAPIIsExist(apiID int) (bool, error) {
 	db := database2.GetConnection()
 	sql := "SELECT apiID FROM goku_gateway_api WHERE apiID = ?;"
 	var id int
 	err := db.QueryRow(sql, apiID).Scan(&id)
 	if err != nil {
 		return false, err
-	} else {
-		return true, err
 	}
+	return true, err
 }
 
-// 批量修改接口负载
-func BatchEditApiBalance(apiIDList []string, balance string) (string, error) {
+// BatchEditAPIBalance 批量修改接口负载
+func BatchEditAPIBalance(apiIDList []string, balance string) (string, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
 
@@ -369,8 +365,8 @@ func BatchEditApiBalance(apiIDList []string, balance string) (string, error) {
 	return "", nil
 }
 
-// 批量修改接口分组
-func BatchEditApiGroup(apiIDList []string, groupID int) (string, error) {
+// BatchEditAPIGroup 批量修改接口分组
+func BatchEditAPIGroup(apiIDList []string, groupID int) (string, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
 
@@ -389,8 +385,8 @@ func BatchEditApiGroup(apiIDList []string, groupID int) (string, error) {
 
 }
 
-// 批量修改接口
-func BatchDeleteApi(apiIDList string) (bool, string, error) {
+// BatchDeleteAPI 批量修改接口
+func BatchDeleteAPI(apiIDList string) (bool, string, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()

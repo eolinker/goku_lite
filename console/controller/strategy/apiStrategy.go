@@ -11,8 +11,8 @@ import (
 	"github.com/eolinker/goku-api-gateway/console/module/strategy"
 )
 
-// 将接口加入策略组
-func AddApiToStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//AddAPIToStrategy 将接口加入策略组
+func AddAPIToStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -32,7 +32,7 @@ func AddApiToStrategy(httpResponse http.ResponseWriter, httpRequest *http.Reques
 		return
 
 	}
-	flag, result, err := api.AddApiToStrategy(apiArray, strategyID)
+	flag, result, err := api.AddAPIToStrategy(apiArray, strategyID)
 	if !flag {
 		controller.WriteError(httpResponse,
 			"240000",
@@ -47,8 +47,8 @@ func AddApiToStrategy(httpResponse http.ResponseWriter, httpRequest *http.Reques
 
 }
 
-// ResetApiTargetOfStrategy 将接口加入策略组
-func ResetApiTargetOfStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+// ResetAPITargetOfStrategy 将接口加入策略组
+func ResetAPITargetOfStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -57,7 +57,7 @@ func ResetApiTargetOfStrategy(httpResponse http.ResponseWriter, httpRequest *htt
 	strategyID := httpRequest.PostFormValue("strategyID")
 	target := httpRequest.PostFormValue("target")
 	apiID := httpRequest.PostFormValue("apiID")
-	apiId, err := strconv.Atoi(apiID)
+	id, err := strconv.Atoi(apiID)
 	if err != nil {
 		controller.WriteError(httpResponse,
 			"240013",
@@ -77,7 +77,7 @@ func ResetApiTargetOfStrategy(httpResponse http.ResponseWriter, httpRequest *htt
 		return
 
 	}
-	flag, result, err := api.SetTarget(apiId, strategyID, target)
+	flag, result, err := api.SetTarget(id, strategyID, target)
 	if !flag {
 		controller.WriteError(httpResponse,
 			"240000",
@@ -91,8 +91,8 @@ func ResetApiTargetOfStrategy(httpResponse http.ResponseWriter, httpRequest *htt
 
 }
 
-// BatchResetApiTargetOfStrategy 将接口加入策略组
-func BatchResetApiTargetOfStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+// BatchResetAPITargetOfStrategy 将接口加入策略组
+func BatchResetAPITargetOfStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -192,8 +192,8 @@ func GetAPIIDListFromStrategy(httpResponse http.ResponseWriter, httpRequest *htt
 	return
 }
 
-// GetApiListFromStrategy 获取策略组接口列表
-func GetApiListFromStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+// GetAPIListFromStrategy 获取策略组接口列表
+func GetAPIListFromStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
 	if e != nil {
 		return
@@ -273,8 +273,8 @@ func GetApiListFromStrategy(httpResponse http.ResponseWriter, httpRequest *http.
 	return
 }
 
-// 检查插件是否添加进策略组
-func CheckIsExistApiInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//CheckIsExistAPIInStrategy 检查插件是否添加进策略组
+func CheckIsExistAPIInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -293,7 +293,7 @@ func CheckIsExistApiInStrategy(httpResponse http.ResponseWriter, httpRequest *ht
 		return
 
 	}
-	flag, _, err := api.CheckIsExistApiInStrategy(id, strategyID)
+	flag, _, err := api.CheckIsExistAPIInStrategy(id, strategyID)
 	if !flag {
 		controller.WriteError(httpResponse,
 			"240000",
@@ -349,8 +349,8 @@ func GetAPIIDListNotInStrategyByProject(httpResponse http.ResponseWriter, httpRe
 	return
 }
 
-// 获取未被该策略组绑定的接口列表
-func GetApiListNotInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//GetAPIListNotInStrategy 获取未被该策略组绑定的接口列表
+func GetAPIListNotInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
 	if e != nil {
 		return
@@ -404,8 +404,8 @@ func GetApiListNotInStrategy(httpResponse http.ResponseWriter, httpRequest *http
 	return
 }
 
-// 批量删除策略组接口
-func BatchDeleteApiInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//BatchDeleteAPIInStrategy 批量删除策略组接口
+func BatchDeleteAPIInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -414,7 +414,7 @@ func BatchDeleteApiInStrategy(httpResponse http.ResponseWriter, httpRequest *htt
 	apiIDList := httpRequest.PostFormValue("apiIDList")
 	strategyID := httpRequest.PostFormValue("strategyID")
 
-	flag, result, err := api.BatchDeleteApiInStrategy(apiIDList, strategyID)
+	flag, result, err := api.BatchDeleteAPIInStrategy(apiIDList, strategyID)
 	if !flag {
 
 		controller.WriteError(httpResponse,

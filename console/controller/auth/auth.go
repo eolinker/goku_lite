@@ -10,7 +10,7 @@ import (
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 )
 
-// 获取认证状态
+//GetAuthStatus 获取认证状态
 func GetAuthStatus(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
 	if e != nil {
@@ -35,7 +35,7 @@ func GetAuthStatus(httpResponse http.ResponseWriter, httpRequest *http.Request) 
 	return
 }
 
-// 获取认证信息
+//GetAuthInfo 获取认证信息
 func GetAuthInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
 	if e != nil {
@@ -62,7 +62,7 @@ func GetAuthInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 }
 
-// 编辑认证信息
+//EditAuthInfo 编辑认证信息
 func EditAuthInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationEDIT)
 	if e != nil {

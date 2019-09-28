@@ -20,12 +20,19 @@ import (
 )
 
 const (
+	//PRE_SIGNAL pre signal
 	PRE_SIGNAL = iota
+
+	//POST_SIGNAL post signal
 	POST_SIGNAL
 
+	//STATE_INIT state init
 	STATE_INIT
+	//STATE_RUNNING state running
 	STATE_RUNNING
+	//STATE_SHUTTING_DOWN state shutting down
 	STATE_SHUTTING_DOWN
+	//STATE_TERMINATE state terminate
 	STATE_TERMINATE
 )
 
@@ -36,10 +43,14 @@ var (
 	socketPtrOffsetMap   map[string]uint
 	runningServersForked bool
 
-	DefaultReadTimeOut    time.Duration
-	DefaultWriteTimeOut   time.Duration
+	//DefaultReadTimeOut 默认读超时时间
+	DefaultReadTimeOut time.Duration
+	//DefaultWriteTimeOut 默认写超时时间
+	DefaultWriteTimeOut time.Duration
+	//DefaultMaxHeaderBytes 默认请求头最大字节数
 	DefaultMaxHeaderBytes int
-	DefaultHammerTime     time.Duration
+	//DefaultHammerTime default hammer time
+	DefaultHammerTime time.Duration
 
 	isChild     bool
 	socketOrder string
@@ -47,7 +58,7 @@ var (
 	hookableSignals []os.Signal
 )
 
-var isStop bool = true
+var isStop = true
 
 func init() {
 	runningServerReg = sync.RWMutex{}

@@ -7,7 +7,7 @@ import (
 	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
 )
 
-// 新增策略组插件
+//AddPluginToStrategy 新增策略组插件
 func AddPluginToStrategy(pluginName, config, strategyID string) (bool, interface{}, error) {
 	tableName := "goku_conn_plugin_strategy"
 	flag, result, err := console_mysql.AddPluginToStrategy(pluginName, config, strategyID)
@@ -18,7 +18,7 @@ func AddPluginToStrategy(pluginName, config, strategyID string) (bool, interface
 	return flag, result, err
 }
 
-// 新增策略组插件配置
+//EditStrategyPluginConfig 新增策略组插件配置
 func EditStrategyPluginConfig(pluginName, config, strategyID string) (bool, string, error) {
 	flag, result, err := console_mysql.EditStrategyPluginConfig(pluginName, config, strategyID)
 	tableName := "goku_conn_plugin_strategy"
@@ -29,7 +29,7 @@ func EditStrategyPluginConfig(pluginName, config, strategyID string) (bool, stri
 	return flag, result, err
 }
 
-// 批量修改策略组插件状态
+//BatchEditStrategyPluginStatus 批量修改策略组插件状态
 func BatchEditStrategyPluginStatus(connIDList, strategyID string, pluginStatus int) (bool, string, error) {
 	plugins := []string{}
 	flag, _ := console_mysql.CheckStrategyPluginIsExistByConnIDList(connIDList, "goku-rate_limiting")
@@ -50,7 +50,7 @@ func BatchEditStrategyPluginStatus(connIDList, strategyID string, pluginStatus i
 	return flag, result, err
 }
 
-// 批量删除策略组插件
+//BatchDeleteStrategyPlugin 批量删除策略组插件
 func BatchDeleteStrategyPlugin(connIDList, strategyID string) (bool, string, error) {
 	tableName := "goku_conn_plugin_strategy"
 	flag, result, err := console_mysql.BatchDeleteStrategyPlugin(connIDList, strategyID)
@@ -65,22 +65,22 @@ func GetStrategyPluginList(strategyID, keyword string, condition int) (bool, []m
 	return console_mysql.GetStrategyPluginList(strategyID, keyword, condition)
 }
 
-// 通过策略组ID获取配置信息
+//GetStrategyPluginConfig 通过策略组ID获取配置信息
 func GetStrategyPluginConfig(strategyID, pluginName string) (bool, string, error) {
 	return console_mysql.GetStrategyPluginConfig(strategyID, pluginName)
 }
 
-// 检查策略组是否绑定插件
+//CheckPluginIsExistInStrategy 检查策略组是否绑定插件
 func CheckPluginIsExistInStrategy(strategyID, pluginName string) (bool, error) {
 	return console_mysql.CheckPluginIsExistInStrategy(strategyID, pluginName)
 }
 
-// 检查策略组插件是否开启
+//GetStrategyPluginStatus 检查策略组插件是否开启
 func GetStrategyPluginStatus(strategyID, pluginName string) (bool, error) {
 	return console_mysql.GetStrategyPluginStatus(strategyID, pluginName)
 }
 
-// 获取Connid
+//GetConnIDFromStrategyPlugin 获取Connid
 func GetConnIDFromStrategyPlugin(pluginName, strategyID string) (bool, int, error) {
 	return console_mysql.GetConnIDFromStrategyPlugin(pluginName, strategyID)
 }

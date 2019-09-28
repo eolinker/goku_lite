@@ -1,8 +1,10 @@
-package monitor_key
+package monitorkey
 
+//MonitorKeyType 监控Key类型
 type MonitorKeyType int
 
 const (
+	// GatewayRequestCount 请求次数信息
 	GatewayRequestCount MonitorKeyType = iota
 	GatewaySuccessCount
 	GatewayStatus2xxCount
@@ -30,10 +32,13 @@ func init() {
 	}
 	keys = ks
 }
+
+//Keys
 func Keys() []MonitorKeyType {
 	return keys
 }
 
+//ToString toString
 func ToString(key int) string {
 	return MonitorKeyType(key).String()
 }

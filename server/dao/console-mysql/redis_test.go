@@ -1,1 +1,1 @@
-package console_mysql
+package consolemysql

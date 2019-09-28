@@ -1,4 +1,4 @@
-package goku_log
+package gokulog
 
 import (
 	"bytes"
@@ -13,11 +13,13 @@ const (
 	defaultTimestampFormat = time.RFC3339
 )
 
+//LineFormatter 格式化
 type LineFormatter struct {
 	TimestampFormat  string
 	CallerPrettyfier func(*runtime.Frame) (function string, file string)
 }
 
+//Format 格式化
 func (f *LineFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	data := make(Fields)
 	for k, v := range entry.Data {

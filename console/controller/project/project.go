@@ -8,7 +8,7 @@ import (
 	"github.com/eolinker/goku-api-gateway/console/module/project"
 )
 
-// 新建项目
+//AddProject 新建项目
 func AddProject(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
@@ -41,7 +41,7 @@ func AddProject(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 修改项目信息
+//EditProject 修改项目信息
 func EditProject(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
@@ -85,7 +85,7 @@ func EditProject(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 删除项目信息
+//DeleteProject 删除项目信息
 func DeleteProject(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
@@ -120,7 +120,7 @@ func DeleteProject(httpResponse http.ResponseWriter, httpRequest *http.Request) 
 	return
 }
 
-// 删除项目信息
+//BatchDeleteProject 删除项目信息
 func BatchDeleteProject(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
@@ -145,7 +145,7 @@ func BatchDeleteProject(httpResponse http.ResponseWriter, httpRequest *http.Requ
 	return
 }
 
-// 获取项目信息
+//GetProjectInfo 获取项目信息
 func GetProjectInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
 	if e != nil {
@@ -179,7 +179,7 @@ func GetProjectInfo(httpResponse http.ResponseWriter, httpRequest *http.Request)
 	return
 }
 
-// 获取项目列表
+//GetProjectList 获取项目列表
 func GetProjectList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
 	if e != nil {
@@ -205,14 +205,14 @@ func GetProjectList(httpResponse http.ResponseWriter, httpRequest *http.Request)
 	return
 }
 
-// 获取项目列表中没有被策略组绑定的接口
-func GetApiListFromProjectNotInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//GetAPIListFromProjectNotInStrategy 获取项目列表中没有被策略组绑定的接口
+func GetAPIListFromProjectNotInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
 	if e != nil {
 		return
 	}
 
-	flag, result, err := project.GetApiListFromProjectNotInStrategy()
+	flag, result, err := project.GetAPIListFromProjectNotInStrategy()
 	if !flag {
 
 		controller.WriteError(httpResponse,

@@ -1,4 +1,4 @@
-package node_common
+package nodecommon
 
 import (
 	"fmt"
@@ -6,24 +6,31 @@ import (
 )
 
 var (
+	//ListenPort 网关监听端口
 	ListenPort  = 6689
 	clusterName string
-	adminUrl    = ""
+	adminURL    = ""
 )
 
+//SetClusterName 设置集群名称
 func SetClusterName(name string) {
 	clusterName = name
 }
+
+//ClusterName 获取集群名称
 func ClusterName() string {
 	return clusterName
 }
 
+//SetAdmin 设置admin地址
 func SetAdmin(host string) {
 	h := strings.TrimPrefix(host, "http://")
 	h = strings.TrimSuffix(h, "/")
-	adminUrl = fmt.Sprintf("http://%s", h)
+	adminURL = fmt.Sprintf("http://%s", h)
 }
-func GetAdminUrl(path string) string {
+
+//GetAdminURL 获取adminURL
+func GetAdminURL(path string) string {
 	p := strings.TrimPrefix(path, "/")
-	return fmt.Sprintf("%s/%s", adminUrl, p)
+	return fmt.Sprintf("%s/%s", adminURL, p)
 }

@@ -5,8 +5,6 @@ import (
 
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 
-	_ "net/http/pprof"
-
 	"github.com/eolinker/goku-api-gateway/console/controller/api"
 	"github.com/eolinker/goku-api-gateway/console/controller/script"
 	"github.com/eolinker/goku-api-gateway/console/controller/strategy"
@@ -18,11 +16,12 @@ import (
 	"github.com/eolinker/goku-api-gateway/console/module/account"
 )
 
+//Server 服务
 func Server() {
 	//go monitor.MonitorNode()
 	monitor_read.InitMonitorRead(cluster2.GetList())
 	script.UpdateTables()
-	api.UpdateAllApiPluginUpdateTag()
+	api.UpdateAllAPIPluginUpdateTag()
 	strategy.UpdateAllStrategyPluginUpdateTag()
 	bind, has := conf.Get("admin_bind")
 
@@ -66,7 +65,7 @@ func Server() {
 
 }
 
-// 用户注册
+// Register 用户注册
 func Register(loginCall, loginPassword string) bool {
 	return account.Register(loginCall, loginPassword)
 }

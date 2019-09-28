@@ -9,6 +9,7 @@ import (
 
 var _ goku_plugin.ContextProxy = (*Context)(nil)
 
+//Context context
 type Context struct {
 	w http.ResponseWriter
 	*CookiesHandler
@@ -19,27 +20,35 @@ type Context struct {
 	ProxyRequest         *Request
 	ProxyResponseHandler *ResponseReader
 	Body                 []byte
-	strategyId           string
+	strategyID           string
 	strategyName         string
-	apiId                int
-	requestId            string
+	apiID                int
+	requestID            string
 	finalTargetServer    string
 	retryTargetServers   string
 }
 
+//FinalTargetServer 获取最终目标转发服务器
 func (ctx *Context) FinalTargetServer() string {
 	return ctx.finalTargetServer
 }
+
+//SetFinalTargetServer 设置最终目标服务器
 func (ctx *Context) SetFinalTargetServer(finalTargetServer string) {
 	ctx.finalTargetServer = finalTargetServer
 }
+
+//RetryTargetServers 重试目标服务器
 func (ctx *Context) RetryTargetServers() string {
 	return ctx.retryTargetServers
 }
+
+//SetRetryTargetServers 设置重试目标服务器
 func (ctx *Context) SetRetryTargetServers(retryTargetServers string) {
 	ctx.retryTargetServers = retryTargetServers
 }
 
+//Finish 请求结束
 func (ctx *Context) Finish() (n int, statusCode int) {
 
 	header := ctx.PriorityHeader.header
@@ -96,11 +105,14 @@ func (ctx *Context) Finish() (n int, statusCode int) {
 	n, _ = ctx.w.Write(ctx.Body)
 	return n, statusCode
 }
+
+//RequestId 获取请求ID
 func (ctx *Context) RequestId() string {
-	return ctx.requestId
+	return ctx.requestID
 }
 
-func NewContext(r *http.Request, requestId string, w http.ResponseWriter) *Context {
+//NewContext 创建context
+func NewContext(r *http.Request, requestID string, w http.ResponseWriter) *Context {
 	requestreader := NewRequestReader(r)
 	return &Context{
 		CookiesHandler:       newCookieHandle(r.Header),
@@ -110,10 +122,12 @@ func NewContext(r *http.Request, requestId string, w http.ResponseWriter) *Conte
 		RequestOrg:           requestreader,
 		ProxyRequest:         NewRequest(requestreader),
 		ProxyResponseHandler: nil,
-		requestId:            requestId,
+		requestID:            requestID,
 		w:                    w,
 	}
 }
+
+//SetProxyResponse 设置转发响应
 func (ctx *Context) SetProxyResponse(response *http.Response) {
 
 	ctx.ProxyResponseHandler = newResponseReader(response)
@@ -136,39 +150,57 @@ func (ctx *Context) Write(w http.ResponseWriter) {
 
 }
 
+//GetBody 获取body内容
 func (ctx *Context) GetBody() []byte {
 	return ctx.Body
 }
+
+//SetBody 设置body内容
 func (ctx *Context) SetBody(data []byte) {
 	ctx.Body = data
 }
 
+//ProxyResponse 转发响应
 func (ctx *Context) ProxyResponse() goku_plugin.ResponseReader {
 	return ctx.ProxyResponseHandler
 }
 
+//StrategyId 获取策略ID
 func (ctx *Context) StrategyId() string {
-	return ctx.strategyId
+	return ctx.strategyID
 }
-func (ctx *Context) SetStrategyId(strategyId string) {
-	ctx.strategyId = strategyId
+
+//SetStrategyId 设置策略ID
+func (ctx *Context) SetStrategyId(strategyID string) {
+	ctx.strategyID = strategyID
 }
+
+//StrategyName 获取策略名称
 func (ctx *Context) StrategyName() string {
 	return ctx.strategyName
 }
+
+//SetStrategyName 设置策略名称
 func (ctx *Context) SetStrategyName(strategyName string) {
 	ctx.strategyName = strategyName
 }
+
+//ApiID 获取接口ID
 func (ctx *Context) ApiID() int {
-	return ctx.apiId
+	return ctx.apiID
 }
-func (ctx *Context) SetApiID(apiId int) {
-	ctx.apiId = apiId
+
+//SetAPIID 设置接口ID
+func (ctx *Context) SetAPIID(apiID int) {
+	ctx.apiID = apiID
 }
+
+//Request 获取请求原始数据
 func (ctx *Context) Request() goku_plugin.RequestReader {
 	return ctx.RequestOrg
 }
 
+//Proxy 获取代理请求
 func (ctx *Context) Proxy() goku_plugin.Request {
 	return ctx.ProxyRequest
 }

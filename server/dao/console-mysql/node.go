@@ -1,17 +1,17 @@
-package console_mysql
+package consolemysql
 
 import (
 	"fmt"
 	"github.com/eolinker/goku-api-gateway/common/database"
-	. "github.com/eolinker/goku-api-gateway/common/version"
+	v "github.com/eolinker/goku-api-gateway/common/version"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 	"strconv"
 	"strings"
 	"time"
 )
 
-// 新增节点信息
-func AddNode(clusterId int, nodeName, nodeIP, nodePort, gatewayPath string, groupID int) (bool, map[string]interface{}, error) {
+// AddNode 新增节点信息
+func AddNode(clusterID int, nodeName, nodeIP, nodePort, gatewayPath string, groupID int) (bool, map[string]interface{}, error) {
 	db := database.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
 	sql := "INSERT INTO goku_node_info (`clusterID`,`nodeName`,`groupID`,`nodeIP`,`nodePort`,`updateTime`,`createTime`,`version`, `gatewayPath`,`nodeStatus`) VALUES (?,?,?,?,?,?,?,?,?,0);"
@@ -20,19 +20,18 @@ func AddNode(clusterId int, nodeName, nodeIP, nodePort, gatewayPath string, grou
 		return false, map[string]interface{}{"error": "[ERROR]Illegal SQL statement!"}, err
 	}
 	defer stmt.Close()
-	res, err := stmt.Exec(clusterId, nodeName, groupID, nodeIP, nodePort, now, now, Version, gatewayPath)
+	res, err := stmt.Exec(clusterID, nodeName, groupID, nodeIP, nodePort, now, now, v.Version, gatewayPath)
 	if err != nil {
 		return false, map[string]interface{}{"error": "[ERROR]Failed to insert data!"}, err
-	} else {
-		nodeID, err := res.LastInsertId()
-		if err != nil {
-			return false, map[string]interface{}{"error": "[ERROR]Failed to insert data!"}, err
-		}
-		return true, map[string]interface{}{"nodeID": nodeID, "version": Version}, nil
 	}
+	nodeID, err := res.LastInsertId()
+	if err != nil {
+		return false, map[string]interface{}{"error": "[ERROR]Failed to insert data!"}, err
+	}
+	return true, map[string]interface{}{"nodeID": nodeID, "version": v.Version}, nil
 }
 
-// 修改节点信息
+// EditNode 修改节点信息
 func EditNode(nodeName, nodeIP, nodePort, gatewayPath string, nodeID, groupID int) (bool, string, error) {
 	db := database.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
@@ -45,12 +44,11 @@ func EditNode(nodeName, nodeIP, nodePort, gatewayPath string, nodeID, groupID in
 	_, err = stmt.Exec(nodeName, nodeIP, nodePort, now, groupID, gatewayPath, nodeID)
 	if err != nil {
 		return false, "[ERROR]Failed to update data!", err
-	} else {
-		return true, "", nil
 	}
+	return true, "", nil
 }
 
-// 删除节点信息
+// DeleteNode 删除节点信息
 func DeleteNode(nodeID int) (bool, string, error) {
 	db := database.GetConnection()
 	sql := "DELETE FROM goku_node_info WHERE nodeID = ?;"
@@ -62,9 +60,8 @@ func DeleteNode(nodeID int) (bool, string, error) {
 	_, err = stmt.Exec(nodeID)
 	if err != nil {
 		return false, "[ERROR]Failed to delete data!", err
-	} else {
-		return true, "", nil
 	}
+	return true, "", nil
 }
 
 // GetNodeList 获取节点列表
@@ -101,7 +98,7 @@ func GetNodeList(clusterID, groupID int, keyword string) (bool, []*entity.Node, 
 			panic(err)
 			return false, nil, err
 		}
-		if node.Version == Version {
+		if node.Version == v.Version {
 			// 判断节点版本号是否是最新
 			node.IsUpdate = true
 		}
@@ -110,8 +107,8 @@ func GetNodeList(clusterID, groupID int, keyword string) (bool, []*entity.Node, 
 	return true, nodeList, nil
 }
 
-const nodeSqlIpPort = "SELECT  A.`nodeID`, A.`nodeName`, A.`nodeIP`, A.`nodePort`, A.`updateTime`, A.`createTime`, A.`version`,   A.`gatewayPath`, A.`groupID`, IFNULL(G.`groupName`,'') , C.`name` As cluster, C.`title` As cluster_title  FROM goku_node_info A LEFT JOIN goku_node_group G ON A.`groupID` = G.`groupID` LEFT JOIN `goku_cluster` C ON A.`clusterID` = C.`id`WHERE A.`nodeIP` = ? and A.`nodePort`=?;"
-const nodeSqlId = "SELECT  A.`nodeID`, A.`nodeName`, A.`nodeIP`, A.`nodePort`, A.`updateTime`, A.`createTime`, A.`version`,   A.`gatewayPath`, A.`groupID`, IFNULL(G.`groupName`,''),  C.`name` As cluster, C.`title` As cluster_title  FROM goku_node_info A LEFT JOIN goku_node_group G ON A.`groupID` = G.`groupID` LEFT JOIN `goku_cluster` C ON A.`clusterID` = C.`id`WHERE A.`nodeID` = ? ;"
+const nodeSQLIPPort = "SELECT  A.`nodeID`, A.`nodeName`, A.`nodeIP`, A.`nodePort`, A.`updateTime`, A.`createTime`, A.`version`,   A.`gatewayPath`, A.`groupID`, IFNULL(G.`groupName`,'') , C.`name` As cluster, C.`title` As cluster_title  FROM goku_node_info A LEFT JOIN goku_node_group G ON A.`groupID` = G.`groupID` LEFT JOIN `goku_cluster` C ON A.`clusterID` = C.`id`WHERE A.`nodeIP` = ? and A.`nodePort`=?;"
+const nodeSQLID = "SELECT  A.`nodeID`, A.`nodeName`, A.`nodeIP`, A.`nodePort`, A.`updateTime`, A.`createTime`, A.`version`,   A.`gatewayPath`, A.`groupID`, IFNULL(G.`groupName`,''),  C.`name` As cluster, C.`title` As cluster_title  FROM goku_node_info A LEFT JOIN goku_node_group G ON A.`groupID` = G.`groupID` LEFT JOIN `goku_cluster` C ON A.`clusterID` = C.`id`WHERE A.`nodeID` = ? ;"
 
 func getNodeInfo(sql string, args ...interface{}) (bool, *entity.Node, error) {
 
@@ -136,17 +133,19 @@ func getNodeInfo(sql string, args ...interface{}) (bool, *entity.Node, error) {
 	return true, node, err
 }
 
-// 获取节点信息
+// GetNodeInfo 获取节点信息
 func GetNodeInfo(nodeID int) (bool, *entity.Node, error) {
 
-	return getNodeInfo(nodeSqlId, nodeID)
-}
-func GetNodeByIpPort(ip string, port int) (bool, *entity.Node, error) {
-
-	return getNodeInfo(nodeSqlIpPort, ip, port)
+	return getNodeInfo(nodeSQLID, nodeID)
 }
 
-// 节点IP查重
+//GetNodeByIPPort 通过IP+端口获取节点信息
+func GetNodeByIPPort(ip string, port int) (bool, *entity.Node, error) {
+
+	return getNodeInfo(nodeSQLIPPort, ip, port)
+}
+
+// CheckIsExistRemoteAddr 节点IP查重
 func CheckIsExistRemoteAddr(nodeID int, nodeIP, nodePort string) bool {
 	db := database.GetConnection()
 	sql := `SELECT nodeID FROM goku_node_info WHERE nodeIP = ? AND nodePort = ?;`
@@ -157,12 +156,11 @@ func CheckIsExistRemoteAddr(nodeID int, nodeIP, nodePort string) bool {
 	}
 	if id == nodeID {
 		return false
-	} else {
-		return true
 	}
+	return true
 }
 
-// 获取节点IP列表
+// GetNodeIPList 获取节点IP列表
 func GetNodeIPList() (bool, []map[string]interface{}, error) {
 	db := database.GetConnection()
 	sql := `SELECT nodeID,nodeIP,nodePort FROM goku_node_info WHERE nodeStatus = 1;`
@@ -174,27 +172,24 @@ func GetNodeIPList() (bool, []map[string]interface{}, error) {
 	defer rows.Close()
 	//获取记录列
 	nodeList := make([]map[string]interface{}, 0)
-	if _, err = rows.Columns(); err != nil {
-		return false, make([]map[string]interface{}, 0), err
-	} else {
-		for rows.Next() {
-			var nodeID int
-			var nodeIP, nodePort string
-			err = rows.Scan(&nodeID, &nodeIP, &nodePort)
-			if err != nil {
-				return false, make([]map[string]interface{}, 0), err
-			}
-			nodeList = append(nodeList, map[string]interface{}{
-				"nodeID":   nodeID,
-				"nodeIP":   nodeIP,
-				"nodePort": nodePort,
-			})
+
+	for rows.Next() {
+		var nodeID int
+		var nodeIP, nodePort string
+		err = rows.Scan(&nodeID, &nodeIP, &nodePort)
+		if err != nil {
+			return false, make([]map[string]interface{}, 0), err
 		}
-		return true, nodeList, nil
+		nodeList = append(nodeList, map[string]interface{}{
+			"nodeID":   nodeID,
+			"nodeIP":   nodeIP,
+			"nodePort": nodePort,
+		})
 	}
+	return true, nodeList, nil
 }
 
-// 从待操作节点中获取关闭节点列表
+// GetAvaliableNodeListFromNodeList 从待操作节点中获取关闭节点列表
 func GetAvaliableNodeListFromNodeList(nodeIDList string, nodeStatus int) (bool, string, error) {
 	db := database.GetConnection()
 	sql := "SELECT nodeID FROM goku_node_info WHERE nodeID IN (" + nodeIDList + ") AND nodeStatus = ?"
@@ -216,7 +211,7 @@ func GetAvaliableNodeListFromNodeList(nodeIDList string, nodeStatus int) (bool, 
 	return true, strings.Join(idList, ","), nil
 }
 
-// 批量修改节点分组
+// BatchEditNodeGroup 批量修改节点分组
 func BatchEditNodeGroup(nodeIDList string, groupID int) (bool, string, error) {
 	db := database.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
@@ -231,7 +226,7 @@ func BatchEditNodeGroup(nodeIDList string, groupID int) (bool, string, error) {
 	return true, "", nil
 }
 
-// 批量修改接口分组
+// BatchDeleteNode 批量修改接口分组
 func BatchDeleteNode(nodeIDList string) (bool, string, error) {
 	db := database.GetConnection()
 	Tx, _ := db.Begin()
@@ -245,7 +240,7 @@ func BatchDeleteNode(nodeIDList string) (bool, string, error) {
 	return true, "", nil
 }
 
-// 更新节点集群ID
+// UpdateAllNodeClusterID 更新节点集群ID
 func UpdateAllNodeClusterID(clusterID int) {
 	db := database.GetConnection()
 	Tx, _ := db.Begin()

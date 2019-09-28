@@ -1,4 +1,4 @@
-package api_manager
+package apimanager
 
 import (
 	"sync"
@@ -14,22 +14,22 @@ func init() {
 
 // apiList: api列表全局变量
 var (
-	apiList map[int]*entity.Api
+	apiList map[int]*entity.API
 	locker  sync.RWMutex
 )
 
-//GetAPI
-func GetAPI(id int) (*entity.Api, bool) {
+//GetAPI 通过id获取API信息
+func GetAPI(id int) (*entity.API, bool) {
 	locker.RLock()
 	defer locker.RUnlock()
 	a, has := apiList[id]
 	return a, has
 }
 
-//GetAPI
-func GetAPIs(ids []int) []*entity.Api {
+//GetAPIs 获取接口信息列表
+func GetAPIs(ids []int) []*entity.API {
 
-	apis := make([]*entity.Api, 0, len(ids))
+	apis := make([]*entity.API, 0, len(ids))
 
 	locker.RLock()
 	defer locker.RUnlock()
@@ -42,14 +42,14 @@ func GetAPIs(ids []int) []*entity.Api {
 	return apis
 }
 
-func reset(list map[int]*entity.Api) {
+func reset(list map[int]*entity.API) {
 	locker.Lock()
 	defer locker.Unlock()
 	apiList = list
 }
 
 func load() {
-	apis, e := dao_api.GetAllApi()
+	apis, e := dao_api.GetAllAPI()
 	if e != nil {
 		return
 	}

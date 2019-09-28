@@ -12,12 +12,12 @@ import (
 	node_common "github.com/eolinker/goku-api-gateway/goku-node/node-common"
 )
 
-// 新增报警信息
+//AddAlertMessage 新增报警信息
 func AddAlertMessage(apiID int, apiName, requestURL, targetServer, targetURL, requestMethod, proxyMethod, headerList, queryParamList, formParamList, responseHeaderList string, alertPeriodType, alertCount, responseStatus int, isAlert string, strategyID string, strategyName, requestID string) (bool, string, error) {
 	client := &http.Client{
 		Timeout: time.Millisecond * 700,
 	}
-	var data url.Values = url.Values{}
+	var data = url.Values{}
 	data.Add("requestID", requestID)
 	data.Add("apiID", strconv.Itoa(apiID))
 	data.Add("apiName", apiName)
@@ -38,7 +38,7 @@ func AddAlertMessage(apiID int, apiName, requestURL, targetServer, targetURL, re
 	data.Add("strategyID", strategyID)
 	data.Add("strategyName", strategyName)
 	data.Add("nodePort", strconv.Itoa(node_common.ListenPort))
-	request, err := http.NewRequest("POST", node_common.GetAdminUrl("/alert/msg/add"), strings.NewReader(data.Encode()))
+	request, err := http.NewRequest("POST", node_common.GetAdminURL("/alert/msg/add"), strings.NewReader(data.Encode()))
 	request.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	if err != nil {
 
@@ -59,20 +59,20 @@ func AddAlertMessage(apiID int, apiName, requestURL, targetServer, targetURL, re
 	return true, "", nil
 }
 
+//SendRequestToAlertAddress 发送告警请求
 func SendRequestToAlertAddress(alertAddress, requestURL, targetServer, proxyURL, msg, apiName string, apiID int) (bool, string, error) {
 	if alertAddress == "" {
-		return false, "[ERROR] Illegal alertAddress!", errors.New("[ERROR] Illegal alertAddress!")
-	} else {
-		_, err := url.Parse(alertAddress)
-		if err != nil {
-			return false, err.Error(), err
-		}
+		return false, "[ERROR] Illegal alertAddress!", errors.New("[error] illegal alertAddress")
+	}
+	_, err := url.Parse(alertAddress)
+	if err != nil {
+		return false, err.Error(), err
 	}
 	client := &http.Client{
 		Timeout: time.Millisecond * 700,
 	}
 	now := time.Now().Format("2006-01-02 15:04:05")
-	var data url.Values = url.Values{}
+	var data = url.Values{}
 	data.Add("requestURL", requestURL)
 	data.Add("targetServer", targetServer)
 	data.Add("targetURL", proxyURL)

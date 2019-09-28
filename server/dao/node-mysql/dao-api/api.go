@@ -1,4 +1,4 @@
-package dao_api
+package daoapi
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
 
-// 获取API接口列表
-func GetAllApi() (map[int]*entity.Api, error) {
+// GetAllAPI 获取API接口列表
+func GetAllAPI() (map[int]*entity.API, error) {
 
 	sql := "SELECT `apiID`,`apiName`,`requestMethod`,`requestURL`,`protocol`,`balanceName`,`targetURL`,`targetMethod`,`isFollow`,`stripPrefix`,`stripSlash`,`timeout`,`retryCount`,`alertValve` FROM `goku_gateway_api`   ORDER BY `apiID` asc;"
 	stmt, e := database.GetConnection().Prepare(sql)
@@ -20,14 +20,14 @@ func GetAllApi() (map[int]*entity.Api, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	apiList := make(map[int]*entity.Api, 0)
+	apiList := make(map[int]*entity.API, 0)
 	//获取记录列
 	if _, err = rows.Columns(); err != nil {
 		return nil, err
 	}
 	for rows.Next() {
-		api := new(entity.Api)
-		err = rows.Scan(&api.ApiID, &api.ApiName, &api.RequestMethod, &api.RequestURL, &api.Protocol, &api.BalanceName, &api.TargetURL, &api.TargetMethod, &api.IsFollow, &api.StripPrefix, &api.StripSlash, &api.Timeout, &api.RetryCount, &api.AlertValve)
+		api := new(entity.API)
+		err = rows.Scan(&api.APIID, &api.APIName, &api.RequestMethod, &api.RequestURL, &api.Protocol, &api.BalanceName, &api.TargetURL, &api.TargetMethod, &api.IsFollow, &api.StripPrefix, &api.StripSlash, &api.Timeout, &api.RetryCount, &api.AlertValve)
 		if err != nil {
 			continue
 		}
@@ -38,7 +38,7 @@ func GetAllApi() (map[int]*entity.Api, error) {
 			api.TargetURL = fmt.Sprint("/", api.TargetURL)
 		}
 
-		apiList[api.ApiID] = api
+		apiList[api.APIID] = api
 	}
 	return apiList, nil
 

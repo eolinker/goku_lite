@@ -1,11 +1,11 @@
-package console_mysql
+package consolemysql
 
 import (
 	database2 "github.com/eolinker/goku-api-gateway/common/database"
 )
 
-// 新建节点分组
-func AddNodeGroup(groupName string, clusterId int) (bool, interface{}, error) {
+// AddNodeGroup 新建节点分组
+func AddNodeGroup(groupName string, clusterID int) (bool, interface{}, error) {
 	db := database2.GetConnection()
 	sql := "INSERT INTO goku_node_group (`groupName`,`clusterID`) VALUES (?,?);"
 	stmt, err := db.Prepare(sql)
@@ -13,7 +13,7 @@ func AddNodeGroup(groupName string, clusterId int) (bool, interface{}, error) {
 		return false, err.Error(), err
 	}
 	defer stmt.Close()
-	r, err := stmt.Exec(groupName, clusterId)
+	r, err := stmt.Exec(groupName, clusterID)
 	if err != nil {
 		return false, "[ERROR]Fail to insert data!", err
 	}
@@ -21,7 +21,7 @@ func AddNodeGroup(groupName string, clusterId int) (bool, interface{}, error) {
 	return true, groupID, nil
 }
 
-// 修改节点分组信息
+// EditNodeGroup 修改节点分组信息
 func EditNodeGroup(groupName string, groupID int) (bool, string, error) {
 	db := database2.GetConnection()
 	sql := "UPDATE goku_node_group SET groupName = ? WHERE groupID = ?;"
@@ -37,7 +37,7 @@ func EditNodeGroup(groupName string, groupID int) (bool, string, error) {
 	return true, "", nil
 }
 
-// 删除节点分组
+// DeleteNodeGroup 删除节点分组
 func DeleteNodeGroup(groupID int) (bool, string, error) {
 	db := database2.GetConnection()
 	Tx, _ := db.Begin()
@@ -57,7 +57,7 @@ func DeleteNodeGroup(groupID int) (bool, string, error) {
 	return true, "", nil
 }
 
-// 获取节点分组信息
+// GetNodeGroupInfo 获取节点分组信息
 func GetNodeGroupInfo(groupID int) (bool, map[string]interface{}, error) {
 	db := database2.GetConnection()
 
@@ -76,42 +76,37 @@ func GetNodeGroupInfo(groupID int) (bool, map[string]interface{}, error) {
 	return true, groupInfo, nil
 }
 
-// 获取节点分组列表
-func GetNodeGroupList(clusterId int) (bool, []map[string]interface{}, error) {
+// GetNodeGroupList 获取节点分组列表
+func GetNodeGroupList(clusterID int) (bool, []map[string]interface{}, error) {
 	db := database2.GetConnection()
 	sql := "SELECT G.`groupID`, G.groupName,C.`name` as cluster  FROM goku_node_group G left join `goku_cluster` C ON C.`id` = G.`clusterID` where G.`clusterID`=?;"
-	rows, err := db.Query(sql, clusterId)
+	rows, err := db.Query(sql, clusterID)
 	if err != nil {
 		return false, nil, err
 	}
 	//延时关闭Rows
 	defer rows.Close()
 	//获取记录列
-
-	if _, err = rows.Columns(); err != nil {
-		return false, nil, err
-	} else {
-		nodeGroupList := make([]map[string]interface{}, 0)
-		for rows.Next() {
-			var groupID int
-			var groupName string
-			var clusterName string
-			err = rows.Scan(&groupID, &groupName, &clusterName)
-			if err != nil {
-				return false, nil, err
-			}
-			groupInfo := map[string]interface{}{
-				"groupID":   groupID,
-				"groupName": groupName,
-				"cluster":   clusterName,
-			}
-			nodeGroupList = append(nodeGroupList, groupInfo)
+	nodeGroupList := make([]map[string]interface{}, 0)
+	for rows.Next() {
+		var groupID int
+		var groupName string
+		var clusterName string
+		err = rows.Scan(&groupID, &groupName, &clusterName)
+		if err != nil {
+			return false, nil, err
 		}
-		return true, nodeGroupList, nil
+		groupInfo := map[string]interface{}{
+			"groupID":   groupID,
+			"groupName": groupName,
+			"cluster":   clusterName,
+		}
+		nodeGroupList = append(nodeGroupList, groupInfo)
 	}
+	return true, nodeGroupList, nil
 }
 
-// 检查节点分组是否存在
+// CheckNodeGroupIsExist 检查节点分组是否存在
 func CheckNodeGroupIsExist(groupID int) (bool, error) {
 	db := database2.GetConnection()
 	var id int
@@ -123,7 +118,7 @@ func CheckNodeGroupIsExist(groupID int) (bool, error) {
 	return true, nil
 }
 
-// 获取分组内启动节点数量
+// GetRunningNodeCount 获取分组内启动节点数量
 func GetRunningNodeCount(groupID int) (bool, interface{}, error) {
 	db := database2.GetConnection()
 	var count int

@@ -1,128 +1,22 @@
-package console_mysql
+package consolemysql
 
 import (
-	"encoding/json"
 	database2 "github.com/eolinker/goku-api-gateway/common/database"
 	"github.com/eolinker/goku-api-gateway/common/general"
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 	"github.com/eolinker/goku-api-gateway/server/entity/console-entity"
-	"io"
 	"strings"
-	"time"
 )
 
 func init() {
 	general.RegeditLater(CreateTable)
 }
 
-func SaveMemoryInfo(server string, used int, peak int) int64 {
-	db := database2.GetConnection()
-
-	stmt, err := db.Prepare("INSERT INTO `goku_redis_memory`(used,peak,server,datetime) VALUES(?,?,?,?)")
-	if err != nil {
-		log.Info(err.Error())
-		return 0
-	}
-	defer stmt.Close()
-	datetime := time.Now().Format("2006-01-02 15:04:05")
-	ret, err := stmt.Exec(used, peak, server, datetime)
-	if err != nil {
-		log.Info(err.Error())
-		return 0
-	}
-	id, err := ret.LastInsertId()
-	if err != nil {
-		log.Info(err.Error())
-		return 0
-	}
-	return id
-}
-
-func SaveInfoCommand(server string, info map[string]interface{}) int64 {
-
-	datetime := time.Now().Format("2006-01-02 15:04:05")
-	jsonByte, err := json.Marshal(info)
-	if err != nil {
-		log.Info(err.Error())
-		return 0
-	}
-	db := database2.GetConnection()
-	stmt, err := db.Prepare("INSERT INTO `goku_redis_info`(server,info,datetime) VALUES(?,?,?)")
-	if err != nil {
-		log.Info(err.Error())
-		return 0
-	}
-	defer stmt.Close()
-	ret, err := stmt.Exec(server, string(jsonByte), datetime)
-	if err != nil {
-		log.Info(err.Error())
-		return 0
-	}
-	id, err := ret.LastInsertId()
-	if err != nil {
-		log.Info(err.Error())
-		return 0
-	}
-	return id
-}
-
-func SaveServer(serverId string, password string, clusterId int, status int) {
-	db := database2.GetConnection()
-
-	stmt, err := db.Prepare("INSERT INTO `goku_redis_server`(`server`,`password`,`clusterId`,`status`) VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE `password`=VALUES(`password`),`status` =VALUES(`status`)")
-	if err != nil {
-		log.Info(err.Error())
-		return
-	}
-
-	defer stmt.Close()
-	_, err = stmt.Exec(serverId, password, clusterId, status)
-	if err != nil {
-		log.Info(err.Error())
-		return
-	}
-}
-func RemoveServer(serverId string, clusterId int) {
-	db := database2.GetConnection()
-
-	stmt, err := db.Prepare("DELETE from  `goku_redis_server` WHERE `server`=? and `clusterID` = ?;")
-	if err != nil {
-		log.Info(err.Error())
-		return
-	}
-	defer stmt.Close()
-	_, err = stmt.Exec(serverId, clusterId)
-	if err != nil {
-		log.Info(err.Error())
-		return
-	}
-}
-
-func GetRedisServerByStatus(status int) ([]*entity.RedisNode, error) {
-	sql := "SELECT `server`,`clusterID` FROM `goku_redis_server` WHERE `status` = ?"
-	smt, err := database2.GetConnection().Prepare(sql)
-	if err != nil {
-		return nil, err
-	}
-	rows, err := smt.Query(status)
-	if err != nil {
-		return nil, err
-	}
-	servers := make([]*entity.RedisNode, 0)
-	for rows.Next() {
-		node := new(entity.RedisNode)
-		err := rows.Scan(&node.Server, &node.ClusterId)
-		if err != nil {
-			return nil, err
-		}
-		servers = append(servers, node)
-	}
-	return servers, nil
-}
-func GetServers(clusterId int) ([]*entity.RedisNode, error) {
+//GetServers 获取redis服务列表
+func GetServers(clusterID int) ([]*entity.RedisNode, error) {
 
 	db := database2.GetConnection()
-	rows, err := db.Query("SELECT `server`,`password`,`clusterID` from `goku_redis_server` WHERE `clusterID`=?;", clusterId)
+	rows, err := db.Query("SELECT `server`,`password`,`clusterID` from `goku_redis_server` WHERE `clusterID`=?;", clusterID)
 	if err != nil {
 		return nil, err
 	}
@@ -132,7 +26,7 @@ func GetServers(clusterId int) ([]*entity.RedisNode, error) {
 	servers := make([]*entity.RedisNode, 0)
 	for rows.Next() {
 		node := new(entity.RedisNode)
-		err := rows.Scan(&node.Server, &node.Password, &node.ClusterId)
+		err := rows.Scan(&node.Server, &node.Password, &node.ClusterID)
 
 		if err != nil {
 			return nil, err
@@ -140,67 +34,6 @@ func GetServers(clusterId int) ([]*entity.RedisNode, error) {
 		servers = append(servers, node)
 	}
 	return servers, nil
-}
-
-func SetRedisNodeStatus(server string, clusterId int, status int) {
-	db := database2.GetConnection()
-	stmt, err := db.Prepare("UPDATE  `goku_redis_server` SET `status` = ? WHERE `server` = ? AND `clusterID`=?;")
-	if err != nil {
-		log.Info(err.Error())
-		return
-	}
-
-	defer stmt.Close()
-	_, err = stmt.Exec(status, server, clusterId)
-	if err != nil {
-		log.Info(err.Error())
-		return
-	}
-}
-
-func GetInfo(serverId string) (map[string]interface{}, error) {
-	var info string
-	db := database2.GetConnection()
-	err := db.QueryRow("SELECT `info` FROM `goku_redis_info` WHERE server=? ORDER BY datetime DESC LIMIT 1", serverId).Scan(&info)
-	if err != nil {
-		log.Info(err.Error())
-		return nil, err
-	}
-	jsonMap := make(map[string]interface{})
-	jsonErr := json.Unmarshal([]byte(info), &jsonMap)
-
-	if jsonErr != nil {
-		log.Info(jsonErr.Error())
-		return nil, jsonErr
-	}
-	return jsonMap, nil
-}
-
-func GetMemoryInfo(serverId, fromDate, toDate string) ([]map[string]interface{}, error) {
-	db := database2.GetConnection()
-	sql := "SELECT used,peak,datetime FROM `goku_redis_memory` WHERE server=? AND datetime>=? AND datetime<=?"
-	rows, err := db.Query(sql, serverId, fromDate, toDate)
-	if err != nil {
-		log.Info(err.Error())
-		return nil, err
-	}
-	defer rows.Close()
-	var ret []map[string]interface{}
-	for rows.Next() {
-		var (
-			used     string
-			peak     string
-			datetime string
-		)
-		if err := rows.Scan(&used, &peak, &datetime); err != nil {
-			if err != io.EOF {
-				log.Info(err.Error())
-			}
-			continue
-		}
-		ret = append(ret, map[string]interface{}{"used": used, "peak": peak, "datetime": datetime})
-	}
-	return ret, nil
 }
 
 // GetRedisCount 获取redis数量
@@ -227,6 +60,7 @@ func GetRedisCount() (int, int) {
 	return normalCount, errorCount
 }
 
+//CreateTable 创建表
 func CreateTable() error {
 	sqlDatas := []string{
 

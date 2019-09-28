@@ -9,6 +9,7 @@ import (
 	cluster2 "github.com/eolinker/goku-api-gateway/server/cluster"
 )
 
+//AddNodeGroup 新增节点分组
 func AddNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationEDIT)
@@ -18,7 +19,7 @@ func AddNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	cluserName := httpRequest.PostFormValue("cluster")
 
-	clusterId, has := cluster2.GetId(cluserName)
+	clusterID, has := cluster2.GetID(cluserName)
 
 	if !has {
 		controller.WriteError(httpResponse, "340003", "", "[ERROR]Illegal cluster!", nil)
@@ -34,7 +35,7 @@ func AddNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		return
 
 	}
-	flag, result, err := node.AddNodeGroup(groupName, clusterId)
+	flag, result, err := node.AddNodeGroup(groupName, clusterID)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -50,7 +51,7 @@ func AddNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-// 修改节点分组信息
+//EditNodeGroup 修改节点分组信息
 func EditNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationEDIT)
@@ -95,7 +96,7 @@ func EditNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) 
 	controller.WriteResultInfo(httpResponse, "nodeGroup", "", nil)
 }
 
-// 删除节点分组
+//DeleteNodeGroup 删除节点分组
 func DeleteNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationEDIT)
 	if e != nil {
@@ -147,7 +148,7 @@ func DeleteNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request
 
 }
 
-// 获取节点分组信息
+//GetNodeGroupInfo 获取节点分组信息
 func GetNodeGroupInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationREAD)
 	if e != nil {
@@ -180,7 +181,7 @@ func GetNodeGroupInfo(httpResponse http.ResponseWriter, httpRequest *http.Reques
 	controller.WriteResultInfo(httpResponse, "node", "groupInfo", result)
 }
 
-// 获取节点分组列表
+//GetNodeGroupList 获取节点分组列表
 func GetNodeGroupList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationREAD)
 	if e != nil {
@@ -188,7 +189,7 @@ func GetNodeGroupList(httpResponse http.ResponseWriter, httpRequest *http.Reques
 	}
 
 	cluserName := httpRequest.FormValue("cluster")
-	clusterId, has := cluster2.GetId(cluserName)
+	clusterID, has := cluster2.GetID(cluserName)
 	if !has {
 		controller.WriteError(httpResponse,
 			"280001",
@@ -197,7 +198,7 @@ func GetNodeGroupList(httpResponse http.ResponseWriter, httpRequest *http.Reques
 			nil)
 		return
 	}
-	flag, result, err := node.GetNodeGroupList(clusterId)
+	flag, result, err := node.GetNodeGroupList(clusterID)
 	if !flag {
 
 		controller.WriteError(httpResponse,

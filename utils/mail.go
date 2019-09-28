@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-var period map[string]string = map[string]string{
+var period = map[string]string{
 	"0": "1",
 	"1": "5",
 	"2": "15",
@@ -16,31 +16,32 @@ var period map[string]string = map[string]string{
 	"4": "60",
 }
 
+//SendToMail 发送邮件
 func SendToMail(user, password, host, to, subject, body, mailtype, smtpProtocol string) error {
 	hp := strings.Split(host, ":")
 	auth := smtp.PlainAuth("", user, password, hp[0])
-	send_to := strings.Split(to, ",")
-	if len(send_to) < 2 {
-		if send_to[0] == "" {
+	sendTo := strings.Split(to, ",")
+	if len(sendTo) < 2 {
+		if sendTo[0] == "" {
 			return nil
 		}
 	}
 	log.Debug(user, password, auth)
-	var content_type string
+	var contentType string
 	if mailtype == "html" {
-		content_type = "Content-Type: text/" + mailtype + "; charset=UTF-8"
+		contentType = "Content-Type: text/" + mailtype + "; charset=UTF-8"
 	} else {
-		content_type = "Content-Type: text/plain" + "; charset=UTF-8"
+		contentType = "Content-Type: text/plain" + "; charset=UTF-8"
 	}
 	var err error
-	msg := []byte("To: " + to + "\r\nFrom: " + user + ">\r\nSubject: " + subject + "\r\n" + content_type + "\r\n\r\n" + body)
+	msg := []byte("To: " + to + "\r\nFrom: " + user + ">\r\nSubject: " + subject + "\r\n" + contentType + "\r\n\r\n" + body)
 	log.Debug("SendToMail", msg)
 	if smtpProtocol != "0" {
 		err = SendMailUsingTLS(
 			host,
 			auth,
 			user,
-			send_to,
+			sendTo,
 			msg,
 		)
 		if err != nil {
@@ -49,21 +50,21 @@ func SendToMail(user, password, host, to, subject, body, mailtype, smtpProtocol 
 				host,
 				nil,
 				user,
-				send_to,
+				sendTo,
 				msg,
 			)
 
 		}
 	} else {
-		err = smtp.SendMail(host, auth, user, send_to, msg)
+		err = smtp.SendMail(host, auth, user, sendTo, msg)
 		if err != nil {
-			err = smtp.SendMail(host, nil, user, send_to, msg)
+			err = smtp.SendMail(host, nil, user, sendTo, msg)
 		}
 	}
 	return err
 }
 
-//return a smtp client
+//Dial return a smtp client
 func Dial(addr string) (*smtp.Client, error) {
 	conn, err := tls.Dial("tcp", addr, nil)
 	if err != nil {
@@ -74,7 +75,7 @@ func Dial(addr string) (*smtp.Client, error) {
 	return smtp.NewClient(conn, host)
 }
 
-//参考net/smtp的func SendMail()
+//SendMailUsingTLS 参考net/smtp的func SendMail()
 //使用net.Dial连接tls(ssl)端口时,smtp.NewClient()会卡住且不提示err
 //len(to)>1时,to[1]开始提示是密送
 func SendMailUsingTLS(addr string, auth smtp.Auth, from string,

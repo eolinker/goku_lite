@@ -2,7 +2,7 @@ package handler
 
 import (
 	"encoding/json"
-	. "github.com/eolinker/goku-api-gateway/common/version"
+	v "github.com/eolinker/goku-api-gateway/common/version"
 	"github.com/eolinker/goku-api-gateway/goku-node/manager/updater"
 	"net/http"
 )
@@ -14,7 +14,7 @@ func gokuCheckUpdate(w http.ResponseWriter, r *http.Request) {
 	resultInfo := map[string]interface{}{
 		"type":       "update",
 		"statusCode": "000000",
-		"version":    Version,
+		"version":    v.Version,
 	}
 	resultStr, _ := json.Marshal(resultInfo)
 

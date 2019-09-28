@@ -1,1 +1,1 @@
-package strategy_plugin_manager
+package strategypluginmanager

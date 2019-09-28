@@ -1,15 +1,15 @@
-package node_common
+package nodecommon
 
 import "strings"
 
-// 匹配restful参数
+//MatchRestful 匹配restful参数
 func MatchRestful(requestURL string, params []string) string {
 	if len(params) == 0 {
 		return requestURL
 	}
 	// 将匹配URI中的query参数清除
 	requestURL = InterceptURL(requestURL, "?")
-	var postfix bool = false
+	var postfix = false
 	// 将URI最后放的"/"去掉
 	if string(requestURL[len(requestURL)-1]) == "/" {
 		postfix = true
@@ -22,10 +22,10 @@ func MatchRestful(requestURL string, params []string) string {
 		if len(v) > 0 {
 			if string(v[0]) == ":" {
 				url += params[n] + "/"
-				n += 1
+				n = n + 1
 			} else if string(v[0]) == "{" && string(v[len(v)-1]) == "}" {
 				url += params[n] + "/"
-				n += 1
+				n = n + 1
 			} else {
 				url += v + "/"
 			}
@@ -33,12 +33,11 @@ func MatchRestful(requestURL string, params []string) string {
 	}
 	if !postfix {
 		return url[:len(url)-1]
-	} else {
-		return url
 	}
+	return url
 }
 
-// 匹配URI
+//MatchURI 匹配URI
 func MatchURI(requestPath string, matchURI string) (bool, string, []string) {
 	// 将匹配URI中的query参数清除
 	matchURI = InterceptURL(matchURI, "?")
@@ -46,7 +45,7 @@ func MatchURI(requestPath string, matchURI string) (bool, string, []string) {
 	if requestPath == matchURI {
 		return true, "", nil
 	}
-	var postfix bool = false
+	var postfix = false
 	// 将URI最后的"/"去掉
 	if string(requestPath[len(requestPath)-1]) == "/" {
 		postfix = true
@@ -67,7 +66,7 @@ func MatchURI(requestPath string, matchURI string) (bool, string, []string) {
 	n := 0
 	param := make([]string, 0)
 	for i, v := range matchArray {
-		n += 1
+		n = n + 1
 		if v == requestArray[i] {
 			continue
 		} else {
@@ -89,10 +88,11 @@ func MatchURI(requestPath string, matchURI string) (bool, string, []string) {
 	}
 	if !postfix {
 		return true, splitURL[:len(splitURL)-1], param
-	} else {
-		return true, splitURL, param
 	}
+	return true, splitURL, param
 }
+
+//InterceptURL 过滤URL
 func InterceptURL(str, substr string) string {
 	result := strings.Index(str, substr)
 	var rs string
@@ -104,7 +104,7 @@ func InterceptURL(str, substr string) string {
 	return rs
 }
 
-// 过滤双斜杠
+//FilterSlash 过滤双斜杠
 func FilterSlash(uri string) string {
 	replaceURI := strings.ReplaceAll(uri, "//", "/")
 	return replaceURI

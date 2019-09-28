@@ -1,4 +1,4 @@
-package console_mysql
+package consolemysql
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"github.com/eolinker/goku-api-gateway/utils"
 )
 
-// 新增策略组
+//AddStrategy 新增策略组
 func AddStrategy(strategyName string, groupID int) (bool, string, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
@@ -38,12 +38,11 @@ func AddStrategy(strategyName string, groupID int) (bool, string, error) {
 	_, err = stmt.Exec(strategyID, strategyName, now, now, groupID)
 	if err != nil {
 		return false, "[ERROR]Failed to insert data!", err
-	} else {
-		return true, strategyID, nil
 	}
+	return true, strategyID, nil
 }
 
-// 修改策略组信息
+//EditStrategy 修改策略组信息
 func EditStrategy(strategyID, strategyName string, groupID int) (bool, string, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
@@ -55,12 +54,11 @@ func EditStrategy(strategyID, strategyName string, groupID int) (bool, string, e
 	_, err = stmt.Exec(strategyName, groupID, now, strategyID)
 	if err != nil {
 		return false, "[ERROR]Failed to update data!", err
-	} else {
-		return true, strategyID, nil
 	}
+	return true, strategyID, nil
 }
 
-// 删除策略组
+//DeleteStrategy 删除策略组
 func DeleteStrategy(strategyID string) (bool, string, error) {
 	db := database2.GetConnection()
 	Tx, _ := db.Begin()
@@ -153,7 +151,7 @@ func GetOpenStrategy() (bool, *entity.Strategy, error) {
 	return true, &openStrategy, nil
 }
 
-// 获取策略组信息
+//GetStrategyInfo 获取策略组信息
 func GetStrategyInfo(strategyID string) (bool, *entity.Strategy, error) {
 	db := database2.GetConnection()
 	sql := `SELECT strategyID,strategyName,IFNULL(updateTime,''),strategyType,enableStatus FROM goku_gateway_strategy WHERE strategyID = ?;`
@@ -161,12 +159,11 @@ func GetStrategyInfo(strategyID string) (bool, *entity.Strategy, error) {
 	err := db.QueryRow(sql, strategyID).Scan(&strategy.StrategyID, &strategy.StrategyName, &strategy.UpdateTime, &strategy.StrategyType, &strategy.EnableStatus)
 	if err != nil {
 		return false, nil, err
-	} else {
-		return true, strategy, err
 	}
+	return true, strategy, err
 }
 
-// 检查策略组ID是否存在
+// CheckStrategyIsExist 检查策略组ID是否存在
 func CheckStrategyIsExist(strategyID string) (bool, error) {
 	db := database2.GetConnection()
 	sql := "SELECT strategyID FROM goku_gateway_strategy WHERE strategyID = ?;"
@@ -174,12 +171,11 @@ func CheckStrategyIsExist(strategyID string) (bool, error) {
 	err := db.QueryRow(sql, strategyID).Scan(&id)
 	if err != nil {
 		return false, err
-	} else {
-		return true, err
 	}
+	return true, err
 }
 
-// 批量修改策略组分组
+// BatchEditStrategyGroup 批量修改策略组分组
 func BatchEditStrategyGroup(strategyIDList string, groupID int) (bool, string, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")
@@ -202,7 +198,7 @@ func BatchEditStrategyGroup(strategyIDList string, groupID int) (bool, string, e
 	return true, "", nil
 }
 
-// 批量修改策略组
+// BatchDeleteStrategy 批量修改策略组
 func BatchDeleteStrategy(strategyIDList string) (bool, string, error) {
 	db := database2.GetConnection()
 	Tx, _ := db.Begin()
@@ -250,6 +246,7 @@ func BatchDeleteStrategy(strategyIDList string) (bool, string, error) {
 	return true, "", nil
 }
 
+//CheckIsOpenStrategy 判断是否是开放策略
 func CheckIsOpenStrategy(strategyID string) bool {
 	db := database2.GetConnection()
 	var strategyType int
@@ -260,12 +257,11 @@ func CheckIsOpenStrategy(strategyID string) bool {
 	}
 	if strategyType == 1 {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
-// 更新策略启动状态
+// BatchUpdateStrategyEnableStatus 更新策略启动状态
 func BatchUpdateStrategyEnableStatus(strategyIDList string, enableStatus int) (bool, string, error) {
 	db := database2.GetConnection()
 	now := time.Now().Format("2006-01-02 15:04:05")

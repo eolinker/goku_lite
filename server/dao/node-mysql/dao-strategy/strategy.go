@@ -1,4 +1,4 @@
-package dao_strategy
+package daostrategy
 
 import (
 	log "github.com/eolinker/goku-api-gateway/goku-log"
@@ -7,6 +7,7 @@ import (
 	entity "github.com/eolinker/goku-api-gateway/server/entity/node-entity"
 )
 
+//GetAllStrategy 获取所有策略列表
 func GetAllStrategy() (map[string]*entity.Strategy, *entity.Strategy, error) {
 	//const sql = "SELECT `strategyID`,`strategyName`,`auth` ,`strategyType` FROM `goku_gateway_strategy` WHERE `enableStatus` = 1;"
 	const sql = "SELECT `strategyID`,`strategyName`,`auth`,`enableStatus` ,`strategyType` FROM `goku_gateway_strategy`;"
@@ -21,7 +22,7 @@ func GetAllStrategy() (map[string]*entity.Strategy, *entity.Strategy, error) {
 		return nil, nil, e
 	}
 	defer rows.Close()
-	var def *entity.Strategy = nil
+	var def *entity.Strategy
 	strategys := make(map[string]*entity.Strategy)
 	for rows.Next() {
 		s := new(entity.Strategy)

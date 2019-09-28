@@ -12,8 +12,8 @@ import (
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
-// 导入分组
-func ImportApiGroupFromAms(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//ImportAPIGroupFromAms 导入分组
+func ImportAPIGroupFromAms(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -81,7 +81,7 @@ func ImportApiGroupFromAms(httpResponse http.ResponseWriter, httpRequest *http.R
 		return
 
 	}
-	flag, _, err := api.ImportApiGroupFromAms(pjID, userID, groupInfo)
+	flag, _, err := api.ImportAPIGroupFromAms(pjID, userID, groupInfo)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -96,7 +96,7 @@ func ImportApiGroupFromAms(httpResponse http.ResponseWriter, httpRequest *http.R
 
 }
 
-// 导入项目
+//ImportProjectFromAms 导入项目
 func ImportProjectFromAms(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
@@ -168,8 +168,8 @@ func ImportProjectFromAms(httpResponse http.ResponseWriter, httpRequest *http.Re
 	return
 }
 
-// 导入接口
-func ImportApiFromAms(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+//ImportAPIFromAms 导入接口
+func ImportAPIFromAms(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
 		return
@@ -228,7 +228,7 @@ func ImportApiFromAms(httpResponse http.ResponseWriter, httpRequest *http.Reques
 		return
 
 	}
-	apiList := make([]entity.AmsApiInfo, 0)
+	apiList := make([]entity.AmsAPIInfo, 0)
 	err = json.Unmarshal(body, &apiList)
 	if err != nil {
 		controller.WriteError(httpResponse,
@@ -248,7 +248,7 @@ func ImportApiFromAms(httpResponse http.ResponseWriter, httpRequest *http.Reques
 		return
 
 	}
-	flag, _, err := api.ImportApiFromAms(pjID, gID, userID, apiList)
+	flag, _, err := api.ImportAPIFromAms(pjID, gID, userID, apiList)
 	if !flag {
 
 		controller.WriteError(httpResponse,

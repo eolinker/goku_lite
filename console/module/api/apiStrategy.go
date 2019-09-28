@@ -5,20 +5,20 @@ import (
 	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
 )
 
-// 将接口加入策略组
-func AddApiToStrategy(apiList []string, strategyID string) (bool, string, error) {
+//AddAPIToStrategy 将接口加入策略组
+func AddAPIToStrategy(apiList []string, strategyID string) (bool, string, error) {
 	name := "goku_conn_strategy_api"
-	flag, result, err := console_mysql.AddApiToStrategy(apiList, strategyID)
+	flag, result, err := console_mysql.AddAPIToStrategy(apiList, strategyID)
 	if flag {
 		dao.UpdateTable(name)
 	}
 	return flag, result, err
 }
 
-// 重置目标地址
-func SetTarget(apiId int, strategyID string, target string) (bool, string, error) {
+//SetTarget 重置目标地址
+func SetTarget(apiID int, strategyID string, target string) (bool, string, error) {
 	name := "goku_conn_strategy_api"
-	flag, result, err := console_mysql.SetApiTargetOfStrategy(apiId, strategyID, target)
+	flag, result, err := console_mysql.SetAPITargetOfStrategy(apiID, strategyID, target)
 	if flag {
 		dao.UpdateTable(name)
 	}
@@ -28,7 +28,7 @@ func SetTarget(apiId int, strategyID string, target string) (bool, string, error
 // BatchSetTarget 批量重置目标地址
 func BatchSetTarget(apiIds []int, strategyID string, target string) (bool, string, error) {
 	name := "goku_conn_strategy_api"
-	flag, result, err := console_mysql.BatchSetApiTargetOfStrategy(apiIds, strategyID, target)
+	flag, result, err := console_mysql.BatchSetAPITargetOfStrategy(apiIds, strategyID, target)
 	if flag {
 		dao.UpdateTable(name)
 	}
@@ -45,12 +45,12 @@ func GetAPIListFromStrategy(strategyID, keyword string, condition, page, pageSiz
 	return console_mysql.GetAPIListFromStrategy(strategyID, keyword, condition, page, pageSize, ids, balanceNames)
 }
 
-// 检查插件是否添加进策略组
-func CheckIsExistApiInStrategy(apiID int, strategyID string) (bool, string, error) {
-	return console_mysql.CheckIsExistApiInStrategy(apiID, strategyID)
+//CheckIsExistAPIInStrategy 检查插件是否添加进策略组
+func CheckIsExistAPIInStrategy(apiID int, strategyID string) (bool, string, error) {
+	return console_mysql.CheckIsExistAPIInStrategy(apiID, strategyID)
 }
 
-// GetAPIIDListNotInStrategyByProject 获取未被该策略组绑定的接口ID列表(通过项目)
+// GetAPIIDListNotInStrategy 获取未被该策略组绑定的接口ID列表(通过项目)
 func GetAPIIDListNotInStrategy(strategyID string, projectID, groupID int, keyword string) (bool, []int, error) {
 	return console_mysql.GetAPIIDListNotInStrategy(strategyID, projectID, groupID, keyword)
 }
@@ -60,10 +60,10 @@ func GetAPIListNotInStrategy(strategyID string, projectID, groupID, page, pageSi
 	return console_mysql.GetAPIListNotInStrategy(strategyID, projectID, groupID, page, pageSize, keyword)
 }
 
-// 批量删除策略组接口
-func BatchDeleteApiInStrategy(apiIDList, strategyID string) (bool, string, error) {
+//BatchDeleteAPIInStrategy 批量删除策略组接口
+func BatchDeleteAPIInStrategy(apiIDList, strategyID string) (bool, string, error) {
 	name := "goku_conn_strategy_api"
-	flag, result, err := console_mysql.BatchDeleteApiInStrategy(apiIDList, strategyID)
+	flag, result, err := console_mysql.BatchDeleteAPIInStrategy(apiIDList, strategyID)
 	if flag {
 		dao.UpdateTable(name)
 	}

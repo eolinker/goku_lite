@@ -11,10 +11,12 @@ import (
 	"unsafe"
 )
 
+//Values values
 type Values interface {
 	Get(key string) (string, bool)
 }
 
+//ValuesForm valuesForm
 type ValuesForm map[string][]string
 
 // Get gets the first value associated with the given key.
@@ -41,6 +43,7 @@ type (
 	ContextHandle interface {
 		SetContext(ctx Values) error
 	}
+	//CheckOptHandler 判断是否有opt字段
 	CheckOptHandler interface {
 		IsOpt(key string) bool
 	}
@@ -50,6 +53,7 @@ type (
 	}
 )
 
+//IsOpt 是否是opt字段
 func IsOpt(key string, c interface{}) bool {
 	val := reflect.ValueOf(c).Elem()
 	typ := val.Type()
@@ -67,8 +71,10 @@ func IsOpt(key string, c interface{}) bool {
 	return false
 }
 
+//ErrorNil error nil
 var ErrorNil = errors.New("target is nil")
-// SetContext 从url.Values中完成配置字段，context中不存在时，使用 default
+
+// SetValues 从url.Values中完成配置字段，context中不存在时，使用 default
 // 字段格式  opt:"name,require" default:"default value" min:"min value" max:"max value"
 // require 为可选，表示该字段是否为必填
 func SetValues(values url.Values, c interface{}) error {
