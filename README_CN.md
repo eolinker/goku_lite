@@ -102,6 +102,7 @@ Goku API Gateway EE（企业版本）拥有更强大的功能、插件库以及�
 - **市场合作邮箱**：market@eolinker.com
 - **购买咨询邮箱**：sales@eolinker.com
 - **帮助文档**：[help.eolinker.com](help.eolinker.com "help.eolinker.com")
+- **QQ群**: 725853895
 
 # 关于我们
 EOLINKER 是领先的 API 管理服务供应商，为全球超过3000家企业提供专业的 API 研发管理、API自动化测试、API监控、API网关等服务。是首家为ITSS（中国电子工业标准化技术协会）制定API研发管理行业规范的企业。
