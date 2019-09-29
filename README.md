@@ -27,7 +27,7 @@ Goku API Gateway also can combine with EOLINK API Studio to enhance API Manageme
 
 All in all, Goku API Gateway enables enterprise to focus on their business.
 
-[![Stargazers over time](https://starchart.cc/eolinker/goku-api-gateway.svg)]()
+[![Stargazers over time](https://starchart.cc/eolinker/goku-api-gateway.svg)](#)
 
 # Product Features
 - **Cluster Management**：Mutiple  Goku API Gateway  node，Configuration information is automatically synchronized and can support multi-cluster deployment.
