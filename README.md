@@ -50,7 +50,6 @@ All in all, Goku API Gateway enables enterprise to focus on their business.
 
 # Benchmark
 ![](https://data.eolinker.com/p7NFG6lb4c73b26cc880e838fe45aa31bc037b7415e3770.jpg)
-
 [Benchmark Detail](https://help.eolinker.com/#/tutorial/?groupID=c-362&productID=19#tip7 "Benchmark Detail")
 
 # Console Preview
