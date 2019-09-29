@@ -1,4 +1,4 @@
-![Goku API Gateway 悟空网关](https://data.eolinker.com/course/gBTEV2s29e16630bb4dc553bec35ad33914d19aa410a8bf "Goku API Gateway 悟空网关")
+![](https://data.eolinker.com/6IvqUL3cb40efeca8cf4fdc034286bd946b130b45d50bd8.jpg)
 
 [![Gitter](https://badges.gitter.im/goku-api-gateway/community.svg)](https://gitter.im/goku-api-gateway/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Go Report Card](https://goreportcard.com/badge/github.com/eolinker/goku-api-gateway)](https://goreportcard.com/report/github.com/eolinker/goku-api-gateway) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3214/badge)](https://bestpractices.coreinfrastructure.org/projects/3214) ![](https://img.shields.io/badge/license-GPL3.0-blue.svg)
 
