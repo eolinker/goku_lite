@@ -30,23 +30,25 @@ All in all, Goku API Gateway enables enterprise to focus on their business.
 [![Stargazers over time](https://starchart.cc/eolinker/goku-api-gateway.svg)](#)
 
 # Product Features
-- **Cluster Management**：Mutiple  Goku API Gateway  node，Configuration information is automatically synchronized and can support multi-cluster deployment.
-- **UI Management Background**: Manage various configurations of the network through clear UI.
-- **Load balancing**: Load balancing for back-end servers.
-- **Service Discovery**: Find back-end servers from registries such as Consul and Eureka.
-- **Forwarding Agent**: Hide Real Backend Services by Forwarding Requests, Support Rest API, Webservice.
-- **Multi-tenant management**: According to different access terminals or users.
-- **Access Authentication**: Basic, API Key, etc.
-- **API Monitor**：Request data statistics.
+- **Dashboard**: Built-in dashboard to configure Goku.
+- **Cluster Management**：Goku nodes are stateless and can be expanded horizontally. Also the configuration can be synchronized automatically.
+- **Hot Updates**: Continuously updates configurations without restart nodes.
+- **Load balancing**: Round-robin load balancing with weight.
+- **Service Discovery**: Service discorvery from Consul or Eureka.
+- **HTTP(S) Forward Proxy**: Hide real backend services, support Rest API, Webservice.
+- **Multi-tenant management**: According to different strategies to regnorize different users.
+- **Strategies**: Support different strategies to access different APIs, configure different authentication (anonymous, Apikey, Basic) and so on.
 - **API Alert**: Support the webhook and email to alert abnormal services.
-- **Health check**: Dynamic discovery of exceptional network joints and back-end nodes, automatically cut off forwarding traffic and transfer to other normal back-end services.
-- **Exception auto-restart**: When a gateway node is abnormal, it will automatically attempt to restart.
 - **Flexible transmit rules**: support fuzzy matching request path, support rewriting transmit path, etc.
-- **Plug-in**: Plug-in system based on Go language can rapidly develop high-performance plug-ins.
-- **Extension**: Gateway nodes have good processing performance, supporting the number of horizontal extension nodes to meet different performance requirements.
-- **Log**: Detailed system log, http log, etc.
+- **IP Whitelist/Blacklist**
+- **Custom plugins**: Allow plugins to be mounted in common phases, such as before match, access, and proxy.
+- **CLI**: Start\stop\reload Goku through the command line.
+- **Serverless**: Invoke functions in each phase in Goku.
+- **Access Log**:Only record the basic content in proxy, customize the record fields and sort order, and automatically clean up the logs periodically.
+- **System Log**:Provide running logs of consoles and nodes,only record the error information, adjust the level to INFO, WARN or DEBUG according to the actual situation.
+- **Scalability**: plug-in mechanism is easy to extend.
+- **High performance**: Performance excels among many gateways.
 - **Open API**：Provide OPEN API for users to operate on the gateway for easy integration.
-- ...
 
 # Benchmark
 ![](https://data.eolinker.com/p7NFG6lb4c73b26cc880e838fe45aa31bc037b7415e3770.jpg)
