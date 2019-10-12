@@ -39,11 +39,16 @@ func Heartbeat(port int) {
 }
 
 func sendHeartBeat(port int) {
-
 	addr := node_common.GetAdminURL(fmt.Sprintf("node/heartbeat?port=%d", port))
-	_, err := http.Get(addr)
+	r, err := http.Get(addr)
 	if err != nil {
 		log.Warn("fail to send heartbeat:", err)
+		return
+	}
+	e:=r.Body.Close()
+	if e!=nil{
+		log.Warn("close response error:", err)
+		return
 	}
 }
 
