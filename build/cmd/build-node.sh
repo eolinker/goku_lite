@@ -17,12 +17,12 @@ then
 fi
 
 
-buildApp goku-node $VERSION
+buildApp node $VERSION
 
 
-OUTPATH="${BasePath}/out/goku-node-${VERSION}"
+OUTPATH="${BasePath}/out/node-${VERSION}"
 mkdir ${OUTPATH}/plugin
-cp -a ${BasePath}/build/goku-node/resources/*  ${OUTPATH}/
+cp -a ${BasePath}/build/node/resources/*  ${OUTPATH}/
 if [ -d "${BasePath}/out/plugins" ];then 
     cp -a ${BasePath}/out/plugins/*  ${OUTPATH}/plugin/
 fi

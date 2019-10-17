@@ -7,7 +7,7 @@ type CookiesHandler struct {
 	req http.Request
 }
 
-//AddCookie 新增cookie
+//AddCookie 新增cookiess
 func (cs *CookiesHandler) AddCookie(c *http.Cookie) {
 	cs.req.AddCookie(c)
 }

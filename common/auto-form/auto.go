@@ -43,7 +43,7 @@ type (
 	ContextHandle interface {
 		SetContext(ctx Values) error
 	}
-	//CheckOptHandler 判断是否有opt字段
+	//CheckOptHandler 检查配置处理器
 	CheckOptHandler interface {
 		IsOpt(key string) bool
 	}
@@ -53,7 +53,7 @@ type (
 	}
 )
 
-//IsOpt 是否是opt字段
+//IsOpt 判断是否是opt标签
 func IsOpt(key string, c interface{}) bool {
 	val := reflect.ValueOf(c).Elem()
 	typ := val.Type()
@@ -71,7 +71,7 @@ func IsOpt(key string, c interface{}) bool {
 	return false
 }
 
-//ErrorNil error nil
+//ErrorNil 当target为nil时，报错
 var ErrorNil = errors.New("target is nil")
 
 // SetValues 从url.Values中完成配置字段，context中不存在时，使用 default

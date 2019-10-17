@@ -1,6 +1,6 @@
 package entity
 
-//Service service
+//Service 服务发现
 type Service struct {
 	Name               string
 	Driver             string

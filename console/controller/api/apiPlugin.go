@@ -399,7 +399,7 @@ func BatchDeleteAPIPlugin(httpResponse http.ResponseWriter, httpRequest *http.Re
 	controller.WriteResultInfo(httpResponse, "apiPlugin", "", nil)
 }
 
-//GetAPIPluginListWithNotAssignAPIList 获取没有绑定接口插件的接口列表
+//GetAPIPluginListWithNotAssignAPIList 获取没有分配接口插件的接口列表
 func GetAPIPluginListWithNotAssignAPIList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
 	if e != nil {
@@ -427,9 +427,4 @@ func GetAPIPluginListWithNotAssignAPIList(httpResponse http.ResponseWriter, http
 	}
 	controller.WriteResultInfo(httpResponse, "apiPlugin", "pluginList", result)
 
-}
-
-//UpdateAllAPIPluginUpdateTag 更新所有标识
-func UpdateAllAPIPluginUpdateTag() error {
-	return api.UpdateAllAPIPluginUpdateTag()
 }

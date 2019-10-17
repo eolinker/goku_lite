@@ -1,12 +1,12 @@
 package gateway
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/gateway"
-	monitor_read "github.com/eolinker/goku-api-gateway/server/monitor/monitor-read"
 )
 
 //GetGatewayConfig 获取网关配置
@@ -31,7 +31,7 @@ func GetGatewayConfig(httpResponse http.ResponseWriter, httpRequest *http.Reques
 	return
 }
 
-//EditGatewayBaseConfig 获取网关基本配置
+//EditGatewayBaseConfig 编辑网关基本配置
 func EditGatewayBaseConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationGatewayConfig, controller.OperationEDIT)
 	if e != nil {
@@ -81,8 +81,6 @@ func EditGatewayBaseConfig(httpResponse http.ResponseWriter, httpRequest *http.R
 	}
 	flag, result, err := gateway.EditGatewayBaseConfig(successCode, nodePeriod, monitorPeriod, timeout)
 	if !flag {
-		monitor_read.SetPeriod(monitorPeriod)
-
 		controller.WriteError(httpResponse,
 			"320000",
 			"gateway",
@@ -153,4 +151,33 @@ func EditGatewayAlarmConfig(httpResponse http.ResponseWriter, httpRequest *http.
 	controller.WriteResultInfo(httpResponse, "gateway", "", nil)
 
 	return
+}
+
+//GetGatewayBasicInfo 获取网关基本信息
+func GetGatewayBasicInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
+	if e != nil {
+		return
+	}
+
+	flag, result, err := gateway.GetGatewayMonitorSummaryByPeriod()
+	if !flag {
+		controller.WriteError(httpResponse,
+			"340000",
+			"monitor",
+			"[ERROR]The gateway basic information does not exist!",
+			err)
+		return
+
+	}
+	monitorInfo := map[string]interface{}{
+		"statusCode": "000000",
+		"type":       "monitor",
+		"baseInfo":   result.BaseInfo,
+	}
+	info, _ := json.Marshal(monitorInfo)
+
+	httpResponse.Write(info)
+	return
+
 }

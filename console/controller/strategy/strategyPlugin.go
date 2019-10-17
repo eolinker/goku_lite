@@ -313,8 +313,3 @@ func BatchDeleteStrategyPlugin(httpResponse http.ResponseWriter, httpRequest *ht
 	}
 	controller.WriteResultInfo(httpResponse, "strategyPlugin", "", nil)
 }
-
-//UpdateAllStrategyPluginUpdateTag 更新所有策略插件标志位
-func UpdateAllStrategyPluginUpdateTag() error {
-	return strategy.UpdateAllStrategyPluginUpdateTag()
-}

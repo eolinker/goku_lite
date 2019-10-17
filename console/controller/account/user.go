@@ -37,8 +37,8 @@ func EditPassword(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		controller.WriteError(httpResponse,
 			"110005",
 			"user",
-			"[error]illegal oldPassword!",
-			errors.New("[error]illegal oldPassword"))
+			"[ERROR]Illegal oldPassword!",
+			errors.New("[ERROR]Illegal oldPassword"))
 		return
 	}
 	if flag, _ := regexp.MatchString("^[0-9a-zA-Z]{32}$", newPassword); !flag {
@@ -46,8 +46,8 @@ func EditPassword(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		controller.WriteError(httpResponse,
 			"110006",
 			"user",
-			"[error]illegal newPassword!",
-			errors.New("[error]illegal newPassword"))
+			"[ERROR]Illegal newPassword!",
+			errors.New("[ERROR]Illegal newPassword"))
 		return
 	}
 	flag, result, err := account.EditPassword(oldPassword, newPassword, userID)

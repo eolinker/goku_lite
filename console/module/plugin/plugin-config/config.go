@@ -14,7 +14,8 @@ func isEnd(r rune) bool {
 }
 
 var allConfigOfPlugin map[string]interface{}
-// 检查插件配置是否有效
+
+//CheckConfig 检查插件配置是否有效
 func CheckConfig(pluginName string, config []byte) (bool, error) {
 	v, has := allConfigOfPlugin[pluginName]
 	if has {

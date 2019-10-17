@@ -13,33 +13,31 @@ import (
 )
 
 const (
-	//OperationEDIT edit权限
+	//OperationEDIT 编辑
 	OperationEDIT = "edit"
-	//OperationREAD read权限
+	//OperationREAD 读取
 	OperationREAD = "read"
 )
 const (
-	//OperationNone none
+	//OperationNone 无操作
 	OperationNone = ""
-	//OperationAPI api
+	//OperationAPI 接口操作
 	OperationAPI = "apiManagement"
-	//OperationADMIN admin
+	//OperationADMIN 管理员
 	OperationADMIN = "adminManagement"
-	//OperationLoadBalance balance
+	//OperationLoadBalance 负载操作
 	OperationLoadBalance = "loadBalance"
-	//OperationStrategy strategy
+	//OperationStrategy 策略操作
 	OperationStrategy = "strategyManagement"
-	//OperationNode node
+	//OperationNode 节点操作
 	OperationNode = "nodeManagement"
-	//OperationPlugin plugin
+	//OperationPlugin 插件操作
 	OperationPlugin = "pluginManagement"
-	//OperationGatewayConfig gatewayConfig
+	//OperationGatewayConfig 网关配置操作
 	OperationGatewayConfig = "gatewayConfig"
-	//OperationAlert alert
-	OperationAlert = "alertManagement"
 )
 
-//PageInfo pageInfo
+//PageInfo 页码信息
 type PageInfo struct {
 	ItemNum  int `json:"itemNum,"`
 	Page     int `json:"page,omitempty"`
@@ -47,7 +45,7 @@ type PageInfo struct {
 	TotalNum int `json:"totalNum,"`
 }
 
-//SetPage 设置页码信息
+//SetPage 设置页码
 func (p *PageInfo) SetPage(page, size, total int) *PageInfo {
 	p.Page = page
 	p.PageSize = size
@@ -55,14 +53,14 @@ func (p *PageInfo) SetPage(page, size, total int) *PageInfo {
 	return p
 }
 
-//NewItemNum 创建pageInfo对象
+//NewItemNum 创建新的item
 func NewItemNum(num int) *PageInfo {
 	return &PageInfo{
 		ItemNum: num,
 	}
 }
 
-//WriteResult 输出返回结果
+//WriteResult 写响应
 func WriteResult(w http.ResponseWriter, code string, resultType, resultKey string, result interface{}, pageInfo *PageInfo) {
 	ret := map[string]interface{}{
 		"statusCode": code,
@@ -92,12 +90,12 @@ func WriteResult(w http.ResponseWriter, code string, resultType, resultKey strin
 	}
 }
 
-//WriteResultInfoWithPage 输出带页码信息的返回
+//WriteResultInfoWithPage 返回带页码信息的数据
 func WriteResultInfoWithPage(w http.ResponseWriter, resultType, resultKey string, result interface{}, pageInfo *PageInfo) {
 	WriteResult(w, "000000", resultType, resultKey, result, pageInfo)
 }
 
-//WriteResultInfo 输出结果信息
+//WriteResultInfo 返回信息
 func WriteResultInfo(w http.ResponseWriter, resultType string, resultKey string, result interface{}) {
 
 	if result != nil {
@@ -110,12 +108,12 @@ func WriteResultInfo(w http.ResponseWriter, resultType string, resultKey string,
 	WriteResultInfoWithPage(w, resultType, resultKey, result, nil)
 }
 
-//WriteResultInfoWithCode 输出带状态码的信息
+//WriteResultInfoWithCode 返回带状态信息的响应
 func WriteResultInfoWithCode(w http.ResponseWriter, code string, resultType, resultKey string, result interface{}) {
 	WriteResult(w, code, resultType, resultKey, result, nil)
 }
 
-//WriteError 输出错误
+//WriteError 返回错误
 func WriteError(w http.ResponseWriter, statusCode, resultType, resultDesc string, resuleErr error) {
 
 	ret := map[string]interface{}{
@@ -139,20 +137,19 @@ func WriteError(w http.ResponseWriter, statusCode, resultType, resultDesc string
 
 }
 
-//CheckLogin 检查登录
+//CheckLogin 判断是否登录
 func CheckLogin(w http.ResponseWriter, r *http.Request, operationType, operation string) (int, error) {
 
 	userIDCookie, idErr := r.Cookie("userID")
 	userCookie, userErr := r.Cookie("userToken")
 	if idErr != nil || userErr != nil {
-
 		e := errors.New("user not logged in")
 		WriteError(w, "100001", "user", e.Error(), e)
 		return 0, e
 	}
 	userID, err := strconv.Atoi(userIDCookie.Value)
 	if err != nil {
-		WriteError(w, "100001", "user", "Illegal user ID!", err)
+		WriteError(w, "100001", "user", "Illegal user id!", err)
 		return 0, err
 	}
 	flag := account.CheckLogin(userCookie.Value, userID)
@@ -160,24 +157,6 @@ func CheckLogin(w http.ResponseWriter, r *http.Request, operationType, operation
 		e := errors.New("illegal users")
 		WriteError(w, "100001", "user", "Illegal users!", e)
 		return userID, e
-	}
-	if operation == OperationEDIT && OperationNone != operationType {
-		if operationType == OperationADMIN {
-
-			flag, desc, err := account.CheckUserIsAdmin(userID)
-			if !flag {
-				WriteError(w, "100002", "user", desc, err)
-				return userID, errors.New(desc)
-			}
-		} else {
-			flag, desc, err := account.CheckUserPermission(operationType, "edit", userID)
-			if !flag {
-
-				WriteError(w, "100002", "user", desc, err)
-				return userID, errors.New(desc)
-			}
-		}
-
 	}
 
 	return userID, nil

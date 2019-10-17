@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	//PluginTypeGateway 全局插件
+	//PluginTypeGateway 网关插件
 	PluginTypeGateway = 0
 	//PluginTypeStrategy 策略插件
 	PluginTypeStrategy = 1
@@ -26,16 +26,13 @@ type PluginInfo struct {
 //MapString map string
 type MapString map[string]string
 
-//PluginFactoryHandler 插件处理factory
+//PluginFactoryHandler 插件工厂类
 type PluginFactoryHandler struct {
 	Info    *PluginInfo
 	Factory goku_plugin.PluginFactory
-
-	//Config    string
-	//UpdateTag string
 }
 
-//PluginHandlerExce plugin handler exec
+//PluginHandlerExce 插件处理类
 type PluginHandlerExce struct {
 	PluginObj *goku_plugin.PluginObj
 	Name      string

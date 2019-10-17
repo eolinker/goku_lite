@@ -1,4 +1,4 @@
-package accessfield
+package access_field
 
 var (
 	defaultFields = []AccessFieldKey{
@@ -29,14 +29,14 @@ func init() {
 	}
 }
 
-//IsDefault 是否有默认值
+//IsDefault 是否是默认配置
 func IsDefault(k AccessFieldKey) bool {
 	_, has := defaultSet[k]
 	return has
 
 }
 
-//Default 获取默认的字段
+//Default 获取默认配置
 func Default() []AccessFieldKey {
 	return defaultFields
 

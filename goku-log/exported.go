@@ -1,51 +1,53 @@
-package gokulog
+package goku_log
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"os"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 const (
-	//PanicLevel panic
+	//PanicLevel panic lever
 	PanicLevel = logrus.PanicLevel
-	//FatalLevel fatal
+	//FatalLevel fatal lever
 	FatalLevel = logrus.FatalLevel
-	//ErrorLevel error
+	//ErrorLevel error lever
 	ErrorLevel = logrus.ErrorLevel
-	//WarnLevel warn
-	WarnLevel  = logrus.WarnLevel
-	//InfoLevel info
-	InfoLevel  = logrus.InfoLevel
-	//DebugLevel debug
+	//WarnLevel warn lever
+	WarnLevel = logrus.WarnLevel
+	//InfoLevel info lever
+	InfoLevel = logrus.InfoLevel
+	//DebugLevel debug lever
 	DebugLevel = logrus.DebugLevel
-	//TraceLevel trace
+	//TraceLevel trace lever
 	TraceLevel = logrus.TraceLevel
 )
 
 var (
 	writer *FileWriterByPeriod
-	logger                     = logrus.New()
+	logger = logrus.New()
 
 	logEnable = true
 )
 
-//Level level
+//Level 等级
 type Level = logrus.Level
 
-//Fields fields
+//Fields 域
 type Fields = logrus.Fields
 
 //Entry entry
 type Entry = logrus.Entry
 
-//ParseLevel 转换层级
+//ParseLevel 解析层级
 func ParseLevel(lvl string) (Level, error) {
 	return logrus.ParseLevel(lvl)
 }
 
 func init() {
+
 	logger.SetLevel(logrus.WarnLevel)
 	logger.SetFormatter(&LineFormatter{
 		//ForceColors: true,
@@ -59,19 +61,19 @@ func init() {
 	})
 }
 
-//GetLogger 获取日志对象
+//GetLogger 获取logger
 func GetLogger() *logrus.Logger {
 	return logger
 }
 
-//SetLevel 设置日志层级
+//SetLevel 设置层级
 func SetLevel(level Level) {
 
 	logger.SetLevel(level)
 
 }
 
-//SetOutPut 输出设置
+//SetOutPut 设置输出
 func SetOutPut(enable bool, dir, file string, period LogPeriod, expire int) {
 	logEnable = enable
 	logger.SetOutput(writer)
@@ -83,12 +85,12 @@ func SetOutPut(enable bool, dir, file string, period LogPeriod, expire int) {
 	}
 }
 
-//Close 关闭流
+//Close 关闭
 func Close() {
 	writer.Close()
 }
 
-//WithFields 设置日志需要的字段名称
+//WithFields 写域
 func WithFields(fields Fields) *Entry {
 
 	return logger.WithFields(fields)
@@ -154,7 +156,9 @@ func panicout(args ...interface{}) string {
 	}()
 	s, _ := encode(PanicLevel, args...)
 	_, _ = os.Stderr.Write(s)
-	logger.Panic(args...)
+	if logger.Out != nil && logger.Out != os.Stderr {
+		logger.Fatal(args...)
+	}
 	return string(s)
 }
 
@@ -170,7 +174,9 @@ func Fatal(args ...interface{}) {
 		return
 	}
 	_, _ = os.Stderr.Write(s)
-	logger.Fatal(args...)
+	if logger.Out != nil && logger.Out != os.Stderr {
+		logger.Fatal(args...)
+	}
 }
 
 // Tracef logs a message at level Trace on the standard logger.
@@ -257,7 +263,7 @@ func Debugln(args ...interface{}) {
 	logger.Debugln(args...)
 }
 
-// Print 无视lever输出一段trace 信息
+//Print 无视lever输出一段trace 信息
 func Print(args ...interface{}) {
 
 	s, e := encode(TraceLevel, args...)
@@ -282,8 +288,7 @@ func encode(level Level, args ...interface{}) ([]byte, error) {
 	entry.Time = time.Now()
 	s, e := logger.Formatter.Format(entry)
 	if e != nil {
-		fmt.Println(e)
-		fmt.Println(args...)
+		return s, e
 	}
 	return s, e
 }
@@ -332,5 +337,7 @@ func Fatalln(args ...interface{}) {
 		return
 	}
 	_, _ = os.Stderr.Write(s)
-	logger.Fatalln(args...)
+	if logger.Out != nil && logger.Out != os.Stderr {
+		logger.Fatal(args...)
+	}
 }

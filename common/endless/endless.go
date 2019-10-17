@@ -5,8 +5,6 @@ import (
 	"errors"
 	"fmt"
 	log "github.com/eolinker/goku-api-gateway/goku-log"
-	cmd2 "github.com/eolinker/goku-api-gateway/goku-node/cmd"
-
 	"net"
 	"net/http"
 	"os"
@@ -20,19 +18,12 @@ import (
 )
 
 const (
-	//PRE_SIGNAL pre signal
 	PRE_SIGNAL = iota
-
-	//POST_SIGNAL post signal
 	POST_SIGNAL
 
-	//STATE_INIT state init
 	STATE_INIT
-	//STATE_RUNNING state running
 	STATE_RUNNING
-	//STATE_SHUTTING_DOWN state shutting down
 	STATE_SHUTTING_DOWN
-	//STATE_TERMINATE state terminate
 	STATE_TERMINATE
 )
 
@@ -43,14 +34,10 @@ var (
 	socketPtrOffsetMap   map[string]uint
 	runningServersForked bool
 
-	//DefaultReadTimeOut 默认读超时时间
-	DefaultReadTimeOut time.Duration
-	//DefaultWriteTimeOut 默认写超时时间
-	DefaultWriteTimeOut time.Duration
-	//DefaultMaxHeaderBytes 默认请求头最大字节数
+	DefaultReadTimeOut    time.Duration
+	DefaultWriteTimeOut   time.Duration
 	DefaultMaxHeaderBytes int
-	//DefaultHammerTime default hammer time
-	DefaultHammerTime time.Duration
+	DefaultHammerTime     time.Duration
 
 	isChild     bool
 	socketOrder string
@@ -58,7 +45,7 @@ var (
 	hookableSignals []os.Signal
 )
 
-var isStop = true
+var isStop bool = true
 
 func init() {
 	runningServerReg = sync.RWMutex{}
@@ -431,7 +418,7 @@ func (srv *endlessServer) hammerTime(d time.Duration) {
 
 func (srv *endlessServer) fork() (err error) {
 
-	cmd2.StopNode()
+
 	runningServerReg.Lock()
 	defer runningServerReg.Unlock()
 	// only one server instance should fork!

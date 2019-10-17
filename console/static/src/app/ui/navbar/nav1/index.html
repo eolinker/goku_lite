@@ -14,7 +14,8 @@
     <div class="f_row zindex-top-container">
         <div class="special-select-nav-item n_list0_style">
             <div class="text-ni f_row f_ac">
-                <span class="user-logo-tni mr5">&nbsp;</span>
+                <span class="user-logo-tni mr5"
+                    ng-style="{'background-image':$ctrl.service.navbar.info.userInfo.userImage?'url(https://data.eolinker.com/'+$ctrl.service.navbar.info.userInfo.userImage+')':''}">&nbsp;</span>
                 <span
                     class="mr5">{{$ctrl.data.userInfo.remark||$ctrl.data.userInfo.loginCall||'&nbsp;'}}</span>
                 <button type="button" ng-click="$ctrl.fun.news()" class="unread-new-tip ml5"

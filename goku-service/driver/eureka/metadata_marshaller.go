@@ -6,18 +6,21 @@ import (
 	"regexp"
 )
 
+//MetaData metaData
 type MetaData struct {
 	Map   map[string]string
 	Class string
 }
 
+//Vraw vraw
 type Vraw struct {
 	Content []byte `xml:",innerxml"`
 	Class   string `xml:"class,attr" json:"@class"`
 }
 
+//MarshalXML marshalXML
 func (s *MetaData) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	var attributes []xml.Attr = make([]xml.Attr, 0)
+	var attributes = make([]xml.Attr, 0)
 	if s.Class != "" {
 		attributes = append(attributes, xml.Attr{
 			Name: xml.Name{
@@ -30,8 +33,8 @@ func (s *MetaData) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	tokens := []xml.Token{start}
 
 	for key, value := range s.Map {
-		t := xml.StartElement{Name: xml.Name{"", key}}
-		tokens = append(tokens, t, xml.CharData(value), xml.EndElement{t.Name})
+		t := xml.StartElement{Name: xml.Name{Space: "", Local: key}}
+		tokens = append(tokens, t, xml.CharData(value), xml.EndElement{Name: t.Name})
 	}
 
 	tokens = append(tokens, xml.EndElement{
@@ -54,6 +57,7 @@ func (s *MetaData) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	return nil
 }
 
+//UnmarshalXML unMarshalXML
 func (s *MetaData) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	s.Map = make(map[string]string)
 	vraw := &Vraw{}
@@ -71,6 +75,7 @@ func (s *MetaData) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	return nil
 }
 
+//MarshalJSON marshalJSON
 func (s *MetaData) MarshalJSON() ([]byte, error) {
 	mapIt := make(map[string]string)
 	for key, value := range s.Map {
@@ -81,9 +86,11 @@ func (s *MetaData) MarshalJSON() ([]byte, error) {
 	}
 	return json.Marshal(mapIt)
 }
+
+//UnmarshalJSON unMarshalJSON
 func (s *MetaData) UnmarshalJSON(data []byte) error {
 	dataUnmarshal := make(map[string]string)
-	err := json.Unmarshal(data, dataUnmarshal)
+	err := json.Unmarshal(data, &dataUnmarshal)
 	s.Map = dataUnmarshal
 	if val, ok := s.Map["@class"]; ok {
 		s.Class = val

@@ -2,9 +2,7 @@ package entity
 
 import "fmt"
 
-//const ClusterDefaultName = "default"
-
-//Cluster cluster
+//Cluster 集群配置
 type Cluster struct {
 	ID    int    `json:"-" yaml:"-"`
 	Name  string `json:"name" yaml:"name"`
@@ -21,7 +19,7 @@ type ClusterInfo struct {
 	Redis CLusterRedis `json:"redis" yaml:"redis"`
 }
 
-//ClusterDB cluster db
+//ClusterDB 集群DB配置
 type ClusterDB struct {
 	Driver   string `json:"driver" yaml:"driver"`
 	Host     string `json:"host" yaml:"host"`
@@ -29,9 +27,10 @@ type ClusterDB struct {
 	UserName string `json:"userName" yaml:"userName"`
 	Password string `json:"password" yaml:"password"`
 	Database string `json:"database" yaml:"database"`
+	Path     string `json:"path" yaml:"path"`
 }
 
-//CLusterRedis cluster redis
+//CLusterRedis 集群redis配置
 type CLusterRedis struct {
 	Mode     string `json:"mode" yaml:"mode"`
 	Addrs    string `json:"addrs" yaml:"addrs"`
@@ -40,17 +39,17 @@ type CLusterRedis struct {
 	Password string `json:"password" yaml:"password"`
 }
 
-//GetDriver 获取驱动
+//GetDriver 获取驱动名称
 func (c *ClusterDB) GetDriver() string {
 	return c.Driver
 }
 
-//GetSource 获取源字符串
+//GetSource 获取连接字符串
 func (c *ClusterDB) GetSource() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8", c.UserName, c.Password, c.Host, c.Port, c.Database)
 }
 
-//Cluster 获取cluster
+//Cluster 获取集群
 func (c *ClusterInfo) Cluster() *Cluster {
 	return &Cluster{
 		ID:    c.ID,

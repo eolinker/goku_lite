@@ -309,7 +309,7 @@
                     primaryKey: 'apiID',
                     default: [{
                         key: 'APIs',
-                        html: '{{item.apiName}}',
+                        html: `<span class="mr5 plr3 ptb2 fs12" ng-class="{'eo-label-warning':item.apiType,'eo-label-success':!item.apiType}">{{item.apiType?"编排":"普通"}}</span><span>{{item.apiName}}</span>`,
                         draggableCacheMark: 'name'
                     }, {
                         key: '请求方式',
@@ -397,11 +397,19 @@
                     class: 'pull-left',
                     btnClass: 'eo_theme_btn_success',
                     btnList: [{
-                        name: '新建接口',
+                        name: '普通接口',
                         fun: {
                             default: privateFun.edit,
                             params: {
-                                status: 'add'
+                                status: 'add-common'
+                            }
+                        }
+                    }, {
+                        name: '链式调用(服务编排)',
+                        fun: {
+                            default: privateFun.edit,
+                            params: {
+                                status: 'add-link'
                             }
                         }
                     }, {

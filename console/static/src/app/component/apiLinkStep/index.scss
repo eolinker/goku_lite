@@ -1,0 +1,36 @@
+api-Link-Step-Component{
+    width: 578px;
+    display: block;
+   
+    .item_container_alsc{
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .detail_container_alsc{
+        background-color: #fafafa;
+    }
+    .eo-input{
+        width: 100%;
+    }
+    list-block-common-component .thead-div{
+        display: none;
+    }
+    .tr_container_tbd:first-child .tr-tbd{
+        border-top: none !important;
+    }
+    .tr-tbd > div{
+        border-right: none !important;
+    }
+    .ng-invalid-pattern{
+        border-color: #e83333 !important;
+        color: #e83333 !important;
+    }
+    .eo-error-tips{
+        display: none !important;
+    }
+    .btn_group_container_alsc{
+        left: 600px;
+        white-space: nowrap;
+        top:10px;
+    }
+}

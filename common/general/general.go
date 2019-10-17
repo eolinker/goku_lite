@@ -1,6 +1,6 @@
 package general
 
-//InitFunc init func
+//InitFunc 初始化函数
 type InitFunc func() error
 
 var (
@@ -8,7 +8,7 @@ var (
 	_laterFunc []InitFunc
 )
 
-//RegeditInit 初始化注册
+//RegeditInit 注册初始化
 func RegeditInit(fn InitFunc) {
 
 	_initFunc = append(_initFunc, fn)
@@ -29,7 +29,7 @@ func General() error {
 	return nil
 }
 
-//RegeditLater regedit later
+//RegeditLater regeditlater
 func RegeditLater(fn InitFunc) {
 	_laterFunc = append(_laterFunc, fn)
 }

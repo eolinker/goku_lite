@@ -13,7 +13,7 @@ type Request struct {
 	Method       string
 }
 
-//TargetURL 转发URL
+//TargetURL 获取转发url
 func (r *Request) TargetURL() string {
 	return r.targetURL
 }
@@ -28,7 +28,7 @@ func (r *Request) TargetServer() string {
 	return r.targetServer
 }
 
-//SetTargetServer 设置转发服务器地址
+//SetTargetServer 设置最终转发地址
 func (r *Request) SetTargetServer(targetServer string) {
 	r.targetServer = targetServer
 }
@@ -38,7 +38,7 @@ func (r *Request) Querys() url.Values {
 	return r.querys
 }
 
-//NewRequest 新请求
+//NewRequest 创建请求
 func NewRequest(r *RequestReader) *Request {
 	if r == nil {
 		return nil

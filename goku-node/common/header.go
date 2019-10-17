@@ -1,9 +1,10 @@
 package common
 
 import (
-	goku_plugin "github.com/eolinker/goku-plugin"
 	"net/http"
 	"net/url"
+
+	goku_plugin "github.com/eolinker/goku-plugin"
 )
 
 //Header header
@@ -11,7 +12,7 @@ type Header struct {
 	header http.Header
 }
 
-//Headers 返回headers
+//Headers 获取头部
 func (h *Header) Headers() http.Header {
 
 	n := make(http.Header)
@@ -23,42 +24,30 @@ func (h *Header) Headers() http.Header {
 func (h *Header) String() string {
 
 	return url.Values(h.header).Encode()
-	//buf:=bytes.NewBuffer(nil)
-	//for k,v:=range h.header{
-	//	buf.WriteByte('&')
-	//	buf.WriteString(k)
-	//	buf.WriteString("=")
-	//	buf.WriteString(strings.Join(v,","))
-	//
-	//}
-	//data:=buf.Bytes()
-	//if len(data)>1{
-	//	data=data[1:]
-	//}
-	//return string(data)
+
 }
 
-//SetHeader 设置请求头
+//SetHeader 设置请求头部
 func (h *Header) SetHeader(key, value string) {
 	h.header.Set(key, value)
 }
 
-//AddHeader 新增请求头
+//AddHeader 新增头部
 func (h *Header) AddHeader(key, value string) {
 	h.header.Add(key, value)
 }
 
-//DelHeader 删除请求头
+//DelHeader 删除头部
 func (h *Header) DelHeader(key string) {
 	h.header.Del(key)
 }
 
-//GetHeader 通过名字获取请求头
+//GetHeader 根据名称获取头部
 func (h *Header) GetHeader(name string) string {
 	return h.header.Get(name)
 }
 
-//NewHeader 创建header请求头
+//NewHeader 创建Header
 func NewHeader(header http.Header) *Header {
 	if header == nil {
 		header = make(http.Header)
@@ -68,7 +57,7 @@ func NewHeader(header http.Header) *Header {
 	}
 }
 
-//PriorityHeader proorityHeader
+//PriorityHeader priorityHeader
 type PriorityHeader struct {
 	*Header
 	setHeader    *Header
@@ -91,7 +80,7 @@ func (h *PriorityHeader) Append() goku_plugin.Header {
 	return h.setHeader
 }
 
-//NewPriorityHeader 创建优先级header
+//NewPriorityHeader 创建PriorityHeader
 func NewPriorityHeader() *PriorityHeader {
 	return &PriorityHeader{
 		Header:       NewHeader(nil),

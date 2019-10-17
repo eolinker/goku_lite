@@ -13,10 +13,6 @@
                 .state('home.setting.log', {
                     url: '/log',
                     template: '<setting-log></setting-log>'
-                })
-                .state('home.setting.basic', {
-                    url: '/',
-                    template: '<setting-Basic></setting-Basic>'
                 });
         }])
 })()

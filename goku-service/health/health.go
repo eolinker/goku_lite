@@ -1,24 +1,29 @@
 package health
 
 import (
-	"github.com/eolinker/goku-api-gateway/goku-service/common"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/eolinker/goku-api-gateway/goku-service/common"
 )
 
+//CheckHandler checkHandler
 type CheckHandler interface {
 	Open(path string, statusCodes string, second int, timeout time.Duration)
 	Check(instance *common.Instance)
 	IsNeedCheck() bool
 	Close() []*common.Instance
 }
+
+//CheckBox checkBox
 type CheckBox struct {
 	isNeedCheck bool
 	statusCodes map[string]bool
 	checker     *Checker
 }
 
+//Open open
 func (c *CheckBox) Open(path string, statusCodes string, second int, timeout time.Duration) {
 
 	old := c.checker
@@ -58,6 +63,7 @@ func (c *CheckBox) Open(path string, statusCodes string, second int, timeout tim
 	c.isNeedCheck = true
 }
 
+//Check check
 func (c *CheckBox) Check(instance *common.Instance) {
 	if !c.isNeedCheck {
 		return
@@ -67,11 +73,13 @@ func (c *CheckBox) Check(instance *common.Instance) {
 	}
 }
 
+//IsNeedCheck isNeedCheck
 func (c *CheckBox) IsNeedCheck() bool {
 
 	return c.isNeedCheck && c.checker != nil
 }
 
+//Close close
 func (c *CheckBox) Close() []*common.Instance {
 	if c.checker == nil {
 		return nil

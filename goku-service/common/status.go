@@ -2,11 +2,15 @@ package common
 
 import "strings"
 
+//InstanceStatus instanceStanceStatus
 type InstanceStatus int
 
 const (
+	//InstanceRun run
 	InstanceRun = iota
+	//InstanceDown down
 	InstanceDown
+	//InstanceChecking check
 	InstanceChecking
 )
 
@@ -22,6 +26,7 @@ func (status InstanceStatus) String() string {
 	return "unkown"
 }
 
+//ParseStatus parseStatus
 func ParseStatus(status string) InstanceStatus {
 	s := strings.ToLower(status)
 

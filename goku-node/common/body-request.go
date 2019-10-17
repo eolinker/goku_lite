@@ -2,6 +2,8 @@ package common
 
 import (
 	"bytes"
+	"encoding/json"
+	"encoding/xml"
 	"errors"
 
 	goku_plugin "github.com/eolinker/goku-plugin"
@@ -16,24 +18,26 @@ import (
 
 const defaultMultipartMemory = 32 << 20 // 32 MB
 var (
-	errNotForm      = errors.New("contentType is not Form")
-	errNotMultipart = errors.New("contentType is not Multipart")
-	errNotAllowRaw  = errors.New("contentType is not allow Raw")
+	errorNotForm      = errors.New("contentType is not Form")
+	errorNotMultipart = errors.New("contentType is not Multipart")
+	errorNotAllowRaw  = errors.New("contentType is not allow Raw")
 )
 
-//BodyRequestHandler body request handler
+//BodyRequestHandler body请求处理器
 type BodyRequestHandler struct {
 	form            url.Values
-	rawbody         []byte
+	rawBody         []byte
 	orgContentParam map[string]string
 	contentType     string
 	files           map[string]*goku_plugin.FileHeader
 
 	isInit     bool
 	isWriteRaw bool
+
+	object interface{}
 }
 
-//Files files
+//Files 获取文件参数
 func (b *BodyRequestHandler) Files() (map[string]*goku_plugin.FileHeader, error) {
 
 	err := b.Parse()
@@ -45,7 +49,7 @@ func (b *BodyRequestHandler) Files() (map[string]*goku_plugin.FileHeader, error)
 
 }
 
-//Parse parse
+//Parse 解析
 func (b *BodyRequestHandler) Parse() error {
 
 	if b.isInit {
@@ -55,9 +59,25 @@ func (b *BodyRequestHandler) Parse() error {
 	contentType, _, _ := mime.ParseMediaType(b.contentType)
 
 	switch contentType {
+	case goku_plugin.JSON:
+		{
+			e := json.Unmarshal(b.rawBody, &b.object)
+			if e != nil {
+				return e
+			}
+		}
+	case goku_plugin.AppLicationXML, goku_plugin.TextXML:
+		{
+			e := xml.Unmarshal(b.rawBody, &b.object)
+			if e != nil {
+				return e
+			}
+
+		}
+
 	case goku_plugin.MultipartForm:
 		{
-			r, err := multipartReader(b.contentType, false, b.rawbody)
+			r, err := multipartReader(b.contentType, false, b.rawBody)
 			if err != nil {
 				return err
 			}
@@ -93,20 +113,25 @@ func (b *BodyRequestHandler) Parse() error {
 					}
 				}
 			}
+
+			b.object = b.form
 		}
 	case goku_plugin.FormData:
 		{
-			form, err := url.ParseQuery(string(b.rawbody))
+			form, err := url.ParseQuery(string(b.rawBody))
 			if err != nil {
 				return err
 			}
 			if b.form == nil {
-				b.form = form
+
+				b.object = form
 			} else {
 				for k, v := range form {
 					b.form[k] = append(b.form[k], v...)
 				}
+
 			}
+			b.object = b.form
 
 		}
 	}
@@ -114,7 +139,7 @@ func (b *BodyRequestHandler) Parse() error {
 	return nil
 }
 
-//GetForm get form
+//GetForm 获取表单参数
 func (b *BodyRequestHandler) GetForm(key string) string {
 
 	contentType, _, _ := mime.ParseMediaType(b.contentType)
@@ -129,7 +154,7 @@ func (b *BodyRequestHandler) GetForm(key string) string {
 	return b.form.Get(key)
 }
 
-//GetFile getFile
+//GetFile 获取文件参数
 func (b *BodyRequestHandler) GetFile(key string) (file *goku_plugin.FileHeader, has bool) {
 
 	contentType, _, _ := mime.ParseMediaType(b.contentType)
@@ -149,12 +174,12 @@ func (b *BodyRequestHandler) GetFile(key string) (file *goku_plugin.FileHeader, 
 	return f, has
 }
 
-//SetToForm setToForm
+//SetToForm 设置表单参数
 func (b *BodyRequestHandler) SetToForm(key, value string) error {
 
 	contentType, _, _ := mime.ParseMediaType(b.contentType)
 	if contentType != goku_plugin.FormData && contentType != goku_plugin.MultipartForm {
-		return errNotForm
+		return errorNotForm
 	}
 
 	err := b.Parse()
@@ -172,11 +197,11 @@ func (b *BodyRequestHandler) SetToForm(key, value string) error {
 	return nil
 }
 
-//AddForm addForm
+//AddForm 新增表单参数
 func (b *BodyRequestHandler) AddForm(key, value string) error {
 	contentType, _, _ := mime.ParseMediaType(b.contentType)
 	if contentType != goku_plugin.FormData && contentType != goku_plugin.MultipartForm {
-		return errNotForm
+		return errorNotForm
 	}
 	err := b.Parse()
 	if err != nil {
@@ -191,12 +216,12 @@ func (b *BodyRequestHandler) AddForm(key, value string) error {
 	return nil
 }
 
-//AddFile 新建文件参数
+//AddFile 新增文件参数
 func (b *BodyRequestHandler) AddFile(key string, file *goku_plugin.FileHeader) error {
 
 	contentType, _, _ := mime.ParseMediaType(b.contentType)
 	if contentType != goku_plugin.FormData && contentType != goku_plugin.MultipartForm {
-		return errNotMultipart
+		return errorNotMultipart
 	}
 	err := b.Parse()
 	if err != nil {
@@ -215,21 +240,19 @@ func (b *BodyRequestHandler) AddFile(key string, file *goku_plugin.FileHeader) e
 	return nil
 }
 
-//Clone 请求克隆
+//Clone 克隆body
 func (b *BodyRequestHandler) Clone() *BodyRequestHandler {
-
 	rawbody, _ := b.RawBody()
-
 	return NewBodyRequestHandler(b.contentType, rawbody)
 
 }
 
-//ContentType contentType
+//ContentType 获取contentType
 func (b *BodyRequestHandler) ContentType() string {
 	return b.contentType
 }
 
-//BodyForm 获取body参数
+//BodyForm 获取表单参数
 func (b *BodyRequestHandler) BodyForm() (url.Values, error) {
 
 	err := b.Parse()
@@ -239,12 +262,33 @@ func (b *BodyRequestHandler) BodyForm() (url.Values, error) {
 	return b.form, nil
 }
 
+//BodyInterface 获取请求体对象
+func (b *BodyRequestHandler) BodyInterface() (interface{}, error) {
+	err := b.Parse()
+	if err != nil {
+		return nil, err
+	}
+
+	return b.object, nil
+}
+
+//RawBody 获取raw数据
+func (b *BodyRequestHandler) RawBody() ([]byte, error) {
+
+	err := b.Encode()
+	if err != nil {
+		return nil, err
+	}
+	return b.rawBody, nil
+
+}
+
 //Encode encode
 func (b *BodyRequestHandler) Encode() error {
 	if b.isWriteRaw {
 		return nil
-
 	}
+
 	contentType, _, _ := mime.ParseMediaType(b.contentType)
 	if contentType != goku_plugin.FormData && contentType != goku_plugin.MultipartForm {
 		b.isWriteRaw = true
@@ -255,8 +299,8 @@ func (b *BodyRequestHandler) Encode() error {
 		body := new(bytes.Buffer)
 		writer := multipart.NewWriter(body)
 
-		for fieldname, file := range b.files {
-			part, err := writer.CreateFormFile(fieldname, file.FileName)
+		for name, file := range b.files {
+			part, err := writer.CreateFormFile(name, file.FileName)
 			if err != nil {
 				return err
 			}
@@ -266,11 +310,11 @@ func (b *BodyRequestHandler) Encode() error {
 			}
 		}
 
-		for fieldname, values := range b.form {
+		for key, values := range b.form {
 			temp := make(url.Values)
-			temp[fieldname] = values
+			temp[key] = values
 			value := temp.Encode()
-			err := writer.WriteField(fieldname, value)
+			err := writer.WriteField(key, value)
 			if err != nil {
 				return err
 			}
@@ -280,27 +324,16 @@ func (b *BodyRequestHandler) Encode() error {
 			return err
 		}
 		b.contentType = writer.FormDataContentType()
-		b.rawbody = body.Bytes()
+		b.rawBody = body.Bytes()
 		b.isWriteRaw = true
 	} else {
 		if b.form != nil {
-			b.rawbody = []byte(b.form.Encode())
+			b.rawBody = []byte(b.form.Encode())
 		} else {
-			b.rawbody = make([]byte, 0, 0)
+			b.rawBody = make([]byte, 0, 0)
 		}
 	}
 	return nil
-}
-
-//RawBody rawBody
-func (b *BodyRequestHandler) RawBody() ([]byte, error) {
-
-	err := b.Encode()
-	if err != nil {
-		return nil, err
-	}
-	return b.rawbody, nil
-
 }
 
 //SetForm 设置表单参数
@@ -308,7 +341,7 @@ func (b *BodyRequestHandler) SetForm(values url.Values) error {
 
 	contentType, _, _ := mime.ParseMediaType(b.contentType)
 	if contentType != goku_plugin.FormData && contentType != goku_plugin.MultipartForm {
-		return errNotForm
+		return errorNotForm
 	}
 	b.Parse()
 	b.form = values
@@ -322,7 +355,7 @@ func (b *BodyRequestHandler) SetFile(files map[string]*goku_plugin.FileHeader) e
 
 	contentType, _, _ := mime.ParseMediaType(b.contentType)
 	if contentType != goku_plugin.FormData && contentType != goku_plugin.MultipartForm {
-		return errNotForm
+		return errorNotForm
 	}
 	b.Parse()
 	b.files = files
@@ -332,10 +365,10 @@ func (b *BodyRequestHandler) SetFile(files map[string]*goku_plugin.FileHeader) e
 	return nil
 }
 
-//SetRaw 设置Raw
+//SetRaw 设置raw数据
 func (b *BodyRequestHandler) SetRaw(contentType string, body []byte) {
 
-	b.rawbody, b.contentType, b.isInit, b.isWriteRaw = body, contentType, false, true
+	b.rawBody, b.contentType, b.isInit, b.isWriteRaw = body, contentType, false, true
 	_, b.orgContentParam, _ = mime.ParseMediaType(contentType)
 	return
 

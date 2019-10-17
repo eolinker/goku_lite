@@ -1,20 +1,21 @@
-package configlog
+package config_log
 
 import "C"
 import (
 	"encoding/json"
+	"strings"
+
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 	access_field "github.com/eolinker/goku-api-gateway/server/access-field"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/config-log"
-	"strings"
 )
 
 const (
-	// ConsoleLog 控制台log
+	//ConsoleLog console日志
 	ConsoleLog = "console"
-	//NodeLog 节点log
+	//NodeLog 节点日志
 	NodeLog = "node"
-	//AccessLog access log
+	//AccessLog access日志
 	AccessLog = "access"
 	//ExpireDefault 默认过期时间
 	ExpireDefault = 3
@@ -26,7 +27,7 @@ var (
 		NodeLog:    1,
 		AccessLog:  1,
 	}
-	//Expires 过期配置
+	//Expires 过期时间选项数组
 	Expires = []ValueTitle{
 		{
 			Value: 3,
@@ -49,7 +50,7 @@ var (
 			Title: "180天",
 		},
 	}
-	//Periods 周期
+	//Periods 日志生成周期
 	Periods = []NameTitle{
 		{
 			Name:  log.PeriodDay.String(),
@@ -60,7 +61,7 @@ var (
 			Title: "小时",
 		},
 	}
-	//Levels 层级
+	//Levels 日志级别
 	Levels = []NameTitle{
 		{
 			Name:  log.ErrorLevel.String(),
@@ -80,19 +81,19 @@ var (
 	}
 )
 
-//NameTitle name title
+//NameTitle 名称标题结构体
 type NameTitle struct {
 	Name  string `json:"name"`
 	Title string `json:"title"`
 }
 
-//ValueTitle value title
+//ValueTitle 值标题结构体
 type ValueTitle struct {
 	Value int    `json:"value"`
 	Title string `json:"title"`
 }
 
-//Param param
+//Param 日志参数
 type Param struct {
 	Enable bool
 	Dir    string
@@ -103,7 +104,7 @@ type Param struct {
 	Expire int
 }
 
-//PutParam put param
+//PutParam put方式所需参数
 type PutParam struct {
 	Enable bool   `opt:"enable,require"`
 	Dir    string `opt:"dir,require"`
@@ -135,7 +136,7 @@ func (p *PutParam) Format() (*Param, error) {
 
 }
 
-//AccessParam access param
+//AccessParam access参数
 type AccessParam struct {
 	Enable bool   `opt:"enable,require" `
 	Dir    string `opt:"dir,require"`
@@ -203,14 +204,14 @@ type AccessConfig struct {
 	Fields  []*AccessField `json:"fields"`
 }
 
-//AccessField access日志字段
+//AccessField access域
 type AccessField struct {
 	Name   string `json:"name"`
 	Select bool   `json:"select"`
 	Desc   string `json:"desc"`
 }
 
-//InitFields 初始化字段
+//InitFields 域初始化
 func (c *AccessConfig) InitFields() {
 	// 如果有新增的字段，按默认顺序拼接到末尾
 	c.Fields = make([]*AccessField, 0, access_field.Size())

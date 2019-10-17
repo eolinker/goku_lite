@@ -2,13 +2,14 @@ package utils
 
 import (
 	"fmt"
-	"golang.org/x/crypto/ssh"
 	"net"
 	"time"
+
+	"golang.org/x/crypto/ssh"
 	// "io/ioutil"
 )
 
-//Connect ssh连接
+//Connect SSH连接
 func Connect(user, password, host, key string, port int, cipherList []string) (*ssh.Session, error) {
 	var (
 		auth         []ssh.AuthMethod

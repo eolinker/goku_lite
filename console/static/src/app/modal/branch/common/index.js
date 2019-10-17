@@ -91,7 +91,7 @@
                 return false;
             }
         }
-        $scope.fun.confirm = function () {
+        $scope.fun.confirm = function (inputSwitch) {
             var template = {
                 request: angular.copy(input.request || {}),
                 promise: null
@@ -142,8 +142,12 @@
                     if(input.promiseFun){
                         template.promise=input.promiseFun(Object.assign({}, template.request));
                         if(!template.promise)return;
-                    }else if (input.resource) {
-                        template.promise = input.resource(template.request).$promise;
+                    }else  if (input.resource) {
+                        let tmpAjaxRequest=template.request;
+                        if(inputSwitch==="tmp"){
+                            tmpAjaxRequest=Object.assign({},tmpAjaxRequest,input.tmpBtnObj.ajaxRequest||{})
+                        }
+                        template.promise = input.resource(tmpAjaxRequest).$promise;
                     }else {
                         $uibModalInstance.close(Object.assign({}, template.request));
                         return;

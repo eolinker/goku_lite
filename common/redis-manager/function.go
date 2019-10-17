@@ -1,4 +1,4 @@
-package redismanager
+package redis_manager
 
 //
 //func GetKeys(r Redis, pattern string) ([]string, error) {

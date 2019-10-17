@@ -6,12 +6,15 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+
 	// "fmt"
 	"time"
 )
 
-var Version string = "2.0"
+//Version 版本号
+var Version = "2.0"
 
+//Request request
 type Request struct {
 	client  *http.Client
 	method  string
@@ -24,7 +27,7 @@ type Request struct {
 	timeout time.Duration
 }
 
-// 创建新请求
+//NewRequest 创建新请求
 func NewRequest(method string, URL *url.URL) (*Request, error) {
 	if method != "GET" && method != "POST" && method != "PUT" && method != "DELETE" &&
 		method != "HEAD" && method != "OPTIONS" && method != "PATCH" {
@@ -33,7 +36,6 @@ func NewRequest(method string, URL *url.URL) (*Request, error) {
 	return newRequest(method, URL)
 }
 
-//
 func newRequest(method string, URL *url.URL) (*Request, error) {
 	var urlPath string
 	queryParams := make(map[string][]string)
@@ -51,58 +53,56 @@ func newRequest(method string, URL *url.URL) (*Request, error) {
 	return r, nil
 }
 
-// 设置请求头
-func (this *Request) SetHeader(key string, values ...string) {
+//SetHeader 设置请求头
+func (r *Request) SetHeader(key string, values ...string) {
 	if len(values) > 0 {
-		this.headers[key] = values[:]
+		r.headers[key] = values[:]
 	} else {
-		delete(this.headers, key)
+		delete(r.headers, key)
 	}
 }
 
-// 获取请求头
-func (this *Request) Headers() map[string][]string {
+//Headers 获取请求头
+func (r *Request) Headers() map[string][]string {
 	headers := make(map[string][]string)
-	for key, values := range this.headers {
+	for key, values := range r.headers {
 		headers[key] = values[:]
 	}
 	return headers
 }
 
-// 设置Query参数
-func (this *Request) SetQueryParam(key string, values ...string) {
+//SetQueryParam 设置Query参数
+func (r *Request) SetQueryParam(key string, values ...string) {
 	if len(values) > 0 {
-		this.queryParams[key] = values[:]
+		r.queryParams[key] = values[:]
 	} else {
-		delete(this.queryParams, key)
+		delete(r.queryParams, key)
 	}
 }
 
-// 设置请求超时时间
-func (this *Request) SetTimeout(timeout time.Duration) {
-	this.timeout = timeout
+//SetTimeout 设置请求超时时间
+func (r *Request) SetTimeout(timeout time.Duration) {
+	r.timeout = timeout
 }
 
 //// 获取请求超时时间
-//func (this *Request) GetTimeout() time.Duration {
-//	return this.timeout
+//func (r *Request) GetTimeout() time.Duration {
+//	return r.timeout
 //}
 
-// 发送请求
-func (this *Request) Send() (*http.Response, error) {
+//Send 发送请求
+func (r *Request) Send() (*http.Response, error) {
 	// now := time.Now()
-	req, err := this.parseBody()
-	// fmt.Println("Parse body",time.Since(now))
+	req, err := r.parseBody()
 	if err != nil {
 		return nil, err
 	}
 	req.Header.Set("Accept-Encoding", "gzip")
-	// now = time.Now()
-	req.Header = parseHeaders(this.headers)
+	req.Header = parseHeaders(r.headers)
 
-	this.client.Timeout = this.timeout
+	r.client.Timeout = r.timeout
 
-	httpResponse, err := this.client.Do(req)
+	httpResponse, err := r.client.Do(req)
 
 	if err != nil {
 		return nil, err
@@ -111,32 +111,31 @@ func (this *Request) Send() (*http.Response, error) {
 
 }
 
-// 获取query参数
-func (this *Request) QueryParams() map[string][]string {
+//QueryParams 获取query参数
+func (r *Request) QueryParams() map[string][]string {
 	params := make(map[string][]string)
-	for key, values := range this.queryParams {
+	for key, values := range r.queryParams {
 		params[key] = values[:]
 	}
 	return params
 }
 
-// 获取完整的URL路径
-func (this *Request) URLPath() string {
-	if len(this.queryParams) > 0 {
-		return this.URL + "?" + parseParams(this.queryParams).Encode()
-	} else {
-		return this.URL
+//URLPath 获取完整的URL路径
+func (r *Request) URLPath() string {
+	if len(r.queryParams) > 0 {
+		return r.URL + "?" + parseParams(r.queryParams).Encode()
 	}
+	return r.URL
 }
 
-// 设置URL
-func (this *Request) SetURL(url string) {
-	this.URL = url
+//SetURL 设置URL
+func (r *Request) SetURL(url string) {
+	r.URL = url
 }
 
-// 设置源数据
-func (this *Request) SetRawBody(body []byte) {
-	this.body = body
+//SetRawBody 设置源数据
+func (r *Request) SetRawBody(body []byte) {
+	r.body = body
 }
 
 // 解析请求头
@@ -160,66 +159,15 @@ func parseHeaders(headers map[string][]string) http.Header {
 }
 
 // 解析请求体
-func (this *Request) parseBody() (req *http.Request, err error) {
-	var body io.Reader = nil
-	if len(this.body) > 0 {
-		body = bytes.NewBuffer(this.body)
+func (r *Request) parseBody() (req *http.Request, err error) {
+	var body io.Reader
+	if len(r.body) > 0 {
+		body = bytes.NewBuffer(r.body)
 
 	}
-	req, err = http.NewRequest(this.method, this.URLPath(), body)
+	req, err = http.NewRequest(r.method, r.URLPath(), body)
 	return
-	//if this.method == "GET" || this.method == "TRACE" {
-	//	req, err = http.NewRequest(this.method, this.URLPath(), nil)
-	//}
-	//
-	//if len(this.body) > 0 {
-	//
-	//	if this.isJSON {
-	//		if _, ok := this.headers["Content-Type"]; !ok {
-	//			this.headers["Content-Type"] = []string{"application/json"}
-	//		}
-	//		req, err = http.NewRequest(this.method, this.URLPath(),
-	//			strings.NewReader(string(this.body)))
-	//	} else {
-	//		var body *bytes.Buffer
-	//		body = bytes.NewBuffer(this.body)
-	//
-	//	}
-	//} else if len(this.files) > 0 {
-	//	body := new(bytes.Buffer)
-	//	writer := multipart.NewWriter(body)
-	//	var part io.Writer
-	//	for fieldname, file := range this.files {
-	//		part, err = writer.CreateFormFile(fieldname, file.filename)
-	//		if err != nil {
-	//			return
-	//		}
-	//		_, err = part.Write(file.data)
-	//		if err != nil {
-	//			return
-	//		}
-	//	}
-	//	for fieldname, values := range this.formParams {
-	//		temp := make(map[string][]string)
-	//		temp[fieldname] = values
-	//		value := parseParams(temp).Encode()
-	//		err = writer.WriteField(fieldname, value)
-	//		if err != nil {
-	//			return
-	//		}
-	//	}
-	//	err = writer.Close()
-	//	if err != nil {
-	//		return
-	//	}
-	//	this.headers["Content-Type"] = []string{writer.FormDataContentType()}
-	//	req, err = http.NewRequest(this.method, this.URLPath(), body)
-	//} else {
-	//	this.headers["Content-Type"] = []string{"application/x-www-form-urlencoded"}
-	//	req, err = http.NewRequest(this.method, this.URLPath(),
-	//		strings.NewReader(parseParams(this.formParams).Encode()))
-	//}
-	//return
+
 }
 
 // 解析参数

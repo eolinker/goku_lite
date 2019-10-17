@@ -1,6 +1,6 @@
 package entity
 
-//RedisNode redis节点信息
+//RedisNode redis节点
 type RedisNode struct {
 	Server    string
 	Password  string

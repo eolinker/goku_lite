@@ -70,16 +70,14 @@ stop() {
             kill $pid  >/dev/null 2>&1
             if [[ $? != 0 ]];then
                 echo "$PROG stop error"
-
+                exit 1
             fi
             rm -f  "$WORK_PATH/$PROG.pid"
             echo "$PROG stopped"
-        else
-            echo "Error! $PROG not started!" 1>&2
         fi
     else
         ## Program is not running, exit with error.
-        echo "Error! $PROG not started!" 1>&2
+        echo "note! $PROG not started!" 1>&2
     fi
 }
  

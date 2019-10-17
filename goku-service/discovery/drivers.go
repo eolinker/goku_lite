@@ -2,18 +2,22 @@ package discovery
 
 import "sync"
 
+//Driver driver
 type Driver interface {
 	Open(name string, config string) (ISource, error)
 }
 
+//CreateHandler createHandler
 type CreateHandler func(config string) Discovery
 
+//DriverBase driverBase
 type DriverBase struct {
 	createFunc CreateHandler
 	locker     sync.RWMutex
 	sources    map[string]*SourceDiscovery
 }
 
+//NewDriver newDriver
 func NewDriver(createFunc CreateHandler) *DriverBase {
 	return &DriverBase{
 		createFunc: createFunc,
@@ -22,6 +26,7 @@ func NewDriver(createFunc CreateHandler) *DriverBase {
 	}
 }
 
+//Open open
 func (d *DriverBase) Open(name string, config string) (ISource, error) {
 	d.locker.RLock()
 

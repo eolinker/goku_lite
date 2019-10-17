@@ -1,10 +1,11 @@
 package access_log
 
 import (
+	"time"
+
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 	access_field "github.com/eolinker/goku-api-gateway/server/access-field"
 	"github.com/sirupsen/logrus"
-	"time"
 )
 
 var (
@@ -13,14 +14,10 @@ var (
 	writer    *log.FileWriterByPeriod
 )
 
-//func InitLogger(enable bool,fields []string,dir,file string,period log.LogPeriod) {
-//
-//	SetFields(fields)
-//	SetOutput(enable,dir,file,period)
-//
-//}
+//Fields 域
 type Fields = logrus.Fields
 
+//Log log
 func Log(fields Fields) {
 	if logger == nil {
 		return
@@ -28,6 +25,7 @@ func Log(fields Fields) {
 	logger.WithFields(fields).Info()
 }
 
+//SetFields 设置access域
 func SetFields(fields []access_field.AccessFieldKey) {
 	if formatter == nil {
 		formatter = NewAccessLogFormatter(fields)
@@ -35,6 +33,8 @@ func SetFields(fields []access_field.AccessFieldKey) {
 		formatter.SetFields(fields)
 	}
 }
+
+//SetOutput 设置输出
 func SetOutput(enable bool, dir, file string, period log.LogPeriod, expire int) {
 
 	if enable {

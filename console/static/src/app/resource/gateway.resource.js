@@ -12,12 +12,42 @@
 
     function GatewayResource($resource, serverUrl) {
         var data = {
-            info: {
-                api: [],
-                method: 'POST'
-            }
+            api:[],
+            method:"POST"
         };
-        data.info.api['ConfigLog'] = $resource(serverUrl+'config/log/:operate', {
+        data.api['Version'] = $resource(serverUrl+'version/config/:operate', {
+
+        }, {
+            Query: {
+                params: {
+                    operate: 'getList'
+                },
+                method: 'GET',
+                cancellable: true
+            },
+            Add: {
+                params: {
+                    operate: 'add'
+                },
+                method: data.method,
+                cancellable: true
+            },
+            Publish: {
+                params: {
+                    operate: 'publish'
+                },
+                method: data.method,
+                cancellable: true
+            },
+            Delete: {
+                params: {
+                    operate: 'delete'
+                },
+                method: data.method,
+                cancellable: true
+            }
+        });
+        data.api['ConfigLog'] = $resource(serverUrl+'config/log/:operate', {
 
         }, {
             Console: {
@@ -63,7 +93,7 @@
                 cancellable: true
             }
         });
-        data.info.api['ServiceDiscovery'] = $resource(serverUrl+'balance/service/:operate', {
+        data.api['ServiceDiscovery'] = $resource(serverUrl+'balance/service/:operate', {
 
         }, {
             DriverQuery: {
@@ -90,32 +120,32 @@
                 params: {
                     operate: 'add'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Delete: {
                 params: {
                     operate: 'delete'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Edit: {
                 params: {
                     operate: 'save'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             SimpleQuery: {
                 params: {
                     operate: 'simple'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        data.info.api['Cluster'] = $resource(serverUrl +'cluster/:operate', {
+        data.api['Cluster'] = $resource(serverUrl +'cluster/:operate', {
 
         }, {
             Query: {
@@ -125,65 +155,61 @@
                 method: 'GET',
                 cancellable: true
             },
+            Add: {
+                params: {
+                    operate: 'add'
+                },
+                method: data.method,
+                cancellable: true
+            },
+            Edit: {
+                params: {
+                    operate: 'edit'
+                },
+                method: data.method,
+                cancellable: true
+            },
             SimpleQuery: {
                 params: {
                     operate: 'simpleList'
                 },
                 method: 'GET',
                 cancellable: true
-            }
-        });
-        data.info.api['AlertMessage'] = $resource(serverUrl + 'alert/msg/:operate', {
-
-        }, {
-            Query: {
-                params: {
-                    operate: 'getList'
-                },
-                method: data.info.method,
-                cancellable: true,
-            },
-            Empty: {
-                params: {
-                    operate: 'clear'
-                },
-                method: data.info.method,
-                cancellable: true,
             },
             Delete: {
                 params: {
                     operate: 'delete'
                 },
-                method: data.info.method,
-                cancellable: true,
+                method: data.method,
+                cancellable: true
             }
         });
-        data.info.api['Monitor'] = $resource(serverUrl + 'monitor/gateway/:operate', {
+        data.api['Monitor'] = $resource(serverUrl + 'monitor/gateway/:operate', {
 
         }, {
             Info: {
                 params: {
                     operate: 'getSummaryInfo'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true,
             },
             Refresh: {
                 params: {
                     operate: 'refreshInfo'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true,
             },
             Download: {
                 params: {
                     operate: 'download'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true,
             }
         });
-        data.info.api['Config'] = $resource(serverUrl + 'gateway/config/:mark/:operate', {
+        data.api['Config'] = $resource(serverUrl + 'gateway/config/:mark/:operate', {
 
         }, {
             BaseInfo: {
@@ -191,15 +217,7 @@
                     mark: 'base',
                     operate: 'getInfo'
                 },
-                method: data.info.method,
-                cancellable: true,
-            },
-            AlertInfo: {
-                params: {
-                    mark: 'alert',
-                    operate: 'getInfo'
-                },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true,
             },
             BaseEdit: {
@@ -207,26 +225,18 @@
                     mark: 'base',
                     operate: 'edit'
                 },
-                method: data.info.method,
-                cancellable: true,
-            },
-            AlertEdit: {
-                params: {
-                    mark: 'alert',
-                    operate: 'edit'
-                },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true,
             }
         });
-        data.info.api['ImportAms'] = $resource(serverUrl + 'import/ams/:operate', {
+        data.api['ImportAms'] = $resource(serverUrl + 'import/ams/:operate', {
 
         }, {
             Project: {
                 params: {
                     operate: 'project'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true,
                 transformRequest: angular.identity,
                 headers: {
@@ -237,7 +247,7 @@
                 params: {
                     operate: 'api'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true,
                 transformRequest: angular.identity,
                 headers: {
@@ -248,7 +258,7 @@
                 params: {
                     operate: 'group'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true,
                 transformRequest: angular.identity,
                 headers: {
@@ -256,7 +266,7 @@
                 }
             }
         });
-        data.info.api['Project'] = $resource(serverUrl + 'project/:operate/:target', {
+        data.api['Project'] = $resource(serverUrl + 'project/:operate/:target', {
 
         }, {
             Query: {
@@ -270,28 +280,28 @@
                 params: {
                     operate: 'add'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Edit: {
                 params: {
                     operate: 'edit'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Delete: {
                 params: {
                     operate: 'batchDelete'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Info: {
                 params: {
                     operate: 'getInfo'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             QueryAndGroup: {
@@ -299,11 +309,11 @@
                     operate: 'strategy',
                     target:"getList"
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        data.info.api['Api'] = $resource(serverUrl + 'apis/:mark/:operate', {
+        data.api['Api'] = $resource(serverUrl + 'apis/:mark/:operate', {
 
         }, {
             IDQuery: {
@@ -325,216 +335,216 @@
                 params: {
                     operate: 'copy'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Add: {
                 params: {
                     operate: 'add'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Edit: {
                 params: {
                     operate: 'edit'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Delete: {
                 params: {
                     operate: 'batchDelete'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             ChangeGroup: {
                 params: {
                     operate: 'batchEditGroup'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Info: {
                 params: {
                     operate: 'getInfo'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        data.info.api['ApiGroup'] = $resource(serverUrl + 'apis/group/:operate', {
+        data.api['ApiGroup'] = $resource(serverUrl + 'apis/group/:operate', {
 
         }, {
             Query: {
                 params: {
                     operate: 'getList'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Add: {
                 params: {
                     operate: 'add'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Edit: {
                 params: {
                     operate: 'edit'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Delete: {
                 params: {
                     operate: 'delete'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Info: {
                 params: {
                     operate: 'getInfo'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        data.info.api['Auth'] = $resource(serverUrl + 'auth/:operate', {
+        data.api['Auth'] = $resource(serverUrl + 'auth/:operate', {
 
         }, {
             Edit: {
                 params: {
                     operate: 'editInfo'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Info: {
                 params: {
                     operate: 'getInfo'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Status: {
                 params: {
                     operate: 'getStatus'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        data.info.api['Node'] = $resource(serverUrl + 'node/:operate', {
+        data.api['Node'] = $resource(serverUrl + 'node/:operate', {
 
         }, {
             Query: {
                 params: {
                     operate: 'getList'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Add: {
                 params: {
                     operate: 'add'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Edit: {
                 params: {
                     operate: 'edit'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             ChangeGroup: {
                 params: {
                     operate: 'batchEditGroup'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Delete: {
                 params: {
                     operate: 'batchDelete'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Info: {
                 params: {
                     operate: 'getInfo'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Reload: {
                 params: {
                     operate: 'batchReload'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Restart: {
                 params: {
                     operate: 'batchRestart'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Start: {
                 params: {
                     operate: 'batchStart'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Stop: {
                 params: {
                     operate: 'batchStop'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        data.info.api['NodeGroup'] = $resource(serverUrl + 'node/group/:operate', {
+        data.api['NodeGroup'] = $resource(serverUrl + 'node/group/:operate', {
 
         }, {
             Query: {
                 params: {
                     operate: 'getList'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Add: {
                 params: {
                     operate: 'add'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Edit: {
                 params: {
                     operate: 'edit'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Delete: {
                 params: {
                     operate: 'delete'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        data.info.api['Strategy'] = $resource(serverUrl + 'strategy/:mark/:operate', {
+        data.api['Strategy'] = $resource(serverUrl + 'strategy/:mark/:operate', {
 
         }, {
             IDQuery: {
@@ -563,92 +573,92 @@
                 params: {
                     operate: 'add'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Copy: {
                 params: {
                     operate: 'copy'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Edit: {
                 params: {
                     operate: 'edit'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Delete: {
                 params: {
                     operate: 'batchDelete'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             ChangeGroup: {
                 params: {
                     operate: 'batchEditGroup'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Info: {
                 params: {
                     operate: 'getInfo'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Start: {
                 params: {
                     operate: 'batchStart'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Stop: {
                 params: {
                     operate: 'batchStop'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        data.info.api['StrategyGroup'] = $resource(serverUrl + 'strategy/group/:operate', {
+        data.api['StrategyGroup'] = $resource(serverUrl + 'strategy/group/:operate', {
 
         }, {
             Query: {
                 params: {
                     operate: 'getList'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Add: {
                 params: {
                     operate: 'add'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Edit: {
                 params: {
                     operate: 'edit'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Delete: {
                 params: {
                     operate: 'delete'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        data.info.api['StrategyApi'] = $resource(serverUrl + 'strategy/api/:mark/:operate', {
+        data.api['StrategyApi'] = $resource(serverUrl + 'strategy/api/:mark/:operate', {
 
         }, {
             IDQuery: {
@@ -671,7 +681,7 @@
                 params: {
                     operate: 'getNotInList'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Query: {
@@ -685,162 +695,162 @@
                 params: {
                     operate: 'add'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Edit: {
                 params: {
                     operate: 'edit'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Delete: {
                 params: {
                     operate: 'batchDelete'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Info: {
                 params: {
                     operate: 'getInfo'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             ChangeTarget: {
                 params: {
                     operate: 'batchEditTarget'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        data.info.api['Balance'] = $resource(serverUrl + 'balance/:operate', {
+        data.api['Balance'] = $resource(serverUrl + 'balance/:operate', {
 
         }, {
             CheckIsExistInCluster: {
                 params: {
                     operate: 'exits'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Query: {
                 params: {
                     operate: 'getList'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Add: {
                 params: {
                     operate: 'add'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Edit: {
                 params: {
                     operate: 'edit'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Delete: {
                 params: {
                     operate: 'batchDelete'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Info: {
                 params: {
                     operate: 'getInfo'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             SimpleQuery:{
                 params: {
                     operate: 'simple'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        data.info.api['Plugin'] = $resource(serverUrl + 'plugin/:mark/:operate', {
+        data.api['Plugin'] = $resource(serverUrl + 'plugin/:mark/:operate', {
 
         }, {
             TagQuery: {
                 params: {
                     operate: 'getListByType'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Query: {
                 params: {
                     operate: 'getList'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Add: {
                 params: {
                     operate: 'add'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Edit: {
                 params: {
                     operate: 'edit'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Delete: {
                 params: {
                     operate: 'delete'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Info: {
                 params: {
                     operate: 'getInfo'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Start: {
                 params: {
                     operate: 'start'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Stop: {
                 params: {
                     operate: 'stop'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             BatchStop: {
                 params: {
                     operate: 'batchStop'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             BatchStart: {
                 params: {
                     operate: 'batchStart'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Check: {
@@ -848,75 +858,75 @@
                     operate: 'check',
                     mark:'availiable'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        data.info.api['PluginStrategy'] = $resource(serverUrl + 'plugin/strategy/:operate', {
+        data.api['PluginStrategy'] = $resource(serverUrl + 'plugin/strategy/:operate', {
 
         }, {
             Query: {
                 params: {
                     operate: 'getList'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Add: {
                 params: {
                     operate: 'addPluginToStrategy'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Edit: {
                 params: {
                     operate: 'edit'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Delete: {
                 params: {
                     operate: 'batchDelete'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Info: {
                 params: {
                     operate: 'getInfo'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Start: {
                 params: {
                     operate: 'batchStart'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Stop: {
                 params: {
                     operate: 'batchStop'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        data.info.api['GpeditPluginApi'] = $resource(serverUrl + 'strategy/api/plugin/:operate', {
+        data.api['GpeditPluginApi'] = $resource(serverUrl + 'strategy/api/plugin/:operate', {
 
         }, {
             Query: {
                 params: {
                     operate: 'getList'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        data.info.api['PluginApi'] = $resource(serverUrl + 'plugin/api/:mark/:operate', {
+        data.api['PluginApi'] = $resource(serverUrl + 'plugin/api/:mark/:operate', {
 
         }, {
             QueryByStrategy: {
@@ -924,59 +934,59 @@
                     mark:'notAssign',
                     operate: 'getList'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Query: {
                 params: {
                     operate: 'getListByStrategy'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Add: {
                 params: {
                     operate: 'addPluginToApi'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Edit: {
                 params: {
                     operate: 'edit'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Delete: {
                 params: {
                     operate: 'batchDelete'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Info: {
                 params: {
                     operate: 'getInfo'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Start: {
                 params: {
                     operate: 'batchStart'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             },
             Stop: {
                 params: {
                     operate: 'batchStop'
                 },
-                method: data.info.method,
+                method: data.method,
                 cancellable: true
             }
         });
-        return data.info.api;
+        return data.api;
     }
 })();

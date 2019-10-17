@@ -1,11 +1,11 @@
-package redispluginproxy
+package redis_plugin_proxy
 
 import (
 	redis_manager "github.com/eolinker/goku-api-gateway/common/redis-manager"
-	"github.com/eolinker/goku-plugin"
+	goku_plugin "github.com/eolinker/goku-plugin"
 )
 
-//Create 创建redisManager
+//Create 创建RedisManager
 func Create() goku_plugin.RedisManager {
 
 	return &RedisManager{
@@ -13,10 +13,9 @@ func Create() goku_plugin.RedisManager {
 			redisClient: redis_manager.GetConnection(),
 		},
 	}
-
 }
 
-//RedisManager redisManager
+//RedisManager RedisManager
 type RedisManager struct {
 	def goku_plugin.Redis
 }

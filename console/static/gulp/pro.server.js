@@ -27,7 +27,7 @@ function browserSyncInit(baseDir, open, port) {
             },
             //使用代理
             middleware: [
-                proxyMiddleware(['/apis','/strategy','/node','/plugin','/auth','/project','/guest','/balance','/import','/gateway','/user','/message','/alert','/account','/permission','/monitor'], {onProxyRes: onProxyRes, target: 'http://47.95.203.198:10003', changeOrigin: true,secure: false})
+                proxyMiddleware(['/apis','/strategy','/node','/plugin','/auth','/project','/guest','/balance','/import','/gateway','/user','/message','/account','/permission','/monitor'], {onProxyRes: onProxyRes, target: 'http://47.95.203.198:10003', changeOrigin: true,secure: false})
             ]
         }
     });

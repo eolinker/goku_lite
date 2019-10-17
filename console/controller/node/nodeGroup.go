@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/eolinker/goku-api-gateway/console/controller"
+	"github.com/eolinker/goku-api-gateway/console/module/cluster"
 	"github.com/eolinker/goku-api-gateway/console/module/node"
-	cluster2 "github.com/eolinker/goku-api-gateway/server/cluster"
 )
 
 //AddNodeGroup 新增节点分组
@@ -19,9 +19,8 @@ func AddNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	cluserName := httpRequest.PostFormValue("cluster")
 
-	clusterID, has := cluster2.GetID(cluserName)
-
-	if !has {
+	clusterID := cluster.GetClusterIDByName(cluserName)
+	if clusterID == 0 {
 		controller.WriteError(httpResponse, "340003", "", "[ERROR]Illegal cluster!", nil)
 		return
 	}
@@ -189,8 +188,8 @@ func GetNodeGroupList(httpResponse http.ResponseWriter, httpRequest *http.Reques
 	}
 
 	cluserName := httpRequest.FormValue("cluster")
-	clusterID, has := cluster2.GetID(cluserName)
-	if !has {
+	clusterID := cluster.GetClusterIDByName(cluserName)
+	if clusterID == 0 {
 		controller.WriteError(httpResponse,
 			"280001",
 			"nodeGroup",

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-//CheckPluginIsAvailiable  检查插件是否可用
+//CheckPluginIsAvailiable 检查插件是否可用
 func CheckPluginIsAvailiable(pluginName string, nodeList []map[string]interface{}) (bool, []map[string]interface{}) {
 	errNodeList := make([]map[string]interface{}, 0)
 	for _, v := range nodeList {

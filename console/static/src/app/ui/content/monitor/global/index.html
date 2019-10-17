@@ -19,10 +19,6 @@
                     </p>
                     <p class="c999 mt20">节点</p>
                 </div>
-                <div>
-                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.baseInfo.redisCount}}</p>
-                    <p class="c999 mt20">REDIS</p>
-                </div>
             </div>
         </div>
         <div class="eo-tab-container item_panel">
@@ -44,63 +40,6 @@
         </div>
     </div>
     <p class="mb25 bbd divide_panel"></p>
-    <div class="f_row mb25">
-        <select class="eo-select mr10" ng-model="$ctrl.data.cluster"
-            ng-options="item.name as item.title for item in $ctrl.ajaxResponse.clusterArr"
-            ng-change="$ctrl.fun.changeClutser()"></select>
-        <div class="time_panel">
-            <a ng-repeat="tabItem in $ctrl.data.tabSummaryList" class="item_time_panel"
-                ng-class="{'item_time_active_panel':$ctrl.ajaxRequest.table.period==tabItem.active}"
-                ng-click="$ctrl.fun.changeMenu('basic',{item:tabItem,$event:$event})" ng-switch="tabItem.type">
-                <span ng-switch-default>{{tabItem.name}}</span>
-                <div ng-switch-when="html">
-                    <span>{{$ctrl.ajaxRequest.table.beginTime?($ctrl.ajaxRequest.table.beginTime+' - '+$ctrl.ajaxRequest.table.endTime):'自定义时间段'}}</span>
-                    <p datepicker-times-directive="$ctrl.fun.tableFilterTime(arg)"
-                        interaction="$ctrl.directive.tableTimeObject"></p>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="f_row mb25">
-        <div class="eo-tab-container item_panel mr25">
-            <div class="eo-tab-menu"><span class="item-tab">访问统计</span></div>
-            <div class="f_row_ac f_jc h_70 p20 tac">
-                <div class="mr80">
-                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.gatewayRequestInfo.gatewayRequestCount}}</p>
-                    <p class="c999 mt20">请求到达总数</p>
-                </div>
-                <div class="mr80">
-                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.gatewayRequestInfo.gatewayErrorCount||0}}</p>
-                    <p class="c999 mt20">请求异常数量</p>
-                </div>
-                <div class="mr80">
-                    <p class="fs20">
-                        {{$ctrl.ajaxResponse.monitorInfo.gatewayRequestInfo.gatewaySuccessRate}}
-                    </p>
-                    <p class="c999 mt20">请求成功率</p>
-                </div>
-            </div>
-        </div>
-        <div class="eo-tab-container item_panel">
-            <div class="eo-tab-menu"><span class="item-tab">转发统计</span></div>
-            <div class="f_row_ac f_jc h_70 p20 tac">
-                <div class="mr80">
-                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.proxyRequestInfo.proxyRequestCount}}</p>
-                    <p class="c999 mt20">请求转发总数</p>
-                </div>
-                <div class="mr80">
-                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.proxyRequestInfo.proxyErrorCount||0}}</p>
-                    <p class="c999 mt20">转发异常数量</p>
-                </div>
-                <div class="mr80">
-                    <p class="fs20">
-                        {{$ctrl.ajaxResponse.monitorInfo.proxyRequestInfo.proxySuccessRate}}
-                    </p>
-                    <p class="c999 mt20">转发成功率</p>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="f_row mb25">
         <div class="eo-tab-container item_panel">
             <div class="eo-tab-menu"><span class="item-tab">帮助</span></div>

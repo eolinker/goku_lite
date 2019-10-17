@@ -55,9 +55,6 @@
                                         },
                                         "gatewayConfig": {
                                             "edit": true
-                                        },
-                                        "alertManagement": {
-                                            "edit": true
                                         }
                                     }
                                     break;
@@ -89,9 +86,6 @@
                                             "edit": true
                                         },
                                         "gatewayConfig": {
-                                            "edit": true
-                                        },
-                                        "alertManagement": {
                                             "edit": true
                                         }
                                     }

@@ -57,7 +57,7 @@ func ResetAPITargetOfStrategy(httpResponse http.ResponseWriter, httpRequest *htt
 	strategyID := httpRequest.PostFormValue("strategyID")
 	target := httpRequest.PostFormValue("target")
 	apiID := httpRequest.PostFormValue("apiID")
-	id, err := strconv.Atoi(apiID)
+	aID, err := strconv.Atoi(apiID)
 	if err != nil {
 		controller.WriteError(httpResponse,
 			"240013",
@@ -77,7 +77,7 @@ func ResetAPITargetOfStrategy(httpResponse http.ResponseWriter, httpRequest *htt
 		return
 
 	}
-	flag, result, err := api.SetTarget(id, strategyID, target)
+	flag, result, err := api.SetTarget(aID, strategyID, target)
 	if !flag {
 		controller.WriteError(httpResponse,
 			"240000",
@@ -254,16 +254,7 @@ func GetAPIListFromStrategy(httpResponse http.ResponseWriter, httpRequest *http.
 	}
 
 	_, result, count, err := api.GetAPIListFromStrategy(strategyID, keyword, op, p, pSize, ids, names)
-	// if !flag {
 
-	// 	controller.WriteError(httpResponse,
-	// 		"240000",
-	// 		"apiStrategy",
-	// 		"[ERROR]Empty api list!",
-	// 		err)
-	// 	return
-
-	// }
 	controller.WriteResultInfoWithPage(httpResponse, "apiStrategy", "apiList", result, &controller.PageInfo{
 		ItemNum:  len(result),
 		TotalNum: count,

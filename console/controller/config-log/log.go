@@ -1,4 +1,4 @@
-package configlog
+package config_log
 
 import (
 	"fmt"

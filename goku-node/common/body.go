@@ -1,6 +1,6 @@
 package common
 
-//BodyHandler body处理器
+//BodyHandler 请求体处理器
 type BodyHandler struct {
 	body []byte
 }
@@ -18,7 +18,7 @@ func (r *BodyHandler) SetBody(body []byte) {
 	r.body = body
 }
 
-//NewBodyHandler 创建body处理器
+//NewBodyHandler 创建BodyHandler
 func NewBodyHandler(body []byte) *BodyHandler {
 	return &BodyHandler{body: body}
 }

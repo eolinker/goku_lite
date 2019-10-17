@@ -1,6 +1,6 @@
 package entity
 
-//API api
+//API api信息
 type API struct {
 	APIID         int
 	APIName       string
@@ -18,7 +18,7 @@ type API struct {
 	StripSlash    bool // 是否过滤斜杠
 }
 
-//APIExtend api extend
+//APIExtend 接口额外信息
 type APIExtend struct {
 	*API
 	Target string

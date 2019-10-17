@@ -9,9 +9,11 @@
             <article class="eo-modal-article">
                 <form autocomplete="off" name="ConfirmForm">
                     <div ng-repeat="item in input.textArray" ng-switch="item.type">
-                        <p ng-class="{'eo_form_first_item_title':$first,'eo_form_item_title':!$first}">{{item.title}}
+                        <div class="f_row_ac" ng-class="{'eo_form_first_item_title':$first,'eo_form_item_title':!$first}">
+                            <span>{{item.title}}</span>
+                            <tip-directive input="{{item.tip}}" ng-if="item.tip"></tip-directive>
                             <span class="eo-modal-tip" ng-if="item.titleTip">{{item.titleTip}}</span>
-                        </p>
+                        </div>
                         <div ng-switch-when="input">
                             <input autocomplete="off" type="text" name="{{item.key}}" ng-model="item.value" placeholder="{{item.placeholder}}" class="eo-input" ng-class="{'eo-input-error':(data.submitted&&ConfirmForm[item.key].$invalid)}" maxlength="{{item.maxlength}}" ng-disabled="{{item.disabled}}" ng-pattern="item.pattern" ng-required="item.required">
                             <p class="eo-error-tips">请填写正确的{{item.title}}</p>
@@ -48,6 +50,7 @@
             </article>
             <footer class="eo-modal-footer">
                 <button class="{{input.btnObject.class||'eo_theme_btn_success'}}" button-set-disable-directive="fun.confirm()">{{input.btnObject.text||"确定"}}</button>
+                <button type="button" class="eo_theme_btn_success"  button-set-disable-directive="fun.confirm('tmp')" ng-if="input.tmpBtnObj">{{input.tmpBtnObj.text||"确定"}}</button>
                 <button type="button" class="eo_theme_btn_default" ng-click="fun.cancel()">取消</button>
             </footer>
         </div>

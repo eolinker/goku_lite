@@ -2,25 +2,42 @@ package console
 
 import (
 	"fmt"
+
 	"github.com/eolinker/goku-api-gateway/common/database"
 	"github.com/eolinker/goku-api-gateway/server/entity"
 )
 
-//ClusterDatabaseConfig 集群数据库对象
+const (
+	mysqlDriver   = "mysql"
+	sqlite3Driver = "sqlite3"
+)
+
+//ClusterDatabaseConfig 集群数据库配置
 type ClusterDatabaseConfig entity.ClusterDB
 
-//GetDriver 获取驱动
+//GetDriver 获取驱动类型
 func (c *ClusterDatabaseConfig) GetDriver() string {
 	return c.Driver
 }
 
-//GetSource 获取链接字符串
+//GetSource 获取连接字符串
 func (c *ClusterDatabaseConfig) GetSource() string {
 
-	//dsn = conf.Value("db_user") + ":" + conf.Value("db_password")
-	//dsn = dsn + "@tcp(" + conf.Value("db_host") + ":" + conf.Value("db_port") + ")/" + conf.Value("db_name")
-	//dsn = dsn + "?charset=utf8"
-	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8", c.UserName, c.Password, c.Host, c.Port, c.Database)
+	switch c.Driver {
+	case mysqlDriver:
+		{
+			return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8", c.UserName, c.Password, c.Host, c.Port, c.Database)
+		}
+	case sqlite3Driver:
+		{
+			return c.Path
+		}
+	default:
+		{
+			return ""
+		}
+	}
+
 }
 
 //InitDatabase 初始化数据库
@@ -34,4 +51,8 @@ func InitDatabase() {
 	if e != nil {
 		panic(e)
 	}
+}
+
+func InitTable() error {
+	return database.InitTable()
 }

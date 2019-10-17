@@ -24,10 +24,10 @@
             info: {
                 current: null,
                 menu: [{
-                        name: '监控面板',
+                        name: '首页',
                         sref: 'home.monitor',
                         childSref: 'home.monitor.global',
-                        icon: 'icon-jiankong_o',
+                        icon: 'icon-shouye_o',
                         power: -1,
                         status:'un-spreed'
                     },
@@ -71,22 +71,6 @@
                         childSref: 'home.gpedit.default'
                     },
                     {
-                        name: '告警设置',
-                        sref:'home.alert',
-                        childSref: 'home.alert.setting',
-                        icon: 'icon-anquan_o',
-                        power: -1,
-                        status:'un-spreed',
-                        childList: [{
-                                name: '告警设置',
-                                sref: 'home.alert.setting'
-                            },
-                            {
-                                name: '告警列表',
-                                sref: 'home.alert.list'
-                            }
-                        ]
-                    }, {
                         name: '扩展插件',
                         sref: 'home.plugin',
                         childSref: 'home.plugin.default',
@@ -96,19 +80,21 @@
                     {
                         name: '网关设置',
                         sref:'home.setting',
-                        childSref: 'home.setting.basic',
                         icon: 'icon-quanjushezhi_o',
                         power: -1,
                         status:'un-spreed',
-                        childList: [{
-                                name: '基本设置',
-                                sref: 'home.setting.basic'
-                            },
+                        childList: [
                             {
                                 name: '日志设置',
                                 sref: 'home.setting.log'
                             }
                         ]
+                    }
+                    , {
+                        name: '发布配置',
+                        sref: 'home.publish',
+                        icon: 'icon-liangliangduibi_o',
+                        power: -1,
                     }
                 ]
             }

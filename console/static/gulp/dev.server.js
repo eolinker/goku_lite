@@ -91,7 +91,7 @@ function browserSyncInit(baseDir, open, port) {
             },
             //使用代理
             middleware: [
-                proxyMiddleware(['/config','/cluster','/balance', '/apis', '/strategy', '/node', '/plugin', '/auth', '/project', '/guest', '/import', '/gateway', '/user', '/message', '/alert', '/account', '/permission', '/monitor'], {
+                proxyMiddleware(['/config','/cluster','/balance', '/apis', '/strategy', '/node', '/plugin', '/auth', '/project', '/guest', '/import', '/gateway', '/user', '/message','/account', '/permission', '/monitor'], {
                     onProxyRes: onProxyRes,
                     target: 'http://127.0.0.1',
                     changeOrigin: true,

@@ -2,7 +2,7 @@ package service
 
 import "encoding/json"
 
-//Simple simple
+//Simple 简易服务发现结构体
 type Simple struct {
 	Name        string `json:"name"`
 	Driver      string `json:"driver"`
@@ -10,7 +10,7 @@ type Simple struct {
 	Type        string `json:"type"`
 }
 
-//Service service
+//Service 服务发现
 type Service struct {
 	Simple
 
@@ -21,7 +21,7 @@ type Service struct {
 	CreateTime  string `json:"createTime"`
 }
 
-//Info info
+//Info 服务发现信息
 type Info struct {
 	*Service
 	Config             string            `json:"config"`
@@ -38,7 +38,7 @@ func (i *Info) Decode() {
 	json.Unmarshal([]byte(i.ClusterConfig), &i.ClusterConfigObj)
 }
 
-//AddParam add param
+//AddParam 新增接口所需参数
 type AddParam struct {
 	Name          string `opt:"name,require"`
 	Driver        string `opt:"driver" default:"static"`
