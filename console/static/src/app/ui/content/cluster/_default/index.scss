@@ -1,16 +1,8 @@
 cluster-default{
-    list-default-common-component .first-level-article{
-        margin-top: 0;
+    list-default-common-component tip-directive{
+        margin-left: 0;
     }
-    menu-Default-Common-Component .common_menu_ul .search-form {
-        position: absolute;
-        right: 20px;
-        top: 10px;
-    }
-    .menu-title:nth-child(2){
-        padding-bottom: 0;
-    }
-    menu-Default-Common-Component .disabled-operate-has-second-title-placeholder{
-        height: 113px;
+    list-default-common-component .eo-tip-container{
+        margin-left: -15px !important;
     }
 }

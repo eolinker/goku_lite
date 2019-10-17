@@ -9,7 +9,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-//BalanceInfoEntity 负载信息结构体
+//BalanceInfoEntity 负载信息实体
 type BalanceInfoEntity struct {
 	Name string
 	Desc string
@@ -42,7 +42,7 @@ type BalanceConfig struct {
 	ServersConfigOrg string                 `json:"staticOrg"`
 }
 
-//BalanceServerConfig 负载服务器配置
+//BalanceServerConfig 负载服务配置
 type BalanceServerConfig struct {
 	Server string `json:"server"`
 	Weight int    `json:"weight"`
@@ -66,7 +66,7 @@ type _OldVersionBalanceInfo struct {
 //
 //}
 
-//Decode 解码
+//Decode decode
 func (ent *BalanceInfoEntity) Decode() (*BalanceInfo, error) {
 	info := new(BalanceInfo)
 	info.Name = ent.Name
@@ -109,7 +109,7 @@ func (ent *BalanceInfoEntity) Decode() (*BalanceInfo, error) {
 
 }
 
-//TryOld try old config
+//TryOld 解析旧配置
 func TryOld(oldversionConfig string) ([]*BalanceServerConfig, error) {
 	if oldversionConfig == "" {
 		return nil, nil
@@ -139,7 +139,7 @@ func (info *BalanceInfo) GetConfig(clusterName string) *BalanceConfig {
 	return c
 }
 
-//FormatServers 格式化
+//FormatServers 格式化服务
 func FormatServers(servers []*BalanceServerConfig) []string {
 	if len(servers) == 0 {
 		return nil
@@ -175,7 +175,7 @@ func fields(str string) []string {
 	return words
 }
 
-//Decode 解析配置
+//Decode decode配置
 func (c *BalanceConfig) Decode() error {
 
 	words := fields(c.ServersConfigOrg)

@@ -1,4 +1,4 @@
-package accessfield
+package access_field
 
 var (
 	all = []AccessFieldKey{
@@ -26,12 +26,12 @@ var (
 	size = len(all)
 )
 
-//Size 返回size
+//Size 返回域数量
 func Size() int {
 	return size
 }
 
-//All all
+//All 获取所有域key
 func All() []AccessFieldKey {
 	return all
 }

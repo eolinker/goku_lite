@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+
 	"github.com/eolinker/goku-api-gateway/console/module/account"
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 
@@ -12,19 +13,15 @@ import (
 )
 
 var (
-	// UserPassword 用户密码
-	UserPassword string
-	// UserName 用户名
-	UserName     string
-	// ConfFilePath 配置文件地址
-	ConfFilePath = "./config/goku.conf"
-
+	userPassword string
+	userName     string
+	confFilePath = "./config/goku.conf"
 )
 
 func main() {
-	flag.StringVar(&ConfFilePath, "c", "./config/goku.conf", "Please provide a valid configuration file path")
-	flag.StringVar(&UserName, "u", "", "Please provide user name")
-	flag.StringVar(&UserPassword, "p", "", "Please provide user password")
+	flag.StringVar(&confFilePath, "c", "./config/goku.conf", "Please provide a valid configuration file path")
+	flag.StringVar(&userName, "u", "", "Please provide user name")
+	flag.StringVar(&userPassword, "p", "", "Please provide user password")
 	isDebug := flag.Bool("debug", false, "")
 
 	flag.Parse()
@@ -32,7 +29,7 @@ func main() {
 		log.StartDebug()
 	}
 	// 初始化配置
-	if err := conf.ReadConfigure(ConfFilePath); err != nil {
+	if err := conf.ReadConfigure(confFilePath); err != nil {
 		log.Panic(err)
 		return
 	}
@@ -40,32 +37,34 @@ func main() {
 	console.InitDatabase()
 	console.InitLog()
 
-	console.InitClusters()
+	//console.InitClusters()
 	// 其他需要初始化的模块
 	_ = general.General()
 	// 检测是否安装
-
-	if s, err := account.CheckSuperAdminCount(); err != nil {
-		log.Panic(err)
-		return
-	} else if s == 0 {
-		if UserName == "" {
-			log.Fatal("[ERROR] Fail to create administrator. Please try again or contact technical support of eoLinker GOKU API Gateway.")
-			//fmt.Println("[ERROR] Fail to create administrator. Please try again or contact technical support of eoLinker GOKU API Gateway.")
+	s, err := account.CheckSuperAdminCount()
+	if err != nil {
+		err = console.InitTable()
+		if err != nil {
+			log.Panic(err)
 			return
 		}
-		if UserPassword == "" {
+	}
+	if s == 0 {
+		if userName == "" {
 			log.Fatal("[ERROR] Fail to create administrator. Please try again or contact technical support of eoLinker GOKU API Gateway.")
-			//fmt.Println("[ERROR] Fail to create administrator. Please try again or contact technical support of eoLinker GOKU API Gateway.")
+			return
+		}
+		if userPassword == "" {
+			log.Fatal("[ERROR] Fail to create administrator. Please try again or contact technical support of eoLinker GOKU API Gateway.")
+
 			return
 		}
 
 		// 用户注册
-		password := utils.Md5(utils.Md5(UserPassword))
-		f := console.Register(UserName, password)
+		password := utils.Md5(utils.Md5(userPassword))
+		f := console.Register(userName, password)
 		if !f {
 			log.Fatal("[ERROR] Fail to create administrator. Please try again or contact technical support of eoLinker GOKU API Gateway.")
-			//fmt.Println("[ERROR] Fail to create administrator. Please try again or contact technical support of eoLinker GOKU API Gateway.")
 			return
 		}
 	}

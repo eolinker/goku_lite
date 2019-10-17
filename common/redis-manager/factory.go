@@ -1,7 +1,8 @@
-package redismanager
+package redis_manager
 
 import (
 	"fmt"
+
 	"github.com/go-redis/redis"
 
 	"sort"

@@ -2,10 +2,11 @@ package balance
 
 import (
 	"encoding/json"
+
 	entity "github.com/eolinker/goku-api-gateway/server/entity/balance-entity-service"
 )
 
-//Param param
+//Param 负载参数
 type Param struct {
 	Name          string `opt:"balanceName,require"`
 	ServiceName   string `opt:"serviceName,require"`
@@ -15,7 +16,7 @@ type Param struct {
 	Desc          string `opt:"balanceDesc"`
 }
 
-//Info info
+//Info 负载信息
 type Info struct {
 	Name          string            `json:"balanceName"`
 	ServiceName   string            `json:"serviceName"`
@@ -29,7 +30,7 @@ type Info struct {
 	UpdateTime    string            `json:"updateTime"`
 }
 
-//ReadInfo 读取负载配置
+//ReadInfo 读取负载信息
 func ReadInfo(balance *entity.Balance) *Info {
 	info := &Info{
 		Name:          balance.Name,

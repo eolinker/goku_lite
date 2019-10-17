@@ -1,11 +1,11 @@
-package gokulog
+package goku_log
 
 import (
 	"fmt"
 	"strings"
 )
 
-//LogPeriod 日志周期对象
+//LogPeriod 日志周期
 type LogPeriod interface {
 	String() string
 	FormatLayout() string
@@ -43,13 +43,13 @@ func (period LogPeriodType) String() string {
 const (
 	//PeriodMonth 月
 	PeriodMonth LogPeriodType = iota
-	//PeriodDay 天
+	//PeriodDay 日
 	PeriodDay
 	//PeriodHour 时
 	PeriodHour
 )
 
-//FormatLayout 设置时间格式
+//FormatLayout 格式化
 func (period LogPeriodType) FormatLayout() string {
 	switch period {
 	case PeriodHour:

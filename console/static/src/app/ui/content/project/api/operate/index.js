@@ -20,6 +20,8 @@
     function indexController($scope, GatewayResource, $state, CODE, $rootScope, GroupService) {
         var vm = this;
         vm.data = {
+            status:$state.params.status,
+            isSpreedStaticResponse:true,
             requestMethod: false,
             apiGroup: null,
             requestMethodList: [{
@@ -51,6 +53,15 @@
             groupID: $state.params.groupID || -1,
             apiID: $state.params.apiID
         }
+        vm.CONST = {
+            PROTOCOL_ARR: [{
+                key: 'HTTP',
+                value: 'http'
+            }, {
+                key: 'HTTPS',
+                value: 'https'
+            }]
+        }
         vm.ajaxResponse = {
             apiInfo: {
                 apiName: '',
@@ -60,12 +71,12 @@
                 targetURL: '/',
                 targetMethod: '-1',
                 isFollow: true,
-                stripPrefix: true,
-                stripSlash:true,
                 timeout: '2000',
-                retryCount: '',
-                alertValve: 0,
-                protocol: 'http'
+                retryCount: 0,
+                protocol: 'http',
+                responseDataType:$state.params.status==="add-link"?"json":"origin",
+                linkApis:[],
+                apiType:$state.params.status==="add-link"?1:0
             },
             balanceList:[]
         }
@@ -77,26 +88,83 @@
             menuObject: {
                 list: []
             },
-            balanceAutoCompleteObj:{required:true,pattern:'[\\w\\._\\/\\-\\:]+'}
+            balanceAutoCompleteObj:{required:true,pattern:'[\\w\\._\\/\\-\\:]+'},
+            apiLinkStepObj:{
+                CONST:{
+                    PROTOCOL_ARR:vm.CONST.PROTOCOL_ARR
+                }
+            }
         };
-        vm.CONST = {
-            PROTOCOL_ARR: [{
-                key: 'HTTP',
-                value: 'http'
-            }, {
-                key: 'HTTPS',
-                value: 'https'
-            }]
-        }
+        
         var privateFun = {};
         vm.fun.back = function () {
             $state.go('home.project.api.default', {
                 'groupID': $state.params.groupID
             });
         }
+        privateFun.parseLinkApis=()=>{
+            if(vm.ajaxResponse.apiInfo.apiType===0)return true;
+            let tmpLinkApis=angular.copy(vm.ajaxResponse.apiInfo.linkApis);
+            for(let key in tmpLinkApis){
+                let val=tmpLinkApis[key];
+                if(!/^[1-9]\d*$/.test(val.timeout)){
+                    return false;
+                }
+                val.timeout=parseInt(val.timeout);
+                if(!/(^[1-9]\d*$)|(^0$)/.test(val.retry)){
+                    return false;
+                }
+                val.retry=parseInt(val.retry);
+                let tmpList=[];
+                val.blackList.map((childItem)=>{
+                    if(childItem.ip){
+                        tmpList.push(childItem.ip);
+                    }
+                })
+                val.blackList=tmpList;
+                tmpList=[];
+                val.whiteList.map((childItem)=>{
+                    if(childItem.ip){
+                        tmpList.push(childItem.ip);
+                    }
+                })
+                val.whiteList=tmpList;
+                val.delete=val.delete.filter((childItem)=>{
+                    if(childItem.origin)return childItem;
+                });
+                tmpList=[];
+                for(let childKey in val.move){
+                    let childItem =val.move[childKey];
+                    if(childItem.target){
+                        if(childItem.origin){
+                            tmpList.push(childItem)
+                        }else return;
+                    }
+                }
+                val.move=tmpList;
+                tmpList=[];
+                for(let childKey in val.rename){
+                    let childItem =val.rename[childKey];
+                    if(childItem.target){
+                        if(childItem.origin){
+                            childItem.target=(childItem.prefixStr||"")+childItem.target;
+                            tmpList.push(childItem)
+                        }else return;
+                    }
+                }
+                val.rename=tmpList;
+            }
+            return JSON.stringify(tmpLinkApis,(tmpInputKey,tmpInputItem)=>{
+                if (/(prefixStr)|(prefixStr)|($$hashKey)/.test(tmpInputKey)) {
+                    return undefined;
+                }
+                return tmpInputItem;
+            })
+        }
         privateFun.confirm = function () {
             vm.data.requestMethod = false;
             var tmpOutput = {
+                apiType:vm.ajaxResponse.apiInfo.apiType,
                 projectID: vm.ajaxRequest.projectID,
                 groupID: vm.component.selectMultistageCommonComponentObject.new.value==-1?0:vm.component.selectMultistageCommonComponentObject.new.value,
                 apiName: vm.ajaxResponse.apiInfo.apiName,
@@ -105,12 +173,11 @@
                 balanceName: vm.ajaxResponse.apiInfo.balanceName,
                 targetURL: vm.ajaxResponse.apiInfo.targetURL,
                 targetMethod: vm.ajaxResponse.apiInfo.targetMethod,
-                stripPrefix: vm.ajaxResponse.apiInfo.stripPrefix,
+                responseDataType: vm.ajaxResponse.apiInfo.responseDataType,
                 timeout: vm.ajaxResponse.apiInfo.timeout,
                 retryCount: vm.ajaxResponse.apiInfo.retryCount,
-                alertValve: vm.ajaxResponse.apiInfo.alertValve,
                 protocol:vm.ajaxResponse.apiInfo.protocol,
-                stripSlash:vm.ajaxResponse.apiInfo.stripSlash
+                staticResponse:vm.ajaxResponse.apiInfo.staticResponse
             }
             for (var key in vm.data.requestMethodList) {
                 if (vm.data.requestMethodList[key].checkbox) {
@@ -122,7 +189,7 @@
             } else {
                 vm.data.requestMethod = true;
             }
-            switch ($state.params.status) {
+            switch (vm.data.status) {
                 case 'edit': {
                     tmpOutput.apiID = vm.ajaxRequest.apiID
                     break;
@@ -141,12 +208,13 @@
             });
         }
         vm.fun.requestProcessing = function (arg) {
-            var tmpAjaxRequest = privateFun.confirm(),
-                tmpPromise = null;
+            var tmpPromise = null,tmpLinkApis=privateFun.parseLinkApis(),tmpAjaxRequest=privateFun.confirm();
             vm.data.submitted = true;
-            if ($scope.ConfirmForm.$valid && !vm.data.requestMethod) {
+            if ($scope.ConfirmForm.$valid && !vm.data.requestMethod&&tmpLinkApis) {
                 tmpPromise = privateFun.edit({
-                    request: tmpAjaxRequest
+                    request: tmpLinkApis!==true?Object.assign({},tmpAjaxRequest,{
+                        linkApis:tmpLinkApis
+                    }):tmpAjaxRequest
                 });
             } else {
                 $rootScope.InfoModal('API编辑失败，请检查信息是否填写完整！', 'error');
@@ -156,7 +224,7 @@
         }
         privateFun.edit = function (arg) {
             var tmpPromise = null;
-            if ($state.params.status == 'edit') {
+            if (vm.data.status == 'edit') {
                 tmpPromise = GatewayResource.Api.Edit(arg.request).$promise;
                 tmpPromise.then(function (response) {
                     switch (response.statusCode) {
@@ -196,7 +264,7 @@
                 projectID: vm.ajaxRequest.projectID,
                 apiID: vm.ajaxRequest.apiID
             }
-            switch ($state.params.status) {
+            switch (vm.data.status) {
                 case 'edit': {
                     GatewayResource.Api.Info(tmpAjaxRequest).$promise.then(function (response) {
                         switch (response.statusCode) {
@@ -236,6 +304,46 @@
                                             break;
                                         }
                                     }
+                                }
+                                if(response.apiInfo.apiType===1){
+                                    vm.ajaxResponse.apiInfo.linkApis.map((val)=>{
+                                        let tmpList=[];
+                                        val.timeout=(val.timeout||2000).toString();
+                                        val.blackList.map((childItem)=>{
+                                            tmpList.push({
+                                                ip:childItem
+                                            })
+                                        })
+                                        val.blackList=tmpList.concat([{ip:""}]);
+                                        tmpList=[];
+                                        val.whiteList.map((childItem)=>{
+                                            tmpList.push({
+                                                ip:childItem
+                                            })
+                                        })
+                                        val.whiteList=tmpList.concat([{ip:""}]);
+                                        tmpList=[];
+                                        val.delete.map((childItem)=>{
+                                            tmpList.push(childItem)
+                                        })
+                                        val.delete=tmpList.concat([{origin:""}]);
+
+                                        tmpList=[];
+                                        val.move.map((childItem)=>{
+                                            tmpList.push(childItem)
+                                        })
+                                        val.move=tmpList.concat([{origin:"",target:""}]);
+
+                                        tmpList=[];
+                                        val.rename.map((childItem)=>{
+                                            let tmpArr=childItem.target.split('.');
+                                            childItem.prefixStr=tmpArr.slice(0,tmpArr.length-1).join('.');
+                                            if(childItem.prefixStr)childItem.prefixStr+=".";
+                                            childItem.target=tmpArr[tmpArr.length-1];
+                                            tmpList.push(childItem)
+                                        })
+                                        val.rename=tmpList.concat([{origin:"",target:""}]);
+                                    })
                                 }
                                 break;
                             }

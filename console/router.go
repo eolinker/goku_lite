@@ -4,20 +4,18 @@ import (
 	"net/http"
 
 	config_log "github.com/eolinker/goku-api-gateway/console/controller/config-log"
+	"github.com/eolinker/goku-api-gateway/console/controller/gateway"
 
 	"github.com/eolinker/goku-api-gateway/console/controller/account"
-	"github.com/eolinker/goku-api-gateway/console/controller/alert"
 	"github.com/eolinker/goku-api-gateway/console/controller/api"
 	"github.com/eolinker/goku-api-gateway/console/controller/auth"
 	"github.com/eolinker/goku-api-gateway/console/controller/balance"
 	"github.com/eolinker/goku-api-gateway/console/controller/cluster"
 	"github.com/eolinker/goku-api-gateway/console/controller/discovery"
-	"github.com/eolinker/goku-api-gateway/console/controller/gateway"
-	"github.com/eolinker/goku-api-gateway/console/controller/monitor"
+
 	"github.com/eolinker/goku-api-gateway/console/controller/node"
 	"github.com/eolinker/goku-api-gateway/console/controller/plugin"
 	"github.com/eolinker/goku-api-gateway/console/controller/project"
-	"github.com/eolinker/goku-api-gateway/console/controller/script"
 	"github.com/eolinker/goku-api-gateway/console/controller/strategy"
 )
 
@@ -37,14 +35,10 @@ func Router() {
 	http.HandleFunc("/user/checkPermission", account.CheckUserPermission)
 
 	// 网关
-	http.HandleFunc("/gateway/config/base/getInfo", gateway.GetGatewayConfig)
-	http.HandleFunc("/gateway/config/base/edit", gateway.EditGatewayBaseConfig)
-	http.HandleFunc("/gateway/config/alert/edit", gateway.EditGatewayAlarmConfig)
-	http.HandleFunc("/gateway/config/alert/getInfo", alert.GetAlertConfig)
-
-	// 监控
-
-	http.HandleFunc("/monitor/gateway/getSummaryInfo", monitor.GetGatewayMonitorSummaryByPeriod)
+	//http.HandleFunc("/gateway/config/base/getInfo", gateway.GetGatewayConfig)
+	//http.HandleFunc("/gateway/config/base/edit", gateway.EditGatewayBaseConfig)
+	//http.HandleFunc("/gateway/config/alert/edit", gateway.EditGatewayAlarmConfig)
+	//http.HandleFunc("/gateway/config/alert/getInfo", alert.GetAlertConfig)
 
 	// 项目
 	http.HandleFunc("/project/add", project.AddProject)
@@ -60,7 +54,6 @@ func Router() {
 	http.HandleFunc("/apis/group/edit", api.EditAPIGroup)
 	http.HandleFunc("/apis/group/delete", api.DeleteAPIGroup)
 	http.HandleFunc("/apis/group/getList", api.GetAPIGroupList)
-	http.HandleFunc("/apis/group/update", api.UpdateAPIGroupScript)
 
 	// API
 	http.HandleFunc("/apis/add", api.AddAPI)
@@ -68,6 +61,7 @@ func Router() {
 	http.HandleFunc("/apis/copy", api.CopyAPI)
 	http.HandleFunc("/apis/getInfo", api.GetAPIInfo)
 	http.HandleFunc("/apis/getList", api.GetAPIList)
+	http.HandleFunc("/apis/id/getList", api.GetAPIIDList)
 	http.HandleFunc("/apis/batchEditGroup", api.BatchEditAPIGroup)
 	http.HandleFunc("/apis/batchDelete", api.BatchDeleteAPI)
 	http.HandleFunc("/apis/batchEditBalance", api.BatchSetBalanceAPI)
@@ -75,10 +69,11 @@ func Router() {
 	http.HandleFunc("/apis/manager/getList", api.GetAPIManagerList)
 
 	// API绑定插件
-	http.HandleFunc("/plugin/api/addPluginToAPI", api.AddPluginToAPI)
+	http.HandleFunc("/plugin/api/addPluginToApi", api.AddPluginToAPI)
 	http.HandleFunc("/plugin/api/edit", api.EditAPIPluginConfig)
 	http.HandleFunc("/plugin/api/getInfo", api.GetAPIPluginConfig)
 	http.HandleFunc("/plugin/api/getList", api.GetAPIPluginList)
+
 	http.HandleFunc("/plugin/api/getListByStrategy", api.GetAllAPIPluginInStrategy)
 	http.HandleFunc("/plugin/api/batchStart", api.BatchStartAPIPlugin)
 	http.HandleFunc("/plugin/api/batchStop", api.BatchStopAPIPlugin)
@@ -95,11 +90,6 @@ func Router() {
 	http.HandleFunc("/plugin/strategy/batchStart", strategy.BatchStartStrategyPlugin)
 	http.HandleFunc("/plugin/strategy/batchStop", strategy.BatchStopStrategyPlugin)
 	http.HandleFunc("/plugin/strategy/batchDelete", strategy.BatchDeleteStrategyPlugin)
-
-	// 告警
-	http.HandleFunc("/alert/msg/getList", alert.GetAlertMsgList)
-	http.HandleFunc("/alert/msg/clear", alert.ClearAlertMsg)
-	http.HandleFunc("/alert/msg/delete", alert.DeleteAlertMsg)
 
 	// 插件
 	http.HandleFunc("/plugin/add", plugin.AddPlugin)
@@ -128,6 +118,9 @@ func Router() {
 	http.HandleFunc("/strategy/batchDelete", strategy.BatchDeleteStrategy)
 	http.HandleFunc("/strategy/batchStart", strategy.BatchStartStrategy)
 	http.HandleFunc("/strategy/batchStop", strategy.BatchStopStrategy)
+	http.HandleFunc("/strategy/id/getList", strategy.GetStrategyIDList)
+
+	http.HandleFunc("/monitor/gateway/getSummaryInfo", gateway.GetGatewayBasicInfo)
 	// http.HandleFunc("/strategy/openStrategy/getInfo", strategy.GetOpenStrategy)
 
 	// 策略组分组
@@ -141,7 +134,9 @@ func Router() {
 	http.HandleFunc("/strategy/api/target", strategy.ResetAPITargetOfStrategy)
 	http.HandleFunc("/strategy/api/batchEditTarget", strategy.BatchResetAPITargetOfStrategy)
 	http.HandleFunc("/strategy/api/getList", strategy.GetAPIListFromStrategy)
+	http.HandleFunc("/strategy/api/id/getList", strategy.GetAPIIDListFromStrategy)
 	http.HandleFunc("/strategy/api/getNotInList", strategy.GetAPIListNotInStrategy)
+	http.HandleFunc("/strategy/api/id/getNotInList", strategy.GetAPIIDListNotInStrategyByProject)
 	http.HandleFunc("/strategy/api/batchDelete", strategy.BatchDeleteAPIInStrategy)
 	http.HandleFunc("/strategy/api/plugin/getList", api.GetAPIPluginInStrategyByAPIID)
 
@@ -188,13 +183,18 @@ func Router() {
 	http.HandleFunc("/import/ams/project", api.ImportProjectFromAms)
 
 	// 	集群
-
+	http.HandleFunc("/cluster/add", cluster.AddCluster)
+	http.HandleFunc("/cluster/edit", cluster.EditCluster)
+	http.HandleFunc("/cluster/delete", cluster.DeleteCluster)
 	http.HandleFunc("/cluster/list", cluster.GetClusterInfoList)
 	http.HandleFunc("/cluster/simpleList", cluster.GetClusterList)
 
-	// 脚本
-	http.HandleFunc("/scrpit/refreshAPIInfo", script.RefreshAPIInfo)
-	http.HandleFunc("/scrpit/refreshGatewayAlertConfig", script.RefreshGatewayAlertConfig)
+	// 配置发布
+	http.HandleFunc("/version/config/add", cluster.AddVersionConfig)
+	http.HandleFunc("/version/config/getList", cluster.GetVersionList)
+	http.HandleFunc("/version/config/delete", cluster.BatchDeleteVersionConfig)
+	http.HandleFunc("/version/config/publish", cluster.PublishVersion)
+
 	// 配置
 	http.Handle("/config/log/", config_log.Handle("/config/log/"))
 	http.HandleFunc("/", http.StripPrefix("/", http.FileServer(http.Dir("./static"))).ServeHTTP)

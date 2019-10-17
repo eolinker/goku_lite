@@ -435,7 +435,7 @@ func BatchStartPlugin(httpResponse http.ResponseWriter, httpRequest *http.Reques
 
 }
 
-//CheckPluginIsAvailable 判断插件是否可用
+//CheckPluginIsAvailable 检测插件
 func CheckPluginIsAvailable(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
 	if e != nil {

@@ -2,7 +2,7 @@ package utils
 
 import "strings"
 
-//TrimPrefixAll trimPerfixAll
+//TrimPrefixAll 删除所有前缀
 func TrimPrefixAll(s string, r string) string {
 
 	for strings.HasPrefix(s, r) {
@@ -11,7 +11,7 @@ func TrimPrefixAll(s string, r string) string {
 	return s
 }
 
-//TrimSuffixAll trimSuffixAll
+//TrimSuffixAll 删除所有后缀
 func TrimSuffixAll(s string, r string) string {
 
 	for strings.HasSuffix(s, r) {

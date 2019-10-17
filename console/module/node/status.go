@@ -2,13 +2,14 @@ package node
 
 import (
 	"fmt"
-	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 	"sync"
 	"time"
+
+	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
-//EXPIRE 过期时间
-const EXPIRE = time.Second * 10
+//EXPIRE 心跳检测过期时间
+const EXPIRE = time.Second * 20
 
 var (
 	manager = _StatusManager{
@@ -46,19 +47,13 @@ func (m *_StatusManager) get(id string) (time.Time, bool) {
 	return t, b
 }
 
-//Refresh 刷新
+//Refresh refresh
 func Refresh(ip string, port string) {
 	id := fmt.Sprintf("%s:%d", ip, port)
 	manager.refresh(id)
 }
 
-//NodeStop 停止节点
-func NodeStop(ip, port string) {
-	id := fmt.Sprintf("%s:%d", ip, port)
-	manager.stop(id)
-}
-
-//IsLive 是否正常
+//IsLive 通过ip和端口获取当前节点在线状态
 func IsLive(ip string, port string) bool {
 	id := fmt.Sprintf("%s:%d", ip, port)
 	t, has := manager.get(id)

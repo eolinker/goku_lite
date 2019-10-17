@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-//ResponseReader 响应读取器
+//ResponseReader 响应结构体
 type ResponseReader struct {
 	*CookiesHandler
 	*Header
@@ -31,5 +31,23 @@ func newResponseReader(response *http.Response) *ResponseReader {
 	body, _ := ioutil.ReadAll(response.Body)
 	r.BodyHandler = NewBodyHandler(body)
 
+	return r
+}
+
+//NewResponseReader 新增ResponseReader
+func NewResponseReader(header http.Header, statusCode int, status string, body []byte) *ResponseReader {
+	r := new(ResponseReader)
+	r.Header = NewHeader(header)
+	r.CookiesHandler = newCookieHandle(header)
+	r.StatusHandler = NewStatusHandler()
+	r.SetStatus(statusCode, status)
+	// if response.ContentLength > 0 {
+	// 	body, _ := ioutil.ReadAll(response.Body)
+	// 	r.BodyHandler = NewBodyHandler(body)
+	// } else {
+	// 	r.BodyHandler = NewBodyHandler(nil)
+	// }
+
+	r.BodyHandler = NewBodyHandler(body)
 	return r
 }

@@ -2,14 +2,17 @@ package common
 
 import "sync"
 
+//Instance instance
 type Instance struct {
-	InstanceId string
+	InstanceID string
 	IP         string
 	Port       int
 	Weight     int
 	Status     InstanceStatus
 	locker     sync.RWMutex
 }
+
+//PInstances PInstances
 type PInstances []*Instance
 
 func (p PInstances) Len() int {
@@ -24,6 +27,7 @@ func (p PInstances) Swap(i, j int) {
 	p[i], p[j] = p[j], p[i]
 }
 
+//CheckStatus checkStatus
 func (i *Instance) CheckStatus(status InstanceStatus) bool {
 	i.locker.RLock()
 	b := i.Status == status

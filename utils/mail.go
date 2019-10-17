@@ -2,27 +2,20 @@ package utils
 
 import (
 	"crypto/tls"
-	log "github.com/eolinker/goku-api-gateway/goku-log"
 	"net"
 	"net/smtp"
 	"strings"
-)
 
-var period = map[string]string{
-	"0": "1",
-	"1": "5",
-	"2": "15",
-	"3": "30",
-	"4": "60",
-}
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+)
 
 //SendToMail 发送邮件
 func SendToMail(user, password, host, to, subject, body, mailtype, smtpProtocol string) error {
 	hp := strings.Split(host, ":")
 	auth := smtp.PlainAuth("", user, password, hp[0])
-	sendTo := strings.Split(to, ",")
-	if len(sendTo) < 2 {
-		if sendTo[0] == "" {
+	sendTO := strings.Split(to, ",")
+	if len(sendTO) < 2 {
+		if sendTO[0] == "" {
 			return nil
 		}
 	}
@@ -41,7 +34,7 @@ func SendToMail(user, password, host, to, subject, body, mailtype, smtpProtocol 
 			host,
 			auth,
 			user,
-			sendTo,
+			sendTO,
 			msg,
 		)
 		if err != nil {
@@ -50,15 +43,15 @@ func SendToMail(user, password, host, to, subject, body, mailtype, smtpProtocol 
 				host,
 				nil,
 				user,
-				sendTo,
+				sendTO,
 				msg,
 			)
 
 		}
 	} else {
-		err = smtp.SendMail(host, auth, user, sendTo, msg)
+		err = smtp.SendMail(host, auth, user, sendTO, msg)
 		if err != nil {
-			err = smtp.SendMail(host, nil, user, sendTo, msg)
+			err = smtp.SendMail(host, nil, user, sendTO, msg)
 		}
 	}
 	return err

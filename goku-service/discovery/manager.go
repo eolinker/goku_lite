@@ -1,8 +1,10 @@
 package discovery
 
 import (
-	log "github.com/eolinker/goku-api-gateway/goku-log"
 	"sync"
+
+	"github.com/eolinker/goku-api-gateway/config"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 )
 
 var manager = &Manager{
@@ -10,13 +12,15 @@ var manager = &Manager{
 	sources: make(map[string]ISource),
 }
 
+//Manager manager
 type Manager struct {
 	locker sync.RWMutex
 
 	sources map[string]ISource
 }
 
-func ResetAllServiceConfig(confs []*Config) {
+//ResetAllServiceConfig resetAllServiceConfig
+func ResetAllServiceConfig(confs map[string]*config.DiscoverConfig) {
 
 	sources := make(map[string]ISource)
 	manager.locker.RLock()
@@ -48,7 +52,7 @@ func ResetAllServiceConfig(confs []*Config) {
 		}
 
 		sources[name] = s
-		s.SetHealthConfig(&conf.HealthCheckConfig)
+		s.SetHealthConfig(conf.HealthCheck)
 
 		err := s.SetDriverConfig(conf.Config)
 
@@ -68,6 +72,7 @@ func ResetAllServiceConfig(confs []*Config) {
 	manager.locker.Unlock()
 }
 
+//GetDiscoverer getDiscoverer
 func GetDiscoverer(discoveryName string) (ISource, bool) {
 	manager.locker.RLock()
 	s, has := manager.sources[discoveryName]

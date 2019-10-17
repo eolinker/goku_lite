@@ -5,7 +5,7 @@ cd ${BasePath}/
 
 
 VERSION=$(genVersion $1)
-folder="${BasePath}/out/goku-node-${VERSION}"
+folder="${BasePath}/out/node-${VERSION}"
 if [[ ! -d "$folder" ]]
 then
 
@@ -15,6 +15,6 @@ then
     exit 1
   fi
 fi
-packageApp goku-node $VERSION
+packageApp node $VERSION
 
 cd ${ORGPATH}

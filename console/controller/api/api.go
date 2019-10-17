@@ -21,20 +21,21 @@ func AddAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	apiName := httpRequest.PostFormValue("apiName")
 	requestURL := httpRequest.PostFormValue("requestURL")
 	requestMethod := httpRequest.PostFormValue("requestMethod")
-	// targetServer := httpRequest.PostFormValue("targetServer")
-	stripSlash := httpRequest.PostFormValue("stripSlash")
 	protocol := httpRequest.PostFormValue("protocol")
 	balanceName := httpRequest.PostFormValue("balanceName")
 	targetURL := httpRequest.PostFormValue("targetURL")
 	targetMethod := httpRequest.PostFormValue("targetMethod")
 	isFollow := httpRequest.PostFormValue("isFollow")
-	stripPrefix := httpRequest.PostFormValue("stripPrefix")
 	timeout := httpRequest.PostFormValue("timeout")
 	retryCount := httpRequest.PostFormValue("retryCount")
 	groupID := httpRequest.PostFormValue("groupID")
 	projectID := httpRequest.PostFormValue("projectID")
 	alertValve := httpRequest.PostFormValue("alertValve")
 	managerID := httpRequest.PostFormValue("managerID")
+	apiType := httpRequest.PostFormValue("apiType")
+	linkApis := httpRequest.PostFormValue("linkApis")
+	staticResponse := httpRequest.PostFormValue("staticResponse")
+	responseDataType := httpRequest.PostFormValue("responseDataType")
 
 	if apiName == "" {
 		controller.WriteError(httpResponse, "190002", "api", "[ERROR]Illegal apiName!", nil)
@@ -48,22 +49,22 @@ func AddAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	if isFollow == "" {
 		isFollow = "false"
 	}
-	if stripPrefix != "true" && stripPrefix != "false" {
-		controller.WriteError(httpResponse, "190009", "api", "[ERROR]Illegal stripPrefix!", nil)
-		return
 
+	aType, err := strconv.Atoi(apiType)
+	if err != nil && apiType == "" {
+		controller.WriteError(httpResponse, "190012", "api", "[ERROR]Illegal apiType!", err)
+		return
 	}
-	if stripPrefix != "true" && stripPrefix != "false" {
-		controller.WriteError(httpResponse, "190009", "api", "[ERROR]Illegal stripPrefix!", nil)
+	if responseDataType != "origin" && responseDataType != "json" && responseDataType != "xml" {
+		controller.WriteError(httpResponse, "190013", "api", "[ERROR]Illegal responseDataType!", err)
 		return
-
 	}
 	t, err := strconv.Atoi(timeout)
 	if err != nil && timeout != "" {
 		controller.WriteError(httpResponse, "190010", "api", "[ERROR]Illegal timeout!", err)
 		return
-
 	}
+
 	count, err := strconv.Atoi(retryCount)
 	if err != nil && retryCount != "" {
 		controller.WriteError(httpResponse, "190011", "api", "[ERROR]Illegal retryCount!", err)
@@ -101,13 +102,8 @@ func AddAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	if managerID == "" {
 		mgID = userID
 	}
-	// exist := api.CheckURLIsExist(requestURL, requestMethod, pjID, 0)
-	// if exist {
-	// 	controller.WriteError(httpResponse, "190005", "api", "[ERROR]URL Repeat!", nil)
-	// 	return
 
-	// }
-	flag, id, err := api.AddAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol, pjID, gID, t, count, apiValve, mgID, userID)
+	flag, id, err := api.AddAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, linkApis, staticResponse, responseDataType, balanceName, protocol, pjID, gID, t, count, apiValve, mgID, userID, aType)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -131,19 +127,19 @@ func EditAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	requestURL := httpRequest.PostFormValue("requestURL")
 	targetURL := httpRequest.PostFormValue("targetURL")
 	requestMethod := httpRequest.PostFormValue("requestMethod")
-	// targetServer := httpRequest.PostFormValue("targetServer")
-	stripSlash := httpRequest.PostFormValue("stripSlash")
 	protocol := httpRequest.PostFormValue("protocol")
 	balanceName := httpRequest.PostFormValue("balanceName")
 	targetMethod := httpRequest.PostFormValue("targetMethod")
 	isFollow := httpRequest.PostFormValue("isFollow")
-	stripPrefix := httpRequest.PostFormValue("stripPrefix")
 	timeout := httpRequest.PostFormValue("timeout")
 	retryCount := httpRequest.PostFormValue("retryCount")
 	groupID := httpRequest.PostFormValue("groupID")
 	projectID := httpRequest.PostFormValue("projectID")
 	alertValve := httpRequest.PostFormValue("alertValve")
 	managerID := httpRequest.PostFormValue("managerID")
+	linkApis := httpRequest.PostFormValue("linkApis")
+	staticResponse := httpRequest.PostFormValue("staticResponse")
+	responseDataType := httpRequest.PostFormValue("responseDataType")
 	if apiName == "" {
 		controller.WriteError(httpResponse, "190002", "api", "[ERROR]Illegal apiName!", nil)
 		return
@@ -154,6 +150,10 @@ func EditAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		controller.WriteError(httpResponse, "190001", "api", "[ERROR]Illegal apiID!", nil)
 		return
 	}
+	if responseDataType != "origin" && responseDataType != "json" && responseDataType != "xml" {
+		controller.WriteError(httpResponse, "190013", "api", "[ERROR]Illegal responseDataType!", err)
+		return
+	}
 
 	if isFollow != "true" && isFollow != "false" && isFollow != "" {
 		controller.WriteError(httpResponse, "190008", "api", "[ERROR]Illegal isFollow!", nil)
@@ -162,11 +162,6 @@ func EditAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	}
 	if isFollow == "" {
 		isFollow = "false"
-	}
-	if stripPrefix != "true" && stripPrefix != "false" {
-		controller.WriteError(httpResponse, "190009", "api", "[ERROR]Illegal stripPrefix!", nil)
-		return
-
 	}
 	t, err := strconv.Atoi(timeout)
 	if err != nil && timeout != "" {
@@ -212,13 +207,8 @@ func EditAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	if managerID == "" {
 		mgID = userID
 	}
-	// exist := api.CheckURLIsExist(requestURL, requestMethod, pjID, aID)
-	// if exist {
-	// 	controller.WriteError(httpResponse, "190005", "api", "[ERROR]URL Repeat!", nil)
-	// 	return
 
-	// }
-	flag, err := api.EditAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, stripPrefix, stripSlash, balanceName, protocol, pjID, gID, t, count, apiValve, aID, mgID, userID)
+	flag, err := api.EditAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, linkApis, staticResponse, responseDataType, balanceName, protocol, pjID, gID, t, count, apiValve, aID, mgID, userID)
 	if !flag {
 
 		controller.WriteError(httpResponse, "190000", "api", "[ERROR]apiID does not exist!", err)
@@ -426,7 +416,7 @@ func GetAPIManagerList(httpResponse http.ResponseWriter, httpRequest *http.Reque
 	return
 }
 
-//CopyAPI 接口复制
+//CopyAPI 复制接口
 func CopyAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
 	if e != nil {
@@ -480,7 +470,8 @@ func CopyAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		controller.WriteError(httpResponse, "190000", "api", "[ERROR]apiID does not exist!", nil)
 		return
 	}
-	flag, id, err := api.AddAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, strconv.FormatBool(apiInfo.StripPrefix), strconv.FormatBool(apiInfo.StripSlash), balanceName, protocol, pjID, gID, apiInfo.Timeout, apiInfo.RetryConut, apiInfo.Valve, apiInfo.ManagerID, userID)
+	linkApis, _ := json.Marshal(apiInfo.LinkAPIs)
+	flag, id, err := api.AddAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, string(linkApis), apiInfo.StaticResponse, apiInfo.ResponseDataType, balanceName, protocol, pjID, gID, apiInfo.Timeout, apiInfo.RetryConut, apiInfo.Valve, apiInfo.ManagerID, userID, apiInfo.APIType)
 	if !flag {
 		controller.WriteError(httpResponse, "190000", "api", "[ERROR]Fail to add api!", err)
 		return

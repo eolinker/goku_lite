@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
+	log "github.com/eolinker/goku-api-gateway/goku-log"
+
 	goku_plugin "github.com/eolinker/goku-plugin"
 )
 
@@ -26,29 +28,32 @@ type Context struct {
 	requestID            string
 	finalTargetServer    string
 	retryTargetServers   string
+
+	RestfulParam map[string]string
+	LogFields    log.Fields
 }
 
-//FinalTargetServer 获取最终目标转发服务器
+//FinalTargetServer 获取最终转发服务器地址
 func (ctx *Context) FinalTargetServer() string {
 	return ctx.finalTargetServer
 }
 
-//SetFinalTargetServer 设置最终目标服务器
+//SetFinalTargetServer 设置最终转发地址
 func (ctx *Context) SetFinalTargetServer(finalTargetServer string) {
 	ctx.finalTargetServer = finalTargetServer
 }
 
-//RetryTargetServers 重试目标服务器
+//RetryTargetServers 重试转发地址
 func (ctx *Context) RetryTargetServers() string {
 	return ctx.retryTargetServers
 }
 
-//SetRetryTargetServers 设置重试目标服务器
+//SetRetryTargetServers 设置重试地址
 func (ctx *Context) SetRetryTargetServers(retryTargetServers string) {
 	ctx.retryTargetServers = retryTargetServers
 }
 
-//Finish 请求结束
+//Finish finish
 func (ctx *Context) Finish() (n int, statusCode int) {
 
 	header := ctx.PriorityHeader.header
@@ -106,12 +111,12 @@ func (ctx *Context) Finish() (n int, statusCode int) {
 	return n, statusCode
 }
 
-//RequestId 获取请求ID
+//RequestId 请求ID
 func (ctx *Context) RequestId() string {
 	return ctx.requestID
 }
 
-//NewContext 创建context
+//NewContext 创建Context
 func NewContext(r *http.Request, requestID string, w http.ResponseWriter) *Context {
 	requestreader := NewRequestReader(r)
 	return &Context{
@@ -124,19 +129,25 @@ func NewContext(r *http.Request, requestID string, w http.ResponseWriter) *Conte
 		ProxyResponseHandler: nil,
 		requestID:            requestID,
 		w:                    w,
+		LogFields:            make(log.Fields),
 	}
 }
 
 //SetProxyResponse 设置转发响应
 func (ctx *Context) SetProxyResponse(response *http.Response) {
 
-	ctx.ProxyResponseHandler = newResponseReader(response)
+	ctx.SetProxyResponseHandler(newResponseReader(response))
+
+}
+
+//SetProxyResponseHandler 设置转发响应处理器
+func (ctx *Context) SetProxyResponseHandler(response *ResponseReader) {
+	ctx.ProxyResponseHandler = response
 	if ctx.ProxyResponseHandler != nil {
 		ctx.Body = ctx.ProxyResponseHandler.body
 		ctx.SetStatus(ctx.ProxyResponseHandler.StatusCode(), ctx.ProxyResponseHandler.Status())
 		ctx.header = ctx.ProxyResponseHandler.header
 	}
-
 }
 func (ctx *Context) Write(w http.ResponseWriter) {
 	if ctx.StatusCode() == 0 {
@@ -150,17 +161,17 @@ func (ctx *Context) Write(w http.ResponseWriter) {
 
 }
 
-//GetBody 获取body内容
+//GetBody 获取请求body
 func (ctx *Context) GetBody() []byte {
 	return ctx.Body
 }
 
-//SetBody 设置body内容
+//SetBody 设置body
 func (ctx *Context) SetBody(data []byte) {
 	ctx.Body = data
 }
 
-//ProxyResponse 转发响应
+//ProxyResponse 返回响应
 func (ctx *Context) ProxyResponse() goku_plugin.ResponseReader {
 	return ctx.ProxyResponseHandler
 }
@@ -191,16 +202,16 @@ func (ctx *Context) ApiID() int {
 }
 
 //SetAPIID 设置接口ID
-func (ctx *Context) SetAPIID(apiID int) {
-	ctx.apiID = apiID
+func (ctx *Context) SetAPIID(apiId int) {
+	ctx.apiID = apiId
 }
 
-//Request 获取请求原始数据
+//Request 获取原始请求
 func (ctx *Context) Request() goku_plugin.RequestReader {
 	return ctx.RequestOrg
 }
 
-//Proxy 获取代理请求
+//Proxy 代理
 func (ctx *Context) Proxy() goku_plugin.Request {
 	return ctx.ProxyRequest
 }

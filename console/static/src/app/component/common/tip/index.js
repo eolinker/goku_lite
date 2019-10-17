@@ -61,13 +61,6 @@
                     content: '尚未对访问策略设置鉴权方式，请在 <a class="eo_link" ui-sref="home.gpedit.inside.plugin.gpedit">策略插件</a> 处添加相应的鉴权插件'
                 }
             },
-            alertConfig: {
-                general: {
-                    title: '告警提示',
-                    class:'warning-ul common-ul',
-                    content: '<span>返回非成功状态码则视为请求失败；API的告警阀值在API编辑页面设置</span>'
-                }
-            },
             authorityConfig: {
                 general: {
                     title: '权限提示',

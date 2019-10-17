@@ -55,9 +55,8 @@
                 vm.data.query = [];
                 let tmpIndex = 0;
                 angular.forEach(vm.array, function (val, key) {
-                    var pattern = '/^' + vm.model[vm.keyName].toLowerCase() + '/';
                     try {
-                        if (eval(pattern).test(val.toLowerCase())) {
+                        if (val.toLowerCase().indexOf(vm.model[vm.keyName].toLowerCase())>-1) {
                             vm.data.query.splice(tmpIndex, 0, val);
                             tmpIndex++;
                         } else if (val.toLowerCase().indexOf(vm.model[vm.keyName].toLowerCase()) > -1) {

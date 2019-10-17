@@ -5,11 +5,13 @@ import (
 	"sync"
 )
 
+//InstanceFactory instanceFactory
 type InstanceFactory struct {
 	locker    sync.RWMutex
 	instances map[string]*Instance
 }
 
+//NewInstanceFactory 创建InstanceFactory
 func NewInstanceFactory() *InstanceFactory {
 	return &InstanceFactory{
 		locker:    sync.RWMutex{},
@@ -17,6 +19,7 @@ func NewInstanceFactory() *InstanceFactory {
 	}
 }
 
+//General general
 func (m *InstanceFactory) General(ip string, port int, weight int) *Instance {
 	if weight < 1 {
 		weight = 1
@@ -38,7 +41,7 @@ func (m *InstanceFactory) General(ip string, port int, weight int) *Instance {
 		return i
 	}
 	i = &Instance{
-		InstanceId: fmt.Sprintf("%s:%d", ip, port),
+		InstanceID: fmt.Sprintf("%s:%d", ip, port),
 		IP:         ip,
 		Port:       port,
 		Weight:     weight,

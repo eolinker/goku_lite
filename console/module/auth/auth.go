@@ -1,27 +1,23 @@
 package auth
 
 import (
-	"github.com/eolinker/goku-api-gateway/server/dao"
-	console_mysql "github.com/eolinker/goku-api-gateway/server/dao/console-mysql"
+	console_sqlite3 "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3"
 )
 
-//GetAuthStatus 获取认证信息
+//GetAuthStatus 获取认证状态
 func GetAuthStatus(strategyID string) (bool, map[string]interface{}, error) {
-	return console_mysql.GetAuthStatus(strategyID)
+	return console_sqlite3.GetAuthStatus(strategyID)
 }
 
 //GetAuthInfo 获取认证信息
 func GetAuthInfo(strategyID string) (bool, map[string]interface{}, error) {
-	return console_mysql.GetAuthInfo(strategyID)
+	return console_sqlite3.GetAuthInfo(strategyID)
 }
 
 //EditAuthInfo 编辑认证信息
 func EditAuthInfo(strategyID, strategyName, basicAuthList, apikeyList, jwtCredentialList, oauth2CredentialList string, delClientIDList []string) (bool, error) {
-	flag, err := console_mysql.EditAuthInfo(strategyID, strategyName, basicAuthList, apikeyList,
+	flag, err := console_sqlite3.EditAuthInfo(strategyID, strategyName, basicAuthList, apikeyList,
 		jwtCredentialList, oauth2CredentialList, delClientIDList)
-	name := "goku_conn_plugin_strategy"
-	if flag {
-		dao.UpdateTable(name)
-	}
+
 	return flag, err
 }

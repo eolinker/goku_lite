@@ -1,8 +1,9 @@
 package discovery
 
 import (
-	log "github.com/eolinker/goku-api-gateway/goku-log"
 	"strings"
+
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 )
 
 var (
@@ -11,6 +12,7 @@ var (
 	driverNames = make([]string, 0)
 )
 
+//AllDrivers allDrivers
 func AllDrivers() []string {
 	return driverNames
 }
@@ -23,6 +25,7 @@ func AllDrivers() []string {
 //	isLock=true
 //}
 
+//RegisteredDiscovery registerdDiscovery
 func RegisteredDiscovery(name string, driver Driver) {
 
 	//if isLock{

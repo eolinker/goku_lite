@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-//TimeUUID uuid
+//TimeUUID 获取uuid
 func TimeUUID() string {
 	out, err := exec.Command("uuidgen").Output()
 	if err != nil {

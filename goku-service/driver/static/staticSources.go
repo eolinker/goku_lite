@@ -3,18 +3,22 @@ package static
 import (
 	"errors"
 	"fmt"
-	"github.com/eolinker/goku-api-gateway/goku-service/discovery"
-	"github.com/eolinker/goku-api-gateway/goku-service/health"
 	"time"
 
-	"github.com/eolinker/goku-api-gateway/goku-service/common"
+	"github.com/eolinker/goku-api-gateway/config"
+	"github.com/eolinker/goku-api-gateway/goku-service/health"
+
 	"strconv"
 	"strings"
 	"unicode"
+
+	"github.com/eolinker/goku-api-gateway/goku-service/common"
 )
 
+//ErrorNoInstance errorNoInstance
 var ErrorNoInstance = errors.New("no instance")
 
+//Sources source
 type Sources struct {
 	name string
 
@@ -23,19 +27,21 @@ type Sources struct {
 	instanceFactory    *common.InstanceFactory
 }
 
-func (s *Sources) SetHealthConfig(conf *discovery.HealthCheckConfig) {
+//SetHealthConfig setHealthConfig
+func (s *Sources) SetHealthConfig(conf *config.HealthCheckConfig) {
 	if conf == nil || !conf.IsHealthCheck {
 		s.Close()
 		return
 	}
 
 	s.healthCheckHandler.Open(
-		conf.Url,
+		conf.URL,
 		conf.StatusCode,
 		conf.Second,
 		time.Duration(conf.TimeOutMill)*time.Millisecond)
 }
 
+//Close close
 func (s *Sources) Close() {
 	instances := s.healthCheckHandler.Close()
 	for _, instance := range instances {
@@ -43,15 +49,18 @@ func (s *Sources) Close() {
 	}
 }
 
+//CheckDriver checkDriver
 func (s *Sources) CheckDriver(driverName string) bool {
 
 	return driverName == DriverName
 }
 
+//SetDriverConfig setDriverConfig
 func (s *Sources) SetDriverConfig(config string) error {
 	return nil
 }
 
+//GetApp getApp
 func (s *Sources) GetApp(app string) (*common.Service, health.CheckHandler, bool) {
 	service, e := s.decode(app)
 	if e != nil {
@@ -60,6 +69,7 @@ func (s *Sources) GetApp(app string) (*common.Service, health.CheckHandler, bool
 	return service, s.healthCheckHandler, true
 }
 
+//NewStaticSources 创建Sources
 func NewStaticSources(name string) *Sources {
 	return &Sources{
 
@@ -88,7 +98,7 @@ func (s *Sources) decode(config string) (*common.Service, error) {
 
 	instances := make([]*common.Instance, 0, 5)
 	nodes := make([]*Node, 0, 5)
-	var node *Node = nil
+	var node *Node
 	index := 0
 	for _, word := range words {
 		if word == ";" {
@@ -113,10 +123,6 @@ func (s *Sources) decode(config string) (*common.Service, error) {
 				if len(vs) == 2 {
 					node.Port, _ = strconv.Atoi(vs[1])
 				}
-				if node.Port == 0 {
-					node.Port = 80
-				}
-				//node.InstanceId = fmt.Sprintf("%s:%d",node.IP,node.Port)
 				nodes = append(nodes, node)
 
 			}

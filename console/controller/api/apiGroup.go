@@ -185,8 +185,3 @@ func GetAPIGroupList(httpResponse http.ResponseWriter, httpRequest *http.Request
 	controller.WriteResultInfo(httpResponse, "apiGroup", "groupList", result)
 	return
 }
-
-//UpdateAPIGroupScript 更新接口分组脚本
-func UpdateAPIGroupScript(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	api.UpdateAPIGroupScript()
-}

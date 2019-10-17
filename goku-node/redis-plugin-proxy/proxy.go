@@ -1,9 +1,10 @@
-package redispluginproxy
+package redis_plugin_proxy
 
 import (
+	"time"
+
 	redis2 "github.com/eolinker/goku-plugin"
 	"github.com/go-redis/redis"
-	"time"
 )
 
 //RedisProxy redisProxy
@@ -57,7 +58,7 @@ func (p *RedisProxy) Restore(key string, ttl time.Duration, value string) redis2
 	return p.redisClient.Restore(key, ttl, value)
 }
 
-//RestoreReplace restore replace
+//RestoreReplace restoreReplace
 func (p *RedisProxy) RestoreReplace(key string, ttl time.Duration, value string) redis2.StatusCmd {
 	return p.redisClient.RestoreReplace(key, ttl, value)
 }
@@ -131,13 +132,13 @@ func (p *RedisProxy) IncrByFloat(key string, value float64) redis2.FloatCmd {
 	return p.redisClient.IncrByFloat(key, value)
 }
 
-//MGet mget
+//MGet mGet
 func (p *RedisProxy) MGet(keys ...string) redis2.SliceCmd { return p.redisClient.MGet(keys...) }
 
-//MSet mset
+//MSet mSet
 func (p *RedisProxy) MSet(pairs ...interface{}) redis2.StatusCmd { return p.redisClient.MSet(pairs) }
 
-//MSetNX msetnx
+//MSetNX mSetNx
 func (p *RedisProxy) MSetNX(pairs ...interface{}) redis2.BoolCmd { return p.redisClient.MSetNX(pairs) }
 
 //Set set
@@ -145,17 +146,17 @@ func (p *RedisProxy) Set(key string, value interface{}, expiration time.Duration
 	return p.redisClient.Set(key, value, expiration)
 }
 
-//SetBit setbit
+//SetBit setBit
 func (p *RedisProxy) SetBit(key string, offset int64, value int) redis2.IntCmd {
 	return p.redisClient.SetBit(key, offset, value)
 }
 
-//SetNX setnx
+//SetNX setNx
 func (p *RedisProxy) SetNX(key string, value interface{}, expiration time.Duration) redis2.BoolCmd {
 	return p.redisClient.SetNX(key, value, expiration)
 }
 
-//SetXX setxx
+//SetXX setXX
 func (p *RedisProxy) SetXX(key string, value interface{}, expiration time.Duration) redis2.BoolCmd {
 	return p.redisClient.SetXX(key, value, expiration)
 }
@@ -200,12 +201,12 @@ func (p *RedisProxy) HKeys(key string) redis2.StringSliceCmd { return p.redisCli
 //HLen hLen
 func (p *RedisProxy) HLen(key string) redis2.IntCmd { return p.redisClient.HLen(key) }
 
-//HMGet hMget
+//HMGet hMGet
 func (p *RedisProxy) HMGet(key string, fields ...string) redis2.SliceCmd {
 	return p.redisClient.HMGet(key, fields...)
 }
 
-//HMSet hMset
+//HMSet hMSet
 func (p *RedisProxy) HMSet(key string, fields map[string]interface{}) redis2.StatusCmd {
 	return p.redisClient.HMSet(key, fields)
 }
@@ -223,17 +224,17 @@ func (p *RedisProxy) HSetNX(key, field string, value interface{}) redis2.BoolCmd
 //HVals hVals
 func (p *RedisProxy) HVals(key string) redis2.StringSliceCmd { return p.redisClient.HVals(key) }
 
-//BLPop bLpop
+//BLPop bLPop
 func (p *RedisProxy) BLPop(timeout time.Duration, keys ...string) redis2.StringSliceCmd {
 	return p.redisClient.BLPop(timeout, keys...)
 }
 
-//BRPop brpop
+//BRPop bRPop
 func (p *RedisProxy) BRPop(timeout time.Duration, keys ...string) redis2.StringSliceCmd {
 	return p.redisClient.BRPop(timeout, keys...)
 }
 
-//BRPopLPush brPopLpush
+//BRPopLPush bRPopLPush
 func (p *RedisProxy) BRPopLPush(source, destination string, timeout time.Duration) redis2.StringCmd {
 	return p.redisClient.BRPopLPush(source, destination, timeout)
 }
@@ -261,7 +262,7 @@ func (p *RedisProxy) LInsertAfter(key string, pivot, value interface{}) redis2.I
 //LLen llen
 func (p *RedisProxy) LLen(key string) redis2.IntCmd { return p.redisClient.LLen(key) }
 
-//LPop lpop
+//LPop lPop
 func (p *RedisProxy) LPop(key string) redis2.StringCmd { return p.redisClient.LPop(key) }
 
 //LPush lPush
@@ -297,7 +298,7 @@ func (p *RedisProxy) LTrim(key string, start, stop int64) redis2.StatusCmd {
 //RPop rPop
 func (p *RedisProxy) RPop(key string) redis2.StringCmd { return p.redisClient.RPop(key) }
 
-//RPopLPush rPopLpush
+//RPopLPush rPopLPush
 func (p *RedisProxy) RPopLPush(source, destination string) redis2.StringCmd {
 	return p.redisClient.RPopLPush(source, destination)
 }
@@ -387,7 +388,7 @@ func (p *RedisProxy) SUnionStore(destination string, keys ...string) redis2.IntC
 	return p.redisClient.SUnionStore(destination, keys...)
 }
 
-//Pipeline pipeLine
+//Pipeline pipeline
 func (p *RedisProxy) Pipeline() redis2.Pipeliner {
 	pipe := p.redisClient.Pipeline()
 	return &PipelineProxy{

@@ -2,21 +2,25 @@ package discovery
 
 import (
 	"errors"
-	"github.com/eolinker/goku-api-gateway/goku-service/common"
-	"github.com/eolinker/goku-api-gateway/goku-service/health"
 	"reflect"
 	"sync"
 	"time"
+
+	"github.com/eolinker/goku-api-gateway/config"
+	"github.com/eolinker/goku-api-gateway/goku-service/common"
+	"github.com/eolinker/goku-api-gateway/goku-service/health"
 )
 
+//ISource iSource
 type ISource interface {
 	GetApp(app string) (*common.Service, health.CheckHandler, bool)
-	SetHealthConfig(conf *HealthCheckConfig)
+	SetHealthConfig(conf *config.HealthCheckConfig)
 	SetDriverConfig(config string) error
 	Close()
 	CheckDriver(driverName string) bool
 }
 
+//SourceDiscovery sourceDiscovery
 type SourceDiscovery struct {
 	name               string
 	discovery          Discovery
@@ -26,10 +30,12 @@ type SourceDiscovery struct {
 	services map[string]*common.Service
 }
 
+//SetDriverConfig 设置服务发现配置
 func (s *SourceDiscovery) SetDriverConfig(config string) error {
 	return s.discovery.SetConfig(config)
 }
 
+//Close close
 func (s *SourceDiscovery) Close() {
 	instances := s.healthCheckHandler.Close()
 	for _, instance := range instances {
@@ -37,6 +43,8 @@ func (s *SourceDiscovery) Close() {
 	}
 
 }
+
+//CheckDriver checkDriver
 func (s *SourceDiscovery) CheckDriver(driverName string) bool {
 	if s.discovery == nil {
 		return false
@@ -47,19 +55,21 @@ func (s *SourceDiscovery) CheckDriver(driverName string) bool {
 	return false
 }
 
-func (s *SourceDiscovery) SetHealthConfig(conf *HealthCheckConfig) {
+//SetHealthConfig 设置健康检查配置
+func (s *SourceDiscovery) SetHealthConfig(conf *config.HealthCheckConfig) {
 	if conf == nil || !conf.IsHealthCheck {
 		s.Close()
 		return
 	}
 
 	s.healthCheckHandler.Open(
-		conf.Url,
+		conf.URL,
 		conf.StatusCode,
 		conf.Second,
 		time.Duration(conf.TimeOutMill)*time.Millisecond)
 }
 
+//GetApp getApp
 func (s *SourceDiscovery) GetApp(name string) (*common.Service, health.CheckHandler, bool) {
 	s.locker.RLock()
 	service, has := s.services[name]
@@ -70,6 +80,7 @@ func (s *SourceDiscovery) GetApp(name string) (*common.Service, health.CheckHand
 	return nil, nil, false
 }
 
+//SetServices setServices
 func (s *SourceDiscovery) SetServices(services []*common.Service) {
 
 	serviceMap := make(map[string]*common.Service)
@@ -84,8 +95,10 @@ func (s *SourceDiscovery) SetServices(services []*common.Service) {
 
 }
 
+//ErrorEmptyDiscovery errorEmptyDiscovery
 var ErrorEmptyDiscovery = errors.New("discovery is nil")
 
+//NewSource newSource
 func NewSource(name string, d Discovery) (*SourceDiscovery, error) {
 
 	if d == nil || reflect.ValueOf(d).IsNil() {
@@ -99,13 +112,6 @@ func NewSource(name string, d Discovery) (*SourceDiscovery, error) {
 		services:           make(map[string]*common.Service),
 		locker:             sync.RWMutex{},
 	}
-
-	//services, e := d.GetServers()
-	//if e!=nil{
-	//	return nil,e
-	//}
-
-	//s.SetServices(services)
 
 	d.SetCallback(s.SetServices)
 

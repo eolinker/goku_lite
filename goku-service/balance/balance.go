@@ -1,7 +1,7 @@
 package balance
 
-type Balance struct {
-	Name      string
-	Discovery string
-	AppConfig string
-}
+//type Balance struct {
+//	Name      string
+//	Discovery string
+//	AppConfig string
+//}

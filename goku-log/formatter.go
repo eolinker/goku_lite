@@ -1,12 +1,13 @@
-package gokulog
+package goku_log
 
 import (
 	"bytes"
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 const (

@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 
+	"github.com/eolinker/goku-api-gateway/console/module/cluster"
+
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 
 	"net/http"
@@ -11,7 +13,6 @@ import (
 
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/node"
-	cluster2 "github.com/eolinker/goku-api-gateway/server/cluster"
 	"github.com/eolinker/goku-api-gateway/utils"
 )
 
@@ -25,8 +26,8 @@ func AddNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	cluserName := httpRequest.PostFormValue("cluster")
 
-	clusterID, has := cluster2.GetID(cluserName)
-	if !has {
+	clusterID := cluster.GetClusterIDByName(cluserName)
+	if clusterID == 0 {
 		controller.WriteError(httpResponse, "340003", "", "[ERROR]Illegal cluster!", nil)
 		return
 	}
@@ -122,7 +123,7 @@ func EditNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	flag := utils.ValidateRemoteAddr(nodeIP + ":" + nodePort)
 	if !flag {
 
-		controller.WriteError(httpResponse, "230006", "node", "[ERROR]Illegal remote address!", errors.New("[error]illegal remote address"))
+		controller.WriteError(httpResponse, "230006", "node", "[ERROR]Illegal remote address!", errors.New("[ERROR]Illegal remote address"))
 		return
 	}
 
@@ -228,8 +229,8 @@ func GetNodeList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		gID = -1
 	}
 
-	clusterID, has := cluster2.GetID(cluserName)
-	if !has {
+	clusterID := cluster.GetClusterIDByName(cluserName)
+	if clusterID == 0 {
 		controller.WriteError(httpResponse, "330003", "node", "[ERROR]The cluster dosen't exist!", nil)
 		return
 	}

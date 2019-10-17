@@ -188,6 +188,54 @@ func GetStrategyList(httpResponse http.ResponseWriter, httpRequest *http.Request
 	controller.WriteResultInfo(httpResponse, "strategy", "strategyList", result)
 }
 
+//GetStrategyIDList 获取策略组列表
+func GetStrategyIDList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
+	if e != nil {
+		return
+	}
+	httpRequest.ParseForm()
+	groupID := httpRequest.Form.Get("groupID")
+	keyword := httpRequest.Form.Get("keyword")
+	condition := httpRequest.Form.Get("condition")
+
+	gID, err := strconv.Atoi(groupID)
+	if err != nil {
+		if groupID != "" {
+			controller.WriteError(httpResponse,
+				"220005",
+				"strategy",
+				"[ERROR]Illegal groupID!",
+				err)
+			return
+		}
+		gID = -1
+	}
+
+	op, err := strconv.Atoi(condition)
+	if err != nil {
+		if condition != "" {
+			controller.WriteError(httpResponse,
+				"220007",
+				"strategy",
+				"[ERROR]Illegal condition!",
+				err)
+			return
+		}
+	}
+
+	flag, result, err := strategy.GetStrategyIDList(gID, keyword, op)
+	if !flag {
+		controller.WriteError(httpResponse,
+			"220000",
+			"strategy",
+			"[ERROR]Empty list!",
+			err)
+		return
+	}
+	controller.WriteResultInfo(httpResponse, "strategy", "strategyList", result)
+}
+
 // GetStrategyInfo 获取策略组信息
 func GetStrategyInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
@@ -301,7 +349,7 @@ func BatchDeleteStrategy(httpResponse http.ResponseWriter, httpRequest *http.Req
 	controller.WriteResultInfo(httpResponse, "strategy", "", nil)
 }
 
-//BatchStartStrategy 更新策略启用状态
+//BatchStartStrategy 批量开启策略
 func BatchStartStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {
@@ -330,7 +378,7 @@ func BatchStartStrategy(httpResponse http.ResponseWriter, httpRequest *http.Requ
 	controller.WriteResultInfo(httpResponse, "strategy", "", nil)
 }
 
-//BatchStopStrategy 更新策略启用状态
+//BatchStopStrategy 批量关闭策略
 func BatchStopStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
 	if e != nil {

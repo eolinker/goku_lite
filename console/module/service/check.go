@@ -2,7 +2,6 @@ package service
 
 import "strings"
 
-//var nameLetters ="abcdefghijklmnopqrstuvwxyz_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 var nameLetters map[rune]bool
 
 func init() {
@@ -23,7 +22,7 @@ func f(r rune) bool {
 	return !nameLetters[r]
 }
 
-//ValidateName 判断名称是否合法
+//ValidateName 校验名称合法性
 func ValidateName(name string) bool {
 	if name == "" {
 		return false

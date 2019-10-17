@@ -2,13 +2,15 @@ package consul
 
 import (
 	"context"
+	"time"
+
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 	"github.com/eolinker/goku-api-gateway/goku-service/common"
 	"github.com/hashicorp/consul/api"
-	"time"
 )
 
-type ConsulDiscovery struct {
+//Discovery discovery
+type Discovery struct {
 	//Config *api.Config
 
 	orgConfig string
@@ -21,7 +23,8 @@ type ConsulDiscovery struct {
 	cancel          context.CancelFunc
 }
 
-func (d *ConsulDiscovery) SetConfig(config string) error {
+//SetConfig setConfig
+func (d *Discovery) SetConfig(config string) error {
 	if d.orgConfig == config {
 		return nil
 	}
@@ -39,33 +42,38 @@ func (d *ConsulDiscovery) SetConfig(config string) error {
 
 }
 
-func (d *ConsulDiscovery) Driver() string {
+//Driver driver
+func (d *Discovery) Driver() string {
 	return DriverName
 }
 
-func (d *ConsulDiscovery) SetCallback(callback func(services []*common.Service)) {
+//SetCallback setCallback
+func (d *Discovery) SetCallback(callback func(services []*common.Service)) {
 	d.callback = callback
 }
 
-func (d *ConsulDiscovery) GetServers() ([]*common.Service, error) {
+//GetServers getServers
+func (d *Discovery) GetServers() ([]*common.Service, error) {
 	return d.services, nil
 }
 
-func (d *ConsulDiscovery) Close() error {
+//Close close
+func (d *Discovery) Close() error {
 	if d.cancel != nil {
 		d.cancel()
 	}
 	return nil
 }
 
-func (d *ConsulDiscovery) Open() error {
+//Open open
+func (d *Discovery) Open() error {
 
 	d.ScheduleAtFixedRate(time.Second * 5)
 	return nil
 }
 
-//address: [hostName:port]
-func NewConsulDiscovery(address string) *ConsulDiscovery {
+//NewConsulDiscovery address: [hostName:port]
+func NewConsulDiscovery(address string) *Discovery {
 	config := api.DefaultConfig()
 	config.Address = address
 
@@ -75,7 +83,7 @@ func NewConsulDiscovery(address string) *ConsulDiscovery {
 		return nil
 	}
 
-	cd := &ConsulDiscovery{
+	cd := &Discovery{
 		callback:        nil,
 		client:          client,
 		services:        nil,
@@ -86,7 +94,8 @@ func NewConsulDiscovery(address string) *ConsulDiscovery {
 	return cd
 }
 
-func (d *ConsulDiscovery) GetServicesInTime() (map[string][]string, map[string][]*api.ServiceEntry, error) {
+//GetServicesInTime getServicesInTime
+func (d *Discovery) GetServicesInTime() (map[string][]string, map[string][]*api.ServiceEntry, error) {
 
 	q := &api.QueryOptions{}
 	services, _, err := d.client.Catalog().Services(q)
@@ -110,7 +119,8 @@ func (d *ConsulDiscovery) GetServicesInTime() (map[string][]string, map[string][
 
 }
 
-func (d *ConsulDiscovery) ScheduleAtFixedRate(second time.Duration) {
+//ScheduleAtFixedRate scheduleAtFixedRate
+func (d *Discovery) ScheduleAtFixedRate(second time.Duration) {
 	if d.cancel != nil {
 		d.cancel()
 		d.cancel = nil
@@ -118,10 +128,10 @@ func (d *ConsulDiscovery) ScheduleAtFixedRate(second time.Duration) {
 	d.run()
 	ctx, cancel := context.WithCancel(context.Background())
 	d.cancel = cancel
-	go d.runTask(second, ctx)
+	go d.runTask(ctx, second)
 }
 
-func (d *ConsulDiscovery) runTask(second time.Duration, ctx context.Context) {
+func (d *Discovery) runTask(ctx context.Context, second time.Duration) {
 	timer := time.NewTicker(second)
 	defer timer.Stop()
 	for {
@@ -135,7 +145,7 @@ func (d *ConsulDiscovery) runTask(second time.Duration, ctx context.Context) {
 		}
 	}
 }
-func (d *ConsulDiscovery) run() {
+func (d *Discovery) run() {
 	services, catalogServices, err := d.GetServicesInTime()
 	if err == nil || services != nil || catalogServices != nil {
 		d.execCallbacks(services, catalogServices)
@@ -144,7 +154,7 @@ func (d *ConsulDiscovery) run() {
 	}
 }
 
-func (d *ConsulDiscovery) execCallbacks(services map[string][]string, catalogServices map[string][]*api.ServiceEntry) {
+func (d *Discovery) execCallbacks(services map[string][]string, catalogServices map[string][]*api.ServiceEntry) {
 	if services == nil {
 		log.Info("consul services is empty")
 		return
@@ -175,7 +185,8 @@ func (d *ConsulDiscovery) execCallbacks(services map[string][]string, catalogSer
 
 }
 
-func (d *ConsulDiscovery) Health() (bool, string) {
+//Health health
+func (d *Discovery) Health() (bool, string) {
 	leader, err := d.client.Status().Leader()
 	if err != nil || leader == "" {
 		return false, err.Error()

@@ -2,7 +2,7 @@ package common
 
 import goku_plugin "github.com/eolinker/goku-plugin"
 
-//Store 存储器
+//Store 存储
 type Store struct {
 	value interface{}
 }
@@ -17,14 +17,14 @@ func (s *Store) Get() (value interface{}) {
 	return s.value
 }
 
-//StoreHandler 存储处理器
+//StoreHandler 存储器
 type StoreHandler struct {
 	Cache             map[string]interface{}
 	Stores            map[string]goku_plugin.Store
 	CurrentPluginName string
 }
 
-//SetPlugin 设置插件
+//SetPlugin 设置plugin
 func (s *StoreHandler) SetPlugin(name string) {
 	s.CurrentPluginName = name
 }
@@ -60,7 +60,7 @@ func (s *StoreHandler) Store() goku_plugin.Store {
 	return store
 }
 
-//NewStoreHandler 创建存储处理器
+//NewStoreHandler 储存器
 func NewStoreHandler() *StoreHandler {
 	return new(StoreHandler)
 }

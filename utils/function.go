@@ -3,7 +3,9 @@ package utils
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"fmt"
 	"math/rand"
+	"net"
 	"os"
 	"os/exec"
 	"regexp"
@@ -11,15 +13,6 @@ import (
 	"strings"
 	"time"
 )
-
-//ConvertString 将string转为int类型
-func ConvertString(params string) (int, bool) {
-	id, err := strconv.Atoi(params)
-	if err != nil {
-		return 0, false
-	}
-	return id, true
-}
 
 //ValidateRemoteAddr 判断ip端口是否合法
 func ValidateRemoteAddr(ip string) bool {
@@ -30,7 +23,7 @@ func ValidateRemoteAddr(ip string) bool {
 	return match
 }
 
-//InterceptIP 过滤IP
+//InterceptIP 获取IP
 func InterceptIP(str, substr string) string {
 	result := strings.Index(str, substr)
 	var rs string
@@ -42,7 +35,7 @@ func InterceptIP(str, substr string) string {
 	return rs
 }
 
-//Md5 md5
+//Md5 md5加密
 func Md5(encodeString string) string {
 	h := md5.New()
 	h.Write([]byte(encodeString))
@@ -61,7 +54,7 @@ func GetRandomString(num int) string {
 	return string(result)
 }
 
-// CheckFileIsExist 判断文件是否存在  存在返回 true 不存在返回false
+//CheckFileIsExist 判断文件是否存在  存在返回 true 不存在返回false
 func CheckFileIsExist(filename string) bool {
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
 		return false
@@ -69,7 +62,7 @@ func CheckFileIsExist(filename string) bool {
 	return true
 }
 
-// Stop 关闭网关服务，重启读取配置文件
+//Stop 关闭网关服务，重启读取配置文件
 func Stop() bool {
 	id := os.Getpid()
 	cmd := exec.Command("/bin/bash", "-c", "kill -HUP "+strconv.Itoa(id))
@@ -77,4 +70,24 @@ func Stop() bool {
 		return false
 	}
 	return true
+}
+
+//GetMac 获取MAC地址
+func GetMac() (bool, string) {
+	interfaces, err := net.Interfaces()
+	if err != nil {
+		return false, "Poor soul, here is what you got: " + err.Error()
+	}
+	for _, inter := range interfaces {
+		mac := inter.HardwareAddr //获取本机MAC地址
+		m := fmt.Sprintf("%s", mac)
+		match, err := regexp.MatchString(`[0-9a-f][0-9a-f][:-][0-9a-f][0-9a-f][:-][0-9a-f][0-9a-f][:-][0-9a-f][0-9a-f][:-][0-9a-f][0-9a-f][:-][0-9a-f][0-9a-f]`, m)
+		if err != nil {
+			return false, ""
+		}
+		if match {
+			return true, string(m)
+		}
+	}
+	return false, ""
 }

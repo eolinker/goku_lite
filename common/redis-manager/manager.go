@@ -1,4 +1,4 @@
-package redismanager
+package redis_manager
 
 import (
 	"sync"
@@ -11,7 +11,7 @@ var (
 	locker sync.RWMutex
 )
 
-//InitRedisOfCluster 初始化集群redis
+//InitRedisOfCluster 初始化集群的redis
 func InitRedisOfCluster(rs map[string]RedisConfig) {
 	locker.Lock()
 	defer locker.Unlock()
@@ -29,7 +29,7 @@ func get(name string) (Redis, bool) {
 	return r, h
 }
 
-//Get 获取redis
+//Get 获取配置
 func Get(name string) (Redis, bool) {
 	r, has := get(name)
 

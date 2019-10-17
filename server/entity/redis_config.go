@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-//GetMode 获取redis模式
+//GetMode 获取redis使用模式
 func (c CLusterRedis) GetMode() string {
 	return c.Mode
 }
@@ -14,12 +14,12 @@ func (c CLusterRedis) GetAddrs() []string {
 	return strings.Split(c.Addrs, ",")
 }
 
-//GetMasters getMasters
+//GetMasters 获取master
 func (c CLusterRedis) GetMasters() []string {
 	return strings.Split(c.Masters, ",")
 }
 
-//GetDbIndex 获取数据序号
+//GetDbIndex 获取数据库序号
 func (c CLusterRedis) GetDbIndex() int {
 	return c.DbIndex
 }

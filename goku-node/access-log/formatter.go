@@ -3,24 +3,28 @@ package access_log
 import (
 	"bytes"
 	"fmt"
-	access_field "github.com/eolinker/goku-api-gateway/server/access-field"
-	"github.com/sirupsen/logrus"
 	"sync"
 	"time"
+
+	access_field "github.com/eolinker/goku-api-gateway/server/access-field"
+	"github.com/sirupsen/logrus"
 )
 
+//AccessLogFormatter access日志格式器
 type AccessLogFormatter struct {
 	fields          []access_field.AccessFieldKey
 	locker          sync.RWMutex
 	TimestampFormat string
 }
 
+//SetFields 设置域
 func (f *AccessLogFormatter) SetFields(fields []access_field.AccessFieldKey) {
 	f.locker.Lock()
 	f.fields = fields
 	f.locker.Unlock()
 }
 
+//Format 格式化
 func (f *AccessLogFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	var b *bytes.Buffer
 	if entry.Buffer != nil {
@@ -56,19 +60,6 @@ func (f *AccessLogFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	return p[1:], nil
 }
 
-//
-//func (f *AccessLogFormatter) needsQuoting(text string) bool {
-//
-//	for _, ch := range text {
-//		if !((ch >= 'a' && ch <= 'z') ||
-//			(ch >= 'A' && ch <= 'Z') ||
-//			(ch >= '0' && ch <= '9') ||
-//			ch == '-' || ch == '.' || ch == '_' || ch == '/' || ch == '@' || ch == '^' || ch == '+') {
-//			return true
-//		}
-//	}
-//	return false
-//}
 func (f *AccessLogFormatter) appendValue(b *bytes.Buffer, value interface{}) {
 	stringVal, ok := value.(string)
 	if !ok {
@@ -81,6 +72,8 @@ func (f *AccessLogFormatter) appendValue(b *bytes.Buffer, value interface{}) {
 	//	b.WriteString(fmt.Sprintf("%q", stringVal))
 	//}
 }
+
+//NewAccessLogFormatter 创建AccessLogFormatter
 func NewAccessLogFormatter(fields []access_field.AccessFieldKey) *AccessLogFormatter {
 	return &AccessLogFormatter{fields: fields}
 }

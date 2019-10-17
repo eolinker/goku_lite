@@ -1,10 +1,13 @@
 package driver
 
 const (
-	Static    = "static"
+	//Static 静态服务
+	Static = "static"
+	//Discovery 服务发现
 	Discovery = "discovery"
 )
 
+//Driver driver
 type Driver struct {
 	Name  string `json:"name"`
 	Type  string `json:"type"`
@@ -57,24 +60,30 @@ func init() {
 		driverOfType[d.Type] = append(driverOfType[d.Type], d)
 	}
 }
+
+//All all
 func All() []*Driver {
 	return all
 }
 
+//GetByType 根据类型获取驱动列表
 func GetByType(t string) []*Driver {
 	return driverOfType[t]
 }
 
+//Get get
 func Get(name string) (*Driver, bool) {
 	d, has := drivers[name]
 	return d, has
 }
 
+//TypeName typeName
 func TypeName(t string) (string, bool) {
 	n, has := typeNames[t]
 	return n, has
 }
 
+//Types types
 func Types() map[string]string {
 	return typeNames
 }

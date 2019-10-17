@@ -5,7 +5,7 @@ import (
 	"net/url"
 )
 
-//RequestReader 请求header
+//RequestReader 请求reader
 type RequestReader struct {
 	*Header
 	*BodyRequestHandler
@@ -17,7 +17,7 @@ func (r *RequestReader) Proto() string {
 	return r.req.Proto
 }
 
-//NewRequestReader 获取新请求header
+//NewRequestReader 创建RequestReader
 func NewRequestReader(req *http.Request) *RequestReader {
 	r := new(RequestReader)
 	r.req = req
@@ -39,8 +39,6 @@ func (r *RequestReader) ParseRequest() {
 	} else {
 		r.BodyRequestHandler = NewBodyRequestHandler(r.req.Header.Get("Content-Type"), nil)
 	}
-
-	// todo
 }
 
 //Cookie 获取cookie
@@ -53,12 +51,12 @@ func (r *RequestReader) Cookies() []*http.Cookie {
 	return r.req.Cookies()
 }
 
-//Method 获取方法
+//Method 获取请求方式
 func (r *RequestReader) Method() string {
 	return r.req.Method
 }
 
-//URL 获取URL
+//URL url
 func (r *RequestReader) URL() *url.URL {
 	return r.req.URL
 }
@@ -73,7 +71,7 @@ func (r *RequestReader) Host() string {
 	return r.req.Host
 }
 
-//RemoteAddr 获取客户端地址
+//RemoteAddr 远程地址
 func (r *RequestReader) RemoteAddr() string {
 	return r.req.RemoteAddr
 }

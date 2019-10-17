@@ -1,14 +1,13 @@
-package gokulog
+package goku_log
 
 import (
-	"fmt"
-	"github.com/sirupsen/logrus"
 	"os"
+
+	"github.com/sirupsen/logrus"
 )
 
-// StartDebug 启用debug钩子
+//StartDebug 开启debug模式
 func StartDebug() {
-
 	logger.AddHook(new(debugHook))
 }
 
@@ -30,7 +29,6 @@ func (h *debugHook) Levels() []logrus.Level {
 func (h *debugHook) Fire(entry *logrus.Entry) error {
 	s, e := logger.Formatter.Format(entry)
 	if e != nil {
-		fmt.Println(entry)
 		return nil
 	}
 	os.Stdout.Write(s)

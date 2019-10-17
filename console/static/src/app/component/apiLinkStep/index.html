@@ -1,0 +1,117 @@
+<div class="item_container_alsc mb15 po_re" ng-repeat="item in $ctrl.list">
+    <div class="f_row_ac f_js plr15 lh_35 cp" ng-click="item.isShrink=!item.isShrink">
+        <span>#step{{$index+1}}:{{item.balance}}{{item.path||"/"}}</span>
+        <span class="iconfont" ng-class="{'icon-xuanzeqishouqi_o':!item.isShrink,'icon-xuanzeqizhankai_o':item.isShrink}"></span>
+    </div>
+    <div class="po_ab btn_group_container_alsc">
+        <button type="button" class="eo-operate-btn" ng-click="$ctrl.fun.oprItem('moveUp',$index)" ng-disabled="$first">上移</button>
+        <button type="button" class="eo-operate-btn" ng-click="$ctrl.fun.oprItem('moveDown',$index)" ng-disabled="$last">下移</button>
+        <button type="button" class="eo-operate-btn" ng-click="$ctrl.fun.oprItem('delete',$index)">删除</button>
+    </div>
+    <div class="detail_container_alsc plr15 pb20 btd" ng-show="!item.isShrink">
+        <p class="lh_50 f_row_ac">
+            <span>*转发地址/负载后端(Target/Upstream)：</span>
+            <tip-directive input="请求的实际后端地址，也可以是在网关配置的负载名称"></tip-directive>
+        </p>
+        <div class="f_row_ac">
+            <select class="eo-select mr5 w_80" ng-model="item.proto" ng-options="item.value as item.key for item in $ctrl.mainObject.CONST.PROTOCOL_ARR"></select>
+            <select class="eo-select mr5 w_100" ng-model="item.method">
+                <option value="post">POST</option>
+                <option value="get">GET</option>
+                <option value="put">PUT</option>
+                <option value="delete">DELETE</option>
+                <option value="head">HEAD</option>
+                <option value="options">OPTIONS</option>
+                <option value="patch">PATCH</option>
+            </select>
+            <auto-complete-component model="item" key-name='balance' array="$ctrl.otherObject.balanceList"
+                placeholder="实际转发地址或负载后端名称" main-object="$ctrl.otherObject.balanceAutoCompleteObj"
+                ng-class="{'eo-had-input-error':$ctrl.otherObject.submitted&&!item.balance}">
+            </auto-complete-component>
+        </div>
+        <p class="lh_50 f_row_ac">
+            <span>*转发路径：</span>
+            <tip-directive input="网关转发请求的URL；转发规则：若转发路径为/a，实际上/a、/a/b、/a/b/c等都可以被转发到"></tip-directive>
+        </p>
+        <p>
+            <input autocomplete="off" class="eo-input" type="text" ng-model="item.path"
+                ng-class="{'eo-input-error':$ctrl.otherObject.submitted&&!item.path}" maxlength="255"
+                placeholder="以/开头，如/test/login">
+        </p>
+        <p class="lh_50 f_row_ac">
+            <span>*返回数据类型：</span>
+            <tip-directive input="后端服务返回的数据类型"></tip-directive>
+        </p>
+        <p>
+            <select class="eo-input" ng-model="item.decode">
+                <option value="json">JSON</option>
+            </select>
+        </p>
+        <p class="lh_50 f_row_ac">
+            <span>*超时限制(ms)：</span>
+            <tip-directive input="网关转发时若遇到后端超时未返回，此时网关会对客户端返回504表示超时"></tip-directive>
+        </p>
+        <p>
+            <input autocomplete="off" class="eo-input" type="text" ng-model="item.timeout" ng-pattern="/^[1-9]\d*$/" ng-class="{'eo-input-error':$ctrl.otherObject.submitted&&!item.timeout}">
+        </p>
+        <p class="lh_50 f_row_ac">
+            <span>重试次数：</span>
+            <tip-directive input="网关转发失败后，再次对后端发送请求的次数"></tip-directive>
+        </p>
+        <p>
+            <input autocomplete="off" class="eo-input" type="text" ng-model="item.retry" placeholder="转发失败时执行重试的次数" ng-pattern="/(^[1-9]\d*$)|(^0$)/" ng-class="{'eo-input-error':$ctrl.otherObject.submitted&&!item.retry}">
+        </p>
+        <div class="lh_50 f_row_ac">
+            <span class="mr5">入参：</span>
+            <select class="eo-select mr10" ng-model="item.encode">
+                <option value="origin">原始值</option>
+                <option value="json">JSON</option>
+            </select>
+            <tip-directive input="该Step的请求参数，其中原始值代表网关接收的参数"></tip-directive>
+        </div>
+        <p ng-show="item.encode==='json'">
+            <textarea ng-model="item.body" class="eo-textarea w_100percent" rows="5"></textarea>
+        </p>
+        <p class="lh_50 f_row_ac">
+            <span>返回值选取：</span>
+            <tip-directive input="对返回值进行过滤、整合等操作"></tip-directive>
+        </p>
+        <div>
+            <p class="lh_50 f_row_ac">黑名单：</p>
+            <list-block-common-component class="eo-block-container" main-object="$ctrl.component.ipListObj"
+                list="item.blackList"></list-block-common-component>
+            <p class="lh_50 f_row_ac">白名单：</p>
+            <list-block-common-component class="eo-block-container" main-object="$ctrl.component.ipListObj"
+                list="item.whiteList"></list-block-common-component>
+            <div class="lh_50 f_row_ac">
+                <span>删除：</span>
+            </div>
+            <list-block-common-component class="eo-block-container" main-object="$ctrl.component.deleteActionObj"
+                list="item.delete"></list-block-common-component>
+            <div class="lh_50 f_row_ac">
+                <span>移动：</span>
+            </div>
+            <list-block-common-component class="eo-block-container" main-object="$ctrl.component.moveActionObj"
+                other-object="{submitted:$ctrl.otherObject.submitted}" list="item.move"></list-block-common-component>
+            <div class="lh_50 f_row_ac">
+                <span>重命名：</span>
+            </div>
+            <list-block-common-component class="eo-block-container" main-object="$ctrl.component.renameActionObj"
+                other-object="{submitted:$ctrl.otherObject.submitted}" list="item.rename"></list-block-common-component>
+            <div class="lh_50 f_row_ac">
+                <span>拆包：</span>
+            </div>
+            <input type="text" class="eo-input" ng-model="item.target" autocomplete="off">
+            <div class="lh_50 f_row_ac">
+                <span>封包：</span>
+            </div>
+            <input type="text" class="eo-input" ng-model="item.group" autocomplete="off">
+        </div>
+    </div>
+</div>
+<p>
+    <button class="eo_theme_btn_success" ng-click="$ctrl.fun.addStep()">
+        <span class="iconfont icon-jiahao"></span>
+        <span>Step</span>
+    </button>
+</p>

@@ -6,6 +6,7 @@ import (
 	"sync"
 )
 
+//Service service
 type Service struct {
 	Name      string
 	instances []*Instance
@@ -13,6 +14,7 @@ type Service struct {
 	locker sync.RWMutex
 }
 
+//NewService 创建Service
 func NewService(name string, Instances []*Instance) *Service {
 	return &Service{
 		Name:      name,
@@ -22,6 +24,7 @@ func NewService(name string, Instances []*Instance) *Service {
 	}
 }
 
+//SetInstances setInstances
 func (s *Service) SetInstances(instances []*Instance) {
 
 	sort.Sort(sort.Reverse(PInstances(instances)))
@@ -36,6 +39,7 @@ func (s *Service) SetInstances(instances []*Instance) {
 	//}
 }
 
+//Weighting weighting
 func (s *Service) Weighting() (*Instance, int, bool) {
 	s.locker.RLock()
 	instances := s.instances
@@ -66,6 +70,7 @@ func (s *Service) Weighting() (*Instance, int, bool) {
 	return nil, 0, false
 }
 
+//Next next
 func (s *Service) Next(lastIndex int) (*Instance, int, bool) {
 	if lastIndex == -1 {
 		return s.Weighting()

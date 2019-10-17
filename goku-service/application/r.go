@@ -18,15 +18,24 @@ func request(method string, backendDomain string, query url.Values, header http.
 
 		return nil, err
 	}
+	u.Query()
 	req, err := NewRequest(method, u)
 	if err != nil {
 
 		return nil, err
 	}
+	queryDest:= u.Query()
+	if query!= nil{
+		for k,vs:=range query{
+			for _,v:=range vs{
+				queryDest.Add(k,v)
+			}
+		}
+	}
 
 	req.headers = header
 
-	req.queryParams = query
+	req.queryParams = queryDest
 
 	req.SetRawBody(body)
 	if timeout != 0 {

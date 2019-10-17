@@ -5,9 +5,10 @@ import (
 	"net/http"
 	"strings"
 
+	dao_service2 "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3/dao-service"
+
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/service"
-	dao_service "github.com/eolinker/goku-api-gateway/server/dao/console-mysql/dao-service"
 )
 
 func delete(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +27,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	err = service.Delete(names)
 
 	if err != nil {
-		if en, ok := err.(dao_service.DeleteError); ok {
+		if en, ok := err.(dao_service2.DeleteError); ok {
 			controller.WriteError(w, "260000", "", fmt.Sprintf("删除[%s]失败，请先从负载中移除对该服务的引用", string(en)), err)
 		} else {
 			controller.WriteError(w, "260000", "serviceDiscovery", fmt.Sprintf("[error] %s", err.Error()), err)

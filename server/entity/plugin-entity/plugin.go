@@ -1,7 +1,4 @@
-package pluginentity
-
-//GlobalPlugin 全局插件
-var GlobalPlugin = make(map[string]*Plugin)
+package plugin_entity
 
 //Plugin 插件
 type Plugin struct {
@@ -12,15 +9,6 @@ type Plugin struct {
 	PluginConfig string `json:"pluginConfig"`
 	PluginInfo   string `json:"pluginInfo"`
 	IsStop       int    `json:"isStop"`
-}
-
-//PluginParams pluginParams
-type PluginParams struct {
-	PluginName   string `json:"pluginName"`
-	PluginConfig string `json:"pluginConfig"`
-	PluginIndex  int    `json:"pluginPriority"`
-	//PluginInfo   string `json:"pluginInfo"`
-	IsStop int `json:"isStop"`
 }
 
 //PluginSlice 插件切片

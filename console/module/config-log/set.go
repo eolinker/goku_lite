@@ -1,14 +1,14 @@
-package configlog
+package config_log
 
 import (
 	"fmt"
+
 	log "github.com/eolinker/goku-api-gateway/goku-log"
-	dao2 "github.com/eolinker/goku-api-gateway/server/dao"
-	dao "github.com/eolinker/goku-api-gateway/server/dao/config-log"
+	config_log "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3/config-log"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/config-log"
 )
 
-//Set set
+//Set 设置参数
 func Set(name string, param *Param) error {
 	if _, has := logNames[name]; !has {
 		return fmt.Errorf("not has that log config of %s", name)
@@ -27,12 +27,10 @@ func Set(name string, param *Param) error {
 	}
 	c.Fields = param.Fields
 	c.Expire = param.Expire
-	err := dao.Set(c)
+	err := config_log.Set(c)
 	if err != nil {
 		return err
 	}
-	_ = dao2.UpdateTable("goku_config_log")
-
 	if name == ConsoleLog {
 		go reset(c)
 	}

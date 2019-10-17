@@ -1,4 +1,4 @@
-package gokulog
+package goku_log
 
 import (
 	"context"

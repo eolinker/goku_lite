@@ -3,11 +3,13 @@ package health
 import (
 	"context"
 	"fmt"
-	"github.com/eolinker/goku-api-gateway/goku-service/common"
 	"net/http"
 	"time"
+
+	"github.com/eolinker/goku-api-gateway/goku-service/common"
 )
 
+//Checker checker
 type Checker struct {
 	path    string
 	second  int
@@ -22,6 +24,7 @@ type Checker struct {
 	checkChan   chan *common.Instance
 }
 
+//Open open
 func (c *Checker) Open() {
 	if c.cancelFunc != nil {
 		return
@@ -37,13 +40,23 @@ func (c *Checker) Open() {
 	go c.doloop(ctx, c.closeDone)
 }
 func (c *Checker) check(instance *common.Instance) bool {
-	url := fmt.Sprintf("http://%s:%d/%s", instance.IP, instance.Port, c.path)
-	respone, err := http.Get(url)
+	// todo 这里有个问题，没有指定协议，只能通过端口进行简单判定，如果没有设置端口或者设置自定义的https的端口，会导致无法识别到https
+	server := instance.IP
+	if instance.Port != 0 {
+		server = fmt.Sprintf("%s:%d", instance.IP, instance.Port)
+	}
+	protocol := "http"
+	if instance.Port == 443 {
+		protocol = "https"
+	}
+
+	url := fmt.Sprintf("%s://%s/%s", protocol, server, c.path)
+	response, err := http.Get(url)
 	if err != nil {
 		return false
 	}
 
-	if c.statusCodes[ respone.StatusCode] {
+	if c.statusCodes[response.StatusCode] {
 		return true
 	}
 	return false
@@ -69,11 +82,11 @@ func (c *Checker) doloop(ctx context.Context, closeDone chan int) {
 		case <-t.C:
 			{
 				count := 0
-				for instanceId, ins := range instances {
+				for instanceID, ins := range instances {
 
 					// 处理空列表
 					if len(ins) == 0 {
-						delete(instances, instanceId)
+						delete(instances, instanceID)
 						continue
 					}
 
@@ -87,37 +100,39 @@ func (c *Checker) doloop(ctx context.Context, closeDone chan int) {
 
 					// 移除没有需要待检查的实例id
 					if len(insNew) == 0 {
-						delete(instances, instanceId)
+						delete(instances, instanceID)
 						continue
 					}
 					instance := insNew[0]
 
 					if c.check(instance) {
-						delete(instances, instanceId)
+						delete(instances, instanceID)
 						for _, in := range insNew {
 							in.ChangeStatus(common.InstanceChecking, common.InstanceRun)
 						}
 					} else {
 						count += len(insNew)
-						instances[instanceId] = insNew
+						instances[instanceID] = insNew
 					}
 				}
 				c.sum = count
 			}
 		case instance := <-c.checkChan:
 			if instance != nil {
-				instances[instance.InstanceId] = append(instances[instance.InstanceId], instance)
+				instances[instance.InstanceID] = append(instances[instance.InstanceID], instance)
 				c.sum++
 			}
 		}
 	}
 }
 
+//Check check
 func (c *Checker) Check(instance *common.Instance) {
 	instance.ChangeStatus(common.InstanceRun, common.InstanceChecking)
 	c.checkChan <- instance
 }
 
+//Close close
 func (c *Checker) Close() (map[string][]*common.Instance, int) {
 	if c.cancelFunc != nil {
 		c.cancelFunc()

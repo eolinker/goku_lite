@@ -2,17 +2,16 @@ package account
 
 import (
 	"errors"
+	"net/http"
+	"strconv"
+
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/account"
 	"github.com/eolinker/goku-api-gateway/utils"
-	"net/http"
-	"strconv"
 )
 
 //Login 用户登录
 func Login(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-
-	//resultInfo := entity2.ResultInfo{}
 
 	loginCall := httpRequest.PostFormValue("loginCall")
 	loginPassword := httpRequest.PostFormValue("loginPassword")

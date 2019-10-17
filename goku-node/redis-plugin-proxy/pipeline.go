@@ -1,11 +1,11 @@
-package redispluginproxy
+package redis_plugin_proxy
 
 import (
-	"github.com/eolinker/goku-plugin"
+	goku_plugin "github.com/eolinker/goku-plugin"
 	"github.com/go-redis/redis"
 )
 
-//PipelineProxy pipelineProxy
+//PipelineProxy 转发管道
 type PipelineProxy struct {
 	RedisProxy
 	pipeliner redis.Pipeliner

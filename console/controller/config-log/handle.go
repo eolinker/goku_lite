@@ -1,13 +1,14 @@
-package configlog
+package config_log
 
 import (
 	"fmt"
-	module "github.com/eolinker/goku-api-gateway/console/module/config-log"
 	"net/http"
 	"strings"
+
+	module "github.com/eolinker/goku-api-gateway/console/module/config-log"
 )
 
-//Handle 处理器
+//Handle handle
 func Handle(prefix string) http.Handler {
 
 	pre := strings.TrimSuffix(prefix, "/")

@@ -1,1 +1,1 @@
-package configlog
+package config_log
