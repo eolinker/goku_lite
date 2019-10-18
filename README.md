@@ -62,7 +62,7 @@ All in all, Goku API Gateway enables enterprise to focus on their business.
 
 
 # Quick Start
-* [Deployment Tutorial](https://help.eolinker.com/#/tutorial/?groupID=c-351&productID=19 "Deployment Tutorial")
+* [Deployment Tutorial](https://help.eolinker.com/#/tutorial/?groupID=c-371&productID=19 "Deployment Tutorial")
 * [Quick Start](https://help.eolinker.com/#/tutorial/?groupID=c-307&productID=19 "Quick Start Tutorial")
 * [Source Code Compilation](https://help.eolinker.com/#/tutorial/?groupID=c-350&productID=19 "Source Code Compilation")
 
