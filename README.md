@@ -49,6 +49,9 @@ All in all, Goku API Gateway enables enterprise to focus on their business.
 - **Scalability**: plug-in mechanism is easy to extend.
 - **High performance**: Performance excels among many gateways.
 - **Open API**：Provide OPEN API for users to operate on the gateway for easy integration.
+- **[New] Orchestration**：Orchestration can correspond to multiple backends. The backend input parameter supports the client incoming, and also supports the parameter transfer between backend. The return data of backend supports filter, delete, move, rename, target and group. API can set the exception return when the orchestration call fails.
+- **[New] Data transform ** :Support for converting returned data to JSON or XML.
+- **[New] Configured version management ** : Support for the release of operations and multiple rollbacks.
 
 # Benchmark
 ![](https://data.eolinker.com/p7NFG6lb4c73b26cc880e838fe45aa31bc037b7415e3770.jpg)
