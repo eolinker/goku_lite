@@ -79,7 +79,7 @@ Goku API Gateway 的社区版本（CE）拥有完善的使用指南和二次开�
 [查看产品截图](https://github.com/eolinker/goku-api-gateway/blob/master/docs/CONSOLE_PREVIEW_CN.md "查看产品截图")
 
 # 安装使用
-* [部署教程](https://help.eolinker.com/#/tutorial/?groupID=c-351&productID=19 "部署教程")
+* [部署教程](https://help.eolinker.com/#/tutorial/?groupID=c-371&productID=19 "部署教程")
 * [快速入门教程](https://help.eolinker.com/#/tutorial/?groupID=c-307&productID=19 "快速入门教程")
 * [源码编译教程](https://help.eolinker.com/#/tutorial/?groupID=c-350&productID=19 "源码编译")
 
