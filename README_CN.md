@@ -17,7 +17,7 @@ Goku API Gateway （中文名：悟空 API 网关）是一个基于 Golang 开�
 - [授权协议](#授权协议 "授权协议")
 
 # 为什么要使用Goku
-Goku API Gateway （悟空 API 网关）是运行在企业系统服务边界上的微服务网关。当您构建网站、App、IOT甚至是开放API交易时，Goku API Gateway 能够帮你将内部系统中重复的组件抽取出来并放置在Goku网关上运行，如进行用户授权、访问控制、流量监控、防火墙、静态数据缓存、数据转换等。
+Goku API Gateway （悟空 API 网关）是运行在企业系统服务边界上的微服务网关。当您构建网站、App、IOT甚至是开放API交易时，Goku API Gateway 能够帮你将内部系统中重复的组件抽取出来并放置在Goku网关上运行，如进行用户授权、访问控制、防火墙、数据转换等；并且Goku 提供服务编排的功能，让企业可以快速从各类服务上获取需要的数据，对业务实现快速响应。
 
 Goku API Gateway 的社区版本（CE）拥有完善的使用指南和二次开发指南，代码使用纯 Go 语言编写，拥有良好的性能和扩展性，并且内置的插件系统能够让企业针对自身业务进行定制开发。
 
@@ -79,7 +79,8 @@ Goku API Gateway 的社区版本（CE）拥有完善的使用指南和二次开�
 [查看产品截图](https://github.com/eolinker/goku-api-gateway/blob/master/docs/CONSOLE_PREVIEW_CN.md "查看产品截图")
 
 # 安装使用
-* [部署教程](https://help.eolinker.com/#/tutorial/?groupID=c-371&productID=19 "部署教程")
+* 直接部署：[部署教程](https://help.eolinker.com/#/tutorial/?groupID=c-371&productID=19 "部署教程")
+* Docker部署：[控制台Docker](https://hub.docker.com/r/eolinker/goku-api-gateway-ce-console "控制台Docker")、[网关节点Docker](https://hub.docker.com/r/eolinker/goku-api-gateway-ce-node "网关节点Docker")
 * [快速入门教程](https://help.eolinker.com/#/tutorial/?groupID=c-307&productID=19 "快速入门教程")
 * [源码编译教程](https://help.eolinker.com/#/tutorial/?groupID=c-350&productID=19 "源码编译")
 
