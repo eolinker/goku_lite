@@ -3,6 +3,10 @@ package console
 import (
 	"net/http"
 
+	"github.com/eolinker/goku-api-gateway/console/controller/monitor"
+
+	"github.com/eolinker/goku-api-gateway/console/controller/updater"
+
 	config_log "github.com/eolinker/goku-api-gateway/console/controller/config-log"
 	"github.com/eolinker/goku-api-gateway/console/controller/gateway"
 
@@ -148,7 +152,6 @@ func Router() {
 	http.HandleFunc("/node/delete", node.DeleteNode)
 	http.HandleFunc("/node/getInfo", node.GetNodeInfo)
 	http.HandleFunc("/node/getList", node.GetNodeList)
-	http.HandleFunc("/node/checkIsExistRemoteAddr", node.CheckIsExistRemoteAddr)
 
 	http.HandleFunc("/node/batchEditGroup", node.BatchEditNodeGroup)
 	http.HandleFunc("/node/batchDelete", node.BatchDeleteNode)
@@ -194,6 +197,14 @@ func Router() {
 	http.HandleFunc("/version/config/getList", cluster.GetVersionList)
 	http.HandleFunc("/version/config/delete", cluster.BatchDeleteVersionConfig)
 	http.HandleFunc("/version/config/publish", cluster.PublishVersion)
+
+	// 表更新
+	http.HandleFunc("/updater/check/table/isExist", updater.IsTableExist)
+	http.HandleFunc("/updater/check/column/isExist", updater.IsColumnExist)
+
+	// 监控模块
+	http.HandleFunc("/monitor/module/config/get", monitor.GetMonitorModules)
+	http.HandleFunc("/monitor/module/config/set", monitor.SetMonitorModule)
 
 	// 配置
 	http.Handle("/config/log/", config_log.Handle("/config/log/"))

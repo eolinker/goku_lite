@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	start = []byte( "{{")
-	end   = []byte( "}}")
+	start = []byte("{{")
+	end   = []byte("}}")
 
 	restfulStart = []byte("{")
 	restfulEnd   = []byte("}")
@@ -16,16 +16,18 @@ var (
 	restfulSpE   = "/?"
 )
 
+//Gen gen
 func Gen(tpl string) Interpreter {
-	tpl=strings.TrimSpace(tpl)
-	i,err:=Parse(tpl)
-	if err!= nil{
+	tpl = strings.TrimSpace(tpl)
+	i, err := Parse(tpl)
+	if err != nil {
 		exe := make(_Executor, 1, 1)
 		exe[0] = new(_OrgReader)
 		return exe
 	}
 	return i
 }
+
 //Parse 编译
 func Parse(tpl string) (Interpreter, error) {
 
@@ -74,15 +76,18 @@ func parse(data []byte) (pre, key, sub []byte) {
 	return
 }
 
+//GenPath genPath
 func GenPath(path string) Interpreter {
 	interpreter, e := ParsePath(path)
-	if e != nil{
+	if e != nil {
 		exe := make(_Executor, 1, 1)
 		exe[0] = _NotReader(path)
 		return exe
 	}
 	return interpreter
 }
+
+//ParsePath 解析路径
 func ParsePath(path string) (Interpreter, error) {
 
 	exe := make(_Executor, 0, 10)
@@ -207,7 +212,7 @@ func parseRestfulDo(line []byte) (pre, key, sub []byte) {
 		return
 	}
 
-	firstEnd += firstStart+2
+	firstEnd += firstStart + 2
 	pre = line[:firstStart+1]
 	key = line[firstStart+2 : firstEnd]
 

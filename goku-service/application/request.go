@@ -3,10 +3,12 @@ package application
 import (
 	"bytes"
 	"errors"
+	"github.com/eolinker/goku-api-gateway/diting"
+	goku_labels "github.com/eolinker/goku-api-gateway/goku-labels"
+	"github.com/eolinker/goku-api-gateway/node/monitor"
 	"io"
 	"net/http"
 	"net/url"
-
 	// "fmt"
 	"time"
 )
@@ -97,6 +99,17 @@ func (r *Request) Send() (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
+	start:=time.Now()
+	defer func() {
+		delay:= time.Since(start)
+		labels:= make(diting.Labels)
+
+		labels[goku_labels.Proto] = req.Proto
+		labels[goku_labels.Host] = req.Host
+		labels[goku_labels.Path] = req.URL.Path
+		labels[goku_labels.Method] = req.Method
+		monitor.ProxyMonitor.Observe(float64( delay.Milliseconds()),labels)
+	}()
 	req.Header.Set("Accept-Encoding", "gzip")
 	req.Header = parseHeaders(r.headers)
 

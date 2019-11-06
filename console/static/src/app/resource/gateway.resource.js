@@ -184,6 +184,24 @@
                 cancellable: true
             }
         });
+        data.api['MonitorModuleConf'] = $resource(serverUrl + 'monitor/module/config/:operate', {
+
+        }, {
+            Get: {
+                params: {
+                    operate: 'get'
+                },
+                method: "GET",
+                cancellable: true,
+            },
+            Set: {
+                params: {
+                    operate: 'set'
+                },
+                method: data.method,
+                cancellable: true,
+            }
+        });
         data.api['Monitor'] = $resource(serverUrl + 'monitor/gateway/:operate', {
 
         }, {

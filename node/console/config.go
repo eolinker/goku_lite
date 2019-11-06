@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -33,7 +32,7 @@ func (c *Console) GetConfig() (*config.GokuConfig, error) {
 	}
 
 	once.Do(func() {
-		listenConfig(c.ctx, c.port, c.adminHost)
+		listenConfig(c.ctx, c.instance, c.adminHost)
 	})
 
 	cn := make(chan *config.GokuConfig, 1)
@@ -47,6 +46,10 @@ func (c *Console) GetConfig() (*config.GokuConfig, error) {
 	case <-deadline.Done():
 		return nil, errors.New("get config timeout")
 	case conf := <-cn:
+
+		// 设置默认值，debug用
+		conf.AdminAddress = "0.0.0.0:6690"
+		conf.BindAddress = "0.0.0.0:6689"
 		return conf, nil
 	}
 }
@@ -61,7 +64,7 @@ func (c *Console) AddListen(callback ConfigCallbackFunc) {
 
 }
 
-func listenConfig(ctx context.Context, port int, adminHost string) {
+func listenConfig(ctx context.Context, instance string, adminHost string) {
 
 	admin := adminHost
 	admin = strings.TrimPrefix(admin, "http://")
@@ -80,7 +83,7 @@ func listenConfig(ctx context.Context, port int, adminHost string) {
 			default:
 				{
 
-					gokuConfig, err := getConfig(url, port, lastVersion)
+					gokuConfig, err := getConfig(url, instance, lastVersion)
 					if err != nil {
 						errNum++
 						time.After(time.Second * time.Duration(errNum))
@@ -102,7 +105,7 @@ func listenConfig(ctx context.Context, port int, adminHost string) {
 	}()
 
 }
-func getConfig(url string, port int, lastVersion string) (*config.GokuConfig, error) {
+func getConfig(url string, instance string, lastVersion string) (*config.GokuConfig, error) {
 	req, e := http.NewRequest(http.MethodGet, url, nil)
 
 	if e != nil {
@@ -111,7 +114,7 @@ func getConfig(url string, port int, lastVersion string) (*config.GokuConfig, er
 	}
 
 	q := req.URL.Query()
-	q.Add("port", strconv.Itoa(port))
+	q.Add("instance", instance)
 	q.Add("version", lastVersion)
 	req.URL.RawQuery = q.Encode()
 	resp, err := http.DefaultClient.Do(req)

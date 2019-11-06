@@ -2,7 +2,6 @@ package action
 
 import (
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	"github.com/eolinker/goku-api-gateway/node/gateway/response"
@@ -77,6 +76,6 @@ func TestGenWhildRoot(t *testing.T) {
 	filter.Do(r)
 
 	data, _ := json.Marshal(r.Data)
-	fmt.Println(string(data))
+	t.Log(string(data))
 
 }

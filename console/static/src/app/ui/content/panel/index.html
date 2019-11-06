@@ -1,0 +1,68 @@
+<!-- author：广州银云信息科技有限公司 -->
+<overview-product-component main-object="$ctrl.component.overviewObject"></overview-product-component>
+<div class="plr30 pt25 mb65 panel-ui-div">
+    <div class="f_row mb25">
+        <div class="eo-tab-container item_panel mr25">
+            <div class="eo-tab-menu"><span class="item-tab">网关基本信息</span></div>
+            <div class="f_row_ac f_jc h_70 p20 tac">
+                <div class="mr80">
+                    <p class="fs20">V{{$ctrl.ajaxResponse.monitorInfo.baseInfo.version}}</p>
+                    <p class="c999 mt20">版本</p>
+                </div>
+                <div class="mr80">
+                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.baseInfo.clusterCount||0}}</p>
+                    <p class="c999 mt20">集群</p>
+                </div>
+                <div class="mr80">
+                    <p class="fs20">
+                        {{$ctrl.ajaxResponse.monitorInfo.baseInfo.nodeCount}}
+                    </p>
+                    <p class="c999 mt20">节点</p>
+                </div>
+            </div>
+        </div>
+        <div class="eo-tab-container item_panel">
+            <div class="eo-tab-menu"><span class="item-tab">API信息</span></div>
+            <div class="f_row_ac f_jc h_70 p20 tac">
+                <div class="mr80">
+                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.baseInfo.projectCount}}</p>
+                    <p class="c999 mt20">项目</p>
+                </div>
+                <div class="mr80">
+                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.baseInfo.apiCount}}</p>
+                    <p class="c999 mt20">API</p>
+                </div>
+                <div>
+                    <p class="fs20">{{$ctrl.ajaxResponse.monitorInfo.baseInfo.strategyCount}}</p>
+                    <p class="c999 mt20">访问策略</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p class="mb25 bbd divide_panel"></p>
+    <div class="f_row mb25">
+        <div class="eo-tab-container item_panel">
+            <div class="eo-tab-menu"><span class="item-tab">帮助</span></div>
+            <div class="f_row_ac h_70 p20">
+                <div class="iconfont icon-bangzhu_o pr20"></div>
+                <div class="lh_30">
+                    <p>访问官方网站获取最新产品资讯以及使用文档</p>
+                    <p>
+                        <span>[官方网站]</span>
+                        <a class="eo_link" target="_blank" href="https://www.eolinker.com">https://www.eolinker.com</a>
+                    </p>
+                    <p>
+                        <span>[帮助中心]</span>
+                        <a class="eo_link" target="_blank"
+                            href="https://help.eolinker.com">https://help.eolinker.com</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="foot_panel">
+    <a class="eo_link pull-right ml15" href="https://www.eolinker.com" target="_blank">WWW.EOLINKER.COM</a>
+    <span class="pull-right">GOKU API GATEWAY V{{$ctrl.ajaxResponse.monitorInfo.baseInfo.version}}</span>
+</div>
+<loading-common-component fun="$ctrl.fun.init(arg)"></loading-common-component>

@@ -59,11 +59,15 @@
 
 @import "./directive/sort/group/index.scss";
 
-@import "./modal/branch/common/index.scss";
-
 @import "./modal/branch/gateway/index.scss";
 
+@import "./modal/branch/common/index.scss";
+
+@import "./ui/content/monitor/index.scss";
+
 @import "./ui/content/login/index.scss";
+
+@import "./ui/content/panel/index.scss";
 
 @import "./ui/content/publish/index.scss";
 
@@ -93,19 +97,15 @@
 
 @import "./ui/content/gpedit/overview/index.scss";
 
-@import "./ui/content/monitor/global/index.scss";
-
-@import "./ui/content/plugin/operate/index.scss";
-
 @import "./ui/content/plugin/_default/index.scss";
 
 @import "./ui/content/project/_default/index.scss";
 
 @import "./ui/content/setting/log/index.scss";
 
-@import "./ui/content/project/api/_default/index.scss";
-
 @import "./ui/content/project/api/operate/index.scss";
+
+@import "./ui/content/project/api/_default/index.scss";
 
 @import "./ui/content/gpedit/inside/content/auth/index.scss";
 

@@ -3,6 +3,8 @@ package versionConfig
 import (
 	"encoding/json"
 
+	"github.com/eolinker/goku-api-gateway/ksitigarbha"
+
 	console_sqlite3 "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3"
 	dao_version_config2 "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3/dao-version-config"
 
@@ -76,6 +78,16 @@ func buildVersionConfig(v string) (string, string, string) {
 	if err != nil {
 		return "", "", ""
 	}
+	ms := make(map[string]string)
+	modules, _ := dao_version_config2.GetMonitorModules(1, false)
+	if modules != nil {
+		for key, config := range modules {
+			module ,has:= ksitigarbha.GetMonitorModuleModel(key)
+			if has{
+				ms[module.GetName()] = config
+			}
+		}
+	}
 
 	c := config.GokuConfig{
 		Version:             v,
@@ -86,6 +98,7 @@ func buildVersionConfig(v string) (string, string, string) {
 		AuthPlugin:          authNames,
 		Log:                 logCf,
 		AccessLog:           accessCf,
+		MonitorModules:      ms,
 	}
 
 	cByte, err := json.Marshal(c)

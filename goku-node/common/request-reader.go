@@ -1,6 +1,7 @@
 package common
 
 import (
+	"io/ioutil"
 	"net/http"
 	"net/url"
 )
@@ -29,15 +30,12 @@ func NewRequestReader(req *http.Request) *RequestReader {
 func (r *RequestReader) ParseRequest() {
 
 	r.Header = NewHeader(r.req.Header)
-
-	body := make([]byte, r.req.ContentLength, r.req.ContentLength)
-	i, err := r.req.Body.Read(body)
+	body ,err:= ioutil.ReadAll(r.req.Body)
 	_ = r.req.Body.Close()
-	if err != nil && int64(i) == r.req.ContentLength {
-		r.BodyRequestHandler = NewBodyRequestHandler(r.req.Header.Get("Content-Type"), body)
-
-	} else {
+	if err != nil  {
 		r.BodyRequestHandler = NewBodyRequestHandler(r.req.Header.Get("Content-Type"), nil)
+	} else {
+		r.BodyRequestHandler = NewBodyRequestHandler(r.req.Header.Get("Content-Type"), body)
 	}
 }
 

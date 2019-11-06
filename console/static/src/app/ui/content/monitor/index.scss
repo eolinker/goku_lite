@@ -1,0 +1,19 @@
+monitor {
+    .icon-huadongkaiguan-dakai {
+        color: #00ab6d;
+    }
+
+    .container_monitor {
+        margin-top: $HOME-NAVBAR-HEIGHT + 15px;
+    }
+
+    .eo-input.ng-invalid.ng-touched,.eo-input.ng-invalid.ng-dirty {
+        border-color: $buttonDangerBgColor;
+        color: $buttonDangerBgColor;
+
+        &:focus {
+            border-color: $buttonDangerBgColor;
+            color: #333;
+        }
+    }
+}

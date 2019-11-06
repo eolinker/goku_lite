@@ -5,10 +5,8 @@ import (
 	"strconv"
 
 	"github.com/eolinker/goku-api-gateway/console/controller"
-	"github.com/eolinker/goku-api-gateway/console/module/node"
 	"github.com/eolinker/goku-api-gateway/console/module/plugin"
 	plugin_config "github.com/eolinker/goku-api-gateway/console/module/plugin/plugin-config"
-	"github.com/eolinker/goku-api-gateway/utils"
 )
 
 // GetPluginList 获取插件列表
@@ -451,37 +449,37 @@ func CheckPluginIsAvailable(httpResponse http.ResponseWriter, httpRequest *http.
 			nil)
 		return
 	}
-	flag, nodeList, err := node.GetNodeIPList()
-	if !flag {
-		controller.WriteError(httpResponse,
-			"210000",
-			"plugin",
-			"[ERROR]The Open node list is empty",
-			err)
-		return
-	}
-	flag, errPluginList := utils.CheckPluginIsAvailiable(pluginName, nodeList)
-	if !flag {
-
-		controller.WriteResultInfoWithCode(httpResponse,
-			"210000",
-			"plugin",
-			"errNodeList",
-			errPluginList)
-		return
-	}
-	flag, res, _ := plugin.EditPluginCheckStatus(pluginName, 1)
-	if !flag {
-
-		controller.WriteError(httpResponse,
-			"210000",
-			"plugin",
-			res,
-			err)
-		return
-	}
-
-	controller.WriteResultInfo(httpResponse, "plugin", "", nil)
+	//flag, nodeList, err := node.GetNodeIPList()
+	//if !flag {
+	//	controller.WriteError(httpResponse,
+	//		"210000",
+	//		"plugin",
+	//		"[ERROR]The Open node list is empty",
+	//		err)
+	//	return
+	//}
+	//flag, errPluginList := utils.CheckPluginIsAvailiable(pluginName, nodeList)
+	//if !flag {
+	//
+	//	controller.WriteResultInfoWithCode(httpResponse,
+	//		"210000",
+	//		"plugin",
+	//		"errNodeList",
+	//		errPluginList)
+	//	return
+	//}
+	//flag, res, _ := plugin.EditPluginCheckStatus(pluginName, 1)
+	//if !flag {
+	//
+	//	controller.WriteError(httpResponse,
+	//		"210000",
+	//		"plugin",
+	//		res,
+	//		err)
+	//	return
+	//}
+	//
+	//controller.WriteResultInfo(httpResponse, "plugin", "", nil)
 
 	return
 }

@@ -118,14 +118,14 @@ func (ctx *Context) RequestId() string {
 
 //NewContext 创建Context
 func NewContext(r *http.Request, requestID string, w http.ResponseWriter) *Context {
-	requestreader := NewRequestReader(r)
+	requestReader := NewRequestReader(r)
 	return &Context{
 		CookiesHandler:       newCookieHandle(r.Header),
 		PriorityHeader:       NewPriorityHeader(),
 		StatusHandler:        NewStatusHandler(),
 		StoreHandler:         NewStoreHandler(),
-		RequestOrg:           requestreader,
-		ProxyRequest:         NewRequest(requestreader),
+		RequestOrg:           requestReader,
+		ProxyRequest:         NewRequest(requestReader),
 		ProxyResponseHandler: nil,
 		requestID:            requestID,
 		w:                    w,
@@ -202,8 +202,8 @@ func (ctx *Context) ApiID() int {
 }
 
 //SetAPIID 设置接口ID
-func (ctx *Context) SetAPIID(apiId int) {
-	ctx.apiID = apiId
+func (ctx *Context) SetAPIID(apiID int) {
+	ctx.apiID = apiID
 }
 
 //Request 获取原始请求

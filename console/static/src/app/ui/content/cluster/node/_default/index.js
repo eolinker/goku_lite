@@ -111,9 +111,9 @@
                 if (callback) {
                     template.request = {
                         groupID: callback.groupID,
-                        nodeIP: callback.nodeIP,
+                        listenAddress: callback.listenAddress,
                         nodeName: callback.nodeName,
-                        nodePort: callback.nodePort,
+                        adminAddress: callback.adminAddress,
                         gatewayPath: callback.gatewayPath,
                         cluster: vm.ajaxRequest.cluster
                     }
@@ -193,23 +193,36 @@
                     primaryKey: 'nodeID',
                     default: [{
                         key: '名称',
-                        html: '{{item.nodeName}}'
+                        html: '{{item.nodeName}}',
+                        draggableCacheMark: 'name'
                     }, {
-                        key: 'IP:Port',
-                        html: '{{item.nodeIP}}:{{item.nodePort}}'
+                        key: 'Node Key',
+                        html: '{{item.nodeKey}}',
+                        draggableCacheMark: 'key'
+                    }, {
+                        key: '监听地址',
+                        html: '{{item.listenAddress}}',
+                        draggableCacheMark: 'listenAddress'
+                    }, {
+                        key: '管理地址',
+                        html: '{{item.adminAddress}}',
+                        draggableCacheMark: 'adminAddress'
                     }, {
                         key: '状态',
-                        html: `<span class="eo-status-warning" ng-if="item.nodeStatus=='0'">未运行</span><span class="eo-status-danger" ng-if="item.nodeStatus=='2'">异常</span><span class="eo-status-success" ng-if="item.nodeStatus=='1'">运行中</span>`
+                        html: `<span class="eo-status-warning" ng-if="item.nodeStatus=='0'">未运行</span><span class="eo-status-danger" ng-if="item.nodeStatus=='2'">异常</span><span class="eo-status-success" ng-if="item.nodeStatus=='1'">运行中</span>`,
+                        draggableCacheMark: 'status'
                     }, {
                         key: '分组',
-                        html: '{{item.groupName}}'
+                        html: '{{item.groupName}}',
+                        draggableCacheMark: 'group'
                     }, {
                         key: '版本',
-                        html: '{{item.version}}'
+                        html: '{{item.version}}',
+                        draggableCacheMark: 'version'
                     }, {
                         key: '更新时间',
                         html: '{{item.updateTime}}',
-                        class: "w_180"
+                        draggableCacheMark: 'time'
                     }],
                     operate: {
                         funArr: [{
@@ -233,7 +246,19 @@
                     titleAuthority: 'showTitle',
                     unhover: true,
                     warning: '尚未新建任何节点',
-                    fixFoot:true
+                    fixFoot:true,
+                    draggable: true,
+                    dragCacheVar: 'NODE_LIST_DRAG_VAR',
+                    dragCacheObj: {
+                        name: '250px',
+                        key: '250px',
+                        listenAddress: '150px',
+                        adminAddress: '150px',
+                        status: '150px',
+                        group: '150px',
+                        version: '150px',
+                        time:'180px'
+                    }
                 }
             }
 

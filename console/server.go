@@ -3,17 +3,19 @@ package console
 import (
 	"net/http"
 
-	log "github.com/eolinker/goku-api-gateway/goku-log"
+	"github.com/eolinker/goku-api-gateway/console/updater"
 
 	"github.com/eolinker/goku-api-gateway/common/conf"
 	"github.com/eolinker/goku-api-gateway/console/admin"
 	"github.com/eolinker/goku-api-gateway/console/module/account"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 )
 
 //Server 服务
 func Server() {
 	bind, has := conf.Get("admin_bind")
-
+	moduleRegister()
+	updater.InitUpdater()
 	ec := make(chan error, 2)
 	if has {
 		go func() {

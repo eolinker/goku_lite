@@ -2,9 +2,12 @@ package telegraph
 
 import (
 	"context"
+	"errors"
 	"sync"
 )
-
+var (
+	ErrorContextDone = errors.New("context done")
+)
 //Telegraph telegraph
 type Telegraph struct {
 	value   interface{}
@@ -40,7 +43,6 @@ func (t *Telegraph) Set(version string, value interface{}) {
 func (t *Telegraph) get() (string, <-chan struct{}, interface{}) {
 
 	t.locker.RLock()
-
 	version, c, value := t.version, t.c, t.value
 	t.locker.RUnlock()
 
@@ -48,7 +50,7 @@ func (t *Telegraph) get() (string, <-chan struct{}, interface{}) {
 }
 
 //Get get
-func (t *Telegraph) Get(version string) interface{} {
+func (t *Telegraph) Get(version string) (interface{},error) {
 	return t.GetWidthContext(context.Background(), version)
 }
 
@@ -61,21 +63,21 @@ func (t *Telegraph) Close() {
 }
 
 //GetWidthContext 获取上下文
-func (t *Telegraph) GetWidthContext(ctx context.Context, version string) interface{} {
+func (t *Telegraph) GetWidthContext(ctx context.Context, version string) (interface{} ,error){
 	v, c, value := t.get()
 	if v == "" {
 		// closed
-		return nil
+		return nil,nil
 	}
 	if version != v {
-		return value
+		return value,nil
 	}
 
 	select {
 	case <-c:
 		return t.GetWidthContext(ctx, version)
 	case <-ctx.Done():
-		return nil
+		return nil,ErrorContextDone
 	}
 
 }

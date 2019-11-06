@@ -1,9 +1,14 @@
 package config
 
+
 //GokuConfig goku根配置
 type GokuConfig struct {
 	Version string `json:"version"`
 	Cluster string `json:"cluster"`
+	Instance string `json:"instance"`
+	BindAddress string `json:"bind"`
+	AdminAddress string `json:"admin"`
+
 	//Port                int                        `json:"port"`
 	DiscoverConfig      map[string]*DiscoverConfig `json:"discover,omitempty"`
 	Balance             map[string]*BalanceConfig  `json:"balance,omitempty"`
@@ -15,6 +20,8 @@ type GokuConfig struct {
 
 	Log       *LogConfig       `json:"log,omitempty"`
 	AccessLog *AccessLogConfig `json:"access_log,omitempty"`
+
+	MonitorModules map[string]string `json:"monitor_modules"`
 }
 
 //AccessLogConfig access日志配置

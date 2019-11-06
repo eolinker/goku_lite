@@ -8,7 +8,7 @@ import (
 //Console console
 type Console struct {
 	adminHost   string
-	port        int
+	instance        string
 	ctx         context.Context
 	cancel      context.CancelFunc
 	lastVersion int
@@ -21,10 +21,10 @@ func (c *Console) Close() {
 }
 
 //NewConsole newConsole
-func NewConsole(port int, adminHost string) *Console {
+func NewConsole(instance string, adminHost string) *Console {
 	ctx, cancel := context.WithCancel(context.Background())
 	return &Console{
-		port:      port,
+		instance:      instance,
 		adminHost: adminHost,
 		ctx:       ctx,
 		cancel:    cancel,
