@@ -9,15 +9,18 @@ import (
 )
 
 var (
+	//ErrorInvalidAPI 无效API错误
 	ErrorInvalidAPI = errors.New("invalid api")
 )
 
+//Factory factory
 type Factory struct {
 	apiContents map[int]*config.APIContent
 
 	cache map[string]Application
 }
 
+//NewFactory create new factory
 func NewFactory(apis map[int]*config.APIContent) *Factory {
 	return &Factory{
 		apiContents: apis,
@@ -25,6 +28,7 @@ func NewFactory(apis map[int]*config.APIContent) *Factory {
 	}
 }
 
+//GenApplication 通过配置生成应用
 func (f *Factory) GenApplication(cfg *config.APIOfStrategy) (Application, error) {
 
 	apiContent, has := f.apiContents[cfg.ID]

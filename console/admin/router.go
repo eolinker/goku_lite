@@ -7,5 +7,6 @@ func router() http.Handler {
 	serverHandler := http.NewServeMux()
 
 	serverHandler.HandleFunc("/version/config/get", GetVersionConfig)
+
 	return serverHandler
 }

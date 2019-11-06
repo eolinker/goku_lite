@@ -56,7 +56,8 @@ func (p *PageInfo) SetPage(page, size, total int) *PageInfo {
 //NewItemNum 创建新的item
 func NewItemNum(num int) *PageInfo {
 	return &PageInfo{
-		ItemNum: num,
+		ItemNum:  num,
+		TotalNum: num,
 	}
 }
 

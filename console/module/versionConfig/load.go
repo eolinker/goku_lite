@@ -2,7 +2,6 @@ package versionConfig
 
 import (
 	"context"
-	"encoding/json"
 	"sync"
 	"time"
 
@@ -37,25 +36,31 @@ func init() {
 func InitVersionConfig() {
 	load()
 }
-
-func (c *versionConfig) getConfig(cluster string, version string) []byte {
+func (c *versionConfig) GetV(cluster string) *telegraph.Telegraph {
 	c.lock.RLock()
 	v, ok := c.config[cluster]
 	c.lock.RUnlock()
-
-	if ok {
-		ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
-
-		r := v.GetWidthContext(ctx, version)
-		if r != nil {
-			return r.([]byte)
+	if !ok {
+		c.lock.Lock()
+		v, ok = c.config[cluster]
+		if !ok {
+			v = telegraph.NewTelegraph("", nil)
+			c.config[cluster] = v
 		}
+		c.lock.Unlock()
 	}
-	data, _ := json.Marshal(config.GokuConfig{
-		Version: version,
-		Cluster: cluster,
-	})
-	return data
+	return v
+}
+func (c *versionConfig) getConfig(ctx context.Context, cluster string, version string) (*config.GokuConfig, error) {
+
+	v := c.GetV(cluster)
+
+	r, err := v.GetWidthContext(ctx, version)
+	if err != nil {
+		return nil, err
+	}
+	return r.(*config.GokuConfig), err
+
 }
 
 //func (c *versionConfig) getVersion() string {
@@ -65,12 +70,12 @@ func (c *versionConfig) getConfig(cluster string, version string) []byte {
 //}
 
 //GetVersionConfig 获取版本配置
-func GetVersionConfig(cluster, version string) []byte {
-	return vc.getConfig(cluster, version)
+func GetVersionConfig(ctx context.Context, cluster, version string) (*config.GokuConfig, error) {
+	return vc.getConfig(ctx, cluster, version)
 }
 
 func (c *versionConfig) reset(clusters []*entity.Cluster, gokuConfig *config.GokuConfig, balanceConfig map[string]map[string]*config.BalanceConfig, discoverConfig map[string]map[string]*config.DiscoverConfig) {
-	newConfig := make(map[string][]byte)
+	newConfig := make(map[string]*config.GokuConfig)
 	now := time.Now().Format("20060102150405")
 	for _, cl := range clusters {
 		bf := make(map[string]*config.BalanceConfig)
@@ -81,7 +86,7 @@ func (c *versionConfig) reset(clusters []*entity.Cluster, gokuConfig *config.Gok
 		if v, ok := discoverConfig[cl.Name]; ok {
 			df = v
 		}
-		configByte, _ := json.Marshal(&config.GokuConfig{
+		configByte := &config.GokuConfig{
 			Version:             now,
 			Cluster:             cl.Name,
 			DiscoverConfig:      df,
@@ -93,7 +98,8 @@ func (c *versionConfig) reset(clusters []*entity.Cluster, gokuConfig *config.Gok
 			AnonymousStrategyID: gokuConfig.AnonymousStrategyID,
 			Log:                 gokuConfig.Log,
 			AccessLog:           gokuConfig.AccessLog,
-		})
+			MonitorModules:      gokuConfig.MonitorModules,
+		}
 		newConfig[cl.Name] = configByte
 	}
 	c.lock.Lock()

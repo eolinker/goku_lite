@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
 	"io/ioutil"
 	"strings"
 
@@ -57,8 +56,8 @@ func InitTable() error {
 	for _, sql := range sqls {
 		_, err = Tx.Exec(sql)
 		if err != nil {
-			fmt.Println(sql)
 			Tx.Rollback()
+			log.Error("InitTable error:",err,"\t sql:",sql)
 			panic(err)
 			return err
 		}

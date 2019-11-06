@@ -14,6 +14,7 @@ import (
 	access_field "github.com/eolinker/goku-api-gateway/server/access-field"
 )
 
+//DefaultApplication default application
 type DefaultApplication struct {
 	output        response.Encoder
 	backend       *backend.Proxy
@@ -21,6 +22,7 @@ type DefaultApplication struct {
 	balanceTarget string
 }
 
+//NewDefaultApplication create new default application
 func NewDefaultApplication(apiContent *config.APIContent, target string) *DefaultApplication {
 
 	app := &DefaultApplication{
@@ -41,6 +43,7 @@ func NewDefaultApplication(apiContent *config.APIContent, target string) *Defaul
 	return app
 }
 
+//Execute execute
 func (app *DefaultApplication) Execute(ctx *common.Context) {
 
 	ctx.LogFields[access_field.Balance] = app.balanceTarget
@@ -54,14 +57,14 @@ func (app *DefaultApplication) Execute(ctx *common.Context) {
 		if r != nil {
 
 			ctx.ProxyRequest.Method = r.Method
-			ctx.ProxyRequest.SetTargetURL(r.TargetUrl)
+			ctx.ProxyRequest.SetTargetURL(r.TargetURL)
 
 			ctx.SetRetryTargetServers(strings.Join(r.RetryTargetServers, ","))
 			ctx.SetFinalTargetServer(r.FinalTargetServer)
 
 			ctx.LogFields[access_field.FinallyServer] = ctx.FinalTargetServer()
 			ctx.LogFields[access_field.Retry] = ctx.RetryTargetServers()
-			ctx.LogFields[access_field.Proxy] = fmt.Sprintf("\"%s %s %s\"", r.Method, r.TargetUrl, r.Protocol)
+			ctx.LogFields[access_field.Proxy] = fmt.Sprintf("\"%s %s %s\"", r.Method, r.TargetURL, r.Protocol)
 
 		}
 		if err != nil {

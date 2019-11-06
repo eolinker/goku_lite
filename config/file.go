@@ -18,5 +18,6 @@ func ReadConfig(file string) (*GokuConfig, error) {
 	}
 	c := &GokuConfig{}
 	e := json.Unmarshal(data, c)
+
 	return c, e
 }

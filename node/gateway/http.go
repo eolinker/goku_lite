@@ -2,7 +2,11 @@ package gateway
 
 import (
 	"fmt"
+	"github.com/eolinker/goku-api-gateway/diting"
+	goku_labels "github.com/eolinker/goku-api-gateway/goku-labels"
+	"github.com/eolinker/goku-api-gateway/node/monitor"
 	"net/http"
+	"strconv"
 	"time"
 
 	log "github.com/eolinker/goku-api-gateway/goku-log"
@@ -49,26 +53,28 @@ func (h *HTTPHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	n, status := ctx.Finish()
 
-	//proxyStatusCode := 0
-	//if ctx.ProxyResponseHandler != nil {
-	//	proxyStatusCode = ctx.ProxyResponseHandler.StatusCode()
-	//}
+	delay:= time.Since(timeStart)
 
 	ctx.LogFields[fields.RequestID] = requestID
 	ctx.LogFields[fields.StatusCode] = status
 	ctx.LogFields[fields.HTTPUserAgent] = fmt.Sprint("\"", req.UserAgent(), "\"")
 	ctx.LogFields[fields.HTTPReferer] = req.Referer()
-	ctx.LogFields[fields.RequestTime] = time.Since(timeStart)
+	ctx.LogFields[fields.RequestTime] = delay
 	ctx.LogFields[fields.Request] = fmt.Sprint("\"", req.Method, " ", req.URL.Path, " ", req.Proto, "\"")
 	ctx.LogFields[fields.BodyBytesSent] = n
 	ctx.LogFields[fields.Host] = req.Host
 	access_log.Log(ctx.LogFields)
 	log.WithFields(ctx.LogFields).Info()
 
-	//for _, path := range systemRequestPath {
-	//	if path == req.URL.Path {
-	//		return
-	//	}
-	//}
+
+	// 监控计数
+	labels:= make(diting.Labels)
+
+	labels[goku_labels.API] = strconv.Itoa(ctx.ApiID())
+	labels[goku_labels.Strategy] = ctx.StrategyId()
+	labels[goku_labels.Status] = strconv.Itoa(status)
+	monitor.APIMonitor.Observe( float64( delay.Milliseconds()),labels)
+
+
 
 }

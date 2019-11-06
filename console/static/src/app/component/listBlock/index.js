@@ -362,7 +362,7 @@
                         if (tmp.tdObject.disabledModelKey && vm.list[tmp.itemIndex][tmp.tdObject.disabledModelKey]) {
                             return;
                         }
-                        if ((data.radioOriginalIndex || 0).toString() === tmp.itemIndex && tmp.tdObject.isCanBeCancle) {
+                        if ((data.radioOriginalIndex || 0).toString() === tmp.itemIndex && tmp.tdObject.isCanBecancel) {
                             vm.list[tmp.itemIndex][tmp.tdObject.modelKey] = !vm.list[tmp.itemIndex][tmp.tdObject.modelKey];
                             data.radioOriginalIndex = 0;
                         } else {
@@ -506,7 +506,7 @@
             return key;
         }
         vm.fun.watchFormLastChange = function (inputArg, callback) {
-            if (!vm.mainObject.setting.munalAddRow && !inputArg.item.cancleAutomaticAddRow) {
+            if (!vm.mainObject.setting.munalAddRow && !inputArg.item.cancelAutomaticAddRow) {
                 if (vm.data.isDepth) {
                     if (!(vm.mainObject.setting.munalHideOperateColumn && inputArg.$index === 0)) {
                         var tmpIndex = fun.checkIsLastItem(inputArg.$index, vm.list);

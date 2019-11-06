@@ -37,8 +37,8 @@ func TestParse(t *testing.T) {
 		t.Fatal(e)
 		return
 	}
-	fmt.Println("path:\n\t", path)
-	fmt.Println("target:\n\t", interpreterpath.Execution(variables))
+	t.Log("path:\n\t", path)
+	t.Log("target:\n\t", interpreterpath.Execution(variables))
 
 	//variables.AppendResponse(header,body,cookie)
 	//

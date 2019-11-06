@@ -9,7 +9,7 @@
                 list: '<',
                 modelKey: '@',
                 bindFun: '&',
-                cancleBindFun:'@',
+                cancelBindFun:'@',
                 disabled:'<'
             }
         })
@@ -20,7 +20,7 @@
         var vm = this;
         vm.fun = {};
         vm.fun.clickMenu = function (inputValue) {
-            if (!vm.cancleBindFun) {
+            if (!vm.cancelBindFun) {
                 vm.bindFun({
                     arg: inputValue
                 });

@@ -12,7 +12,6 @@ func request(method string, backendDomain string, query url.Values, header http.
 	if backendDomain == "" {
 		return nil, fmt.Errorf("invaild url")
 	}
-
 	u, err := url.ParseRequestURI(backendDomain)
 	if err != nil {
 
@@ -24,6 +23,7 @@ func request(method string, backendDomain string, query url.Values, header http.
 
 		return nil, err
 	}
+
 	queryDest:= u.Query()
 	if query!= nil{
 		for k,vs:=range query{

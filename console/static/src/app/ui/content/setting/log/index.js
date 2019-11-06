@@ -99,7 +99,7 @@
             })
             return tmpPromise;
         }
-        vm.fun.cancleEdit = function (inputWhich) {
+        vm.fun.cancelEdit = function (inputWhich) {
             vm.data.submitted = false;
             vm.data[inputWhich+'IsEdit']=false;
             vm.ajaxResponse[inputWhich+'Log'] = angular.copy(cache[inputWhich+'Log']);

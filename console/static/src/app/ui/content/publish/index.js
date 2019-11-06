@@ -92,11 +92,11 @@
         }
         privateFun.publish = function (inputArg) {
             let tmpModal = {
-                    title: "发布配置"
+                    title: "配置管理"
                 },tmpAjaxRequest={
                     versionID:inputArg.item.versionID
                 }
-            $rootScope.EnsureModal(tmpModal.title, null, '配置发布立即生效，确定对各节点发布配置？', {
+            $rootScope.EnsureModal(tmpModal.title, null, '配置发布立即生效，确定对各节点配置管理？', {
                 btnType:2,
                 btnMessage:"确定"
             }, function (callback) {

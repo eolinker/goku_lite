@@ -25,8 +25,7 @@
                 current: null,
                 menu: [{
                         name: '首页',
-                        sref: 'home.monitor',
-                        childSref: 'home.monitor.global',
+                        sref: 'home.panel',
                         icon: 'icon-shouye_o',
                         power: -1,
                         status:'un-spreed'
@@ -69,6 +68,11 @@
                         icon: 'icon-yuechi_o',
                         power: -1,
                         childSref: 'home.gpedit.default'
+                    }, {
+                        name: 'API监控设置',
+                        sref: 'home.monitor',
+                        icon: 'icon-yuechi_o',
+                        power: -1
                     },
                     {
                         name: '扩展插件',
@@ -91,7 +95,7 @@
                         ]
                     }
                     , {
-                        name: '发布配置',
+                        name: '配置管理',
                         sref: 'home.publish',
                         icon: 'icon-liangliangduibi_o',
                         power: -1,

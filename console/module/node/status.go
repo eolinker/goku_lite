@@ -1,7 +1,6 @@
 package node
 
 import (
-	"fmt"
 	"sync"
 	"time"
 
@@ -9,13 +8,14 @@ import (
 )
 
 //EXPIRE 心跳检测过期时间
-const EXPIRE = time.Second * 20
+const EXPIRE = time.Second * 5
 
 var (
 	manager = _StatusManager{
 		locker:        sync.RWMutex{},
 		lastHeartBeat: make(map[string]time.Time),
 	}
+	instanceLocker = newInstanceLocker()
 )
 
 type _StatusManager struct {
@@ -47,16 +47,59 @@ func (m *_StatusManager) get(id string) (time.Time, bool) {
 	return t, b
 }
 
+type _InstanceLocker struct {
+	locker sync.RWMutex
+	instances map[string]bool
+}
+
+func newInstanceLocker() *_InstanceLocker {
+	return &_InstanceLocker{
+		locker:    sync.RWMutex{},
+		instances: make(map[string]bool),
+	}
+}
+func  (l * _InstanceLocker)IsLock(key string)bool  {
+	l.locker.RLock()
+	locked :=l.instances[key]
+	l.locker.RUnlock()
+	return locked
+}
+func (l * _InstanceLocker)Lock(key string)bool{
+
+	locked :=l.IsLock(key)
+	if locked{
+		return false
+	}
+
+	l.locker.Lock()
+	locked =l.instances[key]
+	if locked{
+		l.locker.Unlock()
+		return false
+	}
+	l.instances[key] = true
+	l.locker.Unlock()
+	return true
+}
+func (l * _InstanceLocker)UnLock(key string){
+
+	l.locker.Lock()
+	l.instances[key] = false
+	l.locker.Unlock()
+}
+
 //Refresh refresh
-func Refresh(ip string, port string) {
-	id := fmt.Sprintf("%s:%d", ip, port)
-	manager.refresh(id)
+
+func Refresh( instance string) {
+
+	manager.refresh(instance)
 }
 
 //IsLive 通过ip和端口获取当前节点在线状态
-func IsLive(ip string, port string) bool {
-	id := fmt.Sprintf("%s:%d", ip, port)
-	t, has := manager.get(id)
+func IsLive( instance string) bool {
+
+	t, has := manager.get(instance)
+
 	if !has {
 		return false
 	}
@@ -71,10 +114,22 @@ func IsLive(ip string, port string) bool {
 func ResetNodeStatus(nodes ...*entity.Node) {
 	for _, node := range nodes {
 
-		if IsLive(node.NodeIP, node.NodePort) {
+		if instanceLocker.IsLock(node.NodeKey) ||  IsLive(node.NodeKey) {
 			node.NodeStatus = 1
 		} else {
 			node.NodeStatus = 0
 		}
 	}
+}
+
+func Lock(key string)bool{
+	return instanceLocker.Lock(key)
+}
+func UnLock(key string)  {
+	instanceLocker.UnLock(key)
+	Refresh(key)
+}
+
+func IsLock(key string)bool{
+	return instanceLocker.Lock(key)
 }

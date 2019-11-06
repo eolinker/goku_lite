@@ -42,7 +42,7 @@
                         case CODE.COMMON.SUCCESS:
                             {
                                 window.localStorage.setItem('LOGINCALL', tmpAjaxRequest.loginCall);
-                                $state.go('home.monitor.global');
+                                $state.go('home.panel');
                                 break;
                             }
                     }

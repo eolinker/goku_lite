@@ -12,6 +12,7 @@ import (
 	"github.com/eolinker/goku-api-gateway/node/gateway/response"
 )
 
+//LayerApplication layer application
 type LayerApplication struct {
 	output    response.Encoder
 	backsides []*backend.Layer
@@ -20,6 +21,7 @@ type LayerApplication struct {
 	timeOut time.Duration
 }
 
+//Execute execute
 func (app *LayerApplication) Execute(ctx *common.Context) {
 
 	orgBody, _ := ctx.ProxyRequest.RawBody()
@@ -88,7 +90,7 @@ func (app *LayerApplication) do(ctxDeadline context.Context, variables *interpre
 				return
 			}
 		}
-		r, err := b.Send(ctx, variables, ctxDeadline)
+		r, err := b.Send(ctxDeadline, ctx, variables)
 
 		if deadline, ok := ctxDeadline.Deadline(); ok {
 			if time.Now().After(deadline) {
@@ -114,6 +116,8 @@ func (app *LayerApplication) do(ctxDeadline context.Context, variables *interpre
 	resC <- 1
 
 }
+
+//NewLayerApplication create new layer application
 func NewLayerApplication(apiContent *config.APIContent) *LayerApplication {
 	app := &LayerApplication{
 		output:    response.GetEncoder(apiContent.OutPutEncoder),

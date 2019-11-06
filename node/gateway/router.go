@@ -152,6 +152,7 @@ func (f *_ApiFactory) genAPIRouter(cfg *config.APIOfStrategy) (router.IRouter, *
 
 	return &API{
 		strategyID:          f.strategyID,
+		apiID:				 cfg.ID,
 		app:                 app,
 		pluginAccess:        pluginAccesses,
 		pluginProxies:       pluginProxies,

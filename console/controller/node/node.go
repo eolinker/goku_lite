@@ -3,6 +3,7 @@ package node
 import (
 	"encoding/json"
 	"errors"
+	"github.com/eolinker/goku-api-gateway/common/auto-form"
 
 	"github.com/eolinker/goku-api-gateway/console/module/cluster"
 
@@ -33,30 +34,48 @@ func AddNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	}
 
 	//nodeNumber := rsa.CertConf["nodeNumber"].(int)
-
-	nodeName := httpRequest.PostFormValue("nodeName")
-	nodeIP := httpRequest.PostFormValue("nodeIP")
-	nodePort := httpRequest.PostFormValue("nodePort")
-	groupID := httpRequest.PostFormValue("groupID")
-	gatewayPath := httpRequest.PostFormValue("gatewayPath")
-
-	gID, err := strconv.Atoi(groupID)
-	if err != nil && groupID != "" {
-		controller.WriteError(httpResponse, "230015", "", "[ERROR]Illegal groupID!", err)
+	type NodeParam struct {
+		NodeName string `opt:"nodeName,require"`
+		ListenAddress string `opt:"listenAddress,require"`
+		AdminAddress string `opt:"adminAddress,require"`
+		GroupID int `opt:"groupID,require"`
+		Path string `opt:"gatewayPath"`
+	}
+	//
+	//nodeName := httpRequest.PostFormValue("nodeName")
+	//listenAddress := httpRequest.PostFormValue("listenAddress")
+	//adminAddress := httpRequest.PostFormValue("adminAddress")
+	//groupID := httpRequest.PostFormValue("groupID")
+	//gatewayPath := httpRequest.PostFormValue("gatewayPath")
+	//
+	//gID, err := strconv.Atoi(groupID)
+	//if err != nil && groupID != "" {
+	//	controller.WriteError(httpResponse, "230015", "", "[ERROR]Illegal groupID!", err)
+	//	return
+	//}
+	param:=new(NodeParam)
+	err:=auto.SetValues(httpRequest.Form,param)
+	if err!= nil{
+		controller.WriteError(httpResponse, "230015", "", "[ERROR]", err)
 		return
 	}
-
-	flag := utils.ValidateRemoteAddr(nodeIP + ":" + nodePort)
-	if !flag {
+	if !utils.ValidateRemoteAddr(param.ListenAddress) {
 		controller.WriteError(httpResponse,
 			"230006",
-			"node", "[ERROR]Illegal remote address!",
-			errors.New("Illegal remote address"))
+			"node", "[ERROR]Illegal listenAddress!",
+			errors.New("illegal listenAddress"))
 		return
 	}
-	if gID != 0 {
+	if !utils.ValidateRemoteAddr(param.AdminAddress) {
+		controller.WriteError(httpResponse,
+			"230007",
+			"node", "[ERROR]Illegal listenAddress!",
+			errors.New("illegal listenAddress"))
+		return
+	}
+	if param.GroupID != 0 {
 		// 检查分组是否存在
-		flag, err = node.CheckNodeGroupIsExist(gID)
+		flag, err := node.CheckNodeGroupIsExist(param.GroupID)
 
 		if !flag {
 			controller.WriteError(
@@ -69,18 +88,7 @@ func AddNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		}
 	}
 
-	exits := node.CheckIsExistRemoteAddr(0, nodeIP, nodePort)
-
-	if exits {
-		controller.WriteError(httpResponse,
-			"230005",
-			"node",
-			"[ERROR]The remote address is alreadey existed!",
-			errors.New("The remote address is alreadey existed"))
-		return
-	}
-
-	flag, result, err := node.AddNode(clusterID, nodeName, nodeIP, nodePort, gatewayPath, gID)
+	flag, result, err := node.AddNode(clusterID, param.NodeName, param.ListenAddress, param.AdminAddress, param.Path, param.GroupID)
 
 	if !flag {
 		controller.WriteError(httpResponse,
@@ -100,7 +108,7 @@ func AddNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	}
 	data, _ := json.Marshal(res)
 
-	httpResponse.Write(data)
+	_,_=httpResponse.Write(data)
 }
 
 //EditNode 修改节点信息
@@ -112,18 +120,26 @@ func EditNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	}
 
 	nodeName := httpRequest.PostFormValue("nodeName")
-	nodeIP := httpRequest.PostFormValue("nodeIP")
-	nodePort := httpRequest.PostFormValue("nodePort")
+	listenAddress := httpRequest.PostFormValue("listenAddress")
+	adminAddress := httpRequest.PostFormValue("adminAddress")
 	groupID := httpRequest.PostFormValue("groupID")
 	nodeID := httpRequest.PostFormValue("nodeID")
 
 	gatewayPath := httpRequest.PostFormValue("gatewayPath")
 	// key := httpRequest.PostFormValue("key")
 
-	flag := utils.ValidateRemoteAddr(nodeIP + ":" + nodePort)
-	if !flag {
-
-		controller.WriteError(httpResponse, "230006", "node", "[ERROR]Illegal remote address!", errors.New("[ERROR]Illegal remote address"))
+	if !utils.ValidateRemoteAddr(listenAddress) {
+		controller.WriteError(httpResponse,
+			"230006",
+			"node", "[ERROR]Illegal listenAddress!",
+			errors.New("illegal listenAddress"))
+		return
+	}
+	if !utils.ValidateRemoteAddr(adminAddress) {
+		controller.WriteError(httpResponse,
+			"230007",
+			"node", "[ERROR]Illegal listenAddress!",
+			errors.New("illegal listenAddress"))
 		return
 	}
 
@@ -141,7 +157,7 @@ func EditNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 	if gID != 0 {
 		// 检查分组是否存在
-		flag, err = node.CheckNodeGroupIsExist(gID)
+		flag, err := node.CheckNodeGroupIsExist(gID)
 
 		if !flag {
 			controller.WriteError(
@@ -154,15 +170,15 @@ func EditNode(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		}
 	}
 
-	exits := node.CheckIsExistRemoteAddr(id, nodeIP, nodePort)
-	if exits {
+	//exits := node.CheckIsExistRemoteAddr(id, listenAddress, adminAddress)
+	//if exits {
+	//
+	//	controller.WriteError(httpResponse, "230005", "node", "[ERROR]The remote address is existed!", nil)
+	//	return
+	//
+	//}
 
-		controller.WriteError(httpResponse, "230005", "node", "[ERROR]The remote address is existed!", nil)
-		return
-
-	}
-
-	flag, result, _ := node.EditNode(nodeName, nodeIP, nodePort, gatewayPath, id, gID)
+	flag, result, _ := node.EditNode(nodeName, listenAddress, adminAddress, gatewayPath, id, gID)
 
 	if !flag {
 		controller.WriteError(httpResponse, "330000", "node", result, nil)
@@ -270,8 +286,8 @@ func GetNodeInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 			err)
 		return
 	}
-	flag, result, err := node.GetNodeInfo(id)
-	if !flag {
+	  result, err := node.GetNodeInfo(id)
+	if err!= nil {
 
 		controller.WriteError(httpResponse,
 			"330000",
@@ -286,43 +302,7 @@ func GetNodeInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	return
 }
 
-//CheckIsExistRemoteAddr 节点IP查重
-func CheckIsExistRemoteAddr(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationREAD)
-	if e != nil {
-		return
-	}
-
-	nodeIP := httpRequest.PostFormValue("nodeIP")
-	nodePort := httpRequest.PostFormValue("nodePort")
-
-	flag := utils.ValidateRemoteAddr(nodeIP)
-
-	if !flag {
-		controller.WriteError(httpResponse,
-			"230006",
-			"node",
-			"[ERROR]The remote address does not exist!",
-			nil)
-		return
-	}
-
-	flag = node.CheckIsExistRemoteAddr(0, nodePort, nodePort)
-	if !flag {
-
-		controller.WriteError(httpResponse,
-			"330000",
-			"node",
-			"[ERROR]Remote address is existed!",
-			nil)
-		return
-
-	}
-	controller.WriteResultInfo(httpResponse, "node", "", nil)
-
-	return
-}
 
 //BatchEditNodeGroup 批量修改节点分组
 func BatchEditNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {

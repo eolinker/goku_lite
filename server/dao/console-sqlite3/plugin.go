@@ -77,7 +77,7 @@ func GetPluginCount() int {
 // AddPlugin 新增插件信息
 func AddPlugin(pluginName, pluginConfig, pluginDesc, version string, pluginPriority, isStop, pluginType int) (bool, string, error) {
 	db := database2.GetConnection()
-	stmt, err := db.Prepare(`INSERT INTO goku_plugin (pluginName,pluginConfig,pluginDesc,version,pluginStatus,pluginPriority,isStop,official,pluginType) VALUES (?,?,?,?,?,?,?,?,?);`)
+	stmt, err := db.Prepare(`INSERT INTO goku_plugin (pluginName,pluginConfig,pluginDesc,version,pluginStatus,pluginPriority,isStop,official,pluginType,isCheck) VALUES (?,?,?,?,?,?,?,?,?,0);`)
 	if err != nil {
 		return false, "[ERROR]Illegal SQL statement!", err
 	}

@@ -185,7 +185,7 @@ CREATE TABLE "goku_gateway_api" (
   "protocol" text(20),
   "stripSlash" text(32),
   "apiType" integer NOT NULL DEFAULT 0,
-  "responseDataType" text NOT NULL DEFAULT origin,
+  "responseDataType" text NOT NULL DEFAULT 'origin',
   "linkApis" TEXT,
   "staticResponse" TEXT
 );
@@ -319,22 +319,27 @@ CREATE TABLE "goku_node_group" (
 DROP TABLE IF EXISTS "goku_node_info";
 CREATE TABLE "goku_node_info" (
   "nodeID" integer NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "nodeIP" text(255) NOT NULL,
-  "updateStatus" integer(4) NOT NULL DEFAULT 0,
   "createTime" text,
   "updateTime" text,
   "groupID" integer(11) NOT NULL DEFAULT 0,
   "nodeName" text(255) NOT NULL,
-  "nodePort" text(255),
   "nodeStatus" integer(11) NOT NULL,
   "version" text(255),
-  "sshPort" text(255) DEFAULT 22,
-  "userName" text(255),
-  "password" text(255),
+  "sshAddress" text(255) DEFAULT 22,
+  "sshUserName" text(255),
+  "sshPassword" text(255),
   "gatewayPath" text(255),
-  "key" text,
+  "sshKey" text,
   "authMethod" integer(4) NOT NULL DEFAULT 0,
-  "clusterID" integer(11) NOT NULL DEFAULT 0
+  "clusterID" integer(11) NOT NULL DEFAULT 0,
+  "listenAddress" text(22) NOT NULL DEFAULT '',
+  "adminAddress" text(22) NOT NULL DEFAULT '',
+  "nodeKey" TEXT(32) NOT NULL DEFAULT ''
+);
+
+CREATE UNIQUE INDEX "nodeKey_new"
+ON "goku_node_info_new" (
+   "nodeKey" ASC
 );
 
 -- ----------------------------
@@ -402,6 +407,32 @@ CREATE TABLE "goku_table_update_record" (
   "name" text(64) NOT NULL,
   "updateTime" text NOT NULL,
   "tableID" integer NOT NULL PRIMARY KEY AUTOINCREMENT
+);
+
+CREATE TABLE "goku_table_version" (
+    "tableID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "tableName" TEXT NOT NULL,
+    "version" TEXT NOT NULL
+);
+
+CREATE UNIQUE INDEX "tableName"
+ON "goku_table_version" (
+    "tableName"
+);
+INSERT INTO "goku_table_version" ("tableName","version") VALUES ('goku_node_info', "3.1.1");
+INSERT INTO "goku_table_version" ("tableName","version") VALUES ('goku_monitor_module', "3.1.1");
+
+
+CREATE TABLE "goku_monitor_module" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "config" TEXT NOT NULL,
+    "moduleStatus" integer NOT NULL DEFAULT 0
+);
+
+CREATE UNIQUE INDEX "moduleName"
+ON "goku_monitor_module" (
+    "name" ASC
 );
 
 

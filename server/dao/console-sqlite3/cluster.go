@@ -83,7 +83,7 @@ func GetClusterIDByName(name string) int {
 //GetClusters 获取集群列表
 func GetClusters() ([]*entity.Cluster, error) {
 	db := database.GetConnection()
-	sql := "SELECT `id`,`name`,`title`,`note` FROM goku_cluster"
+	sql := "SELECT `id`,`name`,`title`,`note`,count(I.`nodeID`) as num FROM `goku_cluster` C left join `goku_node_info` I on c.id = I.`clusterID` group by `id`,`name`,`title`,`note`;"
 	rows, err := db.Query(sql)
 	if err != nil {
 		return []*entity.Cluster{}, err
@@ -92,12 +92,7 @@ func GetClusters() ([]*entity.Cluster, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var cluster entity.Cluster
-		err = rows.Scan(&cluster.ID, &cluster.Name, &cluster.Title, &cluster.Note)
-		if err != nil {
-			return []*entity.Cluster{}, err
-		}
-		sql = "SELECT COUNT(*) FROM goku_node_info WHERE clusterID = ?;"
-		err = db.QueryRow(sql, cluster.ID).Scan(&cluster.NodeCount)
+		err = rows.Scan(&cluster.ID, &cluster.Name, &cluster.Title, &cluster.Note,&cluster.NodeCount)
 		if err != nil {
 			return []*entity.Cluster{}, err
 		}
