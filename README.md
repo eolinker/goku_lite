@@ -33,6 +33,8 @@ All in all, Goku API Gateway enables enterprise to focus on their business.
 - **Dashboard**: Built-in dashboard to configure Goku.
 - **Cluster Management**：Goku nodes are stateless and can be expanded horizontally. Also the configuration can be synchronized automatically.
 - **Hot Updates**: Continuously updates configurations without restart nodes.
+- **Orchestration**：Orchestration can correspond to multiple backends. The backend input parameter supports the client incoming, and also supports the parameter transfer between backend. The return data of backend supports filter, delete, move, rename, target and group. API can set the exception return when the orchestration call fails.
+- **Data transform ** :Support for converting returned data to JSON or XML.
 - **Load balancing**: Round-robin load balancing with weight.
 - **Service Discovery**: Service discorvery from Consul or Eureka.
 - **HTTP(S) Forward Proxy**: Hide real backend services, support Rest API, Webservice.
@@ -49,9 +51,8 @@ All in all, Goku API Gateway enables enterprise to focus on their business.
 - **Scalability**: plug-in mechanism is easy to extend.
 - **High performance**: Performance excels among many gateways.
 - **Open API**：Provide OPEN API for users to operate on the gateway for easy integration.
-- **[New] Orchestration**：Orchestration can correspond to multiple backends. The backend input parameter supports the client incoming, and also supports the parameter transfer between backend. The return data of backend supports filter, delete, move, rename, target and group. API can set the exception return when the orchestration call fails.
-- **[New] Data transform ** :Support for converting returned data to JSON or XML.
-- **[New] Configured version management ** : Support for the release of operations and multiple rollbacks.
+- **Configured version management** : Support for the release of operations and multiple rollbacks.
+- **Monitoring and indicators**: Support for Prometheus, Graphite.
 
 # Benchmark
 ![](https://data.eolinker.com/p7NFG6lb4c73b26cc880e838fe45aa31bc037b7415e3770.jpg)
@@ -59,7 +60,6 @@ All in all, Goku API Gateway enables enterprise to focus on their business.
 
 # Console Preview
 [Console Preview Detail](https://github.com/eolinker/goku-api-gateway/blob/master/docs/CONSOLE_PREVIEW.md "See Console Preview")
-
 
 # Quick Start
 * [Deployment Tutorial](https://help.eolinker.com/#/tutorial/?groupID=c-371&productID=19 "Deployment Tutorial")
