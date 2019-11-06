@@ -25,14 +25,12 @@ start() {
     fi
 
     ADMIN=$1
-    PORT=$2
+    INSTANCE=$2
 
-    if [[ "$PORT" = "" ]] ;then
-        PORT=${ENV_PORT}
+    if [[ "INSTANCE" = "" ]] ;then
+        PORT=${ENV_INSTANCE}
     fi
-    if [[ "$PORT" = "" ]] ;then
-        PORT="6689"
-    fi
+
     if [[ "$ADMIN" = "" ]] ; then
         ADMIN=${ENV_ADMIN}
     fi
@@ -52,7 +50,7 @@ start() {
     else
         time=$(date "+%Y%m%d-%H%M%S")
         ## Change from /dev/null to something like /var/log/$PROG if you want to save output.
-        nohup $PROG_PATH/$PROG --port=$PORT --admin=$ADMIN 2>&1 >"$WORK_PATH/logs/stdout-$PROG-$time.log" &  pid=$!
+        nohup $PROG_PATH/$PROG --instance=$INSTANCE --admin=$ADMIN 2>&1 >"$WORK_PATH/logs/stdout-$PROG-$time.log" &  pid=$!
 
         echo "$PROG started"
         echo $pid > "$WORK_PATH/$PROG.pid"
