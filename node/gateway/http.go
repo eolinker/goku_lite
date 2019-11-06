@@ -2,12 +2,13 @@ package gateway
 
 import (
 	"fmt"
-	"github.com/eolinker/goku-api-gateway/diting"
-	goku_labels "github.com/eolinker/goku-api-gateway/goku-labels"
-	"github.com/eolinker/goku-api-gateway/node/monitor"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/eolinker/goku-api-gateway/diting"
+	goku_labels "github.com/eolinker/goku-api-gateway/goku-labels"
+	"github.com/eolinker/goku-api-gateway/node/monitor"
 
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 	access_log "github.com/eolinker/goku-api-gateway/goku-node/access-log"
@@ -53,7 +54,7 @@ func (h *HTTPHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	n, status := ctx.Finish()
 
-	delay:= time.Since(timeStart)
+	delay := time.Since(timeStart)
 
 	ctx.LogFields[fields.RequestID] = requestID
 	ctx.LogFields[fields.StatusCode] = status
@@ -66,15 +67,12 @@ func (h *HTTPHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	access_log.Log(ctx.LogFields)
 	log.WithFields(ctx.LogFields).Info()
 
-
 	// 监控计数
-	labels:= make(diting.Labels)
+	labels := make(diting.Labels)
 
 	labels[goku_labels.API] = strconv.Itoa(ctx.ApiID())
 	labels[goku_labels.Strategy] = ctx.StrategyId()
 	labels[goku_labels.Status] = strconv.Itoa(status)
-	monitor.APIMonitor.Observe( float64( delay.Milliseconds()),labels)
-
-
+	monitor.APIMonitor.Observe(float64(delay/time.Millisecond), labels)
 
 }
