@@ -356,6 +356,7 @@ func BatchEditAPIBalance(apiIDList []string, balance string) (string, error) {
 	if err != nil {
 		return "[ERROR]Fail to Prepare SQL!", err
 	}
+	defer stmt.Close()
 	_, err = stmt.Exec(now, now, balance)
 	if err != nil {
 		return "[ERROR]Fail to excute SQL statement!", err
@@ -375,6 +376,7 @@ func BatchEditAPIGroup(apiIDList []string, groupID int) (string, error) {
 	if err != nil {
 		return "[ERROR]Fail to Prepare SQL!", err
 	}
+	defer stmt.Close()
 	_, err = stmt.Exec(now, now, groupID)
 	if err != nil {
 		return "[ERROR]Fail to excute SQL statement!", err

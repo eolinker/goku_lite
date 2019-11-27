@@ -14,6 +14,7 @@ func Get(name string) (*entity.LogConfig, error) {
 	if e != nil {
 		return nil, e
 	}
+	defer stmt.Close()
 	ent := &entity.LogConfig{}
 	err := stmt.QueryRow(name).Scan(
 		&ent.Name,
@@ -37,6 +38,7 @@ func Set(ent *entity.LogConfig) error {
 	if e != nil {
 		return e
 	}
+	defer stmt.Close()
 	_, err := stmt.Exec(
 		ent.Name,
 		ent.Enable,
