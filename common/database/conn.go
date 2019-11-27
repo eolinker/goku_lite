@@ -58,7 +58,6 @@ func InitTable() error {
 		if err != nil {
 			Tx.Rollback()
 			log.Error("InitTable error:",err,"\t sql:",sql)
-			panic(err)
 			return err
 		}
 	}

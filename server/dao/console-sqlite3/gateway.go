@@ -38,6 +38,7 @@ func EditGatewayBaseConfig(successCode string, nodeUpdatePeriod, monitorUpdatePe
 	if err != nil {
 		return false, "[ERROR]Illegal SQL Statement!", err
 	}
+	defer stmt.Close()
 	_, err = stmt.Exec(successCode, nodeUpdatePeriod, monitorUpdatePeriod, monitorTimeout)
 	if err != nil {
 		return false, "[ERROR]Fail to excute SQL Statement!", err
@@ -60,6 +61,7 @@ func EditGatewayAlarmConfig(apiAlertInfo, sender, senderPassword, smtpAddress st
 	if err != nil {
 		return false, "[ERROR]Illegal SQL Statement!", err
 	}
+	defer stmt.Close()
 	_, err = stmt.Exec(apiAlertInfo, alertStatus, sender, senderPassword, smtpAddress, smtpPort, smtpProtocol)
 	if err != nil {
 		return false, "[ERROR]Fail to excute SQL Statement!", err

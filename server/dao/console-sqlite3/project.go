@@ -54,6 +54,7 @@ func DeleteProject(projectID int) (bool, string, error) {
 	sql := "SELECT groupID FROM goku_gateway_api_group WHERE projectID = ?;"
 	rows, err := Tx.Query(sql, projectID)
 	if err != nil {
+		Tx.Rollback()
 		return false, "", err
 	}
 	//延时关闭Rows

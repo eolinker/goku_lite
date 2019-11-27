@@ -17,7 +17,7 @@ func Add(name, driver, desc, config, clusterConfig string, isDefault, healthChec
 	if e != nil {
 		return e
 	}
-
+	defer stmt.Close()
 	_, err := stmt.Exec(name, driver, isDefault, desc, config, clusterConfig, healthCheck, healthCheckPath, healthCheckPeriod, healthCheckCode, healthCheckTimeOut, now, now)
 	return err
 }

@@ -203,11 +203,13 @@ func UpdateAllNodeClusterID(clusterID int) {
 	_, err := Tx.Exec(sql, clusterID)
 	if err != nil {
 		Tx.Rollback()
+		return
 	}
 	sql = "UPDATE goku_node_group SET clusterID = ?;"
 	_, err = Tx.Exec(sql, clusterID)
 	if err != nil {
 		Tx.Rollback()
+		return
 	}
 	Tx.Commit()
 }

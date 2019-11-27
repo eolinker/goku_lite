@@ -27,7 +27,6 @@ func AddPluginToStrategy(pluginName, config, strategyID string) (bool, interface
 	result, err := Tx.Exec("INSERT INTO goku_conn_plugin_strategy (pluginName,pluginConfig,strategyID,createTime,updateTime,pluginStatus) VALUES (?,?,?,?,?,?);", pluginName, config, strategyID, now, now, 1)
 	if err != nil {
 		Tx.Rollback()
-		panic(err)
 		return false, "[ERROR]Fail to insert data", errors.New("[ERROR]Fail to insert data")
 	}
 	connID, err := result.LastInsertId()

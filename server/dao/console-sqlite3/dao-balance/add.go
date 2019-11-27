@@ -115,6 +115,7 @@ func Delete(name string) (string, error) {
 	if err != nil {
 		return "[ERROR]Illegal SQL statement!", err
 	}
+	defer stmt.Close()
 	_, err = stmt.Exec(name)
 	if err != nil {
 		return "[ERROR]DELETE fail", err
@@ -132,10 +133,12 @@ func BatchDelete(balanceNames []string) (string, error) {
 	if err != nil {
 		return "[ERROR]Illegal SQL statement!", err
 	}
+	defer stmt.Close()
 	stmt2, err := db.Prepare(sql2)
 	if err != nil {
 		return "[ERROR]Illegal SQL statement!", err
 	}
+	defer stmt2.Close()
 	for _, balanceName := range balanceNames {
 		stmt.Exec(balanceName)
 		stmt2.Exec(balanceName)

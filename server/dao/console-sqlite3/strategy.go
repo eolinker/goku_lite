@@ -30,7 +30,7 @@ func AddStrategy(strategyName string, groupID int) (bool, string, error) {
 		return false, "[ERROR]Empty strategy id !", nil
 	}
 	stmt, err := db.Prepare(`INSERT INTO goku_gateway_strategy (strategyID,strategyName,updateTime,createTime,groupID) VALUES (?,?,?,?,?);`)
-
+	defer stmt.Close()
 	if err != nil {
 		return false, "[ERROR]Illegal SQL statement!", err
 	}

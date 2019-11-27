@@ -20,6 +20,9 @@ func AddAPIToStrategy(apiList []string, strategyID string) (bool, string, error)
 	stmt1, _ := Tx.Prepare(sql1)
 	stmt2, _ := Tx.Prepare(sql2)
 	stmt3, _ := Tx.Prepare(sql3)
+	defer stmt1.Close()
+	defer stmt2.Close()
+	defer stmt3.Close()
 
 	for _, apiID := range apiList {
 		id, err := strconv.Atoi(apiID)
@@ -64,7 +67,7 @@ func SetAPITargetOfStrategy(apiID int, strategyID string, target string) (bool, 
 	if err != nil {
 		return false, err.Error(), err
 	}
-
+	defer stmt.Close()
 	_, e := stmt.Exec(target, apiID, strategyID)
 
 	if e != nil {
@@ -93,7 +96,7 @@ func BatchSetAPITargetOfStrategy(apiIds []int, strategyID string, target string)
 	if err != nil {
 		return false, err.Error(), err
 	}
-
+	defer stmt.Close()
 	_, e := stmt.Exec(s...)
 
 	if e != nil {
