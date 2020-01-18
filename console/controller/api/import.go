@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -9,18 +10,36 @@ import (
 
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/api"
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
+const operationImportAMS = "apiManagement"
+
+//ImportHandlers 导入handlers
+type ImportHandlers struct {
+}
+
+//Handlers handler
+func (i *ImportHandlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+
+	return map[string]http.Handler{
+		"/api":     factory.NewAccountHandleFunction(operationImportAMS, true, ImportAPIFromAms),
+		"/group":   factory.NewAccountHandleFunction(operationImportAMS, true, ImportAPIGroupFromAms),
+		"/project": factory.NewAccountHandleFunction(operationImportAMS, true, ImportProjectFromAms),
+	}
+}
+
+//NewImportHandlers new导入处理器
+func NewImportHandlers() *ImportHandlers {
+	return &ImportHandlers{}
+}
+
 //ImportAPIGroupFromAms 导入分组
 func ImportAPIGroupFromAms(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	contentType := httpRequest.Header.Get("Content-Type")
-
+	userID := goku_handler.UserIDFromRequest(httpRequest)
 	if !strings.Contains(contentType, "multipart/form-data") {
 		controller.WriteError(httpResponse,
 			"310001",
@@ -98,13 +117,9 @@ func ImportAPIGroupFromAms(httpResponse http.ResponseWriter, httpRequest *http.R
 
 //ImportProjectFromAms 导入项目
 func ImportProjectFromAms(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	contentType := httpRequest.Header.Get("Content-Type")
-
+	userID := goku_handler.UserIDFromRequest(httpRequest)
 	if !strings.Contains(contentType, "multipart/form-data") {
 		controller.WriteError(httpResponse,
 			"310001",
@@ -170,12 +185,9 @@ func ImportProjectFromAms(httpResponse http.ResponseWriter, httpRequest *http.Re
 
 //ImportAPIFromAms 导入接口
 func ImportAPIFromAms(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	contentType := httpRequest.Header.Get("Content-Type")
+	userID := goku_handler.UserIDFromRequest(httpRequest)
 	if !strings.Contains(contentType, "multipart/form-data") {
 		controller.WriteError(httpResponse,
 			"310001",
@@ -229,6 +241,7 @@ func ImportAPIFromAms(httpResponse http.ResponseWriter, httpRequest *http.Reques
 
 	}
 	apiList := make([]entity.AmsAPIInfo, 0)
+	fmt.Println(string(body))
 	err = json.Unmarshal(body, &apiList)
 	if err != nil {
 		controller.WriteError(httpResponse,

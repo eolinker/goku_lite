@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/eolinker/goku-api-gateway/goku-service/application"
+
 	"github.com/eolinker/goku-api-gateway/config"
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 	"github.com/eolinker/goku-api-gateway/goku-node/common"
@@ -64,11 +66,12 @@ func (app *DefaultApplication) Execute(ctx *common.Context) {
 
 			ctx.LogFields[access_field.FinallyServer] = ctx.FinalTargetServer()
 			ctx.LogFields[access_field.Retry] = ctx.RetryTargetServers()
-			ctx.LogFields[access_field.Proxy] = fmt.Sprintf("\"%s %s %s\"", r.Method, r.TargetURL, r.Protocol)
+			ctx.LogFields[access_field.Proxy] = fmt.Sprintf("\"%s %s %s\"", r.Method, application.URLPath(r.TargetURL, ctx.ProxyRequest.Querys()), r.Protocol)
 
 		}
 		if err != nil {
-
+			ctx.SetStatus(504, "504")
+			ctx.SetBody([]byte("[ERROR]Fail to get response after proxy!"))
 			log.Warn(err)
 			return
 		}

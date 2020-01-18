@@ -2,21 +2,17 @@ package balance
 
 import (
 	"fmt"
-	"net/http"
-
 	"github.com/eolinker/goku-api-gateway/common/auto-form"
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/balance"
 	"github.com/go-sql-driver/mysql"
+	"net/http"
 )
 
 //SaveBalance 新增负载配置
 func SaveBalance(w http.ResponseWriter, r *http.Request) {
 
-	_, e := controller.CheckLogin(w, r, controller.OperationLoadBalance, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
+
 
 	if err := r.ParseForm(); err != nil {
 		controller.WriteError(w, "260000", "data", "[param_check] Parse form body error | 解析form表单参数错误", err)

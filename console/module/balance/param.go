@@ -28,6 +28,7 @@ type Info struct {
 	Desc          string            `json:"balanceDesc"`
 	CreateTime    string            `json:"createTime"`
 	UpdateTime    string            `json:"updateTime"`
+	CanDelete     int               `json:"canDelete"`
 }
 
 //ReadInfo 读取负载信息
@@ -43,6 +44,7 @@ func ReadInfo(balance *entity.Balance) *Info {
 		Desc:          balance.Desc,
 		CreateTime:    balance.CreateTime,
 		UpdateTime:    balance.UpdateTime,
+		CanDelete:     balance.CanDelete,
 	}
 	json.Unmarshal([]byte(balance.StaticCluster), &info.StaticCluster)
 	return info

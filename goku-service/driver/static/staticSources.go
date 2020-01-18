@@ -22,7 +22,7 @@ var ErrorNoInstance = errors.New("no instance")
 type Sources struct {
 	name string
 
-	discovery          *StaticDiscovery
+	discovery          *Discovery
 	healthCheckHandler health.CheckHandler
 	instanceFactory    *common.InstanceFactory
 }
@@ -74,7 +74,7 @@ func NewStaticSources(name string) *Sources {
 	return &Sources{
 
 		name:               name,
-		discovery:          new(StaticDiscovery),
+		discovery:          new(Discovery),
 		healthCheckHandler: &health.CheckBox{},
 		instanceFactory:    common.NewInstanceFactory(),
 	}

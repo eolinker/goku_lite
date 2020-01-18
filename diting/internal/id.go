@@ -18,7 +18,7 @@ func NewIDCreate() *IDCreate {
 
 //Next next
 func (c *IDCreate) Next() uint64 {
-	var id uint64 = 0
+	var id uint64
 	c.locker.Lock()
 
 	id = uint64(time.Now().UnixNano())

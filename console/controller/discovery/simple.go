@@ -1,17 +1,14 @@
 package discovery
 
 import (
+	"github.com/eolinker/goku-api-gateway/console/controller"
 	"net/http"
 
-	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/service"
 )
 
 func simple(w http.ResponseWriter, r *http.Request) {
-	_, err := controller.CheckLogin(w, r, controller.OperationLoadBalance, controller.OperationREAD)
-	if err != nil {
-		return
-	}
+
 
 	vs, def, err := service.SimpleList()
 	if err != nil {

@@ -1,16 +1,35 @@
 package config_log
 
 import (
-	"github.com/eolinker/goku-api-gateway/common/database"
+	"database/sql"
+
+	"github.com/eolinker/goku-api-gateway/server/dao"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/config-log"
 )
 
 const sqlSelect = "SELECT `name`,`enable`,`dir`,`file`,`level`,`period`,`expire`,`fields` FROM `goku_config_log` WHERE `name` = ? LIMIT 1;"
 const sqlInsert = "REPLACE INTO `goku_config_log`(`name`,`enable`,`dir`,`file`,`level`,`period`,`expire`,`fields`)VALUES(?,?,?,?,?,?,?,?);"
 
+//ConfigLogDao ConfigLogDao
+type ConfigLogDao struct {
+	db *sql.DB
+}
+
+//NewConfigLogDao new ConfigLogDao
+func NewConfigLogDao() *ConfigLogDao {
+	return &ConfigLogDao{}
+}
+
+//Create create
+func (d *ConfigLogDao) Create(db *sql.DB) (interface{}, error) {
+	d.db = db
+	var i dao.ConfigLogDao = d
+	return &i, nil
+}
+
 //Get get
-func Get(name string) (*entity.LogConfig, error) {
-	stmt, e := database.GetConnection().Prepare(sqlSelect)
+func (d *ConfigLogDao) Get(name string) (*entity.LogConfig, error) {
+	stmt, e := d.db.Prepare(sqlSelect)
 	if e != nil {
 		return nil, e
 	}
@@ -33,8 +52,8 @@ func Get(name string) (*entity.LogConfig, error) {
 }
 
 //Set set
-func Set(ent *entity.LogConfig) error {
-	stmt, e := database.GetConnection().Prepare(sqlInsert)
+func (d *ConfigLogDao) Set(ent *entity.LogConfig) error {
+	stmt, e := d.db.Prepare(sqlInsert)
 	if e != nil {
 		return e
 	}

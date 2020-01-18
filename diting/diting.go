@@ -6,24 +6,20 @@ type ConfigHandleFunc func() interface{}
 //Constructor constructor
 type Constructor interface {
 	Namespace() string
-	Create(conf string) (Factory,error)
+	Create(conf string) (Factory, error)
 	Close()
-
 }
 
 //Factory factory
 type Factory interface {
-
-	NewCounter(opt *CounterOpts) (Counter,error)
+	NewCounter(opt *CounterOpts) (Counter, error)
 	//NewSummary(opt *SummaryOpts) (Summary,error)
-	NewHistogram(opt *HistogramOpts) (Histogram,error)
-	NewGauge(opt *GaugeOpts) (Gauge,error)
-
+	NewHistogram(opt *HistogramOpts) (Histogram, error)
+	NewGauge(opt *GaugeOpts) (Gauge, error)
 }
 
 //Factories factories
 type Factories []Factory
-
 
 //NewCounter new counter
 func (fs Factories) NewCounter(opt *CounterOpts) (Counters, error) {

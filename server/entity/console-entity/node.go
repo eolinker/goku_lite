@@ -18,14 +18,15 @@ type Node struct {
 	CreateTime    string `json:"createTime"`
 	UpdateTime    string `json:"updateTime"`
 	UpdatePeriod  int    `json:"updatePeriod,omitempty"`
-	//*SSHInfo
+	*SSHInfo
 }
 
-//type SSHInfo struct {
-//	SSHPort     string `json:"sshPort"`
-//	UserName    string `json:"userName"`
-//	Password    string `json:"password"`
-//
-//	Key         string `json:"key"`
-//	AuthMethod  int    `json:"authMethod"`
-//}
+//SSHInfo sshInfo
+type SSHInfo struct {
+	SSHAddress string `json:"sshAddress"`
+	UserName   string `json:"sshUserName"`
+	Password   string `json:"sshPassword"`
+	Key        string `json:"sshKey"`
+	AuthMethod int    `json:"authMethod"`
+	IsSave     int    `json:"isSave"`
+}

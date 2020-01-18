@@ -5,12 +5,12 @@ import (
 
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 
-	"github.com/eolinker/goku-api-gateway/common/database"
 	"github.com/eolinker/goku-api-gateway/config"
 )
 
-func GetDiscoverConfig(clusters []*entity.Cluster) (map[string]map[string]*config.DiscoverConfig, error) {
-	db := database.GetConnection()
+//GetDiscoverConfig 获取服务发现信息
+func (d *VersionConfigDao)GetDiscoverConfig(clusters []*entity.Cluster) (map[string]map[string]*config.DiscoverConfig, error) {
+	db := d.db
 	sql := "SELECT `name`,`driver`,`config`,`clusterConfig`,`healthCheck`,`healthCheckPath`,`healthCheckPeriod`,`healthCheckCode`,`healthCheckTimeOut` FROM goku_service_config"
 	rows, err := db.Query(sql)
 	if err != nil {

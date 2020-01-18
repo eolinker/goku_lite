@@ -2,21 +2,16 @@ package discovery
 
 import (
 	"fmt"
-	"net/http"
-	"strings"
-
-	dao_service2 "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3/dao-service"
-
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/service"
+	dao_service2 "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3/dao-service"
+	"net/http"
+	"strings"
 )
 
 func delete(w http.ResponseWriter, r *http.Request) {
-	_, err := controller.CheckLogin(w, r, controller.OperationLoadBalance, controller.OperationEDIT)
-	if err != nil {
-		return
-	}
-	if err != r.ParseForm() {
+
+	if err := r.ParseForm() ; err!= nil{
 		controller.WriteError(w, "260000", "serviceDiscovery", "[param_check] Parse form body error | 解析form表单参数错误", err)
 		return
 	}
@@ -24,7 +19,7 @@ func delete(w http.ResponseWriter, r *http.Request) {
 
 	names := strings.Split(nameStr, ",")
 
-	err = service.Delete(names)
+	err := service.Delete(names)
 
 	if err != nil {
 		if en, ok := err.(dao_service2.DeleteError); ok {

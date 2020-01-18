@@ -1,6 +1,6 @@
 package gateway
 
-var(
+var (
 	authNames = map[string]string{
 		"Oauth2": "goku-oauth2_auth",
 		"Apikey": "goku-apikey_auth",

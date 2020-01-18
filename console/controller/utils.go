@@ -2,39 +2,9 @@ package controller
 
 import (
 	"encoding/json"
-	"errors"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 	"net/http"
 	"reflect"
-	"strconv"
-
-	log "github.com/eolinker/goku-api-gateway/goku-log"
-
-	"github.com/eolinker/goku-api-gateway/console/module/account"
-)
-
-const (
-	//OperationEDIT 编辑
-	OperationEDIT = "edit"
-	//OperationREAD 读取
-	OperationREAD = "read"
-)
-const (
-	//OperationNone 无操作
-	OperationNone = ""
-	//OperationAPI 接口操作
-	OperationAPI = "apiManagement"
-	//OperationADMIN 管理员
-	OperationADMIN = "adminManagement"
-	//OperationLoadBalance 负载操作
-	OperationLoadBalance = "loadBalance"
-	//OperationStrategy 策略操作
-	OperationStrategy = "strategyManagement"
-	//OperationNode 节点操作
-	OperationNode = "nodeManagement"
-	//OperationPlugin 插件操作
-	OperationPlugin = "pluginManagement"
-	//OperationGatewayConfig 网关配置操作
-	OperationGatewayConfig = "gatewayConfig"
 )
 
 //PageInfo 页码信息
@@ -136,29 +106,4 @@ func WriteError(w http.ResponseWriter, statusCode, resultType, resultDesc string
 	w.Write(data)
 	log.WithFields(ret).Debug("write error:", err)
 
-}
-
-//CheckLogin 判断是否登录
-func CheckLogin(w http.ResponseWriter, r *http.Request, operationType, operation string) (int, error) {
-
-	userIDCookie, idErr := r.Cookie("userID")
-	userCookie, userErr := r.Cookie("userToken")
-	if idErr != nil || userErr != nil {
-		e := errors.New("user not logged in")
-		WriteError(w, "100001", "user", e.Error(), e)
-		return 0, e
-	}
-	userID, err := strconv.Atoi(userIDCookie.Value)
-	if err != nil {
-		WriteError(w, "100001", "user", "Illegal user id!", err)
-		return 0, err
-	}
-	flag := account.CheckLogin(userCookie.Value, userID)
-	if !flag {
-		e := errors.New("illegal users")
-		WriteError(w, "100001", "user", "Illegal users!", e)
-		return userID, e
-	}
-
-	return userID, nil
 }

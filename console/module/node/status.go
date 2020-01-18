@@ -8,7 +8,7 @@ import (
 )
 
 //EXPIRE 心跳检测过期时间
-const EXPIRE = time.Second * 5
+const EXPIRE = time.Second * 10
 
 var (
 	manager = _StatusManager{
@@ -25,11 +25,16 @@ type _StatusManager struct {
 
 func (m *_StatusManager) refresh(id string) {
 	t := time.Now()
+	//heartBeat, err := nodeDao.GetHeartBeatTime(id)
+	//if err == nil {
+	//	t = heartBeat
+	//}
 	m.locker.Lock()
 
 	m.lastHeartBeat[id] = t
 
 	m.locker.Unlock()
+	nodeDao.SetHeartBeatTime(id, time.Now())
 }
 
 func (m *_StatusManager) stop(id string) {
@@ -48,7 +53,7 @@ func (m *_StatusManager) get(id string) (time.Time, bool) {
 }
 
 type _InstanceLocker struct {
-	locker sync.RWMutex
+	locker    sync.RWMutex
 	instances map[string]bool
 }
 
@@ -58,22 +63,22 @@ func newInstanceLocker() *_InstanceLocker {
 		instances: make(map[string]bool),
 	}
 }
-func  (l * _InstanceLocker)IsLock(key string)bool  {
+func (l *_InstanceLocker) IsLock(key string) bool {
 	l.locker.RLock()
-	locked :=l.instances[key]
+	locked := l.instances[key]
 	l.locker.RUnlock()
 	return locked
 }
-func (l * _InstanceLocker)Lock(key string)bool{
+func (l *_InstanceLocker) Lock(key string) bool {
 
-	locked :=l.IsLock(key)
-	if locked{
+	locked := l.IsLock(key)
+	if locked {
 		return false
 	}
 
 	l.locker.Lock()
-	locked =l.instances[key]
-	if locked{
+	locked = l.instances[key]
+	if locked {
 		l.locker.Unlock()
 		return false
 	}
@@ -81,7 +86,7 @@ func (l * _InstanceLocker)Lock(key string)bool{
 	l.locker.Unlock()
 	return true
 }
-func (l * _InstanceLocker)UnLock(key string){
+func (l *_InstanceLocker) UnLock(key string) {
 
 	l.locker.Lock()
 	l.instances[key] = false
@@ -90,21 +95,29 @@ func (l * _InstanceLocker)UnLock(key string){
 
 //Refresh refresh
 
-func Refresh( instance string) {
+func Refresh(instance string) {
 
 	manager.refresh(instance)
 }
 
+func GetLastHeartTime(instance string) (time.Time, bool) {
+	return manager.get(instance)
+}
+
 //IsLive 通过ip和端口获取当前节点在线状态
-func IsLive( instance string) bool {
+func IsLive(instance string) bool {
+
+	if instanceLocker.IsLock(instance) {
+		return true
+	}
 
 	t, has := manager.get(instance)
 
 	if !has {
 		return false
 	}
-
-	if time.Now().Sub(t) > EXPIRE {
+	now := time.Now()
+	if now.Sub(t) > EXPIRE {
 		return false
 	}
 	return true
@@ -113,23 +126,23 @@ func IsLive( instance string) bool {
 //ResetNodeStatus 重置节点状态
 func ResetNodeStatus(nodes ...*entity.Node) {
 	for _, node := range nodes {
-
-		if instanceLocker.IsLock(node.NodeKey) ||  IsLive(node.NodeKey) {
+		if instanceLocker.IsLock(node.NodeKey) || IsLive(node.NodeKey) {
 			node.NodeStatus = 1
 		} else {
-			node.NodeStatus = 0
+			if node.NodeStatus == 1 {
+				node.NodeStatus = 2
+			} else {
+				node.NodeStatus = 0
+			}
 		}
 	}
 }
 
-func Lock(key string)bool{
+func Lock(key string) bool {
 	return instanceLocker.Lock(key)
 }
-func UnLock(key string)  {
+func UnLock(key string) {
 	instanceLocker.UnLock(key)
 	Refresh(key)
-}
 
-func IsLock(key string)bool{
-	return instanceLocker.Lock(key)
 }

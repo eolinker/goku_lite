@@ -5,23 +5,40 @@ import (
 	"net/http"
 	"strings"
 
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
+
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/auth"
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 )
 
+const operationAuth = "strategyManagement"
+
+//Handlers handlers
+type Handlers struct {
+}
+
+//Handlers handlers
+func (h *Handlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/getStatus": factory.NewAccountHandleFunction(operationAuth, true, GetAuthStatus),
+		"/getInfo":   factory.NewAccountHandleFunction(operationAuth, true, GetAuthInfo),
+		"/editInfo":  factory.NewAccountHandleFunction(operationAuth, true, EditAuthInfo),
+	}
+}
+
+//NewHandlers new handlers
+func NewHandlers() *Handlers {
+	return &Handlers{}
+}
+
 //GetAuthStatus 获取认证状态
 func GetAuthStatus(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 
 	flag, result, err := auth.GetAuthStatus(strategyID)
 	if !flag {
-
 		controller.WriteError(httpResponse, "250000", "auth", "[ERROR]The auth info of the strategy does not exist!", err)
 		return
 	}
@@ -37,10 +54,6 @@ func GetAuthStatus(httpResponse http.ResponseWriter, httpRequest *http.Request) 
 
 //GetAuthInfo 获取认证信息
 func GetAuthInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 
@@ -64,10 +77,6 @@ func GetAuthInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //EditAuthInfo 编辑认证信息
 func EditAuthInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	strategyName := httpRequest.PostFormValue("strategyName")

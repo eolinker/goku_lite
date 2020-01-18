@@ -1,32 +1,17 @@
 package console
 
 import (
-	"context"
-	"sync"
+	"github.com/eolinker/goku-api-gateway/config"
 )
 
-//Console console
-type Console struct {
-	adminHost   string
-	instance        string
-	ctx         context.Context
-	cancel      context.CancelFunc
-	lastVersion int
-	once        sync.Once
+//ConfigConsole configConsole
+type ConfigConsole interface {
+	Close()
+	AddListen(callback ConfigCallbackFunc)
+	GetConfig() (*config.GokuConfig, error)
+	RegisterToConsole() (*config.GokuConfig, error)
+	Listen()
 }
 
-//Close close
-func (c *Console) Close() {
-	c.once.Do(c.cancel)
-}
-
-//NewConsole newConsole
-func NewConsole(instance string, adminHost string) *Console {
-	ctx, cancel := context.WithCancel(context.Background())
-	return &Console{
-		instance:      instance,
-		adminHost: adminHost,
-		ctx:       ctx,
-		cancel:    cancel,
-	}
-}
+//ConfigCallbackFunc configCallbackFunc
+type ConfigCallbackFunc func(conf *config.GokuConfig)

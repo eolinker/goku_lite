@@ -28,14 +28,13 @@ func NewMetricKey(name string, labelNames []string) MetricKey {
 	return &_MetricKey{name: name, labelNames: labelNames}
 }
 
-
 //Key key
 func (m *_MetricKey) Key(labels diting.Labels, valueType string) string {
 	tmp := make([]string, 0, len(m.labelNames)+2)
 	tmp = append(tmp, m.name)
 
 	for _, name := range m.labelNames {
-		labelValue:= labels[name]
+		labelValue := labels[name]
 		tmp = append(tmp, formatLabelValue(labelValue))
 	}
 
@@ -45,10 +44,11 @@ func (m *_MetricKey) Key(labels diting.Labels, valueType string) string {
 	return strings.Join(tmp, ".")
 }
 
-const rep  = '_'
+const rep = '_'
+
 //formatLabelValue 将label value的所有字母、数字转换成 _
-func formatLabelValue(value string)string  {
-	s:=[]rune(value)
+func formatLabelValue(value string) string {
+	s := []rune(value)
 	for i, r := range s {
 		if !unicode.IsLetter(r) && !unicode.IsNumber(r) {
 			s[i] = rep

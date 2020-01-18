@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"reflect"
 	"strings"
@@ -69,7 +70,7 @@ func (f *_RootFactory) createStrategy() map[string]*Strategy {
 
 // 构造策略
 func (f *_RootFactory) genStrategy(cfg *config.StrategyConfig) *Strategy {
-	_, accesses, _ := genPlugins(cfg.Plugins, f.cluster, cfg.ID, 0)
+	_, accesses, proxies := genPlugins(cfg.Plugins, f.cluster, cfg.ID, 0)
 
 	s := &Strategy{
 		ID:     cfg.ID,
@@ -100,20 +101,23 @@ func (f *_RootFactory) genStrategy(cfg *config.StrategyConfig) *Strategy {
 			}
 
 			if pluginObj.Access != nil && !reflect.ValueOf(pluginObj.Access).IsNil() {
+				if cfg.ID == "68YAY7" {
+					fmt.Println(authKey, pluginName)
+				}
 				s.authPlugin[authKey] = plugin_executor.NewAccessExecutor(&config.PluginConfig{
 					Name:   pluginName,
 					IsStop: true,
 					Config: authCfg,
+					IsAuth: true,
 				}, pluginObj.Access)
 			}
 		}
 	}
 
 	factory := newAPIFactory(f, s.ID)
-
 	for _, apiCfg := range cfg.APIS {
 
-		iRouter, apiContent := factory.genAPIRouter(apiCfg)
+		iRouter, apiContent := factory.genAPIRouter(apiCfg, proxies)
 		if iRouter == nil {
 			continue
 		}
@@ -137,7 +141,7 @@ func newAPIFactory(root *_RootFactory, strategyID string) *_ApiFactory {
 		strategyID: strategyID,
 	}
 }
-func (f *_ApiFactory) genAPIRouter(cfg *config.APIOfStrategy) (router.IRouter, *config.APIContent) {
+func (f *_ApiFactory) genAPIRouter(cfg *config.APIOfStrategy, proxies []plugin_executor.Executor) (router.IRouter, *config.APIContent) {
 
 	apiContend, has := f.root.apis[cfg.ID]
 	if !has {
@@ -149,13 +153,16 @@ func (f *_ApiFactory) genAPIRouter(cfg *config.APIOfStrategy) (router.IRouter, *
 		return nil, nil
 	}
 	_, pluginAccesses, pluginProxies := genPlugins(cfg.Plugins, f.root.cluster, f.strategyID, cfg.ID)
+	pro := make([]plugin_executor.Executor, 0, len(proxies)+len(pluginProxies))
+	pro = append(pro, proxies...)
+	pro = append(pro, pluginProxies...)
 
 	return &API{
 		strategyID:          f.strategyID,
-		apiID:				 cfg.ID,
+		apiID:               cfg.ID,
 		app:                 app,
 		pluginAccess:        pluginAccesses,
-		pluginProxies:       pluginProxies,
+		pluginProxies:       pro,
 		pluginAccessGlobal:  f.root.gAccesses,
 		pluginProxiesGlobal: f.root.gProxies,
 	}, apiContend
@@ -169,7 +176,6 @@ func genFactory(cfg *config.GokuConfig, factory router.Factory) *_RootFactory {
 	beforePlugin := genBeforPlugin(cfg.Plugins.BeforePlugins, cfg.Cluster)
 
 	gBefores, gAccesses, gProxies := genPlugins(cfg.Plugins.GlobalPlugins, cfg.Cluster, "", 0)
-
 	apis := toMap(cfg.APIS)
 	return &_RootFactory{
 		beforePlugin:  beforePlugin,
@@ -188,6 +194,9 @@ func genFactory(cfg *config.GokuConfig, factory router.Factory) *_RootFactory {
 func toMap(cfgs []*config.APIContent) map[int]*config.APIContent {
 	m := make(map[int]*config.APIContent)
 	for _, cfg := range cfgs {
+		//if cfg.ID == 1880 {
+		//	fmt.Println(cfg)
+		//}
 		m[cfg.ID] = cfg
 	}
 	return m

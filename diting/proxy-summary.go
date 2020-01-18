@@ -1,6 +1,5 @@
 package diting
 
-
 //
 //type SummariesProxy struct {
 //	ConstLabelsProxy

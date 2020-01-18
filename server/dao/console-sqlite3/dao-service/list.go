@@ -3,21 +3,20 @@ package dao_service
 import (
 	"fmt"
 
-	"github.com/eolinker/goku-api-gateway/common/database"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
 const sqlList = "SELECT `name`,`driver`,`default`,`desc`,`config`,`clusterConfig`,`healthCheck`,`healthCheckPath`,`healthCheckPeriod`,`healthCheckCode`,`healthCheckTimeOut`,`createTime`,`updateTime` FROM `goku_service_config` %s ORDER BY `updateTime` DESC;"
 
 //List 获取服务发现列表
-func List(keyword string) ([]*entity.Service, error) {
+func (d *ServiceDao) List(keyword string) ([]*entity.Service, error) {
 	where := ""
 	if keyword != "" {
 		where = fmt.Sprint("where `name` like '%", keyword, "%' OR `driver` like '%", keyword, "%'")
 	}
 
 	sql := fmt.Sprintf(sqlList, where)
-	stmt, e := database.GetConnection().Prepare(sql)
+	stmt, e := d.db.Prepare(sql)
 	if e != nil {
 		return nil, e
 	}

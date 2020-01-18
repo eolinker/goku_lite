@@ -11,8 +11,8 @@ import (
 //ModuleNameSpace 模块空间名称
 const ModuleNameSpace = "diting.graphite"
 const moduleName = "Graphite"
-const desc = "API监控模块对接Graphite(udp by minute)"
-const addressPattern = `^[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]$`
+const desc = "对接Graphite(数据每分钟更新)"
+const addressPattern = `^[-A-Za-z0-9\.]+(:\d+)$`
 const content = `[
         {
             "type": "line",
@@ -24,7 +24,7 @@ const content = `[
                     "name":"accessAddress",
                     "placeholder":"",
                     "required":true,
-                    "pattern":"` + addressPattern + `"
+                    "pattern":""
                 }
             ]
         }
@@ -36,13 +36,17 @@ var (
 )
 
 func init() {
-	json.Unmarshal([]byte(content), &mode)
+	err := json.Unmarshal([]byte(content), &mode)
+	if err != nil {
+		panic(err)
+	}
 
 	r, err := regexp.Compile(addressPattern)
 	if err != nil {
 		panic("init graphite module error:" + err.Error())
 	}
 	addressMatcher = r
+	mode[0].Items[0]["pattern"] = addressPattern
 }
 
 //GraphiteModule 配置
@@ -81,8 +85,8 @@ func (c *GraphiteModule) GetDefaultConfig() interface{} {
 	}
 }
 
-//Encoder encoder
-func (c *GraphiteModule) Encoder(v interface{}) (string, error) {
+//Write encoder
+func (c *GraphiteModule) Encode(v interface{}) (string, error) {
 	if v == nil {
 		return "", nil
 	}
@@ -94,7 +98,7 @@ func (c *GraphiteModule) Encoder(v interface{}) (string, error) {
 	return "", errors.New("illegal config")
 }
 
-//Decode decode
+//Read decode
 func Decode(config string) (*GraphiteConfig, error) {
 	mc := new(GraphiteConfig)
 	err := json.Unmarshal([]byte(config), &mc)
@@ -110,7 +114,7 @@ func Decode(config string) (*GraphiteConfig, error) {
 	return mc, nil
 }
 
-//Decode decode
+//Read decode
 func (c *GraphiteModule) Decode(config string) (interface{}, error) {
 	return Decode(config)
 }

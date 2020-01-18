@@ -4,19 +4,36 @@ import (
 	"net/http"
 	"strconv"
 
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
+	"github.com/eolinker/goku-api-gateway/ksitigarbha"
+
 	"github.com/pkg/errors"
 
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/monitor"
 )
 
+const operationMonitorModule = "monitorModuleManagement"
+
+//Handlers handlers
+type Handlers struct {
+}
+
+//Handlers handlers
+func (h *Handlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/get": factory.NewAccountHandleFunction(operationMonitorModule, false, GetMonitorModules),
+		"/set": factory.NewAccountHandleFunction(operationMonitorModule, true, SetMonitorModule),
+	}
+}
+
+//NewHandlers new handlers
+func NewHandlers() *Handlers {
+	return &Handlers{}
+}
+
 //GetMonitorModules 获取监控模块列表
 func GetMonitorModules(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
-	if e != nil {
-		return
-	}
-
 	result, err := monitor.GetMonitorModules()
 	if err != nil {
 		controller.WriteError(httpResponse,
@@ -25,18 +42,14 @@ func GetMonitorModules(httpResponse http.ResponseWriter, httpRequest *http.Reque
 			err.Error(),
 			err)
 		return
-
 	}
 
 	controller.WriteResultInfo(httpResponse, "monitorModule", "moduleList", result)
 	return
 }
 
+//SetMonitorModule 设置监控模块
 func SetMonitorModule(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 	httpRequest.ParseForm()
 	moduleName := httpRequest.Form.Get("moduleName")
 	moduleStatus := httpRequest.Form.Get("moduleStatus")
@@ -62,7 +75,11 @@ func SetMonitorModule(httpResponse http.ResponseWriter, httpRequest *http.Reques
 			err)
 		return
 	}
-
+	if status == 1 {
+		ksitigarbha.Open(moduleName, config)
+	} else {
+		ksitigarbha.Close(moduleName)
+	}
 	controller.WriteResultInfo(httpResponse, "monitorModule", "", nil)
 	return
 }

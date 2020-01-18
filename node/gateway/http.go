@@ -17,7 +17,7 @@ import (
 	fields "github.com/eolinker/goku-api-gateway/server/access-field"
 )
 
-var systemRequestPath = []string{"/oauth2/token", "/oauth2/authorize", "/oauth2/verify"}
+var systemRequestPath = map[string]bool{"/oauth2/token": true, "/oauth2/authorize": true, "/oauth2/verify": true}
 
 //HTTPHandler httpHandler
 type HTTPHandler struct {
@@ -61,12 +61,16 @@ func (h *HTTPHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	ctx.LogFields[fields.HTTPUserAgent] = fmt.Sprint("\"", req.UserAgent(), "\"")
 	ctx.LogFields[fields.HTTPReferer] = req.Referer()
 	ctx.LogFields[fields.RequestTime] = delay
-	ctx.LogFields[fields.Request] = fmt.Sprint("\"", req.Method, " ", req.URL.Path, " ", req.Proto, "\"")
+	ctx.LogFields[fields.Request] = fmt.Sprint("\"", req.Method, " ", req.URL.String(), " ", req.Proto, "\"")
 	ctx.LogFields[fields.BodyBytesSent] = n
 	ctx.LogFields[fields.Host] = req.Host
 	access_log.Log(ctx.LogFields)
 	log.WithFields(ctx.LogFields).Info()
 
+	// /oauth2的path不参与统计
+	if systemRequestPath[req.URL.Path] {
+		return
+	}
 	// 监控计数
 	labels := make(diting.Labels)
 

@@ -7,7 +7,9 @@ import (
 
 //Create 创建RedisManager
 func Create() goku_plugin.RedisManager {
-
+	if redis_manager.GetConnection() == nil {
+		return nil
+	}
 	return &RedisManager{
 		def: &RedisProxy{
 			redisClient: redis_manager.GetConnection(),

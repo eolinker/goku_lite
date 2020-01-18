@@ -2,17 +2,24 @@ package service
 
 import (
 	"fmt"
+	"github.com/eolinker/goku-api-gateway/common/pdao"
+	"github.com/eolinker/goku-api-gateway/server/dao"
 
-	dao_service2 "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3/dao-service"
 	driver2 "github.com/eolinker/goku-api-gateway/server/driver"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
 const _TableName = "goku_service_config"
+var (
+	serviceDao dao.ServiceDao
+)
 
-//Add 新增服务发现
+func init() {
+	pdao.Need(&serviceDao)
+}
+//RegisterDao 新增服务发现
 func Add(param *AddParam) error {
-	err := dao_service2.Add(param.Name, param.Driver, param.Desc, param.Config, param.ClusterConfig, false, param.HealthCheck, param.HealthCheckPath, param.HealthCheckCode, param.HealthCheckPeriod, param.HealthCheckTimeOut)
+	err := serviceDao.Add(param.Name, param.Driver, param.Desc, param.Config, param.ClusterConfig, false, param.HealthCheck, param.HealthCheckPath, param.HealthCheckCode, param.HealthCheckPeriod, param.HealthCheckTimeOut)
 
 	return err
 }
@@ -20,7 +27,7 @@ func Add(param *AddParam) error {
 //Save 保存服务发现
 func Save(param *AddParam) error {
 
-	v, e := dao_service2.Get(param.Name)
+	v, e := serviceDao.Get(param.Name)
 	if e != nil {
 		return e
 	}
@@ -29,14 +36,14 @@ func Save(param *AddParam) error {
 		return fmt.Errorf("not allowed change dirver from %s to %s for service", v.Driver, param.Driver)
 	}
 
-	err := dao_service2.Save(param.Name, param.Desc, param.Config, param.ClusterConfig, param.HealthCheck, param.HealthCheckPath, param.HealthCheckCode, param.HealthCheckPeriod, param.HealthCheckTimeOut)
+	err := serviceDao.Save(param.Name, param.Desc, param.Config, param.ClusterConfig, param.HealthCheck, param.HealthCheckPath, param.HealthCheckCode, param.HealthCheckPeriod, param.HealthCheckTimeOut)
 
 	return err
 }
 
 //Get 通过名称获取服务发现信息
 func Get(name string) (*Info, error) {
-	v, err := dao_service2.Get(name)
+	v, err := serviceDao.Get(name)
 	if err != nil {
 		return nil, err
 	}
@@ -61,12 +68,12 @@ func Delete(names []string) error {
 		}
 	}
 
-	return dao_service2.Delete(names)
+	return serviceDao.Delete(names)
 }
 
 //SetDefaut 设置默认服务发现
 func SetDefaut(name string) error {
-	return dao_service2.SetDefault(name)
+	return serviceDao.SetDefault(name)
 }
 func tran(v *entity.Service) *Service {
 	s := &Service{
@@ -94,7 +101,7 @@ func tran(v *entity.Service) *Service {
 
 //List 获取服务发现列表
 func List(keyword string) ([]*Service, error) {
-	vs, e := dao_service2.List(keyword)
+	vs, e := serviceDao.List(keyword)
 	if e != nil {
 		return nil, e
 	}
@@ -110,7 +117,7 @@ func List(keyword string) ([]*Service, error) {
 
 //SimpleList 获取简易服务发现列表
 func SimpleList() ([]*Simple, string, error) {
-	vs, e := dao_service2.List("")
+	vs, e := serviceDao.List("")
 	if e != nil {
 		return nil, "", e
 	}

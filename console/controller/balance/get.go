@@ -1,18 +1,14 @@
 package balance
 
 import (
-	"net/http"
-
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/balance"
+	"net/http"
 )
 
 //GetBalanceInfo 获取负载信息
 func GetBalanceInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationLoadBalance, controller.OperationREAD)
-	if e != nil {
-		return
-	}
+
 	if err := httpRequest.ParseForm(); err != nil {
 		controller.WriteError(httpResponse, "501", "balance", "[ERROR]参数解析错误t!", err)
 		return

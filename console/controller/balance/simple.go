@@ -1,18 +1,14 @@
 package balance
 
 import (
-	"net/http"
-
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/balance"
+	"net/http"
 )
 
 //GetSimpleList 获取简易列表
 func GetSimpleList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationLoadBalance, controller.OperationREAD)
-	if e != nil {
-		return
-	}
+
 
 	flag, result, err := balance.GetBalancNames()
 

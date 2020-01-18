@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	log "github.com/eolinker/goku-api-gateway/goku-log"
-	config_log "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3/config-log"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/config-log"
 )
 
@@ -27,7 +26,7 @@ func Set(name string, param *Param) error {
 	}
 	c.Fields = param.Fields
 	c.Expire = param.Expire
-	err := config_log.Set(c)
+	err := configLogDao.Set(c)
 	if err != nil {
 		return err
 	}

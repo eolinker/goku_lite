@@ -71,7 +71,7 @@ func Handler() http.Handler {
 	return handler
 }
 
-//Add add
+//Add( add
 func Add(name string, pattern string, h http.Handler) {
 	handler.Add(name, pattern, h)
 }

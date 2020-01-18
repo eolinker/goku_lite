@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/eolinker/goku-api-gateway/goku-node/common"
+	"github.com/eolinker/goku-api-gateway/module/httprouter"
 	"github.com/eolinker/goku-api-gateway/node/router"
-	"github.com/julienschmidt/httprouter"
 )
 
 //HTTPRouter httpRouter
@@ -29,6 +29,7 @@ type Engine struct {
 
 //AddRouter addRouter
 func (r *Engine) AddRouter(method, path string, router router.IRouter) {
+
 	r.router.Handle(method, path,
 		func(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
 			ctx := ContextFromRequest(req)

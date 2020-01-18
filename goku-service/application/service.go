@@ -2,6 +2,7 @@ package application
 
 import (
 	"fmt"
+	goku_plugin "github.com/eolinker/goku-plugin"
 	"net/http"
 	"net/url"
 	"time"
@@ -27,7 +28,7 @@ func NewApplication(service *common.Service, healthCheckHandler health.CheckHand
 }
 
 //Send send
-func (app *Application) Send(proto string, method string, path string, querys url.Values, header http.Header, body []byte, timeout time.Duration, retry int) (*http.Response, string, []string, error) {
+func (app *Application) Send(ctx goku_plugin.ContextAccess,proto string, method string, path string, querys url.Values, header http.Header, body []byte, timeout time.Duration, retry int) (*http.Response, string, []string, error) {
 
 	var response *http.Response
 	var err error
@@ -51,7 +52,7 @@ func (app *Application) Send(proto string, method string, path string, querys ur
 
 		RetryTargetServers = append(RetryTargetServers, FinalTargetServer)
 		u := fmt.Sprintf("%s://%s/%s", proto, FinalTargetServer, path)
-		response, err = request(method, u, querys, header, body, timeout)
+		response, err = request(ctx,method, u, querys, header, body, timeout)
 
 		if err != nil {
 			if app.healthCheckHandler.IsNeedCheck() {

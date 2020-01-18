@@ -6,7 +6,7 @@ import (
 )
 
 type staticeResponse struct {
-	body []byte
+	body     []byte
 	strategy config.StaticResponseStrategy
 }
 
@@ -16,5 +16,5 @@ func newStaticeResponse(body string, strategy config.StaticResponseStrategy) *st
 
 func (sp *staticeResponse) Do(ctx *common.Context) {
 	ctx.SetBody(sp.body)
-	ctx.SetStatus(200,"200")
+	ctx.SetStatus(200, "200")
 }

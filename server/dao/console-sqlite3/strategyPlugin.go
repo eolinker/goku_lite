@@ -7,14 +7,30 @@ import (
 	"strings"
 	"time"
 
-	database2 "github.com/eolinker/goku-api-gateway/common/database"
+	"github.com/eolinker/goku-api-gateway/server/dao"
 )
 
-var strategyPlugins = []string{"goku-oauth2_auth", "goku-rate_limiting", "goku-replay_attack_defender"}
+//StrategyPluginDao StrategyPluginDao
+type StrategyPluginDao struct {
+	db *SQL.DB
+}
+
+//NewStrategyPluginDao new StrategyPluginDao
+func NewStrategyPluginDao() *StrategyPluginDao {
+	return &StrategyPluginDao{}
+}
+
+//Create create
+func (d *StrategyPluginDao) Create(db *SQL.DB) (interface{}, error) {
+	d.db = db
+	var i dao.StrategyPluginDao = d
+
+	return &i, nil
+}
 
 //AddPluginToStrategy 新增策略组插件
-func AddPluginToStrategy(pluginName, config, strategyID string) (bool, interface{}, error) {
-	db := database2.GetConnection()
+func (d *StrategyPluginDao) AddPluginToStrategy(pluginName, config, strategyID string) (bool, interface{}, error) {
+	db := d.db
 	// 查询接口是否添加该插件
 	sql := "SELECT strategyID FROM goku_conn_plugin_strategy WHERE strategyID = ? AND pluginName = ?;"
 	var id string
@@ -47,8 +63,8 @@ func AddPluginToStrategy(pluginName, config, strategyID string) (bool, interface
 }
 
 //EditStrategyPluginConfig 新增策略组插件配置
-func EditStrategyPluginConfig(pluginName, config, strategyID string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *StrategyPluginDao) EditStrategyPluginConfig(pluginName, config, strategyID string) (bool, string, error) {
+	db := d.db
 	// 查询策略组是否添加该插件
 	t := time.Now()
 	now := t.Format("2006-01-02 15:04:05")
@@ -77,8 +93,8 @@ func EditStrategyPluginConfig(pluginName, config, strategyID string) (bool, stri
 }
 
 // GetStrategyPluginList 获取策略插件列表
-func GetStrategyPluginList(strategyID, keyword string, condition int) (bool, []map[string]interface{}, error) {
-	db := database2.GetConnection()
+func (d *StrategyPluginDao) GetStrategyPluginList(strategyID, keyword string, condition int) (bool, []map[string]interface{}, error) {
+	db := d.db
 
 	rule := make([]string, 0, 3)
 
@@ -125,8 +141,8 @@ func GetStrategyPluginList(strategyID, keyword string, condition int) (bool, []m
 }
 
 //GetStrategyPluginConfig 通过策略组ID获取配置信息
-func GetStrategyPluginConfig(strategyID, pluginName string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *StrategyPluginDao) GetStrategyPluginConfig(strategyID, pluginName string) (bool, string, error) {
+	db := d.db
 	sql := "SELECT pluginConfig FROM goku_conn_plugin_strategy WHERE strategyID = ? AND pluginName = ?;"
 	var p string
 	err := db.QueryRow(sql, strategyID, pluginName).Scan(&p)
@@ -141,8 +157,8 @@ func GetStrategyPluginConfig(strategyID, pluginName string) (bool, string, error
 }
 
 //CheckPluginIsExistInStrategy 检查策略组是否绑定插件
-func CheckPluginIsExistInStrategy(strategyID, pluginName string) (bool, error) {
-	db := database2.GetConnection()
+func (d *StrategyPluginDao) CheckPluginIsExistInStrategy(strategyID, pluginName string) (bool, error) {
+	db := d.db
 	sql := "SELECT strategyID FROM goku_conn_plugin_strategy WHERE strategyID = ? AND pluginName = ?;"
 	var id string
 	err := db.QueryRow(sql, strategyID, pluginName).Scan(&id)
@@ -153,8 +169,8 @@ func CheckPluginIsExistInStrategy(strategyID, pluginName string) (bool, error) {
 }
 
 //GetStrategyPluginStatus 检查策略组插件是否开启
-func GetStrategyPluginStatus(strategyID, pluginName string) (bool, error) {
-	db := database2.GetConnection()
+func (d *StrategyPluginDao) GetStrategyPluginStatus(strategyID, pluginName string) (bool, error) {
+	db := d.db
 	sql := "SELECT pluginStatus FROM goku_conn_plugin_strategy WHERE strategyID = ? AND pluginName = ?;"
 	var pluginStatus int
 	err := db.QueryRow(sql, strategyID, pluginName).Scan(&pluginStatus)
@@ -168,8 +184,8 @@ func GetStrategyPluginStatus(strategyID, pluginName string) (bool, error) {
 }
 
 //GetConnIDFromStrategyPlugin 获取Connid
-func GetConnIDFromStrategyPlugin(pluginName, strategyID string) (bool, int, error) {
-	db := database2.GetConnection()
+func (d *StrategyPluginDao) GetConnIDFromStrategyPlugin(pluginName, strategyID string) (bool, int, error) {
+	db := d.db
 	sql := "SELECT connID FROM goku_conn_plugin_strategy WHERE strategyID = ? AND pluginName = ?;"
 	var connID int
 	err := db.QueryRow(sql, strategyID, pluginName).Scan(&connID)
@@ -180,8 +196,8 @@ func GetConnIDFromStrategyPlugin(pluginName, strategyID string) (bool, int, erro
 }
 
 //BatchEditStrategyPluginStatus 批量修改策略组插件状态
-func BatchEditStrategyPluginStatus(connIDList, strategyID string, pluginStatus int) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *StrategyPluginDao) BatchEditStrategyPluginStatus(connIDList, strategyID string, pluginStatus int) (bool, string, error) {
+	db := d.db
 	t := time.Now()
 	now := t.Format("2006-01-02 15:04:05")
 	updateTag := t.Format("20060102150405")
@@ -204,8 +220,8 @@ func BatchEditStrategyPluginStatus(connIDList, strategyID string, pluginStatus i
 }
 
 //BatchDeleteStrategyPlugin 批量删除策略组插件
-func BatchDeleteStrategyPlugin(connIDList, strategyID string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *StrategyPluginDao) BatchDeleteStrategyPlugin(connIDList, strategyID string) (bool, string, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
 	sql := "DELETE FROM goku_conn_plugin_strategy WHERE connID IN (" + connIDList + ");"
@@ -226,8 +242,8 @@ func BatchDeleteStrategyPlugin(connIDList, strategyID string) (bool, string, err
 }
 
 //CheckStrategyPluginIsExistByConnIDList 通过connIDList判断插件是否存在
-func CheckStrategyPluginIsExistByConnIDList(connIDList, pluginName string) (bool, error) {
-	db := database2.GetConnection()
+func (d *StrategyPluginDao) CheckStrategyPluginIsExistByConnIDList(connIDList, pluginName string) (bool, error) {
+	db := d.db
 	sql := "SELECT pluginStatus FROM goku_conn_plugin_strategy WHERE connID IN (" + connIDList + ") AND pluginName = ?;"
 	var pluginStatus int
 	err := db.QueryRow(sql, pluginName).Scan(&pluginStatus)

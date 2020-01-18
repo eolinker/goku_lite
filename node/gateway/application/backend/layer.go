@@ -1,6 +1,7 @@
 package backend
 
 import (
+	"compress/gzip"
 	"context"
 	"io/ioutil"
 	"strings"
@@ -41,7 +42,7 @@ func (b *Layer) Send(deadline context.Context, ctx *common.Context, variables *i
 	body := b.Body.Execution(variables)
 	method := b.Method
 
-	r, finalTargetServer, retryTargetServers, err := b.Balance.Send(b.Protocol, method, path, ctx.ProxyRequest.Querys(), ctx.ProxyRequest.Headers(), []byte(body), b.TimeOut, b.Retry)
+	r, finalTargetServer, retryTargetServers, err := b.Balance.Send(ctx, b.Protocol, method, path, ctx.ProxyRequest.Querys(), ctx.ProxyRequest.Headers(), []byte(body), b.TimeOut, b.Retry)
 
 	if err != nil {
 		return nil, err
@@ -57,7 +58,13 @@ func (b *Layer) Send(deadline context.Context, ctx *common.Context, variables *i
 	}
 
 	defer r.Body.Close()
-	backendResponse.BodyOrg, err = ioutil.ReadAll(r.Body)
+	bd := r.Body
+	if r.Header.Get("Content-Encoding") == "gzip" {
+		bd, _ = gzip.NewReader(r.Body)
+		r.Header.Del("Content-Encoding")
+	}
+
+	backendResponse.BodyOrg, err = ioutil.ReadAll(bd)
 	if err != nil {
 		return backendResponse, nil
 	}
@@ -76,6 +83,7 @@ func (b *Layer) Send(deadline context.Context, ctx *common.Context, variables *i
 	if len(b.Group) > 0 {
 		rp.Group(b.Group)
 	}
+
 	backendResponse.Body = rp.Data
 	return backendResponse, nil
 }
@@ -95,7 +103,7 @@ func NewLayer(step *config.APIStepConfig) *Layer {
 		Target:      step.Target,
 		Group:       nil,
 		TimeOut:     time.Duration(step.TimeOut) * time.Millisecond,
-		Body:        interpreter.Gen(step.Body),
+		Body:        interpreter.Gen(step.Body, step.Encode),
 		Retry:       step.Retry,
 	}
 	if step.Group != "" {

@@ -3,12 +3,12 @@ package dao_version_config
 import (
 	"encoding/json"
 
-	"github.com/eolinker/goku-api-gateway/common/database"
 	"github.com/eolinker/goku-api-gateway/config"
 )
 
-func GetLogInfo() (*config.LogConfig, *config.AccessLogConfig, error) {
-	db := database.GetConnection()
+//GetLogInfo 获取日志信息
+func (d *VersionConfigDao)GetLogInfo() (*config.LogConfig, *config.AccessLogConfig, error) {
+	db := d.db
 	sql := "SELECT `name`,`enable`,`dir`,`file`,`period`,IFNULL(`level`,''),IFNULL(`fields`,''),`expire` FROM goku_config_log;"
 	rows, err := db.Query(sql)
 	if err != nil {

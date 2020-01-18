@@ -47,7 +47,6 @@ func Open(name string) {
 	m.locker.Lock()
 	m.modules[name] = true
 	m.locker.Unlock()
-
 }
 
 //Refresh refresh
@@ -59,5 +58,5 @@ func Refresh(States []State) {
 		m.modules[s.name] = s.isOpen
 	}
 	m.locker.Unlock()
-
 }
+

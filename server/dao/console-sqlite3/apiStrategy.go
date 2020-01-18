@@ -1,17 +1,35 @@
 package console_sqlite3
 
 import (
+	"database/sql"
 	"fmt"
 	"strconv"
 	"strings"
 	"time"
 
-	database2 "github.com/eolinker/goku-api-gateway/common/database"
+	"github.com/eolinker/goku-api-gateway/server/dao"
 )
 
+//APIStrategyDao APIStrategyDao
+type APIStrategyDao struct {
+	db *sql.DB
+}
+
+//NewAPIStrategyDao new APIStrategyDao
+func NewAPIStrategyDao() *APIStrategyDao {
+	return &APIStrategyDao{}
+}
+
+//Create create
+func (d *APIStrategyDao) Create(db *sql.DB) (interface{}, error) {
+	d.db = db
+	var i dao.APIStrategyDao = d
+	return &i, nil
+}
+
 //AddAPIToStrategy 将接口加入策略组
-func AddAPIToStrategy(apiList []string, strategyID string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *APIStrategyDao) AddAPIToStrategy(apiList []string, strategyID string) (bool, string, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	sql2 := "SELECT apiID FROM goku_conn_strategy_api WHERE apiID = ? AND strategyID = ?"
 	sql1 := "SELECT apiID FROM goku_gateway_api WHERE apiID = ?"
@@ -60,8 +78,8 @@ func AddAPIToStrategy(apiList []string, strategyID string) (bool, string, error)
 }
 
 // SetAPITargetOfStrategy 重定向接口负载
-func SetAPITargetOfStrategy(apiID int, strategyID string, target string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *APIStrategyDao) SetAPITargetOfStrategy(apiID int, strategyID string, target string) (bool, string, error) {
+	db := d.db
 	sql := "UPDATE goku_conn_strategy_api SET `target` = ? where apiID = ? AND strategyID = ? "
 	stmt, err := db.Prepare(sql)
 	if err != nil {
@@ -78,7 +96,7 @@ func SetAPITargetOfStrategy(apiID int, strategyID string, target string) (bool, 
 }
 
 // BatchSetAPITargetOfStrategy 批量重定向接口负载
-func BatchSetAPITargetOfStrategy(apiIds []int, strategyID string, target string) (bool, string, error) {
+func (d *APIStrategyDao) BatchSetAPITargetOfStrategy(apiIds []int, strategyID string, target string) (bool, string, error) {
 	idLen := len(apiIds)
 	s := make([]interface{}, 0, idLen+2)
 	c := ""
@@ -90,7 +108,7 @@ func BatchSetAPITargetOfStrategy(apiIds []int, strategyID string, target string)
 		}
 		s = append(s, id)
 	}
-	db := database2.GetConnection()
+	db := d.db
 	sql := fmt.Sprintf("UPDATE goku_conn_strategy_api SET `target` = ? where strategyID = ? AND apiID IN (%s) ", c)
 	stmt, err := db.Prepare(sql)
 	if err != nil {
@@ -106,7 +124,7 @@ func BatchSetAPITargetOfStrategy(apiIds []int, strategyID string, target string)
 	return true, "", nil
 }
 
-func getAPIOfStrategyRule(condition int, balanceNames []string, ids []int) []string {
+func (d *APIStrategyDao) getAPIOfStrategyRule(condition int, balanceNames []string, ids []int) []string {
 	rule := make([]string, 0, 2)
 	switch condition {
 	case 1, 2:
@@ -149,7 +167,7 @@ func getAPIOfStrategyRule(condition int, balanceNames []string, ids []int) []str
 }
 
 // GetAPIIDListFromStrategy 获取策略组接口列表
-func GetAPIIDListFromStrategy(strategyID, keyword string, condition int, ids []int, balanceNames []string) (bool, []int, error) {
+func (d *APIStrategyDao) GetAPIIDListFromStrategy(strategyID, keyword string, condition int, ids []int, balanceNames []string) (bool, []int, error) {
 	rule := make([]string, 0, 10)
 
 	rule = append(rule, fmt.Sprintf("S.strategyID = '%s'", strategyID))
@@ -159,14 +177,14 @@ func GetAPIIDListFromStrategy(strategyID, keyword string, condition int, ids []i
 		rule = append(rule, searchRule)
 	}
 	if condition > 0 {
-		rule = append(rule, getAPIOfStrategyRule(condition, balanceNames, ids)...)
+		rule = append(rule, d.getAPIOfStrategyRule(condition, balanceNames, ids)...)
 	}
 	ruleStr := ""
 	if len(rule) > 0 {
 		ruleStr += "WHERE " + strings.Join(rule, " AND ")
 	}
 	sql := fmt.Sprintf("SELECT A.`apiID` FROM `goku_gateway_api` A INNER JOIN `goku_conn_strategy_api` S ON S.`apiID` = A.`apiID` %s", ruleStr)
-	rows, err := database2.GetConnection().Query(sql)
+	rows, err := d.db.Query(sql)
 	if err != nil {
 		return false, make([]int, 0), err
 	}
@@ -186,7 +204,7 @@ func GetAPIIDListFromStrategy(strategyID, keyword string, condition int, ids []i
 }
 
 // GetAPIListFromStrategy 获取策略组接口列表
-func GetAPIListFromStrategy(strategyID, keyword string, condition, page, pageSize int, ids []int, balanceNames []string) (bool, []map[string]interface{}, int, error) {
+func (d *APIStrategyDao) GetAPIListFromStrategy(strategyID, keyword string, condition, page, pageSize int, ids []int, balanceNames []string) (bool, []map[string]interface{}, int, error) {
 	rule := make([]string, 0, 2)
 
 	rule = append(rule, fmt.Sprintf("S.strategyID = '%s'", strategyID))
@@ -196,7 +214,7 @@ func GetAPIListFromStrategy(strategyID, keyword string, condition, page, pageSiz
 		rule = append(rule, searchRule)
 	}
 	if condition > 0 {
-		rule = append(rule, getAPIOfStrategyRule(condition, balanceNames, ids)...)
+		rule = append(rule, d.getAPIOfStrategyRule(condition, balanceNames, ids)...)
 	}
 	ruleStr := ""
 	if len(rule) > 0 {
@@ -204,8 +222,8 @@ func GetAPIListFromStrategy(strategyID, keyword string, condition, page, pageSiz
 	}
 
 	sql := fmt.Sprintf("SELECT A.`apiID`, A.`apiName`, A.`requestURL`,A.`requestMethod`,CASE WHEN A.`apiType`=0 THEN A.`targetURL` ELSE '' END,A.apiType,IFNULL(A.`targetMethod`,''), A.`isFollow`, IFNULL(A.`updateTime`,'') AS updateTime, A.`lastUpdateUserID`, A.`managerID`, IFNULL(A.`balanceName`,'') As `target`, IFNULL(S.`target`,'') as `rewriteTarget`,  CASE WHEN AD.`remark` is null or AD.`remark` = '' THEN AD.`loginCall` ELSE AD.`remark` END AS managerName, CASE WHEN AD2.`remark` is null or AD2.`remark` = '' THEN AD2.`loginCall` ELSE AD2.`remark` END AS updaterName  FROM `goku_gateway_api` A INNER JOIN `goku_conn_strategy_api` S ON S.`apiID` = A.`apiID` LEFT JOIN `goku_admin` AD ON A.`managerID` = AD.`userID` LEFT JOIN `goku_admin` AD2 ON A.`lastUpdateUserID` = AD2.`userID` %s", ruleStr)
-	count := getCountSQL(sql)
-	rows, err := getPageSQL(sql, "S.`connID`", "DESC", page, pageSize)
+	count := getCountSQL(d.db, sql)
+	rows, err := getPageSQL(d.db, sql, "S.`connID`", "DESC", page, pageSize)
 	if err != nil {
 		return false, make([]map[string]interface{}, 0), 0, err
 	}
@@ -242,8 +260,8 @@ func GetAPIListFromStrategy(strategyID, keyword string, condition, page, pageSiz
 }
 
 // CheckIsExistAPIInStrategy 检查插件是否添加进策略组
-func CheckIsExistAPIInStrategy(apiID int, strategyID string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *APIStrategyDao) CheckIsExistAPIInStrategy(apiID int, strategyID string) (bool, string, error) {
+	db := d.db
 	var id int
 	sql := "SELECT connID FROM goku_conn_strategy_api WHERE apiID = ? AND strategyID = ?"
 	err := db.QueryRow(sql, apiID, strategyID).Scan(&id)
@@ -254,8 +272,8 @@ func CheckIsExistAPIInStrategy(apiID int, strategyID string) (bool, string, erro
 }
 
 // 获取策略绑定的简易接口列表
-func getSimpleAPIListInStrategy(strategyID string, projectID int) map[string]string {
-	db := database2.GetConnection()
+func (d *APIStrategyDao) getSimpleAPIListInStrategy(strategyID string, projectID int) map[string]string {
+	db := d.db
 	sql := "SELECT goku_gateway_api.requestURL,GROUP_CONCAT(DISTINCT goku_gateway_api.requestMethod) AS requestMethod FROM goku_gateway_api INNER JOIN goku_conn_strategy_api ON goku_gateway_api.apiID = goku_conn_strategy_api.apiID where goku_conn_strategy_api.strategyID = ? AND goku_gateway_api.projectID = ? GROUP BY requestURL"
 	rows, err := db.Query(sql, strategyID, projectID)
 	if err != nil {
@@ -275,8 +293,8 @@ func getSimpleAPIListInStrategy(strategyID string, projectID int) map[string]str
 }
 
 // GetAPIIDListNotInStrategy 获取未被该策略组绑定的接口ID列表(通过项目)
-func GetAPIIDListNotInStrategy(strategyID string, projectID, groupID int, keyword string) (bool, []int, error) {
-	requestMap := getSimpleAPIListInStrategy(strategyID, projectID)
+func (d *APIStrategyDao) GetAPIIDListNotInStrategy(strategyID string, projectID, groupID int, keyword string) (bool, []int, error) {
+	requestMap := d.getSimpleAPIListInStrategy(strategyID, projectID)
 	rule := make([]string, 0, 3)
 
 	rule = append(rule, fmt.Sprintf("A.projectID = %d", projectID))
@@ -286,7 +304,7 @@ func GetAPIIDListNotInStrategy(strategyID string, projectID, groupID int, keywor
 		searchRule += " OR IFNULL(A.balanceName,'') LIKE '%" + keyword + "%' OR A.targetURL LIKE '%" + keyword + "%')"
 		rule = append(rule, searchRule)
 	}
-	groupRule, err := getAPIGroupRule(projectID, groupID)
+	groupRule, err := d.getAPIGroupRule(projectID, groupID)
 	if err != nil {
 		return false, make([]int, 0), err
 	}
@@ -299,7 +317,7 @@ func GetAPIIDListNotInStrategy(strategyID string, projectID, groupID int, keywor
 	}
 
 	sql := fmt.Sprintf("SELECT A.apiID,A.requestURL,A.requestMethod FROM goku_gateway_api A %s", ruleStr)
-	rows, err := database2.GetConnection().Query(sql)
+	rows, err := d.db.Query(sql)
 	if err != nil {
 		return false, make([]int, 0), err
 	}
@@ -323,8 +341,8 @@ func GetAPIIDListNotInStrategy(strategyID string, projectID, groupID int, keywor
 	return true, apiIDList, nil
 }
 
-func getAPIGroupRule(projectID, groupID int) (string, error) {
-	db := database2.GetConnection()
+func (d *APIStrategyDao) getAPIGroupRule(projectID, groupID int) (string, error) {
+	db := d.db
 	if groupID < 1 {
 		if groupID == 0 {
 			groupRule := fmt.Sprintf("A.groupID = %d", groupID)
@@ -349,8 +367,8 @@ func getAPIGroupRule(projectID, groupID int) (string, error) {
 }
 
 // GetAPIListNotInStrategy 获取未被该策略组绑定的接口列表(通过项目)
-func GetAPIListNotInStrategy(strategyID string, projectID, groupID, page, pageSize int, keyword string) (bool, []map[string]interface{}, int, error) {
-	requestMap := getSimpleAPIListInStrategy(strategyID, projectID)
+func (d *APIStrategyDao) GetAPIListNotInStrategy(strategyID string, projectID, groupID, page, pageSize int, keyword string) (bool, []map[string]interface{}, int, error) {
+	requestMap := d.getSimpleAPIListInStrategy(strategyID, projectID)
 	rule := make([]string, 0, 3)
 
 	rule = append(rule, fmt.Sprintf("A.projectID = %d", projectID))
@@ -361,7 +379,7 @@ func GetAPIListNotInStrategy(strategyID string, projectID, groupID, page, pageSi
 		rule = append(rule, searchRule)
 	}
 
-	groupRule, err := getAPIGroupRule(projectID, groupID)
+	groupRule, err := d.getAPIGroupRule(projectID, groupID)
 	if err != nil {
 		return false, make([]map[string]interface{}, 0), 0, err
 	}
@@ -374,8 +392,8 @@ func GetAPIListNotInStrategy(strategyID string, projectID, groupID, page, pageSi
 		ruleStr += "WHERE " + strings.Join(rule, " AND ")
 	}
 	sql := fmt.Sprintf("SELECT A.apiID,A.apiName,A.requestURL,A.requestMethod,IFNULL(A.balanceName,''),CASE WHEN A.apiType=0 THEN A.targetURL ELSE '' END,A.apiType,IFNULL(A.`targetMethod`,''), A.`isFollow`,A.groupID,IFNULL(G.groupPath,A.groupID) FROM goku_gateway_api A LEFT JOIN goku_gateway_api_group G ON G.groupID = A.groupID  %s", ruleStr)
-	count := getCountSQL(sql)
-	rows, err := getPageSQL(sql, "A.`updateTime`", "DESC", page, pageSize)
+	count := getCountSQL(d.db, sql)
+	rows, err := getPageSQL(d.db, sql, "A.`updateTime`", "DESC", page, pageSize)
 	if err != nil {
 		return false, make([]map[string]interface{}, 0), 0, err
 	}
@@ -415,8 +433,8 @@ func GetAPIListNotInStrategy(strategyID string, projectID, groupID, page, pageSi
 }
 
 //BatchDeleteAPIInStrategy 批量删除策略组接口
-func BatchDeleteAPIInStrategy(apiIDList, strategyID string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *APIStrategyDao) BatchDeleteAPIInStrategy(apiIDList, strategyID string) (bool, string, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
 	sql := "DELETE FROM goku_conn_strategy_api WHERE strategyID = ? AND apiID IN (" + apiIDList + ")"

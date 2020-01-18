@@ -4,13 +4,12 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/eolinker/goku-api-gateway/common/database"
 	"github.com/eolinker/goku-api-gateway/config"
 )
 
 //GetAPIContent 获取接口信息
-func GetAPIContent() ([]*config.APIContent, error) {
-	db := database.GetConnection()
+func (d *VersionConfigDao)GetAPIContent() ([]*config.APIContent, error) {
+	db := d.db
 	sql := "SELECT apiID,apiName,IFNULL(protocol,'http'),IFNULL(balanceName,''),IFNULL(targetURL,''),CASE WHEN isFollow = 'true' THEN 'FOLLOW' ELSE targetMethod END targetMethod,responseDataType,requestURL,requestMethod,timeout,alertValve,retryCount,IFNULL(linkApis,''),IFNULL(staticResponse,'') FROM goku_gateway_api"
 	rows, err := db.Query(sql)
 	if err != nil {

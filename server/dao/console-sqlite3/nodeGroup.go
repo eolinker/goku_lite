@@ -1,12 +1,31 @@
 package console_sqlite3
 
 import (
-	database2 "github.com/eolinker/goku-api-gateway/common/database"
+	SQL "database/sql"
+
+	"github.com/eolinker/goku-api-gateway/server/dao"
 )
 
+//NodeGroupDao NodeGroupDao
+type NodeGroupDao struct {
+	db *SQL.DB
+}
+
+//NewNodeGroupDao new NodeGroupDao
+func NewNodeGroupDao() *NodeGroupDao {
+	return &NodeGroupDao{}
+}
+
+//Create create
+func (d *NodeGroupDao) Create(db *SQL.DB) (interface{}, error) {
+	d.db = db
+	var i dao.NodeGroupDao = d
+	return &i, nil
+}
+
 //AddNodeGroup 新建节点分组
-func AddNodeGroup(groupName string, clusterID int) (bool, interface{}, error) {
-	db := database2.GetConnection()
+func (d *NodeGroupDao) AddNodeGroup(groupName string, clusterID int) (bool, interface{}, error) {
+	db := d.db
 	sql := "INSERT INTO goku_node_group (`groupName`,`clusterID`) VALUES (?,?);"
 	stmt, err := db.Prepare(sql)
 	if err != nil {
@@ -22,8 +41,8 @@ func AddNodeGroup(groupName string, clusterID int) (bool, interface{}, error) {
 }
 
 //EditNodeGroup 修改节点分组信息
-func EditNodeGroup(groupName string, groupID int) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *NodeGroupDao) EditNodeGroup(groupName string, groupID int) (bool, string, error) {
+	db := d.db
 	sql := "UPDATE goku_node_group SET groupName = ? WHERE groupID = ?;"
 	stmt, err := db.Prepare(sql)
 	if err != nil {
@@ -38,8 +57,8 @@ func EditNodeGroup(groupName string, groupID int) (bool, string, error) {
 }
 
 //DeleteNodeGroup 删除节点分组
-func DeleteNodeGroup(groupID int) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *NodeGroupDao) DeleteNodeGroup(groupID int) (bool, string, error) {
+	db := d.db
 	Tx, _ := db.Begin()
 	sql := "DELETE FROM goku_node_group WHERE groupID = ?;"
 	_, err := Tx.Exec(sql, groupID)
@@ -58,8 +77,8 @@ func DeleteNodeGroup(groupID int) (bool, string, error) {
 }
 
 //GetNodeGroupInfo 获取节点分组信息
-func GetNodeGroupInfo(groupID int) (bool, map[string]interface{}, error) {
-	db := database2.GetConnection()
+func (d *NodeGroupDao) GetNodeGroupInfo(groupID int) (bool, map[string]interface{}, error) {
+	db := d.db
 
 	sql := "SELECT G.`groupName`,C.`name` FROM goku_node_group G left join `goku_cluster` C ON C.`id` = G.`clusterID` WHERE G.`groupID` = ?;"
 	var groupName string
@@ -77,8 +96,8 @@ func GetNodeGroupInfo(groupID int) (bool, map[string]interface{}, error) {
 }
 
 //GetNodeGroupList 获取节点分组列表
-func GetNodeGroupList(clusterID int) (bool, []map[string]interface{}, error) {
-	db := database2.GetConnection()
+func (d *NodeGroupDao) GetNodeGroupList(clusterID int) (bool, []map[string]interface{}, error) {
+	db := d.db
 	sql := "SELECT G.`groupID`, G.groupName,C.`name` as cluster  FROM goku_node_group G left join `goku_cluster` C ON C.`id` = G.`clusterID` where G.`clusterID`=?;"
 	rows, err := db.Query(sql, clusterID)
 	if err != nil {
@@ -108,8 +127,8 @@ func GetNodeGroupList(clusterID int) (bool, []map[string]interface{}, error) {
 }
 
 //CheckNodeGroupIsExist 检查节点分组是否存在
-func CheckNodeGroupIsExist(groupID int) (bool, error) {
-	db := database2.GetConnection()
+func (d *NodeGroupDao) CheckNodeGroupIsExist(groupID int) (bool, error) {
+	db := d.db
 	var id int
 	sql := "SELECT groupID FROM goku_node_group WHERE groupID = ?;"
 	err := db.QueryRow(sql, groupID).Scan(&id)
@@ -120,8 +139,8 @@ func CheckNodeGroupIsExist(groupID int) (bool, error) {
 }
 
 //GetRunningNodeCount 获取分组内启动节点数量
-func GetRunningNodeCount(groupID int) (bool, interface{}, error) {
-	db := database2.GetConnection()
+func (d *NodeGroupDao) GetRunningNodeCount(groupID int) (bool, interface{}, error) {
+	db := d.db
 	var count int
 	sql := "SELECT COUNT(0) FROM goku_node_info WHERE groupID = ? AND nodeStatus = 1"
 	err := db.QueryRow(sql, groupID).Scan(&count)

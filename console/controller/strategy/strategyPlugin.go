@@ -4,18 +4,43 @@ import (
 	"net/http"
 	"strconv"
 
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
+
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/plugin"
 	plugin_config "github.com/eolinker/goku-api-gateway/console/module/plugin/plugin-config"
 	"github.com/eolinker/goku-api-gateway/console/module/strategy"
 )
 
+const operationStrategyPlugin = "strategyManagement"
+
+//PluginHandlers 策略插件处理器
+type PluginHandlers struct {
+}
+
+//Handlers handlers
+func (h *PluginHandlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/addPluginToStrategy": factory.NewAccountHandleFunction(operationAPIStrategy, true, AddPluginToStrategy),
+		"/edit":                factory.NewAccountHandleFunction(operationAPIStrategy, true, EditStrategyPluginConfig),
+		"/getInfo":             factory.NewAccountHandleFunction(operationAPIStrategy, false, GetStrategyPluginConfig),
+		"/getList":             factory.NewAccountHandleFunction(operationAPIStrategy, false, GetStrategyPluginList),
+		"/checkPluginIsExist":  factory.NewAccountHandleFunction(operationAPIStrategy, false, CheckPluginIsExistInStrategy),
+		"/getStatus":           factory.NewAccountHandleFunction(operationAPIStrategy, false, GetStrategyPluginStatus),
+		"/batchStart":          factory.NewAccountHandleFunction(operationAPIStrategy, false, BatchStartStrategyPlugin),
+		"/batchStop":           factory.NewAccountHandleFunction(operationAPIStrategy, true, BatchStopStrategyPlugin),
+		"/batchDelete":         factory.NewAccountHandleFunction(operationAPIStrategy, true, BatchDeleteStrategyPlugin),
+	}
+
+}
+
+//NewPluginHandlers new pluginHandlers
+func NewPluginHandlers() *PluginHandlers {
+	return &PluginHandlers{}
+}
+
 //AddPluginToStrategy 新增插件到接口
 func AddPluginToStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	pluginName := httpRequest.PostFormValue("pluginName")
 	pluginConfig := httpRequest.PostFormValue("pluginConfig")
@@ -69,10 +94,6 @@ func AddPluginToStrategy(httpResponse http.ResponseWriter, httpRequest *http.Req
 
 //EditStrategyPluginConfig 修改插件信息
 func EditStrategyPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	pluginName := httpRequest.PostFormValue("pluginName")
 	pluginConfig := httpRequest.PostFormValue("pluginConfig")
@@ -111,10 +132,7 @@ func EditStrategyPluginConfig(httpResponse http.ResponseWriter, httpRequest *htt
 
 //GetStrategyPluginList 获取策略组插件列表
 func GetStrategyPluginList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
-	if e != nil {
-		return
-	}
+
 	httpRequest.ParseForm()
 	strategyID := httpRequest.Form.Get("strategyID")
 	keyword := httpRequest.Form.Get("keyword")
@@ -141,10 +159,6 @@ func GetStrategyPluginList(httpResponse http.ResponseWriter, httpRequest *http.R
 
 //GetStrategyPluginConfig 获取策略组插件信息
 func GetStrategyPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	pluginName := httpRequest.PostFormValue("pluginName")
@@ -156,10 +170,6 @@ func GetStrategyPluginConfig(httpResponse http.ResponseWriter, httpRequest *http
 
 //CheckPluginIsExistInStrategy 检查策略组是否绑定插件
 func CheckPluginIsExistInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	pluginName := httpRequest.PostFormValue("pluginName")
@@ -190,10 +200,6 @@ func CheckPluginIsExistInStrategy(httpResponse http.ResponseWriter, httpRequest 
 
 //GetStrategyPluginStatus 检查策略组插件是否开启
 func GetStrategyPluginStatus(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	pluginName := httpRequest.PostFormValue("pluginName")
@@ -226,10 +232,6 @@ func GetStrategyPluginStatus(httpResponse http.ResponseWriter, httpRequest *http
 
 //BatchStartStrategyPlugin 批量开启策略组插件
 func BatchStartStrategyPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	connIDList := httpRequest.PostFormValue("connIDList")
@@ -256,10 +258,6 @@ func BatchStartStrategyPlugin(httpResponse http.ResponseWriter, httpRequest *htt
 
 //BatchStopStrategyPlugin 批量修改策略组插件状态
 func BatchStopStrategyPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	connIDList := httpRequest.PostFormValue("connIDList")
@@ -285,10 +283,6 @@ func BatchStopStrategyPlugin(httpResponse http.ResponseWriter, httpRequest *http
 
 //BatchDeleteStrategyPlugin 批量删除策略组插件
 func BatchDeleteStrategyPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	connIDList := httpRequest.PostFormValue("connIDList")

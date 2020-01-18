@@ -54,15 +54,15 @@ type HistogramOpts struct {
 
 	LabelNames []string
 	// Namespace, Subsystem, and Name are components of the fully-qualified
-	// name of the Histogram (created by joining these components with
+	// name of the HistogramObserve (created by joining these components with
 	// "_"). Only Name is mandatory, the others merely help structuring the
-	// name. Note that the fully-qualified name of the Histogram must be a
+	// name. Note that the fully-qualified name of the HistogramObserve must be a
 	// valid Prometheus metric name.
 	Namespace string
 	Subsystem string
 	Name      string
 
-	// Help provides information about this Histogram.
+	// Help provides information about this HistogramObserve.
 	//
 	// Metrics with the same fully-qualified name must have the same Help
 	// string.

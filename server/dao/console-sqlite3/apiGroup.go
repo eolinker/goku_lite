@@ -5,12 +5,38 @@ import (
 	"strconv"
 	"time"
 
-	database2 "github.com/eolinker/goku-api-gateway/common/database"
+	"github.com/eolinker/goku-api-gateway/common/pdao"
+	"github.com/eolinker/goku-api-gateway/server/dao"
 )
 
+var (
+	apiDao dao.APIDao
+)
+
+func init() {
+	pdao.Need(&apiDao)
+}
+
+//APIGroupDao APIGroupDao
+type APIGroupDao struct {
+	db *SQL.DB
+}
+
+//NewAPIGroupDao new APIGroupDao
+func NewAPIGroupDao() *APIGroupDao {
+	return &APIGroupDao{}
+}
+
+//Create create
+func (d *APIGroupDao) Create(db *SQL.DB) (interface{}, error) {
+	d.db = db
+	var i dao.APIGroupDao = d
+	return &i, nil
+}
+
 //AddAPIGroup 新建接口分组
-func AddAPIGroup(groupName string, projectID, parentGroupID int) (bool, interface{}, error) {
-	db := database2.GetConnection()
+func (d *APIGroupDao) AddAPIGroup(groupName string, projectID, parentGroupID int) (bool, interface{}, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
 	groupPath := ""
@@ -69,8 +95,8 @@ func AddAPIGroup(groupName string, projectID, parentGroupID int) (bool, interfac
 }
 
 //EditAPIGroup 修改接口分组
-func EditAPIGroup(groupName string, groupID, projectID int) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *APIGroupDao) EditAPIGroup(groupName string, groupID, projectID int) (bool, string, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
 	sql := "UPDATE goku_gateway_api_group SET groupName = ? WHERE groupID = ? AND projectID = ?;"
@@ -90,8 +116,8 @@ func EditAPIGroup(groupName string, groupID, projectID int) (bool, string, error
 }
 
 //DeleteAPIGroup 删除接口分组
-func DeleteAPIGroup(projectID, groupID int) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *APIGroupDao) DeleteAPIGroup(projectID, groupID int) (bool, string, error) {
+	db := d.db
 	Tx, _ := db.Begin()
 	var groupPath string
 	// 获取分组信息
@@ -114,7 +140,7 @@ func DeleteAPIGroup(projectID, groupID int) (bool, string, error) {
 		Tx.Rollback()
 		return false, "[ERROR]Fail to delete data!", err
 	}
-	flag, apiList, _ := GetAPIListByGroupList(projectID, concatGroupID)
+	flag, apiList, _ := apiDao.GetAPIListByGroupList(projectID, concatGroupID)
 	if flag {
 		listLen := len(apiList)
 		if listLen > 0 {
@@ -167,8 +193,8 @@ func DeleteAPIGroup(projectID, groupID int) (bool, string, error) {
 }
 
 //GetAPIGroupList 获取接口分组列表
-func GetAPIGroupList(projectID int) (bool, []map[string]interface{}, error) {
-	db := database2.GetConnection()
+func (d *APIGroupDao) GetAPIGroupList(projectID int) (bool, []map[string]interface{}, error) {
+	db := d.db
 	sql := "SELECT groupID,groupName,parentGroupID,groupDepth FROM goku_gateway_api_group WHERE projectID = ?;"
 	rows, err := db.Query(sql, projectID)
 	if err != nil {

@@ -2,8 +2,6 @@ package dao_service
 
 import (
 	"fmt"
-
-	"github.com/eolinker/goku-api-gateway/common/database"
 )
 
 const sqlDelete = "DELETE FROM  `goku_service_config` WHERE  `name` = ? AND NOT EXISTS (SELECT * FROM `goku_balance` B WHERE B.`serviceName` =  `goku_service_config`.`name` ) "
@@ -16,16 +14,15 @@ func (e DeleteError) Error() string {
 }
 
 //Delete 删除服务发现
-func Delete(names []string) error {
+func (d *ServiceDao) Delete(names []string) error {
 
-	tx, err := database.GetConnection().Begin()
+	tx, err := d.db.Begin()
 	if err != nil {
 		return err
 	}
 
 	stmt, e := tx.Prepare(sqlDelete)
 	if e != nil {
-
 		return e
 	}
 

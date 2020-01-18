@@ -4,39 +4,38 @@ import (
 	"fmt"
 	"net/http"
 
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
+
 	"github.com/eolinker/goku-api-gateway/common/auto-form"
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	module "github.com/eolinker/goku-api-gateway/console/module/config-log"
 )
 
-//AccessLogHandler access日志处理器
-type AccessLogHandler struct {
+//LogHandler access日志处理器
+type LogHandler struct {
+	getHandler http.Handler
+	setHandler http.Handler
 }
 
-func (h *AccessLogHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	_, err := controller.CheckLogin(w, r, controller.OperationGatewayConfig, controller.OperationEDIT)
-	if err != nil {
-		return
-	}
+func (h *LogHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
 		{
-			h.get(w, r)
-
+			h.getHandler.ServeHTTP(w, r)
 		}
 
 	case http.MethodPut:
 		{
-			h.set(w, r)
-
+			h.setHandler.ServeHTTP(w, r)
 		}
 	default:
 		w.WriteHeader(404)
 	}
 }
 
-func (h *AccessLogHandler) get(w http.ResponseWriter, r *http.Request) {
+//AccessLogGet 获取access日志配置
+func AccessLogGet(w http.ResponseWriter, r *http.Request) {
 	config, e := module.GetAccess()
 	if e = r.ParseForm(); e != nil {
 		controller.WriteError(w, "270000", "data", "[Get]未知错误："+e.Error(), e)
@@ -49,7 +48,9 @@ func (h *AccessLogHandler) get(w http.ResponseWriter, r *http.Request) {
 		config)
 
 }
-func (h *AccessLogHandler) set(w http.ResponseWriter, r *http.Request) {
+
+//AccessLogSet 设置access日志内容
+func AccessLogSet(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err = r.ParseForm(); err != nil {
 		controller.WriteError(w, "260000", "data", "[param_check] Parse form body error | 解析form表单参数错误", err)
@@ -82,11 +83,19 @@ func (h *AccessLogHandler) set(w http.ResponseWriter, r *http.Request) {
 
 	err = module.Set(module.AccessLog, paramBase)
 	if err != nil {
-		controller.WriteError(w, "260000", "data", fmt.Sprintf("[mysql_error] %s", err.Error()), err)
+		controller.WriteError(w, "260000", "data", fmt.Sprintf("[db_error] %s", err.Error()), err)
 		return
 	}
 	controller.WriteResultInfo(w,
 		"data",
 		"",
 		nil)
+}
+
+//NewAccessHandler accessHandler
+func NewAccessHandler(factory *goku_handler.AccountHandlerFactory) http.Handler {
+	return &LogHandler{
+		getHandler: factory.NewAccountHandleFunction(operationLog, false, AccessLogGet),
+		setHandler: factory.NewAccountHandleFunction(operationLog, true, AccessLogSet),
+	}
 }
