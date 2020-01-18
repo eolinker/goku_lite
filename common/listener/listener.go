@@ -5,7 +5,7 @@ import "sync"
 //CallbackFunc 回调函数
 type CallbackFunc func(event interface{})
 
-//Listener
+//Listener 监听者
 type Listener struct {
 	callbacks     []CallbackFunc
 	callbacksOnce []CallbackFunc
