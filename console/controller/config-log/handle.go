@@ -1,32 +1,27 @@
 package config_log
 
 import (
-	"fmt"
 	"net/http"
-	"strings"
 
-	module "github.com/eolinker/goku-api-gateway/console/module/config-log"
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
 )
 
-//Handle handle
-func Handle(prefix string) http.Handler {
+const operationLog = "logManagement"
 
-	pre := strings.TrimSuffix(prefix, "/")
-	serveMux := http.NewServeMux()
-	consoleLogHandler := &LogHandler{
-		name: module.ConsoleLog,
+//Handlers handlers
+type Handlers struct {
+}
+
+//Handlers handlers
+func (h *Handlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/console": NewLogHandler("console", factory),
+		"/node":    NewLogHandler("node", factory),
+		"/access":  NewAccessHandler(factory),
 	}
+}
 
-	serveMux.Handle(fmt.Sprintf("%s/%s", pre, "console"), consoleLogHandler)
-	nodeLogHandler := &LogHandler{
-		name: module.NodeLog,
-	}
-	serveMux.Handle(fmt.Sprintf("%s/%s", pre, "node"), nodeLogHandler)
-
-	accessLogHandler := &AccessLogHandler{}
-
-	serveMux.Handle(fmt.Sprintf("%s/%s", pre, "access"), accessLogHandler)
-
-	return serveMux
-
+//NewHandlers new handlers
+func NewHandlers() *Handlers {
+	return &Handlers{}
 }

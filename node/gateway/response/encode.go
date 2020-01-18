@@ -8,47 +8,50 @@ import (
 )
 
 var (
-
-	jsonEncoder   =& EncoderH{
-		contentType:"application/json",
-		handleFunc:func(v interface{},org []byte)([]byte,error){
+	jsonEncoder = &EncoderH{
+		contentType: "application/json",
+		handleFunc: func(v interface{}, org []byte) ([]byte, error) {
 			return json.Marshal(v)
 		},
 	}
-	xmlEncoder =&EncoderH{
-		contentType:"text/xml; charset=utf-8",
-		handleFunc:func(v interface{},org []byte) ([]byte,error){
+	xmlEncoder = &EncoderH{
+		contentType: "text/xml; charset=utf-8",
+		handleFunc: func(v interface{}, org []byte) ([]byte, error) {
 			return xml.Marshal(v)
 		},
 	}
-	stringEncoder =&EncoderH{
-		contentType:"text/plain",
-		handleFunc: func(v interface{},org []byte)([]byte,error) {
+	stringEncoder = &EncoderH{
+		contentType: "text/plain",
+		handleFunc: func(v interface{}, org []byte) ([]byte, error) {
 
-			return org,nil
+			return org, nil
 		},
 	}
 	notEncoder = &EncoderH{
 		contentType: "",
 		handleFunc: func(v interface{}, org []byte) (bytes []byte, e error) {
-			return org,nil
+			return org, nil
 		},
 	}
 )
 
+//EncoderH encodeH
 type EncoderH struct {
 	contentType string
-	handleFunc EncodeHandle
+	handleFunc  EncodeHandle
 }
 
-func (e *EncoderH) Encode(v interface{},org []byte) ([]byte, error) {
-	return e.handleFunc(v,org)
+//Encode encode
+func (e *EncoderH) Encode(v interface{}, org []byte) ([]byte, error) {
+	return e.handleFunc(v, org)
 }
 
+//ContentType contentType
 func (e *EncoderH) ContentType() string {
 	return e.contentType
 }
 
+//GetEncoder 获取编码器
 func GetEncoder(encoder string) Encoder {
 
 	switch strings.ToLower(encoder) {

@@ -1,20 +1,39 @@
 package console_sqlite3
 
 import (
+	SQL "database/sql"
 	"fmt"
+
 	"strconv"
 	"strings"
 	"time"
 
-	database2 "github.com/eolinker/goku-api-gateway/common/database"
 	log "github.com/eolinker/goku-api-gateway/goku-log"
+	"github.com/eolinker/goku-api-gateway/server/dao"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
+//ProjectDao ProjectDao
+type ProjectDao struct {
+	db *SQL.DB
+}
+
+//NewProjectDao new ProjectDao
+func NewProjectDao() *ProjectDao {
+	return &ProjectDao{}
+}
+
+//Create create
+func (d *ProjectDao) Create(db *SQL.DB) (interface{}, error) {
+	d.db = db
+	var i dao.ProjectDao = d
+	return &i, nil
+}
+
 //AddProject 新建项目
-func AddProject(projectName string) (bool, interface{}, error) {
+func (d *ProjectDao) AddProject(projectName string) (bool, interface{}, error) {
 	now := time.Now().Format("2006-01-02 15:04:05")
-	db := database2.GetConnection()
+	db := d.db
 	sql := "INSERT INTO goku_gateway_project (projectName,createTime,updateTime) VALUES (?,?,?);"
 	stmt, err := db.Prepare(sql)
 	if err != nil {
@@ -30,9 +49,9 @@ func AddProject(projectName string) (bool, interface{}, error) {
 }
 
 //EditProject 修改项目信息
-func EditProject(projectName string, projectID int) (bool, string, error) {
+func (d *ProjectDao) EditProject(projectName string, projectID int) (bool, string, error) {
 	now := time.Now().Format("2006-01-02 15:04:05")
-	db := database2.GetConnection()
+	db := d.db
 	sql := "UPDATE goku_gateway_project SET projectName = ?,updateTime = ? WHERE projectID = ?;"
 	stmt, err := db.Prepare(sql)
 	if err != nil {
@@ -47,8 +66,8 @@ func EditProject(projectName string, projectID int) (bool, string, error) {
 }
 
 //DeleteProject 修改项目信息
-func DeleteProject(projectID int) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *ProjectDao) DeleteProject(projectID int) (bool, string, error) {
+	db := d.db
 	Tx, _ := db.Begin()
 	// 获取项目分组列表
 	sql := "SELECT groupID FROM goku_gateway_api_group WHERE projectID = ?;"
@@ -68,6 +87,7 @@ func DeleteProject(projectID int) (bool, string, error) {
 		if err != nil {
 			Tx.Rollback()
 			log.Info(err.Error())
+			return false, "", err
 		}
 		groupIDList += strconv.Itoa(groupID) + ","
 	}
@@ -144,8 +164,8 @@ func DeleteProject(projectID int) (bool, string, error) {
 }
 
 //BatchDeleteProject 批量删除项目
-func BatchDeleteProject(projectIDList string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *ProjectDao) BatchDeleteProject(projectIDList string) (bool, string, error) {
+	db := d.db
 	Tx, _ := db.Begin()
 	// 获取项目分组列表
 	sql := "SELECT groupID FROM goku_gateway_api_group WHERE projectID IN (" + projectIDList + ");"
@@ -167,6 +187,7 @@ func BatchDeleteProject(projectIDList string) (bool, string, error) {
 		err = rows.Scan(&groupID)
 		if err != nil {
 			Tx.Rollback()
+			return false, "", err
 		}
 		groupIDList += strconv.Itoa(groupID) + ","
 	}
@@ -237,8 +258,8 @@ func BatchDeleteProject(projectIDList string) (bool, string, error) {
 }
 
 //GetProjectInfo 获取项目信息
-func GetProjectInfo(projectID int) (bool, entity.Project, error) {
-	db := database2.GetConnection()
+func (d *ProjectDao) GetProjectInfo(projectID int) (bool, entity.Project, error) {
+	db := d.db
 	var project entity.Project
 	sql := "SELECT projectID,projectName,createTime,updateTime FROM goku_gateway_project WHERE projectID = ?;"
 	err := db.QueryRow(sql, projectID).Scan(&project.ProjectID, &project.ProjectName, &project.CreateTime, &project.UpdateTime)
@@ -249,7 +270,7 @@ func GetProjectInfo(projectID int) (bool, entity.Project, error) {
 }
 
 //GetProjectList 获取项目列表
-func GetProjectList(keyword string) (bool, []*entity.Project, error) {
+func (d *ProjectDao) GetProjectList(keyword string) (bool, []*entity.Project, error) {
 
 	sql := "SELECT `projectID`,`projectName`,`updateTime` FROM `goku_gateway_project` %s ORDER BY `updateTime` DESC;"
 	keywordValue := strings.Trim(keyword, "%")
@@ -264,7 +285,7 @@ func GetProjectList(keyword string) (bool, []*entity.Project, error) {
 		}
 	}
 	sql = fmt.Sprintf(sql, where)
-	db := database2.GetConnection()
+	db := d.db
 	rows, err := db.Query(sql, arg...)
 	if err != nil {
 		return false, nil, err
@@ -286,8 +307,8 @@ func GetProjectList(keyword string) (bool, []*entity.Project, error) {
 }
 
 //CheckProjectIsExist 检查项目是否存在
-func CheckProjectIsExist(projectID int) (bool, error) {
-	db := database2.GetConnection()
+func (d *ProjectDao) CheckProjectIsExist(projectID int) (bool, error) {
+	db := d.db
 	sql := "SELECT projectID FROM goku_gateway_project WHERE projectID = ?;"
 	var id int
 	err := db.QueryRow(sql, projectID).Scan(&id)
@@ -298,8 +319,8 @@ func CheckProjectIsExist(projectID int) (bool, error) {
 }
 
 //GetAPIListFromProjectNotInStrategy 获取项目列表中没有被策略组绑定的接口
-func GetAPIListFromProjectNotInStrategy() (bool, []map[string]interface{}, error) {
-	db := database2.GetConnection()
+func (d *ProjectDao) GetAPIListFromProjectNotInStrategy() (bool, []map[string]interface{}, error) {
+	db := d.db
 	sql := "SELECT projectID,projectName FROM goku_gateway_project;"
 	projectRows, err := db.Query(sql)
 	if err != nil {

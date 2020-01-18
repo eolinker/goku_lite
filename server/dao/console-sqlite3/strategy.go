@@ -1,18 +1,38 @@
 package console_sqlite3
 
 import (
+	"database/sql"
 	"fmt"
 	"strings"
 	"time"
 
-	database2 "github.com/eolinker/goku-api-gateway/common/database"
+	"github.com/eolinker/goku-api-gateway/server/dao"
+
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 	"github.com/eolinker/goku-api-gateway/utils"
 )
 
-//AddStrategy 新增策略组
-func AddStrategy(strategyName string, groupID int) (bool, string, error) {
-	db := database2.GetConnection()
+//StrategyDao StrategyDao
+type StrategyDao struct {
+	db *sql.DB
+}
+
+//NewStrategyDao new StrategyDao
+func NewStrategyDao() *StrategyDao {
+	return &StrategyDao{}
+}
+
+//Create create
+func (d *StrategyDao) Create(db *sql.DB) (interface{}, error) {
+	d.db = db
+	var i dao.StrategyDao = d
+
+	return &i, nil
+}
+
+//AddStrategy  新增策略组
+func (d *StrategyDao) AddStrategy(strategyName string, groupID, userID int) (bool, string, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	// 随机生成字符串
 	sqlCode := "SELECT strategyID FROM goku_gateway_strategy WHERE strategyID = ?"
@@ -29,8 +49,8 @@ func AddStrategy(strategyName string, groupID int) (bool, string, error) {
 	if strategyID == "" {
 		return false, "[ERROR]Empty strategy id !", nil
 	}
-	stmt, err := db.Prepare(`INSERT INTO goku_gateway_strategy (strategyID,strategyName,updateTime,createTime,groupID) VALUES (?,?,?,?,?);`)
-	defer stmt.Close()
+	stmt, err := db.Prepare(`INSERT INTO goku_gateway_strategy (strategyID,strategyName,updateTime,createTime,groupID) VALUES (?,?,?,?,?)`)
+
 	if err != nil {
 		return false, "[ERROR]Illegal SQL statement!", err
 	}
@@ -43,10 +63,10 @@ func AddStrategy(strategyName string, groupID int) (bool, string, error) {
 }
 
 //EditStrategy 修改策略组信息
-func EditStrategy(strategyID, strategyName string, groupID int) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *StrategyDao) EditStrategy(strategyID, strategyName string, groupID, userID int) (bool, string, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
-	stmt, err := db.Prepare(`UPDATE goku_gateway_strategy SET strategyName = ?,groupID = ?,updateTime = ? WHERE strategyID = ?;`)
+	stmt, err := db.Prepare(`UPDATE goku_gateway_strategy SET strategyName = ?,groupID = ?,updateTime = ? WHERE strategyID = ?`)
 	if err != nil {
 		return false, "[ERROR]Illegal SQL statement!", err
 	}
@@ -59,8 +79,8 @@ func EditStrategy(strategyID, strategyName string, groupID int) (bool, string, e
 }
 
 //DeleteStrategy 删除策略组
-func DeleteStrategy(strategyID string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *StrategyDao) DeleteStrategy(strategyID string) (bool, string, error) {
+	db := d.db
 	Tx, _ := db.Begin()
 	_, err := Tx.Exec(`DELETE FROM goku_gateway_strategy WHERE strategyID = ?;`, strategyID)
 	if err != nil {
@@ -96,9 +116,7 @@ func DeleteStrategy(strategyID string) (bool, string, error) {
 }
 
 // GetStrategyList 获取策略组列表
-func GetStrategyList(groupID int, keyword string, condition int) (bool, []*entity.Strategy, error) {
-	db := database2.GetConnection()
-
+func (d *StrategyDao) GetStrategyList(groupID int, keyword string, condition, page, pageSize int) (bool, []*entity.Strategy, int, error) {
 	rule := make([]string, 0, 2)
 
 	rule = append(rule, "A.strategyType != 1")
@@ -118,10 +136,11 @@ func GetStrategyList(groupID int, keyword string, condition int) (bool, []*entit
 	if len(rule) > 0 {
 		ruleStr += "WHERE " + strings.Join(rule, " AND ")
 	}
-	sql := fmt.Sprintf("SELECT A.strategyID,A.strategyName,IFNULL(A.updateTime,''),IFNULL(A.createTime,''),A.enableStatus,A.groupID,IFNULL(B.groupName,'未分组') FROM goku_gateway_strategy A LEFT JOIN goku_gateway_strategy_group B ON A.groupID = B.groupID %s ORDER BY A.updateTime DESC;", ruleStr)
-	rows, err := db.Query(sql)
+	sql := fmt.Sprintf("SELECT A.strategyID,A.strategyName,IFNULL(A.updateTime,''),IFNULL(A.createTime,''),A.enableStatus,A.groupID,IFNULL(B.groupName,'未分组') FROM goku_gateway_strategy A LEFT JOIN goku_gateway_strategy_group B ON A.groupID = B.groupID %s", ruleStr)
+	count := getCountSQL(d.db, sql)
+	rows, err := getPageSQL(d.db, sql, "A.updateTime", "DESC", page, pageSize)
 	if err != nil {
-		return false, nil, err
+		return false, make([]*entity.Strategy, 0), 0, err
 	}
 	//延时关闭Rows
 	defer rows.Close()
@@ -131,17 +150,17 @@ func GetStrategyList(groupID int, keyword string, condition int) (bool, []*entit
 		var strategy entity.Strategy
 		err = rows.Scan(&strategy.StrategyID, &strategy.StrategyName, &strategy.UpdateTime, &strategy.CreateTime, &strategy.EnableStatus, &strategy.GroupID, &strategy.GroupName)
 		if err != nil {
-			return false, nil, err
+			return false, make([]*entity.Strategy, 0), 0, err
 		}
 		strategyList = append(strategyList, &strategy)
 	}
-	return true, strategyList, nil
+	return true, strategyList, count, nil
 }
 
 // GetOpenStrategy 获取策略组列表
-func GetOpenStrategy() (bool, *entity.Strategy, error) {
+func (d *StrategyDao) GetOpenStrategy() (bool, *entity.Strategy, error) {
 	var openStrategy entity.Strategy
-	db := database2.GetConnection()
+	db := d.db
 	sql := `SELECT strategyID,strategyName,IFNULL(updateTime,""),IFNULL(createTime,""),enableStatus,strategyType FROM goku_gateway_strategy WHERE strategyType = 1 ORDER BY updateTime DESC;`
 	err := db.QueryRow(sql).Scan(&openStrategy.StrategyID, &openStrategy.StrategyName, &openStrategy.UpdateTime, &openStrategy.CreateTime, &openStrategy.EnableStatus, &openStrategy.StrategyType)
 	if err != nil {
@@ -152,8 +171,8 @@ func GetOpenStrategy() (bool, *entity.Strategy, error) {
 }
 
 //GetStrategyInfo 获取策略组信息
-func GetStrategyInfo(strategyID string) (bool, *entity.Strategy, error) {
-	db := database2.GetConnection()
+func (d *StrategyDao) GetStrategyInfo(strategyID string) (bool, *entity.Strategy, error) {
+	db := d.db
 	sql := `SELECT strategyID,strategyName,IFNULL(updateTime,''),strategyType,enableStatus FROM goku_gateway_strategy WHERE strategyID = ?;`
 	strategy := new(entity.Strategy)
 	err := db.QueryRow(sql, strategyID).Scan(&strategy.StrategyID, &strategy.StrategyName, &strategy.UpdateTime, &strategy.StrategyType, &strategy.EnableStatus)
@@ -164,8 +183,8 @@ func GetStrategyInfo(strategyID string) (bool, *entity.Strategy, error) {
 }
 
 //CheckStrategyIsExist 检查策略组ID是否存在
-func CheckStrategyIsExist(strategyID string) (bool, error) {
-	db := database2.GetConnection()
+func (d *StrategyDao) CheckStrategyIsExist(strategyID string) (bool, error) {
+	db := d.db
 	sql := "SELECT strategyID FROM goku_gateway_strategy WHERE strategyID = ?;"
 	var id string
 	err := db.QueryRow(sql, strategyID).Scan(&id)
@@ -176,8 +195,8 @@ func CheckStrategyIsExist(strategyID string) (bool, error) {
 }
 
 //BatchEditStrategyGroup 批量修改策略组分组
-func BatchEditStrategyGroup(strategyIDList string, groupID int) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *StrategyDao) BatchEditStrategyGroup(strategyIDList string, groupID int) (bool, string, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
 	strategy := strings.Split(strategyIDList, ",")
@@ -199,8 +218,8 @@ func BatchEditStrategyGroup(strategyIDList string, groupID int) (bool, string, e
 }
 
 //BatchDeleteStrategy 批量修改策略组
-func BatchDeleteStrategy(strategyIDList string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *StrategyDao) BatchDeleteStrategy(strategyIDList string) (bool, string, error) {
+	db := d.db
 	Tx, _ := db.Begin()
 	strategy := strings.Split(strategyIDList, ",")
 	code := ""
@@ -247,8 +266,8 @@ func BatchDeleteStrategy(strategyIDList string) (bool, string, error) {
 }
 
 //CheckIsOpenStrategy 判断是否是开放策略
-func CheckIsOpenStrategy(strategyID string) bool {
-	db := database2.GetConnection()
+func (d *StrategyDao) CheckIsOpenStrategy(strategyID string) bool {
+	db := d.db
 	var strategyType int
 	sql := "SELECT strategyType FROM goku_gateway_strategy WHERE strategyID = ?;"
 	err := db.QueryRow(sql, strategyID).Scan(&strategyType)
@@ -262,8 +281,8 @@ func CheckIsOpenStrategy(strategyID string) bool {
 }
 
 //BatchUpdateStrategyEnableStatus 更新策略启动状态
-func BatchUpdateStrategyEnableStatus(strategyIDList string, enableStatus int) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *StrategyDao) BatchUpdateStrategyEnableStatus(strategyIDList string, enableStatus int) (bool, string, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	strategy := strings.Split(strategyIDList, ",")
 	code := ""
@@ -290,8 +309,8 @@ func BatchUpdateStrategyEnableStatus(strategyIDList string, enableStatus int) (b
 }
 
 // GetBalanceListInStrategy 获取在策略中的负载列表
-func GetBalanceListInStrategy(strategyID string, balanceType int) (bool, []string, error) {
-	db := database2.GetConnection()
+func (d *StrategyDao) GetBalanceListInStrategy(strategyID string, balanceType int) (bool, []string, error) {
+	db := d.db
 
 	sql := "SELECT DISTINCT(IFNULL(A.balanceName,'')) FROM goku_gateway_api A INNER JOIN goku_conn_strategy_api B ON A.apiID = B.apiID WHERE B.strategyID = ?;"
 	if balanceType == 1 {
@@ -320,8 +339,8 @@ func GetBalanceListInStrategy(strategyID string, balanceType int) (bool, []strin
 }
 
 // CopyStrategy 复制策略
-func CopyStrategy(strategyID string, newStrategyID string, userID int) (string, error) {
-	db := database2.GetConnection()
+func (d *StrategyDao) CopyStrategy(strategyID string, newStrategyID string, userID int) (string, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	sql := "INSERT INTO goku_conn_strategy_api (strategyID,apiID,apiMonitorStatus,strategyMonitorStatus,target,updateTime) SELECT ?,apiID,apiMonitorStatus,strategyMonitorStatus,target,? FROM goku_conn_strategy_api WHERE strategyID = ?"
 	_, err := db.Exec(sql, newStrategyID, now, strategyID)
@@ -342,21 +361,9 @@ func CopyStrategy(strategyID string, newStrategyID string, userID int) (string, 
 	return newStrategyID, nil
 }
 
-//GetOpenStrategyCount 获取开放策略数量
-func GetOpenStrategyCount() int {
-	db := database2.GetConnection()
-	var count int
-	sql := "SELECT COUNT(*) FROM goku_gateway_strategy WHERE strategyType = 1"
-	err := db.QueryRow(sql).Scan(&count)
-	if err != nil {
-		return 0
-	}
-	return count
-}
-
 //GetStrategyIDList 获取策略ID列表
-func GetStrategyIDList(groupID int, keyword string, condition int) (bool, []string, error) {
-	db := database2.GetConnection()
+func (d *StrategyDao) GetStrategyIDList(groupID int, keyword string, condition int) (bool, []string, error) {
+	db := d.db
 	rule := make([]string, 0, 2)
 
 	rule = append(rule, fmt.Sprintf("A.strategyType != 1"))

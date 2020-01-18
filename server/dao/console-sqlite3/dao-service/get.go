@@ -3,16 +3,15 @@ package dao_service
 import (
 	"fmt"
 
-	"github.com/eolinker/goku-api-gateway/common/database"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
 const sqlGet = "SELECT `name`,`driver`,`default`,`desc`,`config`,`clusterConfig`,`healthCheck`,`healthCheckPath`,`healthCheckPeriod`,`healthCheckCode`,`healthCheckTimeOut`,`createTime`,`updateTime` FROM `goku_service_config` WHERE `name`=?; "
 
 //Get 获取服务发现信息
-func Get(name string) (*entity.Service, error) {
+func (d *ServiceDao) Get(name string) (*entity.Service, error) {
 
-	stmt, e := database.GetConnection().Prepare(sqlGet)
+	stmt, e := d.db.Prepare(sqlGet)
 	if e != nil {
 		return nil, e
 	}

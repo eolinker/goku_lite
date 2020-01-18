@@ -15,7 +15,7 @@ type Count struct {
 	metricsValuesCount *MetricsValuesCount
 }
 
-//Add add
+//RegisterDao add
 func (c *Count) Add(value float64, labels diting.Labels) {
 
 	key := c.metricKey.Key(labels, "count")
@@ -61,7 +61,7 @@ func NewMetricsValuesCount() *MetricsValuesCount {
 	}
 }
 
-//Add add
+//RegisterDao add
 func (m *MetricsValuesCount) Add(key string, value float64) {
 	m.locker.Lock()
 	v := int64(value)

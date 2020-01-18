@@ -58,7 +58,7 @@ func TestHistogram_Observe(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			h := &Histogram{
+			h := &HistogramObserve{
 				Buckets: tt.fields.Buckets,
 				Count:   tt.fields.Count,
 			}
@@ -82,23 +82,22 @@ func TestNewHistogram(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *Histogram
+		want *HistogramObserve
 	}{
-		// TODO: Add test cases.
+		// TODO: RegisterDao test cases.
 		{
 			name: "",
 			args: args{
 				buckets: []float64{0.1,0.5,1.0},
 			},
-			want: &Histogram{
-				Buckets: []float64{0.1,0.5,1.0,math.MaxFloat64},
-				Count:   []int64{0,0,0,0},
+			want: &HistogramObserver{
+
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewHistogram(tt.args.buckets); !reflect.DeepEqual(got, tt.want) {
+			if got := NewHistogramObserve(len(tt.args.buckets)); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewHistogram() = %v, want %v", got, tt.want)
 			}
 		})

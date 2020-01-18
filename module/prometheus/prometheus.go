@@ -92,7 +92,7 @@ func (p *Prometheus) NewCounter(opts *diting.CounterOpts) (diting.Counter, error
 	return newCounter(c), nil
 }
 
-//NewHistogram new Histogram
+//NewHistogram new HistogramObserve
 func (p *Prometheus) NewHistogram(opts *diting.HistogramOpts) (diting.Histogram, error) {
 	h := prometheus.NewHistogramVec(ReadHistogramOpts(opts), opts.LabelNames)
 	err := p.registry.Register(h)

@@ -33,7 +33,7 @@ type Info struct {
 	HealthCheckTimeOut int               `json:"healthCheckTimeOut"`
 }
 
-//Decode 解码
+//Read 解码
 func (i *Info) Decode() {
 	json.Unmarshal([]byte(i.ClusterConfig), &i.ClusterConfigObj)
 }

@@ -10,20 +10,44 @@ import (
 	"github.com/eolinker/goku-api-gateway/console/module/plugin"
 	plugin_config "github.com/eolinker/goku-api-gateway/console/module/plugin/plugin-config"
 	"github.com/eolinker/goku-api-gateway/console/module/strategy"
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
 )
+
+const operationAPIPlugin = "strategyManagement"
+
+//PluginHandlers 插件处理器
+type PluginHandlers struct {
+}
+
+//Handlers handlers
+func (p *PluginHandlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/addPluginToApi":    factory.NewAccountHandleFunction(operationAPIPlugin, true, AddPluginToAPI),
+		"/edit":              factory.NewAccountHandleFunction(operationAPIPlugin, true, EditAPIPluginConfig),
+		"/getInfo":           factory.NewAccountHandleFunction(operationAPIPlugin, false, GetAPIPluginConfig),
+		"/getList":           factory.NewAccountHandleFunction(operationAPIPlugin, false, GetAPIPluginList),
+		"/getListByStrategy": factory.NewAccountHandleFunction(operationAPIPlugin, false, GetAllAPIPluginInStrategy),
+		"/batchStart":        factory.NewAccountHandleFunction(operationAPIPlugin, true, BatchStartAPIPlugin),
+		"/batchStop":         factory.NewAccountHandleFunction(operationAPIPlugin, true, BatchStopAPIPlugin),
+		"/batchDelete":       factory.NewAccountHandleFunction(operationAPIPlugin, true, BatchDeleteAPIPlugin),
+		"/notAssign/getList": factory.NewAccountHandleFunction(operationAPIPlugin, false, GetAPIPluginListWithNotAssignAPIList),
+	}
+}
+
+//NewPluginHandlers new插件处理器
+func NewPluginHandlers() *PluginHandlers {
+	return &PluginHandlers{}
+
+}
 
 //AddPluginToAPI 新增插件到接口
 func AddPluginToAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	pluginName := httpRequest.PostFormValue("pluginName")
 	pluginConfig := httpRequest.PostFormValue("pluginConfig")
 	strategyID := httpRequest.PostFormValue("strategyID")
 	apiID := httpRequest.PostFormValue("apiID")
-
+	userID := goku_handler.UserIDFromRequest(httpRequest)
 	aID, err := strconv.Atoi(apiID)
 	if err != nil {
 		controller.WriteError(httpResponse, "240002", "apiPlugin", "[ERROR]Illegal apiID!", err)
@@ -81,15 +105,13 @@ func AddPluginToAPI(httpResponse http.ResponseWriter, httpRequest *http.Request)
 
 //EditAPIPluginConfig 修改接口插件
 func EditAPIPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	pluginName := httpRequest.PostFormValue("pluginName")
 	pluginConfig := httpRequest.PostFormValue("pluginConfig")
 	strategyID := httpRequest.PostFormValue("strategyID")
 	apiID := httpRequest.PostFormValue("apiID")
+	userID := goku_handler.UserIDFromRequest(httpRequest)
+
 	flag, err := plugin_config.CheckConfig(pluginName, []byte(pluginConfig))
 	if !flag {
 		controller.WriteError(httpResponse, "500000", "apiPlugin", "[ERROR]插件配置无效:"+err.Error(), err)
@@ -153,10 +175,6 @@ func EditAPIPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Req
 
 //GetAPIPluginConfig 获取接口插件配置
 func GetAPIPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	pluginName := httpRequest.PostFormValue("pluginName")
 	strategyID := httpRequest.PostFormValue("strategyID")
@@ -198,10 +216,6 @@ func GetAPIPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Requ
 
 //GetAPIPluginList 获取接口插件配置
 func GetAPIPluginList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	apiID := httpRequest.PostFormValue("apiID")
@@ -230,60 +244,8 @@ func GetAPIPluginList(httpResponse http.ResponseWriter, httpRequest *http.Reques
 	return
 }
 
-// GetAPIPluginInStrategyByAPIID 获取策略组中所有接口插件列表
-func GetAPIPluginInStrategyByAPIID(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
-	if e != nil {
-		return
-	}
-	httpRequest.ParseForm()
-	strategyID := httpRequest.Form.Get("strategyID")
-	apiID := httpRequest.Form.Get("apiID")
-	keyword := httpRequest.Form.Get("keyword")
-	condition := httpRequest.Form.Get("condition")
-
-	aID, err := strconv.Atoi(apiID)
-	if err != nil {
-		controller.WriteError(httpResponse, "240002", "apiPlugin", "[ERROR]Illegal condition!", err)
-		return
-	}
-	op, err := strconv.Atoi(condition)
-	if err != nil && condition != "" {
-		controller.WriteError(httpResponse, "270006", "apiPlugin", "[ERROR]Illegal condition!", err)
-		return
-	}
-
-	flag, pluginList, apiInfo, err := api.GetAPIPluginInStrategyByAPIID(strategyID, aID, keyword, op)
-	if !flag {
-		controller.WriteError(httpResponse,
-			"240000",
-			"apiPlugin",
-			"[ERROR]Empty api plugin list!",
-			err)
-		return
-
-	}
-	result := map[string]interface{}{
-		"statusCode":    "000000",
-		"type":          "apiPlugin",
-		"resultDesc":    "",
-		"apiPluginList": pluginList,
-		"apiInfo":       apiInfo,
-		"page": controller.PageInfo{
-			ItemNum: len(pluginList),
-		},
-	}
-	resultStr, _ := json.Marshal(result)
-	httpResponse.Write(resultStr)
-	// controller.WriteResultInfo(httpResponse, "apiPlugin", "apiPluginList", result)
-}
-
 //GetAllAPIPluginInStrategy 获取策略组中所有接口插件列表
 func GetAllAPIPluginInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 
@@ -305,13 +267,11 @@ func GetAllAPIPluginInStrategy(httpResponse http.ResponseWriter, httpRequest *ht
 
 //BatchStartAPIPlugin 批量修改策略组插件状态
 func BatchStartAPIPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	connIDList := httpRequest.PostFormValue("connIDList")
+	userID := goku_handler.UserIDFromRequest(httpRequest)
+
 	if connIDList == "" {
 		controller.WriteError(httpResponse,
 			"240001",
@@ -338,13 +298,11 @@ func BatchStartAPIPlugin(httpResponse http.ResponseWriter, httpRequest *http.Req
 
 //BatchStopAPIPlugin 批量修改策略组插件状态
 func BatchStopAPIPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	connIDList := httpRequest.PostFormValue("connIDList")
+	userID := goku_handler.UserIDFromRequest(httpRequest)
+
 	if connIDList == "" {
 		controller.WriteError(httpResponse,
 			"240001",
@@ -371,13 +329,10 @@ func BatchStopAPIPlugin(httpResponse http.ResponseWriter, httpRequest *http.Requ
 
 //BatchDeleteAPIPlugin 批量删除策略组插件
 func BatchDeleteAPIPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	connIDList := httpRequest.PostFormValue("connIDList")
+
 	if connIDList == "" {
 		controller.WriteError(httpResponse,
 			"240001",
@@ -401,10 +356,6 @@ func BatchDeleteAPIPlugin(httpResponse http.ResponseWriter, httpRequest *http.Re
 
 //GetAPIPluginListWithNotAssignAPIList 获取没有分配接口插件的接口列表
 func GetAPIPluginListWithNotAssignAPIList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	if strategyID == "" {

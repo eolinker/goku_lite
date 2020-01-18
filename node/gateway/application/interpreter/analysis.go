@@ -17,7 +17,12 @@ var (
 )
 
 //Gen gen
-func Gen(tpl string) Interpreter {
+func Gen(tpl string, encode string) Interpreter {
+	if encode == "origin" {
+		exe := make(_Executor, 1, 1)
+		exe[0] = new(_OrgReader)
+		return exe
+	}
 	tpl = strings.TrimSpace(tpl)
 	i, err := Parse(tpl)
 	if err != nil {

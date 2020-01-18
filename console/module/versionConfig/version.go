@@ -3,41 +3,54 @@ package versionConfig
 import (
 	"encoding/json"
 
-	"github.com/eolinker/goku-api-gateway/ksitigarbha"
+	"github.com/eolinker/goku-api-gateway/common/pdao"
+	"github.com/eolinker/goku-api-gateway/server/dao"
+	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 
-	console_sqlite3 "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3"
-	dao_version_config2 "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3/dao-version-config"
+	"github.com/eolinker/goku-api-gateway/ksitigarbha"
 
 	"github.com/eolinker/goku-api-gateway/config"
 )
 
-var authNames = map[string]string{
-	"Oauth2": "goku-oauth2_auth",
-	"Apikey": "goku-apikey_auth",
-	"Basic":  "goku-basic_auth",
-	"Jwt":    "goku-jwt_auth",
+var (
+	versionDao       dao.VersionDao
+	versionConfigDao dao.VersionConfigDao
+	clusterDao       dao.ClusterDao
+	authNames        = map[string]string{
+		"Oauth2": "goku-oauth2_auth",
+		"Apikey": "goku-apikey_auth",
+		"Basic":  "goku-basic_auth",
+		"Jwt":    "goku-jwt_auth",
+	}
+)
+
+func init() {
+	pdao.Need(&versionConfigDao, &versionDao, &clusterDao)
 }
 
 //GetVersionList 获取版本列表
 func GetVersionList(keyword string) ([]config.VersionConfig, error) {
-	return console_sqlite3.GetVersionList(keyword)
+	return versionDao.GetVersionList(keyword)
 }
 
 //AddVersionConfig 新增版本配置
-func AddVersionConfig(name, version, remark, now string) (int, error) {
+func AddVersionConfig(name, version, remark, now string, userID int) (int, error) {
 	config, balanceConfig, discoverConfig := buildVersionConfig(version)
-	return console_sqlite3.AddVersionConfig(name, version, remark, config, balanceConfig, discoverConfig, now)
+	return versionDao.AddVersionConfig(name, version, remark, config, balanceConfig, discoverConfig, now, userID)
+}
+func EditVersionBasicConfig(name, version, remark string, userID, versionID int) error {
+	return versionDao.EditVersionBasicConfig(name, version, remark, userID, versionID)
 }
 
 //BatchDeleteVersionConfig 批量删除版本配置
 func BatchDeleteVersionConfig(ids []int) error {
-	publishID := console_sqlite3.GetPublishVersionID()
-	return console_sqlite3.BatchDeleteVersionConfig(ids, publishID)
+	publishID := versionDao.GetPublishVersionID()
+	return versionDao.BatchDeleteVersionConfig(ids, publishID)
 }
 
 //PublishVersion 发布版本
-func PublishVersion(id int, now string) error {
-	err := console_sqlite3.PublishVersion(id, now)
+func PublishVersion(id, userID int, now string) error {
+	err := versionDao.PublishVersion(id, userID, now)
 	if err == nil {
 		load()
 	}
@@ -46,44 +59,55 @@ func PublishVersion(id int, now string) error {
 
 //GetVersionConfigCount 获取版本配置数量
 func GetVersionConfigCount() int {
-	return console_sqlite3.GetVersionConfigCount()
+	return versionDao.GetVersionConfigCount()
+}
+
+func getRedisConfig(clusters []*entity.Cluster) map[string]interface{} {
+	redisConfig := map[string]interface{}{}
+	for _, c := range clusters {
+		redisConfig[c.Name] = c.Redis
+	}
+	return redisConfig
 }
 
 func buildVersionConfig(v string) (string, string, string) {
-	clusters, err := console_sqlite3.GetClusters()
+	clusters, err := clusterDao.GetClusters()
 	if err != nil {
 		return "", "", ""
 	}
-	discoverMap, err := dao_version_config2.GetDiscoverConfig(clusters)
+	discoverMap, err := versionConfigDao.GetDiscoverConfig(clusters)
 	if err != nil {
 		return "", "", ""
 	}
-	balanceMap, err := dao_version_config2.GetBalances(clusters)
+	balanceMap, err := versionConfigDao.GetBalances(clusters)
 	if err != nil {
 		return "", "", ""
 	}
-	openStrategy, strategyConfigs, err := dao_version_config2.GetStrategyConfig()
+	openStrategy, strategyConfigs, err := versionConfigDao.GetStrategyConfig()
 	if err != nil {
 		return "", "", ""
 	}
-	apiContents, err := dao_version_config2.GetAPIContent()
+	apiContents, err := versionConfigDao.GetAPIContent()
 	if err != nil {
 		return "", "", ""
 	}
-	plugins, err := dao_version_config2.GetGlobalPlugin()
+	plugins, err := versionConfigDao.GetGlobalPlugin()
 	if err != nil {
 		return "", "", ""
 	}
-	logCf, accessCf, err := dao_version_config2.GetLogInfo()
+	logCf, accessCf, err := versionConfigDao.GetLogInfo()
 	if err != nil {
 		return "", "", ""
 	}
+
+	g, _ := versionConfigDao.GetGatewayBasicConfig()
+	routers, _ := versionConfigDao.GetRouterRules(1)
 	ms := make(map[string]string)
-	modules, _ := dao_version_config2.GetMonitorModules(1, false)
+	modules, _ := versionConfigDao.GetMonitorModules(1, false)
 	if modules != nil {
 		for key, config := range modules {
-			module ,has:= ksitigarbha.GetMonitorModuleModel(key)
-			if has{
+			module, has := ksitigarbha.GetMonitorModuleModel(key)
+			if has {
 				ms[module.GetName()] = config
 			}
 		}
@@ -91,7 +115,7 @@ func buildVersionConfig(v string) (string, string, string) {
 
 	c := config.GokuConfig{
 		Version:             v,
-		Plugins:             plugins,
+		Plugins:             *plugins,
 		APIS:                apiContents,
 		Strategy:            strategyConfigs,
 		AnonymousStrategyID: openStrategy,
@@ -99,6 +123,9 @@ func buildVersionConfig(v string) (string, string, string) {
 		Log:                 logCf,
 		AccessLog:           accessCf,
 		MonitorModules:      ms,
+		Routers:             routers,
+		GatewayBasicInfo:    g,
+		RedisConfig:         getRedisConfig(clusters),
 	}
 
 	cByte, err := json.Marshal(c)

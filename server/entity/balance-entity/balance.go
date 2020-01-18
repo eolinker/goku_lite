@@ -53,7 +53,7 @@ type _OldVersionBalanceInfo struct {
 }
 
 //
-//func (info *BalanceInfo) Encode() *BalanceInfoEntity {
+//func (info *BalanceInfo) Write() *BalanceInfoEntity {
 //
 //	ent := new(BalanceInfoEntity)
 //	ent.Name = info.Name

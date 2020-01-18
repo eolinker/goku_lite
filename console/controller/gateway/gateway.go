@@ -4,16 +4,32 @@ import (
 	"encoding/json"
 	"net/http"
 
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
+
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/gateway"
 )
 
+const operationGateway = "gateway"
+
+//Handlers hendlers
+type Handlers struct {
+}
+
+//Handlers handlers
+func (h *Handlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/getSummaryInfo": factory.NewAccountHandleFunction(operationGateway, false, GetGatewayBasicInfo),
+	}
+}
+
+//NewHandlers new handlers
+func NewHandlers() *Handlers {
+	return &Handlers{}
+}
+
 //GetGatewayBasicInfo 获取网关基本信息
 func GetGatewayBasicInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	flag, result, err := gateway.GetGatewayMonitorSummaryByPeriod()
 	if !flag {

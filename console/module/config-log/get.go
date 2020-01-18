@@ -5,7 +5,6 @@ import (
 
 	"github.com/eolinker/goku-api-gateway/common/auto-form"
 	log "github.com/eolinker/goku-api-gateway/goku-log"
-	config_log "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3/config-log"
 )
 
 //Get 获取普通日志配置
@@ -18,7 +17,7 @@ func Get(name string) (*LogConfig, error) {
 	c.Levels = Levels
 	c.Periods = Periods
 	c.Expires = Expires
-	config, e := config_log.Get(name)
+	config, e := configLogDao.Get(name)
 
 	if e != nil || config == nil {
 		auto.SetDefaults(c)
@@ -36,7 +35,7 @@ func Get(name string) (*LogConfig, error) {
 
 //GetAccess 获取access配置
 func GetAccess() (*AccessConfig, error) {
-	config, e := config_log.Get(AccessLog)
+	config, e := configLogDao.Get(AccessLog)
 	c := new(AccessConfig)
 	c.Periods = Periods
 	c.Expires = Expires

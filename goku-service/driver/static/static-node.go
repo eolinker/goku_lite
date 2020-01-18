@@ -16,35 +16,35 @@ func (d *Driver) Open(name string, config string) (discovery.ISource, error) {
 }
 
 //StaticDiscovery staticDiscovery
-type StaticDiscovery struct {
+type Discovery struct {
 }
 
 //SetConfig setConfig
-func (d *StaticDiscovery) SetConfig(config string) error {
+func (d *Discovery) SetConfig(config string) error {
 	return nil
 }
 
 //Driver driver
-func (d *StaticDiscovery) Driver() string {
+func (d *Discovery) Driver() string {
 	return DriverName
 }
 
 //SetCallback setCallBack
-func (d *StaticDiscovery) SetCallback(callback func(services []*common.Service)) {
+func (d *Discovery) SetCallback(callback func(services []*common.Service)) {
 	return
 }
 
 //GetServers getServers
-func (d *StaticDiscovery) GetServers() ([]*common.Service, error) {
+func (d *Discovery) GetServers() ([]*common.Service, error) {
 	return nil, nil
 }
 
 //Close close
-func (d *StaticDiscovery) Close() error {
+func (d *Discovery) Close() error {
 	return nil
 }
 
 //Open open
-func (d *StaticDiscovery) Open() error {
+func (d *Discovery) Open() error {
 	return nil
 }

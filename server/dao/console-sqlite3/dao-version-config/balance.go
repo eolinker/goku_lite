@@ -3,14 +3,13 @@ package dao_version_config
 import (
 	"encoding/json"
 
-	"github.com/eolinker/goku-api-gateway/common/database"
 	"github.com/eolinker/goku-api-gateway/config"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
 //GetBalances 获取balance信息
-func GetBalances(clusters []*entity.Cluster) (map[string]map[string]*config.BalanceConfig, error) {
-	db := database.GetConnection()
+func (d *VersionConfigDao)GetBalances(clusters []*entity.Cluster) (map[string]map[string]*config.BalanceConfig, error) {
+	db := d.db
 	sql := "SELECT goku_balance.balanceName,goku_balance.static,goku_balance.staticCluster,goku_balance.serviceName,goku_balance.appName,goku_service_config.driver FROM goku_balance INNER JOIN goku_service_config ON goku_service_config.`name` = goku_balance.serviceName"
 	rows, err := db.Query(sql)
 	if err != nil {

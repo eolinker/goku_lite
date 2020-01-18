@@ -11,6 +11,34 @@ type modelManager struct {
 	modules map[string]IModule
 	names   []string
 	namespaceNames map[string]string
+	handlers map[string][]ConfigHandler
+}
+
+func (m *modelManager) Handler(name string, handler ConfigHandler) {
+	m.handlers[name] = append(m.handlers[name],handler)
+}
+
+func (m *modelManager) Close(name string) {
+	namespace,has:= m.getNameSpace(name)
+	if !has{
+		return
+	}
+	hs:=m.handlers[name]
+	for _,handler:=range hs{
+		handler.OnClose(namespace,name)
+	}
+}
+
+func (m *modelManager) Open(name string, config string) {
+	namespace,has:= m.getNameSpace(name)
+	if !has{
+		return
+	}
+	hs:=m.handlers[name]
+
+	for _,handler:=range hs{
+		handler.OnOpen(namespace,name,config)
+	}
 }
 
 func newModelManager() *modelManager {
@@ -18,33 +46,10 @@ func newModelManager() *modelManager {
 		modules:        make(map[string]IModule),
 		names:          make([]string,0,5),
 		namespaceNames: make(map[string]string),
+		handlers: 		make(map[string][]ConfigHandler),
 	}
 }
 
-var mManager = newModelManager()
-
-//GetMonitorModuleNames 获取监控模块名称列表
-func GetMonitorModuleNames() []string {
-	return mManager.getModuleNames()
-}
-
-//GetMonitorModuleModel 获取
-func GetMonitorModuleModel(name string) (IModule ,bool){
-	return mManager.getModuleModel(name)
-}
-
-//GetNameSpaceByName 获取namespace
-func GetNameSpaceByName(name string) string {
-	return mManager.getNameSpace(name)
-}
-//Register 注册
-func Register(name string,f IModule) {
-	if f==nil {
-		log.Panic("register ksitigarbha nil")
-	}
-	mManager.add(name,f)
-
-}
 
 func (m *modelManager) add(name string,f IModule) {
 
@@ -73,8 +78,9 @@ func (m *modelManager) isExisted(name string) bool {
 
 	return ok
 }
-func (m *modelManager) getNameSpace(name string) string {
-	return m.namespaceNames[name]
+func (m *modelManager) getNameSpace(name string) (namespace string,has bool) {
+	namespace,has = m.namespaceNames[name]
+	return
 }
 func (m *modelManager) getModuleCount() int {
 	count := len(m.modules)

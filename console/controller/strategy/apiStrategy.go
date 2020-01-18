@@ -6,17 +6,41 @@ import (
 	"strconv"
 	"strings"
 
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
+
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/api"
 	"github.com/eolinker/goku-api-gateway/console/module/strategy"
 )
 
+const operationAPIStrategy = "strategyManagement"
+
+//APIStrategyHandlers 接口策略handlers
+type APIStrategyHandlers struct {
+}
+
+//Handlers handlers
+func (h *APIStrategyHandlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/add":             factory.NewAccountHandleFunction(operationAPIStrategy, true, AddAPIToStrategy),
+		"/target":          factory.NewAccountHandleFunction(operationAPIStrategy, true, ResetAPITargetOfStrategy),
+		"/batchEditTarget": factory.NewAccountHandleFunction(operationAPIStrategy, true, BatchResetAPITargetOfStrategy),
+		"/getList":         factory.NewAccountHandleFunction(operationAPIStrategy, false, GetAPIListFromStrategy),
+		"/id/getList":      factory.NewAccountHandleFunction(operationAPIStrategy, false, GetAPIIDListFromStrategy),
+		"/getNotInList":    factory.NewAccountHandleFunction(operationAPIStrategy, false, GetAPIListNotInStrategy),
+		"/id/getNotInList": factory.NewAccountHandleFunction(operationAPIStrategy, false, GetAPIIDListNotInStrategyByProject),
+		"/batchDelete":     factory.NewAccountHandleFunction(operationAPIStrategy, true, BatchDeleteAPIInStrategy),
+		"/plugin/getList":  factory.NewAccountHandleFunction(operationAPIStrategy, false, GetAPIPluginInStrategyByAPIID),
+	}
+}
+
+//NewAPIStrategyHandlers new接口策略处理器
+func NewAPIStrategyHandlers() *APIStrategyHandlers {
+	return &APIStrategyHandlers{}
+}
+
 //AddAPIToStrategy 将接口加入策略组
 func AddAPIToStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	apiID := httpRequest.PostFormValue("apiID")
@@ -49,11 +73,6 @@ func AddAPIToStrategy(httpResponse http.ResponseWriter, httpRequest *http.Reques
 
 // ResetAPITargetOfStrategy 将接口加入策略组
 func ResetAPITargetOfStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
-
 	strategyID := httpRequest.PostFormValue("strategyID")
 	target := httpRequest.PostFormValue("target")
 	apiID := httpRequest.PostFormValue("apiID")
@@ -93,10 +112,6 @@ func ResetAPITargetOfStrategy(httpResponse http.ResponseWriter, httpRequest *htt
 
 // BatchResetAPITargetOfStrategy 将接口加入策略组
 func BatchResetAPITargetOfStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	target := httpRequest.PostFormValue("target")
@@ -137,10 +152,6 @@ func BatchResetAPITargetOfStrategy(httpResponse http.ResponseWriter, httpRequest
 
 // GetAPIIDListFromStrategy 获取策略组接口ID列表
 func GetAPIIDListFromStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	httpRequest.ParseForm()
 	strategyID := httpRequest.Form.Get("strategyID")
@@ -194,10 +205,6 @@ func GetAPIIDListFromStrategy(httpResponse http.ResponseWriter, httpRequest *htt
 
 // GetAPIListFromStrategy 获取策略组接口列表
 func GetAPIListFromStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	httpRequest.ParseForm()
 	strategyID := httpRequest.Form.Get("strategyID")
@@ -266,10 +273,6 @@ func GetAPIListFromStrategy(httpResponse http.ResponseWriter, httpRequest *http.
 
 //CheckIsExistAPIInStrategy 检查插件是否添加进策略组
 func CheckIsExistAPIInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	strategyID := httpRequest.PostFormValue("strategyID")
 	apiID := httpRequest.PostFormValue("apiID")
@@ -301,10 +304,7 @@ func CheckIsExistAPIInStrategy(httpResponse http.ResponseWriter, httpRequest *ht
 
 // GetAPIIDListNotInStrategyByProject 获取未被该策略组绑定的接口ID列表(通过项目)
 func GetAPIIDListNotInStrategyByProject(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
-	if e != nil {
-		return
-	}
+
 	httpRequest.ParseForm()
 	strategyID := httpRequest.Form.Get("strategyID")
 	projectID := httpRequest.Form.Get("projectID")
@@ -342,10 +342,7 @@ func GetAPIIDListNotInStrategyByProject(httpResponse http.ResponseWriter, httpRe
 
 //GetAPIListNotInStrategy 获取未被该策略组绑定的接口列表
 func GetAPIListNotInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationREAD)
-	if e != nil {
-		return
-	}
+
 	httpRequest.ParseForm()
 	strategyID := httpRequest.Form.Get("strategyID")
 	projectID := httpRequest.Form.Get("projectID")
@@ -397,10 +394,6 @@ func GetAPIListNotInStrategy(httpResponse http.ResponseWriter, httpRequest *http
 
 //BatchDeleteAPIInStrategy 批量删除策略组接口
 func BatchDeleteAPIInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationStrategy, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	apiIDList := httpRequest.PostFormValue("apiIDList")
 	strategyID := httpRequest.PostFormValue("strategyID")
@@ -417,4 +410,49 @@ func BatchDeleteAPIInStrategy(httpResponse http.ResponseWriter, httpRequest *htt
 
 	}
 	controller.WriteResultInfo(httpResponse, "apiStrategy", "", nil)
+}
+
+// GetAPIPluginInStrategyByAPIID 获取策略组中所有接口插件列表
+func GetAPIPluginInStrategyByAPIID(httpResponse http.ResponseWriter, httpRequest *http.Request) {
+
+	httpRequest.ParseForm()
+	strategyID := httpRequest.Form.Get("strategyID")
+	apiID := httpRequest.Form.Get("apiID")
+	keyword := httpRequest.Form.Get("keyword")
+	condition := httpRequest.Form.Get("condition")
+
+	aID, err := strconv.Atoi(apiID)
+	if err != nil {
+		controller.WriteError(httpResponse, "240002", "apiPlugin", "[ERROR]Illegal condition!", err)
+		return
+	}
+	op, err := strconv.Atoi(condition)
+	if err != nil && condition != "" {
+		controller.WriteError(httpResponse, "270006", "apiPlugin", "[ERROR]Illegal condition!", err)
+		return
+	}
+
+	flag, pluginList, apiInfo, err := api.GetAPIPluginInStrategyByAPIID(strategyID, aID, keyword, op)
+	if !flag {
+		controller.WriteError(httpResponse,
+			"240000",
+			"apiPlugin",
+			"[ERROR]Empty api plugin list!",
+			err)
+		return
+
+	}
+	result := map[string]interface{}{
+		"statusCode":    "000000",
+		"type":          "apiPlugin",
+		"resultDesc":    "",
+		"apiPluginList": pluginList,
+		"apiInfo":       apiInfo,
+		"page": controller.PageInfo{
+			ItemNum: len(pluginList),
+		},
+	}
+	resultStr, _ := json.Marshal(result)
+	httpResponse.Write(resultStr)
+	// controller.WriteResultInfo(httpResponse, "apiPlugin", "apiPluginList", result)
 }

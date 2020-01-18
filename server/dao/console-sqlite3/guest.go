@@ -3,13 +3,31 @@ package console_sqlite3
 import (
 	SQL "database/sql"
 
-	"github.com/eolinker/goku-api-gateway/common/database"
+	"github.com/eolinker/goku-api-gateway/server/dao"
+
 	"github.com/eolinker/goku-api-gateway/utils"
 )
 
+//GuestDao GuestDao
+type GuestDao struct {
+	db *SQL.DB
+}
+
+//NewGuestDao new GuestDao
+func NewGuestDao() *GuestDao {
+	return &GuestDao{}
+}
+
+//Create create
+func (d *GuestDao) Create(db *SQL.DB) (interface{}, error) {
+	d.db = db
+	var i dao.GuestDao = d
+	return &i, nil
+}
+
 //Login 登录
-func Login(loginCall, loginPassword string) (bool, int) {
-	db := database.GetConnection()
+func (d *GuestDao) Login(loginCall, loginPassword string) (bool, int) {
+	db := d.db
 	var userID int
 	err := db.QueryRow("SELECT userID FROM goku_admin WHERE loginCall = ? AND loginPassword = ?;", loginCall, loginPassword).Scan(&userID)
 	if err != nil {
@@ -19,8 +37,8 @@ func Login(loginCall, loginPassword string) (bool, int) {
 }
 
 //CheckLogin 检查用户是否登录
-func CheckLogin(userToken string, userID int) bool {
-	db := database.GetConnection()
+func (d *GuestDao) CheckLogin(userToken string, userID int) bool {
+	db := d.db
 	var loginPassword, loginCall string
 	err := db.QueryRow("SELECT loginCall,loginPassword FROM goku_admin WHERE userID = ?;", userID).Scan(&loginCall, &loginPassword)
 	if err != nil {
@@ -33,8 +51,8 @@ func CheckLogin(userToken string, userID int) bool {
 }
 
 //Register 用户注册
-func Register(loginCall, loginPassword string) bool {
-	db := database.GetConnection()
+func (d *GuestDao) Register(loginCall, loginPassword string) bool {
+	db := d.db
 	sql := "SELECT userID,loginPassword FROM goku_admin WHERE loginCall = ?;"
 	password := ""
 	userID := 0

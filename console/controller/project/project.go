@@ -4,16 +4,38 @@ import (
 	"net/http"
 	"strconv"
 
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
+
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/project"
 )
 
+const operationProject = "apiManagement"
+
+//Handlers handlers
+type Handlers struct {
+}
+
+//Handlers handlers
+func (h *Handlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/add":              factory.NewAccountHandleFunction(operationProject, true, AddProject),
+		"/edit":             factory.NewAccountHandleFunction(operationProject, true, EditProject),
+		"/delete":           factory.NewAccountHandleFunction(operationProject, true, DeleteProject),
+		"/getInfo":          factory.NewAccountHandleFunction(operationProject, false, GetProjectInfo),
+		"/getList":          factory.NewAccountHandleFunction(operationProject, false, GetProjectList),
+		"/strategy/getList": factory.NewAccountHandleFunction(operationProject, false, GetAPIListFromProjectNotInStrategy),
+		"/batchDelete":      factory.NewAccountHandleFunction(operationProject, true, BatchDeleteProject),
+	}
+}
+
+//NewHandlers new handlers
+func NewHandlers() *Handlers {
+	return &Handlers{}
+}
+
 //AddProject 新建项目
 func AddProject(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	projectName := httpRequest.PostFormValue("projectName")
 	if projectName == "" {
@@ -43,10 +65,6 @@ func AddProject(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //EditProject 修改项目信息
 func EditProject(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	projectName := httpRequest.PostFormValue("projectName")
 	projectID := httpRequest.PostFormValue("projectID")
@@ -87,10 +105,6 @@ func EditProject(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //DeleteProject 删除项目信息
 func DeleteProject(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	projectID := httpRequest.PostFormValue("projectID")
 
@@ -122,10 +136,6 @@ func DeleteProject(httpResponse http.ResponseWriter, httpRequest *http.Request) 
 
 //BatchDeleteProject 删除项目信息
 func BatchDeleteProject(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	projectIDList := httpRequest.PostFormValue("projectIDList")
 
@@ -147,10 +157,6 @@ func BatchDeleteProject(httpResponse http.ResponseWriter, httpRequest *http.Requ
 
 //GetProjectInfo 获取项目信息
 func GetProjectInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	projectID := httpRequest.PostFormValue("projectID")
 
@@ -181,10 +187,7 @@ func GetProjectInfo(httpResponse http.ResponseWriter, httpRequest *http.Request)
 
 //GetProjectList 获取项目列表
 func GetProjectList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
-	if e != nil {
-		return
-	}
+
 	httpRequest.ParseForm()
 	keyword := httpRequest.FormValue("keyword")
 
@@ -207,10 +210,6 @@ func GetProjectList(httpResponse http.ResponseWriter, httpRequest *http.Request)
 
 //GetAPIListFromProjectNotInStrategy 获取项目列表中没有被策略组绑定的接口
 func GetAPIListFromProjectNotInStrategy(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	flag, result, err := project.GetAPIListFromProjectNotInStrategy()
 	if !flag {

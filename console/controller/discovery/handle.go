@@ -2,24 +2,31 @@ package discovery
 
 import (
 	"net/http"
+
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
 )
 
-//Handle 服务发现处理器
-func Handle(prefix string) http.Handler {
-
-	serveMux := http.NewServeMux()
-	serveMux.HandleFunc("/drivers", getDrivices)
-
-	serveMux.HandleFunc("/add", add)
-	serveMux.HandleFunc("/delete", delete)
-	serveMux.HandleFunc("/save", edit)
-	serveMux.HandleFunc("/info", getInfo)
-
-	serveMux.HandleFunc("/simple", simple)
-	serveMux.HandleFunc("/list", list)
-
-	serveMux.HandleFunc("/default", setDefault)
-
-	return http.StripPrefix(prefix, serveMux)
-
+//Handlers handlers
+type Handlers struct {
 }
+
+//Handlers handlers
+func (h *Handlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/add":     factory.NewAccountHandleFunction(operationDiscovery, true, add),
+		"/save":    factory.NewAccountHandleFunction(operationDiscovery, true, edit),
+		"/delete":  factory.NewAccountHandleFunction(operationDiscovery, true, delete),
+		"/info":    factory.NewAccountHandleFunction(operationDiscovery, false, getInfo),
+		"/list":    factory.NewAccountHandleFunction(operationDiscovery, false, list),
+		"/default": factory.NewAccountHandleFunction(operationDiscovery, true, setDefault),
+		"/drivers": factory.NewAccountHandleFunction(operationDiscovery, false, getDrivices),
+		"/simple":  factory.NewAccountHandleFunction(operationDiscovery, false, simple),
+	}
+}
+
+//NewHandlers new handlers
+func NewHandlers() *Handlers {
+	return &Handlers{}
+}
+
+const operationDiscovery = "balanceManagement"

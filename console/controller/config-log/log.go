@@ -4,39 +4,20 @@ import (
 	"fmt"
 	"net/http"
 
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
+
 	"github.com/eolinker/goku-api-gateway/common/auto-form"
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	module "github.com/eolinker/goku-api-gateway/console/module/config-log"
 )
 
-//LogHandler 日志处理器
-type LogHandler struct {
+//LogHandlerGet 日志配置获取处理器
+type LogHandlerGet struct {
 	name string
 }
 
-func (h *LogHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	_, err := controller.CheckLogin(w, r, controller.OperationGatewayConfig, controller.OperationEDIT)
-	if err != nil {
-		return
-	}
+func (h *LogHandlerGet) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
-	switch r.Method {
-	case http.MethodGet:
-		{
-			h.get(w, r)
-
-		}
-
-	case http.MethodPut:
-		{
-			h.set(w, r)
-
-		}
-	default:
-		w.WriteHeader(404)
-	}
-}
-func (h *LogHandler) get(w http.ResponseWriter, r *http.Request) {
 	config, e := module.Get(h.name)
 	if e = r.ParseForm(); e != nil {
 		controller.WriteError(w, "270000", "data", "[Get]未知错误："+e.Error(), e)
@@ -50,7 +31,12 @@ func (h *LogHandler) get(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (h *LogHandler) set(w http.ResponseWriter, r *http.Request) {
+//LogHandlerSet 设置日志处理器
+type LogHandlerSet struct {
+	name string
+}
+
+func (h *LogHandlerSet) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseForm()
 	if err = r.ParseForm(); err != nil {
@@ -83,11 +69,19 @@ func (h *LogHandler) set(w http.ResponseWriter, r *http.Request) {
 	}
 	err = module.Set(h.name, paramBase)
 	if err != nil {
-		controller.WriteError(w, "260000", "data", fmt.Sprintf("[mysql_error] %s", err.Error()), err)
+		controller.WriteError(w, "260000", "data", fmt.Sprintf("[db_error] %s", err.Error()), err)
 		return
 	}
 	controller.WriteResultInfo(w,
 		"data",
 		"",
 		nil)
+}
+
+//NewLogHandler 日志handler
+func NewLogHandler(name string, factory *goku_handler.AccountHandlerFactory) http.Handler {
+	return &LogHandler{
+		getHandler: factory.NewAccountHandler(operationLog, false, &LogHandlerGet{name: name}),
+		setHandler: factory.NewAccountHandler(operationLog, true, &LogHandlerSet{name: name}),
+	}
 }

@@ -9,15 +9,14 @@ import (
 	// "io/ioutil"
 )
 
-//Connect SSH连接
-func Connect(user, password, host, key string, port int, cipherList []string) (*ssh.Session, error) {
+//SSHClient SSHClient
+func SSHClient(user, password, host, key string, port int, cipherList []string) (*ssh.Client, error) {
 	var (
 		auth         []ssh.AuthMethod
 		addr         string
 		clientConfig *ssh.ClientConfig
 		client       *ssh.Client
 		config       ssh.Config
-		session      *ssh.Session
 		err          error
 	)
 	// get auth method
@@ -65,7 +64,15 @@ func Connect(user, password, host, key string, port int, cipherList []string) (*
 	if client, err = ssh.Dial("tcp", addr, clientConfig); err != nil {
 		return nil, err
 	}
+	return client, nil
+}
 
+//SessionConnect SessionConnect
+func SessionConnect(client *ssh.Client) (*ssh.Session, error) {
+	var (
+		session *ssh.Session
+		err     error
+	)
 	// create session
 	if session, err = client.NewSession(); err != nil {
 		return nil, err

@@ -1,33 +1,24 @@
 package dao_balance
 
 import (
-	"github.com/eolinker/goku-api-gateway/common/database"
+	"database/sql"
+
+	dao "github.com/eolinker/goku-api-gateway/server/dao"
 )
 
-//GetBalanceNames 获取负载名称列表
-func GetBalanceNames() (bool, []string, error) {
-	db := database.GetConnection()
-	sql := "SELECT balanceName FROM goku_balance ;"
+//BalanceDao BalanceDao
+type BalanceDao struct {
+	db *sql.DB
+}
 
-	rows, err := db.Query(sql)
-	if err != nil {
-		return false, nil, err
-	}
-	defer rows.Close()
-	//获取记录列
+//NewBalanceDao new BalanceDao
+func NewBalanceDao() *BalanceDao {
+	return &BalanceDao{}
+}
 
-	if _, err = rows.Columns(); err != nil {
-		return false, nil, err
-	}
-	balanceList := make([]string, 0)
-	for rows.Next() {
-		balanceName := ""
-		err = rows.Scan(&balanceName)
-		if err != nil {
-			return false, nil, err
-		}
-		balanceList = append(balanceList, balanceName)
-	}
-	return true, balanceList, nil
-
+//Create create
+func (b *BalanceDao) Create(db *sql.DB) (interface{}, error) {
+	b.db = db
+	i := dao.BalanceDao(b)
+	return &i, nil
 }

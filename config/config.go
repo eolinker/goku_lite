@@ -1,27 +1,42 @@
 package config
 
-
 //GokuConfig goku根配置
 type GokuConfig struct {
-	Version string `json:"version"`
-	Cluster string `json:"cluster"`
-	Instance string `json:"instance"`
-	BindAddress string `json:"bind"`
+	Version      string `json:"version"`
+	Cluster      string `json:"cluster"`
+	Instance     string `json:"instance"`
+	BindAddress  string `json:"bind"`
 	AdminAddress string `json:"admin"`
 
 	//Port                int                        `json:"port"`
 	DiscoverConfig      map[string]*DiscoverConfig `json:"discover,omitempty"`
 	Balance             map[string]*BalanceConfig  `json:"balance,omitempty"`
-	Plugins             *GatewayPluginConfig       `json:"plugins,omitempty"`
+	Plugins             GatewayPluginConfig        `json:"plugins,omitempty"`
 	APIS                []*APIContent              `json:"apis,omitempty"`
 	Strategy            []*StrategyConfig          `json:"strategy,omitempty"`
 	AnonymousStrategyID string                     `json:"anonymousStrategyID,omitempty"`
 	AuthPlugin          map[string]string          `json:"authPlugin,omitempty"`
+	GatewayBasicInfo    *Gateway                   `json:"gatewayBasicInfo"`
+	//RouterRule          map[string]*RouterRule     `json:"routerRule"`
+	Log            *LogConfig             `json:"log,omitempty"`
+	AccessLog      *AccessLogConfig       `json:"access_log,omitempty"`
+	Routers        []*Router              `json:"routers"`
+	MonitorModules map[string]string      `json:"monitor_modules"`
+	RedisConfig    map[string]interface{} `json:"redisConfig"`
+	ExtendsConfig  map[string]interface{} `json:"extends_config"`
+}
 
-	Log       *LogConfig       `json:"log,omitempty"`
-	AccessLog *AccessLogConfig `json:"access_log,omitempty"`
+//Router 路由
+type Router struct {
+	Rules    string `json:"routerRules"`
+	Target   string `json:"target"`
+	Priority int    `json:"priority"`
+}
 
-	MonitorModules map[string]string `json:"monitor_modules"`
+//RouterRule 路由规则
+type RouterRule struct {
+	Host       string `json:"host"`
+	StrategyID string `json:"strategyID"`
 }
 
 //AccessLogConfig access日志配置
@@ -82,12 +97,15 @@ type PluginConfig struct {
 	IsStop    bool   `json:"stop"`
 	Config    string `json:"config"`
 	UpdateTag string `json:"updateTag"`
+	IsAuth    bool   `json:"isAuth"`
 }
 
 //APIContent api详情
 type APIContent struct {
-	ID             int              `json:"id"`
-	Name           string           `json:"name"`
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Alias string `json:"alias"`
+
 	OutPutEncoder  string           `json:"output"`
 	RequestURL     string           `json:"requestUrl"`
 	Methods        []string         `json:"methods"`
@@ -177,6 +195,11 @@ type StrategyConfig struct {
 	Plugins []*PluginConfig   `json:"plugins"`
 }
 
+//Gateway 网关配置
+type Gateway struct {
+	SkipCertificate int `json:"skipCertificate"`
+}
+
 //APIOfStrategy 策略接口配置
 type APIOfStrategy struct {
 	ID      int             `json:"id"`
@@ -193,6 +216,7 @@ type VersionConfig struct {
 	CreateTime    string `json:"createTime"`
 	PublishStatus int    `json:"publishStatus"`
 	PublishTime   string `json:"publishTime"`
+	Publisher     string `json:"publisher"`
 }
 
 //Project 项目

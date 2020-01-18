@@ -51,13 +51,11 @@ func (b *BodyRequestHandler) Files() (map[string]*goku_plugin.FileHeader, error)
 
 //Parse 解析
 func (b *BodyRequestHandler) Parse() error {
-
 	if b.isInit {
 		return nil
 	}
 
 	contentType, _, _ := mime.ParseMediaType(b.contentType)
-
 	switch contentType {
 	case goku_plugin.JSON:
 		{
@@ -123,8 +121,7 @@ func (b *BodyRequestHandler) Parse() error {
 				return err
 			}
 			if b.form == nil {
-
-				b.object = form
+				b.form = form
 			} else {
 				for k, v := range form {
 					b.form[k] = append(b.form[k], v...)

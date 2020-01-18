@@ -50,9 +50,10 @@ func (h *API) Router(ctx *common.Context) {
 
 func (h *API) accessFlow(ctx *common.Context) bool {
 	for _, handler := range h.pluginAccess {
-
-		flag, _ := handler.Execute(ctx)
-
+		flag, err := handler.Execute(ctx)
+		if err != nil {
+			fmt.Println(err)
+		}
 		if flag == false && handler.IsStop() {
 
 			return false
@@ -70,7 +71,6 @@ func (h *API) accessGlobalFlow(ctx *common.Context) {
 
 func (h *API) proxyFlow(ctx *common.Context) bool {
 	for _, handler := range h.pluginProxies {
-
 		flag, _ := handler.Execute(ctx)
 
 		if flag == false && handler.IsStop() {

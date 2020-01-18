@@ -3,7 +3,6 @@ package dao_version_config
 import (
 	"strconv"
 
-	"github.com/eolinker/goku-api-gateway/common/database"
 	"github.com/eolinker/goku-api-gateway/config"
 )
 
@@ -15,15 +14,15 @@ var autoAuthNames = map[string]string{
 }
 
 //GetAPIsOfStrategy 获取策略内接口数据
-func GetAPIsOfStrategy() (map[string][]*config.APIOfStrategy, error) {
-	db := database.GetConnection()
+func (d *VersionConfigDao)GetAPIsOfStrategy() (map[string][]*config.APIOfStrategy, error) {
+	db := d.db
 	sql := "SELECT goku_conn_strategy_api.apiID,IFNULL(goku_conn_strategy_api.target,''),goku_conn_strategy_api.strategyID FROM goku_conn_strategy_api;"
 	rows, err := db.Query(sql)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	apiPlugins, err := GetAPIPlugins()
+	apiPlugins, err := d.GetAPIPlugins()
 	if err != nil {
 		return nil, err
 	}
@@ -53,8 +52,8 @@ func GetAPIsOfStrategy() (map[string][]*config.APIOfStrategy, error) {
 }
 
 //GetStrategyConfig 获取策略配置
-func GetStrategyConfig() (string, []*config.StrategyConfig, error) {
-	db := database.GetConnection()
+func (d *VersionConfigDao)GetStrategyConfig() (string, []*config.StrategyConfig, error) {
+	db := d.db
 	sql := "SELECT strategyID,strategyName,enableStatus,strategyType FROM goku_gateway_strategy"
 
 	rows, err := db.Query(sql)
@@ -63,11 +62,11 @@ func GetStrategyConfig() (string, []*config.StrategyConfig, error) {
 	}
 	defer rows.Close()
 	strategyConfigs := make([]*config.StrategyConfig, 0, 20)
-	strategyPlugins, authMaps, err := GetStrategyPlugins()
+	strategyPlugins, authMaps, err := d.GetStrategyPlugins()
 	if err != nil {
 		return "", nil, err
 	}
-	apiOfStrategy, err := GetAPIsOfStrategy()
+	apiOfStrategy, err := d.GetAPIsOfStrategy()
 	if err != nil {
 		return "", nil, err
 	}

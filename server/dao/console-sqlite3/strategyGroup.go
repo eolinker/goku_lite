@@ -1,12 +1,32 @@
 package console_sqlite3
 
 import (
-	database2 "github.com/eolinker/goku-api-gateway/common/database"
+	"database/sql"
+
+	"github.com/eolinker/goku-api-gateway/server/dao"
 )
 
+//StrategyGroupDao StrategyGroupDao
+type StrategyGroupDao struct {
+	db *sql.DB
+}
+
+//NewStrategyGroupDao new StrategyGroupDao
+func NewStrategyGroupDao() *StrategyGroupDao {
+	return &StrategyGroupDao{}
+}
+
+//Create create
+func (d *StrategyGroupDao) Create(db *sql.DB) (interface{}, error) {
+	d.db = db
+	var i dao.StrategyGroupDao = d
+
+	return &i, nil
+}
+
 //AddStrategyGroup 新建策略组分组
-func AddStrategyGroup(groupName string) (bool, interface{}, error) {
-	db := database2.GetConnection()
+func (d *StrategyGroupDao) AddStrategyGroup(groupName string) (bool, interface{}, error) {
+	db := d.db
 	sql := "INSERT INTO goku_gateway_strategy_group (groupName) VALUES (?);"
 	stmt, err := db.Prepare(sql)
 	if err != nil {
@@ -25,8 +45,8 @@ func AddStrategyGroup(groupName string) (bool, interface{}, error) {
 }
 
 //EditStrategyGroup 修改策略组分组
-func EditStrategyGroup(groupName string, groupID int) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *StrategyGroupDao) EditStrategyGroup(groupName string, groupID int) (bool, string, error) {
+	db := d.db
 	sql := "UPDATE goku_gateway_strategy_group SET groupName = ? WHERE groupID = ?;"
 	stmt, err := db.Prepare(sql)
 	if err != nil {
@@ -41,8 +61,8 @@ func EditStrategyGroup(groupName string, groupID int) (bool, string, error) {
 }
 
 //DeleteStrategyGroup 删除策略组分组
-func DeleteStrategyGroup(groupID int) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *StrategyGroupDao) DeleteStrategyGroup(groupID int) (bool, string, error) {
+	db := d.db
 	// 查询该分组下所有策略组ID
 	sql := "SELECT strategyID FROM goku_gateway_strategy WHERE groupID = ?;"
 	rows, err := db.Query(sql, groupID)
@@ -108,8 +128,8 @@ func DeleteStrategyGroup(groupID int) (bool, string, error) {
 }
 
 //GetStrategyGroupList 获取策略组分组列表
-func GetStrategyGroupList() (bool, []map[string]interface{}, error) {
-	db := database2.GetConnection()
+func (d *StrategyGroupDao) GetStrategyGroupList() (bool, []map[string]interface{}, error) {
+	db := d.db
 	sql := "SELECT groupID,groupName,groupType FROM goku_gateway_strategy_group WHERE groupType = 0;"
 	rows, err := db.Query(sql)
 	if err != nil {
@@ -137,8 +157,8 @@ func GetStrategyGroupList() (bool, []map[string]interface{}, error) {
 }
 
 //CheckIsOpenGroup 判断是否是开放分组
-func CheckIsOpenGroup(groupID int) bool {
-	db := database2.GetConnection()
+func (d *StrategyGroupDao) CheckIsOpenGroup(groupID int) bool {
+	db := d.db
 	var groupType int
 	sql := "SELECT groupType FROM goku_gateway_strategy_group WHERE groupID = ?;"
 	err := db.QueryRow(sql, groupID).Scan(&groupType)

@@ -6,19 +6,47 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/eolinker/goku-api-gateway/utils"
+
+	"github.com/pkg/errors"
+
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
+
 	"github.com/eolinker/goku-api-gateway/console/controller"
-	"github.com/eolinker/goku-api-gateway/console/module/account"
 	"github.com/eolinker/goku-api-gateway/console/module/api"
 )
 
+const operationAPI = "apiManagement"
+
+//Handlers handlers
+type Handlers struct {
+}
+
+//Handlers handlers
+func (h *Handlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/add":              factory.NewAccountHandleFunction(operationAPI, true, AddAPI),
+		"/edit":             factory.NewAccountHandleFunction(operationAPI, true, EditAPI),
+		"/copy":             factory.NewAccountHandleFunction(operationAPI, true, CopyAPI),
+		"/getInfo":          factory.NewAccountHandleFunction(operationAPI, false, GetAPIInfo),
+		"/getList":          factory.NewAccountHandleFunction(operationAPI, false, GetAPIList),
+		"/id/getList":       factory.NewAccountHandleFunction(operationAPI, false, GetAPIIDList),
+		"/batchEditGroup":   factory.NewAccountHandleFunction(operationAPI, true, BatchEditAPIGroup),
+		"/batchDelete":      factory.NewAccountHandleFunction(operationAPI, true, BatchDeleteAPI),
+		"/batchEditBalance": factory.NewAccountHandleFunction(operationAPI, true, BatchSetBalanceAPI),
+	}
+}
+
+//NewAPIHandlers API处理器
+func NewAPIHandlers() *Handlers {
+	return &Handlers{}
+}
+
 //AddAPI 新增接口
 func AddAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	apiName := httpRequest.PostFormValue("apiName")
+	alias := httpRequest.PostFormValue("alias")
 	requestURL := httpRequest.PostFormValue("requestURL")
 	requestMethod := httpRequest.PostFormValue("requestMethod")
 	protocol := httpRequest.PostFormValue("protocol")
@@ -36,7 +64,7 @@ func AddAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	linkApis := httpRequest.PostFormValue("linkApis")
 	staticResponse := httpRequest.PostFormValue("staticResponse")
 	responseDataType := httpRequest.PostFormValue("responseDataType")
-
+	userID := goku_handler.UserIDFromRequest(httpRequest)
 	if apiName == "" {
 		controller.WriteError(httpResponse, "190002", "api", "[ERROR]Illegal apiName!", nil)
 		return
@@ -53,6 +81,15 @@ func AddAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	aType, err := strconv.Atoi(apiType)
 	if err != nil && apiType == "" {
 		controller.WriteError(httpResponse, "190012", "api", "[ERROR]Illegal apiType!", err)
+		return
+	}
+
+	if !utils.ValidateURL(requestURL) {
+		controller.WriteError(httpResponse, "190021", "api", "[ERROR]Illegal requestURL!", nil)
+		return
+	}
+	if aType == 1 && !utils.ValidateURL(targetURL) {
+		controller.WriteError(httpResponse, "190022", "api", "[ERROR]Illegal requestURL!", nil)
 		return
 	}
 	if responseDataType != "origin" && responseDataType != "json" && responseDataType != "xml" {
@@ -102,8 +139,13 @@ func AddAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	if managerID == "" {
 		mgID = userID
 	}
+	if api.CheckAliasIsExist(0, alias) {
+		errInfo := "[ERROR]duplicate alias!"
+		controller.WriteError(httpResponse, "190020", "api", errInfo, errors.New(errInfo))
+		return
+	}
 
-	flag, id, err := api.AddAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, linkApis, staticResponse, responseDataType, balanceName, protocol, pjID, gID, t, count, apiValve, mgID, userID, aType)
+	flag, id, err := api.AddAPI(apiName, alias, requestURL, targetURL, requestMethod, targetMethod, isFollow, linkApis, staticResponse, responseDataType, balanceName, protocol, pjID, gID, t, count, apiValve, mgID, userID, aType)
 	if !flag {
 
 		controller.WriteError(httpResponse,
@@ -117,13 +159,10 @@ func AddAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //EditAPI 编辑接口
 func EditAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	apiID := httpRequest.PostFormValue("apiID")
 	apiName := httpRequest.PostFormValue("apiName")
+	alias := httpRequest.PostFormValue("alias")
 	requestURL := httpRequest.PostFormValue("requestURL")
 	targetURL := httpRequest.PostFormValue("targetURL")
 	requestMethod := httpRequest.PostFormValue("requestMethod")
@@ -140,6 +179,8 @@ func EditAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	linkApis := httpRequest.PostFormValue("linkApis")
 	staticResponse := httpRequest.PostFormValue("staticResponse")
 	responseDataType := httpRequest.PostFormValue("responseDataType")
+	userID := goku_handler.UserIDFromRequest(httpRequest)
+
 	if apiName == "" {
 		controller.WriteError(httpResponse, "190002", "api", "[ERROR]Illegal apiName!", nil)
 		return
@@ -207,8 +248,13 @@ func EditAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	if managerID == "" {
 		mgID = userID
 	}
+	if api.CheckAliasIsExist(aID, alias) {
+		errInfo := "[ERROR]duplicate alias!"
+		controller.WriteError(httpResponse, "190020", "api", errInfo, errors.New(errInfo))
+		return
+	}
 
-	flag, err := api.EditAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, linkApis, staticResponse, responseDataType, balanceName, protocol, pjID, gID, t, count, apiValve, aID, mgID, userID)
+	flag, err := api.EditAPI(apiName, alias, requestURL, targetURL, requestMethod, targetMethod, isFollow, linkApis, staticResponse, responseDataType, balanceName, protocol, pjID, gID, t, count, apiValve, aID, mgID, userID)
 	if !flag {
 
 		controller.WriteError(httpResponse, "190000", "api", "[ERROR]apiID does not exist!", err)
@@ -223,10 +269,6 @@ func EditAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //GetAPIInfo 获取接口信息
 func GetAPIInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	apiID := httpRequest.PostFormValue("apiID")
 
@@ -249,10 +291,6 @@ func GetAPIInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 // GetAPIIDList 获取接口ID列表
 func GetAPIIDList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	httpRequest.ParseForm()
 	projectID := httpRequest.Form.Get("projectID")
@@ -284,8 +322,11 @@ func GetAPIIDList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	ids := make([]int, 0)
 	json.Unmarshal([]byte(idsStr), &ids)
 
-	_, result, _ := api.GetAPIIDList(pjID, gID, keyword, op, ids)
-
+	_, result, err := api.GetAPIIDList(pjID, gID, keyword, op, ids)
+	if err != nil {
+		controller.WriteError(httpResponse, "190020", "api", "[ERROR]db error!", err)
+		return
+	}
 	// controller.WriteResultInfo(httpResponse, "api", "apiList", result)
 	controller.WriteResultInfoWithPage(httpResponse, "api", "apiIDList", result, &controller.PageInfo{
 		ItemNum:  len(result),
@@ -296,10 +337,6 @@ func GetAPIIDList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //GetAPIList 获取接口列表
 func GetAPIList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	httpRequest.ParseForm()
 	projectID := httpRequest.Form.Get("projectID")
@@ -343,8 +380,11 @@ func GetAPIList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	ids := make([]int, 0)
 	json.Unmarshal([]byte(idsStr), &ids)
 
-	_, result, count, _ := api.GetAPIList(pjID, gID, keyword, op, p, pSize, ids)
-
+	_, result, count, err := api.GetAPIList(pjID, gID, keyword, op, p, pSize, ids)
+	if err != nil {
+		controller.WriteError(httpResponse, "190019", "api", "[Error]db error", err)
+		return
+	}
 	// controller.WriteResultInfo(httpResponse, "api", "apiList", result)
 	controller.WriteResultInfoWithPage(httpResponse, "api", "apiList", result, &controller.PageInfo{
 		ItemNum:  len(result),
@@ -357,10 +397,6 @@ func GetAPIList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 // BatchEditAPIGroup 批量修改接口分组
 func BatchEditAPIGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	apiIDList := httpRequest.PostFormValue("apiIDList")
 	groupID := httpRequest.PostFormValue("groupID")
@@ -381,10 +417,6 @@ func BatchEditAPIGroup(httpResponse http.ResponseWriter, httpRequest *http.Reque
 
 //BatchDeleteAPI 批量删除接口
 func BatchDeleteAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	apiIDList := httpRequest.PostFormValue("apiIDList")
 
@@ -400,30 +432,11 @@ func BatchDeleteAPI(httpResponse http.ResponseWriter, httpRequest *http.Request)
 	return
 }
 
-//GetAPIManagerList 获取接口负责人列表
-func GetAPIManagerList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
-	if e != nil {
-		return
-	}
-
-	flag, result, err := account.GetUserListWithPermission("apiManagement", "edit")
-	if !flag {
-		controller.WriteError(httpResponse, "190000", "api", err.Error(), err)
-		return
-	}
-	controller.WriteResultInfo(httpResponse, "api", "userList", result)
-	return
-}
-
 //CopyAPI 复制接口
 func CopyAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	userID, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	apiID := httpRequest.PostFormValue("apiID")
+	alisa := httpRequest.PostFormValue("alisa")
 	apiName := httpRequest.PostFormValue("apiName")
 	requestURL := httpRequest.PostFormValue("requestURL")
 	targetURL := httpRequest.PostFormValue("targetURL")
@@ -434,6 +447,7 @@ func CopyAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 	isFollow := httpRequest.PostFormValue("isFollow")
 	groupID := httpRequest.PostFormValue("groupID")
 	projectID := httpRequest.PostFormValue("projectID")
+	userID := goku_handler.UserIDFromRequest(httpRequest)
 	if apiName == "" {
 		controller.WriteError(httpResponse, "190002", "api", "[ERROR]Illegal apiName!", nil)
 		return
@@ -465,13 +479,21 @@ func CopyAPI(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 		return
 
 	}
+	if !utils.ValidateURL(requestURL) {
+		controller.WriteError(httpResponse, "190021", "api", "[ERROR]Illegal requestURL!", nil)
+		return
+	}
 	flag, apiInfo, err := api.GetAPIInfo(aID)
 	if !flag {
 		controller.WriteError(httpResponse, "190000", "api", "[ERROR]apiID does not exist!", nil)
 		return
 	}
+	if apiInfo.APIType == 1 && !utils.ValidateURL(targetURL) {
+		controller.WriteError(httpResponse, "190022", "api", "[ERROR]Illegal targetURL!", nil)
+		return
+	}
 	linkApis, _ := json.Marshal(apiInfo.LinkAPIs)
-	flag, id, err := api.AddAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, string(linkApis), apiInfo.StaticResponse, apiInfo.ResponseDataType, balanceName, protocol, pjID, gID, apiInfo.Timeout, apiInfo.RetryConut, apiInfo.Valve, apiInfo.ManagerID, userID, apiInfo.APIType)
+	flag, id, err := api.AddAPI(apiName, alisa, requestURL, targetURL, requestMethod, targetMethod, isFollow, string(linkApis), apiInfo.StaticResponse, apiInfo.ResponseDataType, balanceName, protocol, pjID, gID, apiInfo.Timeout, apiInfo.RetryConut, apiInfo.Valve, apiInfo.ManagerID, userID, apiInfo.APIType)
 	if !flag {
 		controller.WriteError(httpResponse, "190000", "api", "[ERROR]Fail to add api!", err)
 		return

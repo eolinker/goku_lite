@@ -67,6 +67,7 @@ func defaultAccessLogConfig() *config.AccessLogConfig {
 		Dir:    "work/logs/",
 		File:   "access.log",
 		Period: "hour",
+		Expire: 3,
 		Fields: nil,
 	}
 }

@@ -61,6 +61,7 @@ func (r *Before) BeforeMatch(ctx *common.Context) bool {
 
 func (r *Before) rout(w http.ResponseWriter, req *http.Request, ctx *common.Context) {
 	strategyID := utils.GetStrateyID(ctx)
+
 	if strategyID == "" {
 		// 没有策略id
 		if r.anonymousStrategy == "" {

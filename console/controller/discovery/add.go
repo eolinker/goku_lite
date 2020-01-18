@@ -2,27 +2,24 @@ package discovery
 
 import (
 	"fmt"
+	"github.com/eolinker/goku-api-gateway/console/controller"
 	"net/http"
 
 	"github.com/eolinker/goku-api-gateway/common/auto-form"
-	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/service"
 	driver2 "github.com/eolinker/goku-api-gateway/server/driver"
 )
 
 func add(w http.ResponseWriter, r *http.Request) {
-	_, err := controller.CheckLogin(w, r, controller.OperationLoadBalance, controller.OperationEDIT)
-	if err != nil {
-		return
-	}
 
-	if err = r.ParseForm(); err != nil {
+
+	if err := r.ParseForm(); err != nil {
 		controller.WriteError(w, "260000", "data", "[param_check] Parse form body error | 解析form表单参数错误", err)
 		return
 	}
 
 	param := new(service.AddParam)
-	err = auto.SetValues(r.PostForm, param)
+	err := auto.SetValues(r.PostForm, param)
 	if err != nil {
 		controller.WriteError(w, "260000", "data", fmt.Sprintf("[param_check] %s", err.Error()), err)
 		return

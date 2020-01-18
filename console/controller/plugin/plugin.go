@@ -4,17 +4,47 @@ import (
 	"net/http"
 	"strconv"
 
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
+
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/plugin"
 	plugin_config "github.com/eolinker/goku-api-gateway/console/module/plugin/plugin-config"
 )
 
+const operationPlugin = "pluginManagement"
+
+//Handlers handlers
+type Handlers struct {
+}
+
+//Handlers handlers
+func (h *Handlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/add":               factory.NewAccountHandleFunction(operationPlugin, true, AddPlugin),
+		"/edit":              factory.NewAccountHandleFunction(operationPlugin, true, EditPlugin),
+		"/delete":            factory.NewAccountHandleFunction(operationPlugin, true, DeletePlugin),
+		"/checkNameIsExist":  factory.NewAccountHandleFunction(operationPlugin, false, CheckNameIsExist),
+		"/checkIndexIsExist": factory.NewAccountHandleFunction(operationPlugin, false, CheckIndexIsExist),
+		"/getList":           factory.NewAccountHandleFunction(operationPlugin, false, GetPluginList),
+		"/getInfo":           factory.NewAccountHandleFunction(operationPlugin, false, GetPluginInfo),
+		"/getConfig":         factory.NewAccountHandleFunction(operationPlugin, false, GetPluginConfig),
+		"/start":             factory.NewAccountHandleFunction(operationPlugin, true, StartPlugin),
+		"/stop":              factory.NewAccountHandleFunction(operationPlugin, true, StopPlugin),
+		"/getListByType":     factory.NewAccountHandleFunction(operationPlugin, false, GetPluginListByPluginType),
+		"/batchStop":         factory.NewAccountHandleFunction(operationPlugin, true, BatchStopPlugin),
+		"/batchStart":        factory.NewAccountHandleFunction(operationPlugin, true, BatchStartPlugin),
+		"/availiable/check":  factory.NewAccountHandleFunction(operationPlugin, false, CheckPluginIsAvailable),
+	}
+}
+
+//NewHandlers new handlers
+func NewHandlers() *Handlers {
+	return &Handlers{}
+}
+
 // GetPluginList 获取插件列表
 func GetPluginList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationREAD)
-	if e != nil {
-		return
-	}
+
 	httpRequest.ParseForm()
 	keyword := httpRequest.Form.Get("keyword")
 	condition := httpRequest.Form.Get("condition")
@@ -40,10 +70,6 @@ func GetPluginList(httpResponse http.ResponseWriter, httpRequest *http.Request) 
 
 //AddPlugin 新增插件信息
 func AddPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	pluginPriority := httpRequest.PostFormValue("pluginPriority")
 	pluginName := httpRequest.PostFormValue("pluginName")
@@ -106,10 +132,6 @@ func AddPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //EditPlugin 修改插件信息
 func EditPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	pluginPriority := httpRequest.PostFormValue("pluginPriority")
 	pluginName := httpRequest.PostFormValue("pluginName")
@@ -162,10 +184,6 @@ func EditPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //DeletePlugin 删除插件信息
 func DeletePlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	pluginName := httpRequest.PostFormValue("pluginName")
 	flag, err := plugin.CheckNameIsExist(pluginName)
@@ -195,10 +213,6 @@ func DeletePlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //GetPluginInfo 获取插件信息
 func GetPluginInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	pluginName := httpRequest.PostFormValue("pluginName")
 
@@ -228,10 +242,6 @@ func GetPluginInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) 
 
 //GetPluginConfig 获取插件配置
 func GetPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	pluginName := httpRequest.PostFormValue("pluginName")
 	flag, result, err := plugin.GetPluginConfig(pluginName)
@@ -252,10 +262,6 @@ func GetPluginConfig(httpResponse http.ResponseWriter, httpRequest *http.Request
 
 //CheckIndexIsExist 判断插件优先级是否存在
 func CheckIndexIsExist(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	pluginPriority := httpRequest.PostFormValue("pluginPriority")
 
@@ -286,10 +292,6 @@ func CheckIndexIsExist(httpResponse http.ResponseWriter, httpRequest *http.Reque
 
 //CheckNameIsExist 检查插件名称是否存在
 func CheckNameIsExist(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	pluginName := httpRequest.PostFormValue("pluginName")
 
@@ -309,10 +311,6 @@ func CheckNameIsExist(httpResponse http.ResponseWriter, httpRequest *http.Reques
 
 //StartPlugin 开启插件
 func StartPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	pluginName := httpRequest.PostFormValue("pluginName")
 
@@ -332,10 +330,6 @@ func StartPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //StopPlugin 关闭插件
 func StopPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	pluginName := httpRequest.PostFormValue("pluginName")
 
@@ -354,10 +348,6 @@ func StopPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //GetPluginListByPluginType 获取不同类型的插件列表
 func GetPluginListByPluginType(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	pluginType := httpRequest.PostFormValue("pluginType")
 
@@ -387,10 +377,6 @@ func GetPluginListByPluginType(httpResponse http.ResponseWriter, httpRequest *ht
 
 //BatchStopPlugin 批量关闭插件
 func BatchStopPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	pluginNameList := httpRequest.PostFormValue("pluginNameList")
 
@@ -411,10 +397,6 @@ func BatchStopPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request
 
 //BatchStartPlugin 批量关闭插件
 func BatchStartPlugin(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	pluginNameList := httpRequest.PostFormValue("pluginNameList")
 
@@ -435,10 +417,6 @@ func BatchStartPlugin(httpResponse http.ResponseWriter, httpRequest *http.Reques
 
 //CheckPluginIsAvailable 检测插件
 func CheckPluginIsAvailable(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationPlugin, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	pluginName := httpRequest.PostFormValue("pluginName")
 	if len(pluginName) < 2 {
@@ -449,37 +427,5 @@ func CheckPluginIsAvailable(httpResponse http.ResponseWriter, httpRequest *http.
 			nil)
 		return
 	}
-	//flag, nodeList, err := node.GetNodeIPList()
-	//if !flag {
-	//	controller.WriteError(httpResponse,
-	//		"210000",
-	//		"plugin",
-	//		"[ERROR]The Open node list is empty",
-	//		err)
-	//	return
-	//}
-	//flag, errPluginList := utils.CheckPluginIsAvailiable(pluginName, nodeList)
-	//if !flag {
-	//
-	//	controller.WriteResultInfoWithCode(httpResponse,
-	//		"210000",
-	//		"plugin",
-	//		"errNodeList",
-	//		errPluginList)
-	//	return
-	//}
-	//flag, res, _ := plugin.EditPluginCheckStatus(pluginName, 1)
-	//if !flag {
-	//
-	//	controller.WriteError(httpResponse,
-	//		"210000",
-	//		"plugin",
-	//		res,
-	//		err)
-	//	return
-	//}
-	//
-	//controller.WriteResultInfo(httpResponse, "plugin", "", nil)
-
 	return
 }

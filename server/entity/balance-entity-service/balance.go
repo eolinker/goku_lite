@@ -14,6 +14,7 @@ type Balance struct {
 	Desc          string
 	CreateTime    string
 	UpdateTime    string
+	CanDelete     int
 }
 
 //Type 获取负载类型

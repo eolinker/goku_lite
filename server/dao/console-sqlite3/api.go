@@ -8,16 +8,34 @@ import (
 	"strings"
 	"time"
 
-	database2 "github.com/eolinker/goku-api-gateway/common/database"
+	"github.com/eolinker/goku-api-gateway/server/dao"
+
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
+//APIDao APIDao
+type APIDao struct {
+	db *SQL.DB
+}
+
+//NewAPIDao new APIDao
+func NewAPIDao() *APIDao {
+	return &APIDao{}
+}
+
+//Create create
+func (d *APIDao) Create(db *SQL.DB) (interface{}, error) {
+	d.db = db
+	var i dao.APIDao = d
+	return &i, nil
+}
+
 // AddAPI 新增接口
-func AddAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, linkAPIs, staticResponse, responseDataType, balanceName, protocol string, projectID, groupID, timeout, retryCount, alertValve, managerID, userID, apiType int) (bool, int, error) {
-	db := database2.GetConnection()
+func (d *APIDao) AddAPI(apiName, alias, requestURL, targetURL, requestMethod, targetMethod, isFollow, linkAPIs, staticResponse, responseDataType, balanceName, protocol string, projectID, groupID, timeout, retryCount, alertValve, managerID, userID, apiType int) (bool, int, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
-	res, err := Tx.Exec("INSERT INTO goku_gateway_api (projectID,groupID,apiName,requestURL,targetURL,requestMethod,targetMethod,protocol,linkAPIs,staticResponse,responseDataType,balanceName,isFollow,timeout,retryCount,alertValve,createTime,updateTime,managerID,lastUpdateUserID,createUserID,apiType) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", projectID, groupID, apiName, requestURL, targetURL, requestMethod, targetMethod, protocol, linkAPIs, staticResponse, responseDataType, balanceName, isFollow, timeout, retryCount, alertValve, now, now, managerID, userID, userID, apiType)
+	res, err := Tx.Exec("INSERT INTO goku_gateway_api (projectID,groupID,apiName,alias,requestURL,targetURL,requestMethod,targetMethod,protocol,linkAPIs,staticResponse,responseDataType,balanceName,isFollow,timeout,retryCount,alertValve,createTime,updateTime,managerID,lastUpdateUserID,createUserID,apiType) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", projectID, groupID, apiName, alias, requestURL, targetURL, requestMethod, targetMethod, protocol, linkAPIs, staticResponse, responseDataType, balanceName, isFollow, timeout, retryCount, alertValve, now, now, managerID, userID, userID, apiType)
 
 	if err != nil {
 		Tx.Rollback()
@@ -35,11 +53,11 @@ func AddAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollo
 }
 
 // EditAPI 修改接口
-func EditAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFollow, linkAPIs, staticResponse, responseDataType, balanceName, protocol string, projectID, groupID, timeout, retryCount, alertValve, apiID, managerID, userID int) (bool, error) {
-	db := database2.GetConnection()
+func (d *APIDao) EditAPI(apiName, alias, requestURL, targetURL, requestMethod, targetMethod, isFollow, linkAPIs, staticResponse, responseDataType, balanceName, protocol string, projectID, groupID, timeout, retryCount, alertValve, apiID, managerID, userID int) (bool, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
-	_, err := Tx.Exec("UPDATE goku_gateway_api SET projectID = ?,groupID = ?,apiName = ?,requestURL = ?,targetURL = ?,requestMethod = ?,protocol = ?,balanceName = ?,targetMethod = ?,isFollow = ?,linkAPIs = ?,staticResponse = ?,responseDataType = ?,timeout = ?,retryCount = ?,alertValve = ?,updateTime = ?,managerID = ?,lastUpdateUserID = ? WHERE apiID = ?", projectID, groupID, apiName, requestURL, targetURL, requestMethod, protocol, balanceName, targetMethod, isFollow, linkAPIs, staticResponse, responseDataType, timeout, retryCount, alertValve, now, managerID, userID, apiID)
+	_, err := Tx.Exec("UPDATE goku_gateway_api SET projectID = ?,groupID = ?,apiName = ?,alias = ?,requestURL = ?,targetURL = ?,requestMethod = ?,protocol = ?,balanceName = ?,targetMethod = ?,isFollow = ?,linkAPIs = ?,staticResponse = ?,responseDataType = ?,timeout = ?,retryCount = ?,alertValve = ?,updateTime = ?,managerID = ?,lastUpdateUserID = ? WHERE apiID = ?", projectID, groupID, apiName, alias, requestURL, targetURL, requestMethod, protocol, balanceName, targetMethod, isFollow, linkAPIs, staticResponse, responseDataType, timeout, retryCount, alertValve, now, managerID, userID, apiID)
 
 	if err != nil {
 		Tx.Rollback()
@@ -56,9 +74,9 @@ func EditAPI(apiName, requestURL, targetURL, requestMethod, targetMethod, isFoll
 }
 
 // GetAPIInfo 获取接口信息
-func GetAPIInfo(apiID int) (bool, *entity.API, error) {
-	db := database2.GetConnection()
-	sql := `SELECT goku_gateway_api.apiID,goku_gateway_api.groupID,goku_gateway_api.apiName,goku_gateway_api.requestURL,goku_gateway_api.targetURL,goku_gateway_api.requestMethod,goku_gateway_api.targetMethod,IFNULL(goku_gateway_api.protocol,"http"),IFNULL(goku_gateway_api.balanceName,""),goku_gateway_api.isFollow,goku_gateway_api.timeout,goku_gateway_api.retryCount,goku_gateway_api.alertValve,goku_gateway_api.createTime,goku_gateway_api.updateTime,goku_gateway_api.managerID,goku_gateway_api.lastUpdateUserID,goku_gateway_api.createUserID,IFNULL(goku_gateway_api_group.groupPath,"0"),goku_gateway_api.apiType,IFNULL(goku_gateway_api.linkAPIs,''),IFNULL(goku_gateway_api.staticResponse,''),IFNULL(goku_gateway_api.responseDataType,'origin') FROM goku_gateway_api LEFT JOIN goku_gateway_api_group ON goku_gateway_api.groupID = goku_gateway_api_group.groupID WHERE goku_gateway_api.apiID = ?`
+func (d *APIDao) GetAPIInfo(apiID int) (bool, *entity.API, error) {
+	db := d.db
+	sql := `SELECT A.apiID,A.groupID,A.apiName,A.requestURL,A.targetURL,A.requestMethod,A.targetMethod,IFNULL(A.protocol,"http"),IFNULL(A.balanceName,""),A.isFollow,A.timeout,A.retryCount,A.alertValve,A.createTime,A.updateTime,A.managerID,A.lastUpdateUserID,A.createUserID,IFNULL(goku_gateway_api_group.groupPath,"0"),A.apiType,IFNULL(A.linkAPIs,''),IFNULL(A.staticResponse,''),IFNULL(A.responseDataType,'origin') FROM goku_gateway_api A LEFT JOIN goku_gateway_api_group ON A.groupID = goku_gateway_api_group.groupID WHERE A.apiID = ?`
 	api := &entity.API{}
 	var managerInfo entity.ManagerInfo
 	var linkAPIs string
@@ -93,10 +111,10 @@ func GetAPIInfo(apiID int) (bool, *entity.API, error) {
 }
 
 //GetAPIListByGroupList 通过分组列表获取接口列表
-func GetAPIListByGroupList(projectID int, groupIDList string) (bool, []map[string]interface{}, error) {
-	db := database2.GetConnection()
+func (d *APIDao) GetAPIListByGroupList(projectID int, groupIDList string) (bool, []map[string]interface{}, error) {
+	db := d.db
 	// 获取分组ID列表
-	sql := `SELECT goku_gateway_api.apiID,goku_gateway_api.apiName,goku_gateway_api.requestURL,IFNULL(goku_gateway_api.updateTime,""),goku_gateway_api.lastUpdateUserID,goku_gateway_api.managerID FROM goku_gateway_api WHERE goku_gateway_api.projectID = ? AND goku_gateway_api.groupID IN (` + groupIDList + `) ORDER BY goku_gateway_api.updateTime DESC;`
+	sql := `SELECT A.apiID,A.apiName,A.requestURL,IFNULL(A.updateTime,""),A.lastUpdateUserID,A.managerID FROM goku_gateway_api A WHERE A.projectID = ? AND A.groupID IN (` + groupIDList + `) ORDER BY A.updateTime DESC;`
 
 	rows, err := db.Query(sql, projectID)
 	if err != nil {
@@ -182,8 +200,8 @@ func getAPIRule(projectID int, keyword string, condition int, ids []int) []strin
 }
 
 // GetAPIIDList 获取接口ID列表
-func GetAPIIDList(projectID int, groupID int, keyword string, condition int, ids []int) (bool, []int, error) {
-	db := database2.GetConnection()
+func (d *APIDao) GetAPIIDList(projectID int, groupID int, keyword string, condition int, ids []int) (bool, []int, error) {
+	db := d.db
 	rule := getAPIRule(projectID, keyword, condition, ids)
 
 	if groupID < 1 {
@@ -213,7 +231,7 @@ func GetAPIIDList(projectID int, groupID int, keyword string, condition int, ids
 		ruleStr += "WHERE " + strings.Join(rule, " AND ")
 	}
 
-	sql := fmt.Sprintf(`SELECT A.apiID FROM goku_gateway_api A %s`, ruleStr)
+	sql := fmt.Sprintf(`SELECT A.apiID FROM goku_gateway_api A  %s`, ruleStr)
 	rows, err := db.Query(sql)
 	if err != nil {
 		return false, make([]int, 0), err
@@ -234,8 +252,8 @@ func GetAPIIDList(projectID int, groupID int, keyword string, condition int, ids
 }
 
 // GetAPIList 获取所有接口列表
-func GetAPIList(projectID int, groupID int, keyword string, condition, page, pageSize int, ids []int) (bool, []map[string]interface{}, int, error) {
-	db := database2.GetConnection()
+func (d *APIDao) GetAPIList(projectID int, groupID int, keyword string, condition, page, pageSize int, ids []int) (bool, []map[string]interface{}, int, error) {
+	db := d.db
 	rule := getAPIRule(projectID, keyword, condition, ids)
 
 	if groupID < 1 {
@@ -265,9 +283,9 @@ func GetAPIList(projectID int, groupID int, keyword string, condition, page, pag
 		ruleStr += "WHERE " + strings.Join(rule, " AND ")
 	}
 
-	sql := fmt.Sprintf(`SELECT A.apiID,A.apiName,A.requestURL,A.requestMethod,CASE WHEN A.apiType=0 THEN A.targetURL ELSE '' END,A.apiType,IFNULL(A.balanceName,''),IFNULL(A.updateTime,""),CASE WHEN B.remark is null or B.remark = "" THEN B.loginCall ELSE B.remark END AS updaterName,CASE WHEN C.remark is null or C.remark = "" THEN C.loginCall ELSE C.remark END AS managerName,A.lastUpdateUserID,A.managerID,A.isFollow,IFNULL(A.protocol,"http"),A.targetMethod,A.groupID,IFNULL(D.groupPath,"0"),IFNULL(D.groupName,"未分组") FROM goku_gateway_api A INNER JOIN goku_admin B ON A.lastUpdateUserID = B.userID INNER JOIN goku_admin C ON A.managerID=C.userID LEFT JOIN goku_gateway_api_group D ON D.groupID = A.groupID %s`, ruleStr)
-	count := getCountSQL(sql)
-	rows, err := getPageSQL(sql, "A.updateTime", "DESC", page, pageSize)
+	sql := fmt.Sprintf(`SELECT A.apiID,A.apiName,A.requestURL,A.requestMethod,CASE WHEN A.apiType=0 THEN A.targetURL ELSE '' END,A.apiType,IFNULL(A.balanceName,''),IFNULL(A.updateTime,""),CASE WHEN B.remark is null or B.remark = "" THEN B.loginCall ELSE B.remark END AS updaterName,CASE WHEN C.remark is null or C.remark = "" THEN C.loginCall ELSE C.remark END AS managerName,A.lastUpdateUserID,A.managerID,A.isFollow,IFNULL(A.protocol,"http"),A.targetMethod,A.groupID,IFNULL(D.groupPath,"0"),IFNULL(D.groupName,"未分组") FROM goku_gateway_api A  INNER JOIN goku_admin B ON A.lastUpdateUserID = B.userID INNER JOIN goku_admin C ON A.managerID=C.userID LEFT JOIN goku_gateway_api_group D ON D.groupID = A.groupID %s`, ruleStr)
+	count := getCountSQL(d.db, sql)
+	rows, err := getPageSQL(d.db, sql, "A.updateTime", "DESC", page, pageSize)
 	if err != nil {
 		return false, make([]map[string]interface{}, 0), 0, err
 	}
@@ -307,11 +325,11 @@ func GetAPIList(projectID int, groupID int, keyword string, condition, page, pag
 }
 
 //CheckURLIsExist 接口路径是否存在
-func CheckURLIsExist(requestURL, requestMethod string, projectID, apiID int) bool {
-	db := database2.GetConnection()
+func (d *APIDao) CheckURLIsExist(requestURL, requestMethod string, projectID, apiID int) bool {
+	db := d.db
 	var id int
 	var m string
-	sql := "SELECT apiID,requestMethod FROM goku_gateway_api WHERE requestURL = ? AND projectID = ?;"
+	sql := "SELECT apiID,requestMethod FROM goku_gateway_api A WHERE requestURL = ? AND projectID = ?;"
 	err := db.QueryRow(sql, requestURL, projectID).Scan(&id, &m)
 	if err != nil {
 		return false
@@ -332,9 +350,9 @@ func CheckURLIsExist(requestURL, requestMethod string, projectID, apiID int) boo
 }
 
 //CheckAPIIsExist 检查接口是否存在
-func CheckAPIIsExist(apiID int) (bool, error) {
-	db := database2.GetConnection()
-	sql := "SELECT apiID FROM goku_gateway_api WHERE apiID = ?;"
+func (d *APIDao) CheckAPIIsExist(apiID int) (bool, error) {
+	db := d.db
+	sql := "SELECT apiID FROM goku_gateway_api A WHERE apiID = ?;"
 	var id int
 	err := db.QueryRow(sql, apiID).Scan(&id)
 	if err != nil {
@@ -343,9 +361,29 @@ func CheckAPIIsExist(apiID int) (bool, error) {
 	return true, err
 }
 
+//CheckAliasIsExist 检查别名是否存在
+func (d *APIDao) CheckAliasIsExist(apiID int, alias string) bool {
+	if alias == "" {
+		return false
+	}
+
+	db := d.db
+	sql := "SELECT apiID FROM goku_gateway_api A WHERE alias = ?;"
+	var id int
+	err := db.QueryRow(sql, apiID).Scan(&id)
+	if err != nil {
+		return false
+	}
+	if id != 0 && apiID == id {
+		return false
+	}
+
+	return true
+}
+
 //BatchEditAPIBalance 批量修改接口负载
-func BatchEditAPIBalance(apiIDList []string, balance string) (string, error) {
-	db := database2.GetConnection()
+func (d *APIDao) BatchEditAPIBalance(apiIDList []string, balance string) (string, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 
 	sqlTpl := "UPDATE `goku_gateway_api` A LEFT JOIN `goku_gateway_project` P ON A.`projectID` = P.`projectID` SET A.`updateTime` = ?,  P.`updateTime`=?, A.`balanceName`=? WHERE A.`apiID` IN (%s)"
@@ -365,8 +403,8 @@ func BatchEditAPIBalance(apiIDList []string, balance string) (string, error) {
 }
 
 //BatchEditAPIGroup 批量修改接口分组
-func BatchEditAPIGroup(apiIDList []string, groupID int) (string, error) {
-	db := database2.GetConnection()
+func (d *APIDao) BatchEditAPIGroup(apiIDList []string, groupID int) (string, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 
 	sqlTpl := "UPDATE `goku_gateway_api` A LEFT JOIN `goku_gateway_project` P ON A.`projectID` = P.`projectID` SET A.`updateTime` = ?,  P.`updateTime`=?, A.`groupID`=? WHERE A.`apiID` IN (%s)"
@@ -386,11 +424,11 @@ func BatchEditAPIGroup(apiIDList []string, groupID int) (string, error) {
 }
 
 //BatchDeleteAPI 批量修改接口
-func BatchDeleteAPI(apiIDList string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *APIDao) BatchDeleteAPI(apiIDList string) (bool, string, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
-	sql := "DELETE FROM goku_gateway_api WHERE apiID IN (" + apiIDList + ");"
+	sql := "DELETE FROM goku_gateway_api A WHERE apiID IN (" + apiIDList + ");"
 	_, err := Tx.Exec(sql)
 	if err != nil {
 		Tx.Rollback()
@@ -410,7 +448,7 @@ func BatchDeleteAPI(apiIDList string) (bool, string, error) {
 	}
 
 	// 查询接口的projectID
-	rows, err := db.Query("SELECT projectID FROM goku_gateway_api WHERE apiID IN (" + apiIDList + ");")
+	rows, err := db.Query("SELECT projectID FROM goku_gateway_api A WHERE apiID IN (" + apiIDList + ");")
 	if err != nil {
 		Tx.Rollback()
 		return false, "[ERROR]Fail to excute SQL statement!", err

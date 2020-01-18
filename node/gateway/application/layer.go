@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/eolinker/goku-api-gateway/config"
@@ -54,8 +55,8 @@ func (app *LayerApplication) Execute(ctx *common.Context) {
 		ctx.SetBody([]byte("[ERROR]timeout!"))
 		// 超时
 		return
-	case <-errC:
-
+	case e := <-errC:
+		fmt.Println(e)
 		cancelFunc()
 		ctx.SetStatus(504, "504")
 		ctx.SetBody([]byte("[ERROR]Fail to get response after proxy!"))
@@ -74,7 +75,13 @@ func (app *LayerApplication) Execute(ctx *common.Context) {
 		log.Warn("encode response error:", e)
 		return
 	}
-
+	//if headers.Get("Content-Encoding") == "gzip" {
+	//	var b bytes.Buffer
+	//	wb := gzip.NewWriter(&b)
+	//	wb.Write(body)
+	//	wb.Flush()
+	//	body, _ = ioutil.ReadAll(&b)
+	//}
 	ctx.SetProxyResponseHandler(common.NewResponseReader(headers, 200, "200", body))
 
 }

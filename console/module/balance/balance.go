@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"time"
 
-	dao_balance "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3/dao-balance"
-
 	"github.com/eolinker/goku-api-gateway/console/module/service"
 	driver2 "github.com/eolinker/goku-api-gateway/server/driver"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/balance-entity-service"
 )
 
-//Add 新增负载
+//RegisterDao 新增负载
 func Add(info *Param) (string, error) {
 	serviceInfo, err := service.Get(info.ServiceName)
 	if err != nil {
@@ -25,7 +23,7 @@ func Add(info *Param) (string, error) {
 				return "param:static 和 staticCluster 不能同时为空", errors.New("param:static 和 staticCluster 不能同时为空")
 			}
 			now := time.Now().Format("2006-01-02 15:04:05")
-			result, err := dao_balance.AddStatic(info.Name, info.ServiceName, info.Static, info.StaticCluster, info.Desc, now)
+			result, err := balanceDao.AddStatic(info.Name, info.ServiceName, info.Static, info.StaticCluster, info.Desc, now)
 
 			return result, err
 		}
@@ -35,7 +33,7 @@ func Add(info *Param) (string, error) {
 				return "param:appName 不能为空", errors.New("param:appName 不能为空")
 			}
 			now := time.Now().Format("2006-01-02 15:04:05")
-			result, err := dao_balance.AddDiscovery(info.Name, info.ServiceName, info.AppName, info.Desc, now)
+			result, err := balanceDao.AddDiscovery(info.Name, info.ServiceName, info.AppName, info.Desc, now)
 
 			return result, err
 		}
@@ -58,7 +56,7 @@ func Save(info *Param) (string, error) {
 				return "param:static 和 staticCluster 不能同时为空", errors.New("param:static 和 staticCluster 不能同时为空")
 			}
 			now := time.Now().Format("2006-01-02 15:04:05")
-			result, err := dao_balance.SaveStatic(info.Name, info.ServiceName, info.Static, info.StaticCluster, info.Desc, now)
+			result, err := balanceDao.SaveStatic(info.Name, info.ServiceName, info.Static, info.StaticCluster, info.Desc, now)
 
 			return result, err
 		}
@@ -68,7 +66,7 @@ func Save(info *Param) (string, error) {
 				return "param:appName 不能为空", errors.New("param:appName 不能为空")
 			}
 			now := time.Now().Format("2006-01-02 15:04:05")
-			result, err := dao_balance.SaveDiscover(info.Name, info.ServiceName, info.AppName, info.Desc, now)
+			result, err := balanceDao.SaveDiscover(info.Name, info.ServiceName, info.AppName, info.Desc, now)
 
 			return result, err
 		}
@@ -80,7 +78,7 @@ func Save(info *Param) (string, error) {
 
 //Get 通过负载名称获取负载信息
 func Get(name string) (*Info, error) {
-	b, e := dao_balance.Get(name)
+	b, e := balanceDao.Get(name)
 	if e != nil {
 		return nil, e
 	}
@@ -92,13 +90,13 @@ func Get(name string) (*Info, error) {
 func Search(keyworkd string) ([]*Info, error) {
 	var entities []*entity.Balance
 	if keyworkd == "" {
-		es, e := dao_balance.GetAll()
+		es, e := balanceDao.GetAll()
 		if e != nil {
 			return nil, e
 		}
 		entities = es
 	} else {
-		es, e := dao_balance.Search(keyworkd)
+		es, e := balanceDao.Search(keyworkd)
 		if e != nil {
 			return nil, e
 		}
@@ -107,7 +105,13 @@ func Search(keyworkd string) ([]*Info, error) {
 
 	infos := make([]*Info, 0, len(entities))
 
+	useBalances, _ := balanceDao.GetUseBalanceNames()
 	for _, ent := range entities {
+		if useBalances != nil {
+			if _, ok := useBalances[ent.Name]; ok {
+				ent.CanDelete = 0
+			}
+		}
 		infos = append(infos, ReadInfo(ent))
 	}
 	return infos, nil
@@ -116,13 +120,18 @@ func Search(keyworkd string) ([]*Info, error) {
 //GetAll 获取所有负载列表
 func GetAll() ([]*Info, error) {
 
-	entities, e := dao_balance.GetAll()
+	entities, e := balanceDao.GetAll()
 	if e != nil {
 		return nil, e
 	}
 	infos := make([]*Info, 0, len(entities))
-
+	useBalances, _ := balanceDao.GetUseBalanceNames()
 	for _, ent := range entities {
+		if useBalances != nil {
+			if _, ok := useBalances[ent.Name]; ok {
+				ent.CanDelete = 0
+			}
+		}
 		infos = append(infos, ReadInfo(ent))
 	}
 	return infos, nil
@@ -130,19 +139,19 @@ func GetAll() ([]*Info, error) {
 
 //Delete 删除负载
 func Delete(name string) (string, error) {
-	result, err := dao_balance.Delete(name)
+	result, err := balanceDao.Delete(name)
 
 	return result, err
 }
 
 //GetBalancNames 获取负载名称列表
 func GetBalancNames() (bool, []string, error) {
-	return dao_balance.GetBalanceNames()
+	return balanceDao.GetBalanceNames()
 }
 
 //BatchDeleteBalance 批量删除负载
 func BatchDeleteBalance(balanceNames []string) (string, error) {
-	result, err := dao_balance.BatchDelete(balanceNames)
+	result, err := balanceDao.BatchDelete(balanceNames)
 
 	return result, err
 }

@@ -4,18 +4,35 @@ import (
 	"net/http"
 	"strconv"
 
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
+
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/cluster"
 	"github.com/eolinker/goku-api-gateway/console/module/node"
 )
 
+//GroupHandlers groupHandlers
+type GroupHandlers struct {
+}
+
+//Handlers handlers
+func (h *GroupHandlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/add":     factory.NewAccountHandleFunction(operationNode, true, AddNodeGroup),
+		"/edit":    factory.NewAccountHandleFunction(operationNode, true, EditNodeGroup),
+		"/delete":  factory.NewAccountHandleFunction(operationNode, true, DeleteNodeGroup),
+		"/getInfo": factory.NewAccountHandleFunction(operationNode, false, GetNodeGroupInfo),
+		"/getList": factory.NewAccountHandleFunction(operationNode, false, GetNodeGroupList),
+	}
+}
+
+//NewGroupHandlers new groupHandlers
+func NewGroupHandlers() *GroupHandlers {
+	return &GroupHandlers{}
+}
+
 //AddNodeGroup 新增节点分组
 func AddNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	cluserName := httpRequest.PostFormValue("cluster")
 
@@ -52,11 +69,6 @@ func AddNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //EditNodeGroup 修改节点分组信息
 func EditNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	groupName := httpRequest.PostFormValue("groupName")
 	groupID := httpRequest.PostFormValue("groupID")
@@ -97,10 +109,6 @@ func EditNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) 
 
 //DeleteNodeGroup 删除节点分组
 func DeleteNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	groupID := httpRequest.PostFormValue("groupID")
 
@@ -149,10 +157,6 @@ func DeleteNodeGroup(httpResponse http.ResponseWriter, httpRequest *http.Request
 
 //GetNodeGroupInfo 获取节点分组信息
 func GetNodeGroupInfo(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	groupID := httpRequest.PostFormValue("groupID")
 
@@ -182,10 +186,6 @@ func GetNodeGroupInfo(httpResponse http.ResponseWriter, httpRequest *http.Reques
 
 //GetNodeGroupList 获取节点分组列表
 func GetNodeGroupList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNode, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	cluserName := httpRequest.FormValue("cluster")
 	clusterID := cluster.GetClusterIDByName(cluserName)

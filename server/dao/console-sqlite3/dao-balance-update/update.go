@@ -1,15 +1,40 @@
 package dao_balance_update
 
 import (
-	"github.com/eolinker/goku-api-gateway/common/database"
-	dao_service2 "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3/dao-service"
+	"database/sql"
+
+	"github.com/eolinker/goku-api-gateway/common/pdao"
+	"github.com/eolinker/goku-api-gateway/server/dao"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/balance-entity"
 )
 
+var serviceDao dao.ServiceDao
+
+func init() {
+	pdao.Need(&serviceDao)
+}
+
+//BalanceUpdateDao BalanceUpdateDao
+type BalanceUpdateDao struct {
+	db *sql.DB
+}
+
+//NewBalanceUpdateDao new BalanceUpdateDao
+func NewBalanceUpdateDao() *BalanceUpdateDao {
+	return &BalanceUpdateDao{}
+}
+
+//Create create
+func (d *BalanceUpdateDao) Create(db *sql.DB) (interface{}, error) {
+	d.db = db
+	i := dao.BalanceUpdateDao(d)
+	return &i, nil
+}
+
 //GetAllOldVerSion 获取所有旧负载配置
-func GetAllOldVerSion() ([]*entity.BalanceInfoEntity, error) {
+func (d *BalanceUpdateDao) GetAllOldVerSion() ([]*entity.BalanceInfoEntity, error) {
 	const sql = "SELECT `balanceName`,IFNULL(`balanceDesc`, ''),IFNULL(`balanceConfig`, ''),IFNULL(`defaultConfig`, ''),IFNULL(`clusterConfig`, ''),`updateTime`,`createTime` FROM `goku_balance` WHERE `serviceName` = '';"
-	db := database.GetConnection()
+	db := d.db
 	rows, err := db.Query(sql)
 	if err != nil {
 		return nil, err
@@ -30,14 +55,14 @@ func GetAllOldVerSion() ([]*entity.BalanceInfoEntity, error) {
 }
 
 //GetDefaultServiceStatic 获取默认静态负载
-func GetDefaultServiceStatic() string {
+func (d *BalanceUpdateDao) GetDefaultServiceStatic() string {
 
-	tx := database.GetConnection()
+	tx := d.db
 	name := ""
 	err := tx.QueryRow("SELECT `name` FROM `goku_service_config` WHERE `driver`='static' ORDER BY  `default` DESC LIMIT 1; ").Scan(&name)
 	if err != nil {
 		name = "static"
-		dao_service2.Add(name, "static", "默认静态服务", "", "", false, false, "", "", 5, 300)
+		serviceDao.Add(name, "static", "默认静态服务", "", "", false, false, "", "", 5, 300)
 	}
 
 	return name

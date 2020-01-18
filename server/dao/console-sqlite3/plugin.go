@@ -6,15 +6,33 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/eolinker/goku-api-gateway/server/dao"
+
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 
-	database2 "github.com/eolinker/goku-api-gateway/common/database"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
+//PluginDao PluginDao
+type PluginDao struct {
+	db *SQL.DB
+}
+
+//NewPluginDao new PluginDao
+func NewPluginDao() *PluginDao {
+	return &PluginDao{}
+}
+
+//Create create
+func (d *PluginDao) Create(db *SQL.DB) (interface{}, error) {
+	d.db = db
+	var i dao.PluginDao = d
+	return &i, nil
+}
+
 //GetPluginInfo 获取插件配置信息
-func GetPluginInfo(pluginName string) (bool, *entity.Plugin, error) {
-	db := database2.GetConnection()
+func (d *PluginDao) GetPluginInfo(pluginName string) (bool, *entity.Plugin, error) {
+	db := d.db
 	sql := `SELECT pluginID,pluginName,pluginStatus,IFNULL(pluginConfig,""),pluginPriority,isStop,IFNULL(pluginDesc,""),IFNULL(version,""),pluginType FROM goku_plugin WHERE pluginName = ?;`
 	plugin := &entity.Plugin{}
 	err := db.QueryRow(sql, pluginName).Scan(&plugin.PluginID, &plugin.PluginName, &plugin.PluginStatus, &plugin.PluginConfig, &plugin.PluginIndex, &plugin.IsStop, &plugin.PluginDesc, &plugin.Version, &plugin.PluginType)
@@ -25,8 +43,8 @@ func GetPluginInfo(pluginName string) (bool, *entity.Plugin, error) {
 }
 
 // GetPluginList 获取插件列表
-func GetPluginList(keyword string, condition int) (bool, []*entity.Plugin, error) {
-	db := database2.GetConnection()
+func (d *PluginDao) GetPluginList(keyword string, condition int) (bool, []*entity.Plugin, error) {
+	db := d.db
 	rule := make([]string, 0, 2)
 
 	if keyword != "" {
@@ -64,10 +82,10 @@ func GetPluginList(keyword string, condition int) (bool, []*entity.Plugin, error
 }
 
 // GetPluginCount 获取插件数量
-func GetPluginCount() int {
+func (d *PluginDao) GetPluginCount() int {
 	var count int
 	sql := "SELECT COUNT(*) FROM goku_plugin;"
-	err := database2.GetConnection().QueryRow(sql).Scan(&count)
+	err := d.db.QueryRow(sql).Scan(&count)
 	if err != nil {
 		return 0
 	}
@@ -75,8 +93,8 @@ func GetPluginCount() int {
 }
 
 // AddPlugin 新增插件信息
-func AddPlugin(pluginName, pluginConfig, pluginDesc, version string, pluginPriority, isStop, pluginType int) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *PluginDao) AddPlugin(pluginName, pluginConfig, pluginDesc, version string, pluginPriority, isStop, pluginType int) (bool, string, error) {
+	db := d.db
 	stmt, err := db.Prepare(`INSERT INTO goku_plugin (pluginName,pluginConfig,pluginDesc,version,pluginStatus,pluginPriority,isStop,official,pluginType,isCheck) VALUES (?,?,?,?,?,?,?,?,?,0);`)
 	if err != nil {
 		return false, "[ERROR]Illegal SQL statement!", err
@@ -90,8 +108,8 @@ func AddPlugin(pluginName, pluginConfig, pluginDesc, version string, pluginPrior
 }
 
 // EditPlugin 修改插件信息
-func EditPlugin(pluginName, pluginConfig, pluginDesc, version string, pluginPriority, isStop, pluginType int) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *PluginDao) EditPlugin(pluginName, pluginConfig, pluginDesc, version string, pluginPriority, isStop, pluginType int) (bool, string, error) {
+	db := d.db
 	// 查询插件是否是官方插件
 	var sql string
 	sql = "SELECT pluginType,official FROM goku_plugin WHERE pluginName = ?;"
@@ -115,19 +133,14 @@ func EditPlugin(pluginName, pluginConfig, pluginDesc, version string, pluginPrio
 		Tx.Rollback()
 		return false, "[ERROR]Failed to update data!", err
 	}
-	flag, err := EditPluginCache(pluginName, oldPluginType, pluginType, Tx)
-	if !flag {
-		Tx.Rollback()
-		return false, "[ERROR]Failed to update plugin cache!", err
-	}
 
 	Tx.Commit()
 	return true, "", nil
 }
 
 // DeletePlugin 删除插件信息
-func DeletePlugin(pluginName string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *PluginDao) DeletePlugin(pluginName string) (bool, string, error) {
+	db := d.db
 	var sql string
 	sql = "SELECT pluginType,official FROM goku_plugin WHERE pluginName = ?;"
 	var official string
@@ -145,19 +158,14 @@ func DeletePlugin(pluginName string) (bool, string, error) {
 		Tx.Rollback()
 		return false, "[ERROR]Failed to delete data!", err
 	}
-	flag, err := EditPluginCache(pluginName, pluginType, 5, Tx)
-	if !flag {
-		Tx.Rollback()
-		return false, "[ERROR]Failed to update plugin cache!", err
-	}
 
 	Tx.Commit()
 	return true, "", nil
 }
 
 //CheckIndexIsExist 判断插件ID是否存在
-func CheckIndexIsExist(pluginName string, pluginPriority int) (bool, error) {
-	db := database2.GetConnection()
+func (d *PluginDao) CheckIndexIsExist(pluginName string, pluginPriority int) (bool, error) {
+	db := d.db
 	sql := "SELECT pluginName FROM goku_plugin WHERE pluginPriority = ?;"
 	var p string
 	err := db.QueryRow(sql, pluginPriority).Scan(&p)
@@ -171,8 +179,8 @@ func CheckIndexIsExist(pluginName string, pluginPriority int) (bool, error) {
 }
 
 //GetPluginConfig 获取插件配置及插件信息
-func GetPluginConfig(pluginName string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *PluginDao) GetPluginConfig(pluginName string) (bool, string, error) {
+	db := d.db
 	sql := `SELECT IFNULL(pluginConfig,"") FROM goku_plugin WHERE pluginName = ?`
 	var pluginConfig string
 	err := db.QueryRow(sql, pluginName).Scan(&pluginConfig)
@@ -183,8 +191,8 @@ func GetPluginConfig(pluginName string) (bool, string, error) {
 }
 
 //CheckNameIsExist 检查插件名称是否存在
-func CheckNameIsExist(pluginName string) (bool, error) {
-	db := database2.GetConnection()
+func (d *PluginDao) CheckNameIsExist(pluginName string) (bool, error) {
+	db := d.db
 	sql := "SELECT pluginName FROM goku_plugin WHERE pluginName = ?;"
 	var p string
 	err := db.QueryRow(sql, pluginName).Scan(&p)
@@ -195,8 +203,8 @@ func CheckNameIsExist(pluginName string) (bool, error) {
 }
 
 //EditPluginStatus 修改插件开启状态
-func EditPluginStatus(pluginName string, pluginStatus int) (bool, error) {
-	db := database2.GetConnection()
+func (d *PluginDao) EditPluginStatus(pluginName string, pluginStatus int) (bool, error) {
+	db := d.db
 	Tx, _ := db.Begin()
 	isCheck := 1
 
@@ -218,8 +226,8 @@ func EditPluginStatus(pluginName string, pluginStatus int) (bool, error) {
 }
 
 //GetPluginListByPluginType 获取不同类型的插件列表
-func GetPluginListByPluginType(pluginType int) (bool, []map[string]interface{}, error) {
-	db := database2.GetConnection()
+func (d *PluginDao) GetPluginListByPluginType(pluginType int) (bool, []map[string]interface{}, error) {
+	db := d.db
 	sql := `SELECT pluginID,pluginName,pluginDesc FROM goku_plugin WHERE pluginType = ? AND pluginStatus = 1;`
 	rows, err := db.Query(sql, pluginType)
 	if err != nil {
@@ -250,8 +258,8 @@ func GetPluginListByPluginType(pluginType int) (bool, []map[string]interface{}, 
 }
 
 //BatchStopPlugin 批量关闭插件
-func BatchStopPlugin(pluginNameList string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *PluginDao) BatchStopPlugin(pluginNameList string) (bool, string, error) {
+	db := d.db
 	Tx, _ := db.Begin()
 	plugin := strings.Split(pluginNameList, ",")
 	code := ""
@@ -274,8 +282,8 @@ func BatchStopPlugin(pluginNameList string) (bool, string, error) {
 }
 
 //BatchStartPlugin 批量关闭插件
-func BatchStartPlugin(pluginNameList string) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *PluginDao) BatchStartPlugin(pluginNameList string) (bool, string, error) {
+	db := d.db
 	Tx, _ := db.Begin()
 	plugin := strings.Split(pluginNameList, ",")
 	code := ""
@@ -297,79 +305,9 @@ func BatchStartPlugin(pluginNameList string) (bool, string, error) {
 	return true, "", nil
 }
 
-//EditPluginCache 将插件配置写进缓存表中
-func EditPluginCache(pluginName string, oldPluginType, pluginType int, Tx *SQL.Tx) (bool, error) {
-	if oldPluginType == 1 {
-		// 获取策略ID列表
-		sql := "SELECT strategyID FROM goku_conn_plugin_strategy WHERE pluginName = ?;"
-		strategyIDList := make([]string, 0)
-		rows, err := Tx.Query(sql, pluginName)
-		if err != nil {
-			return false, err
-		}
-		//延时关闭Rows
-		defer rows.Close()
-		//获取记录列
-
-		for rows.Next() {
-			var strategyID string
-			err = rows.Scan(&strategyID)
-			if err != nil {
-				return false, err
-			}
-			strategyIDList = append(strategyIDList, strategyID)
-		}
-		if len(strategyIDList) > 0 {
-			if oldPluginType != pluginType {
-				// 删除策略组插件
-				_, err = Tx.Exec("DELETE FROM goku_conn_plugin_strategy WHERE strategyID AND pluginName = ?;", pluginName)
-				if err != nil {
-					return false, err
-				}
-			}
-		}
-		return true, nil
-	} else if oldPluginType == 2 {
-		// 获取策略ID列表
-		sql := "SELECT strategyID,apiID FROM goku_conn_plugin_api WHERE pluginName = ?;"
-		connList := make([]map[string]interface{}, 0)
-		rows, err := Tx.Query(sql, pluginName)
-		if err != nil {
-			return false, err
-		}
-		//延时关闭Rows
-		defer rows.Close()
-		//获取记录列
-
-		for rows.Next() {
-			var strategyID string
-			var apiID int
-			err = rows.Scan(&strategyID, &apiID)
-			if err != nil {
-				return false, err
-			}
-			connList = append(connList, map[string]interface{}{
-				"strategyID": strategyID,
-				"apiID":      apiID,
-			})
-		}
-		if len(connList) > 0 {
-			if oldPluginType != pluginType {
-				// 删除接口插件
-				_, err = Tx.Exec("DELETE FROM goku_conn_plugin_api WHERE pluginName = ?;", pluginName)
-				if err != nil {
-					return false, err
-				}
-			}
-		}
-		return true, nil
-	}
-	return true, nil
-}
-
 //EditPluginCheckStatus 更新插件检测状态
-func EditPluginCheckStatus(pluginName string, isCheck int) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *PluginDao) EditPluginCheckStatus(pluginName string, isCheck int) (bool, string, error) {
+	db := d.db
 	sql := "UPDATE goku_plugin SET isCheck = ? WHERE pluginName = ?;"
 	_, err := db.Exec(sql, isCheck, pluginName)
 	if err != nil {

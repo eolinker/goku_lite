@@ -6,6 +6,7 @@ import "github.com/eolinker/goku-api-gateway/config"
 type API struct {
 	APIID            int                      `json:"apiID"`
 	APIName          string                   `json:"apiName"`
+	Alias            string                   `json:"alias"`
 	GroupID          int                      `json:"groupID,omitempty"`
 	ProjectID        int                      `json:"projectID,omitempty"`
 	RequestURL       string                   `json:"requestURL"`

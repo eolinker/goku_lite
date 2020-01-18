@@ -7,14 +7,32 @@ import (
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/api"
 	"github.com/eolinker/goku-api-gateway/console/module/project"
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
 )
+
+const operationAPIGroup = "apiManagement"
+
+//GroupHandlers 接口分组处理器
+type GroupHandlers struct {
+}
+
+//Handlers 处理器
+func (g *GroupHandlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/add":     factory.NewAccountHandleFunction(operationAPIGroup, true, AddAPIGroup),
+		"/edit":    factory.NewAccountHandleFunction(operationAPIGroup, true, EditAPIGroup),
+		"/delete":  factory.NewAccountHandleFunction(operationAPIGroup, true, DeleteAPIGroup),
+		"/getList": factory.NewAccountHandleFunction(operationAPIGroup, false, GetAPIGroupList),
+	}
+}
+
+//NewGroupHandlers new 接口分组处理器
+func NewGroupHandlers() *GroupHandlers {
+	return &GroupHandlers{}
+}
 
 //AddAPIGroup 新建接口分组
 func AddAPIGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	groupName := httpRequest.PostFormValue("groupName")
 	projectID := httpRequest.PostFormValue("projectID")
@@ -68,10 +86,6 @@ func AddAPIGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //EditAPIGroup 修改接口分组
 func EditAPIGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	groupName := httpRequest.PostFormValue("groupName")
 	groupID := httpRequest.PostFormValue("groupID")
@@ -120,10 +134,6 @@ func EditAPIGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //DeleteAPIGroup 删除接口分组
 func DeleteAPIGroup(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationEDIT)
-	if e != nil {
-		return
-	}
 
 	groupID := httpRequest.PostFormValue("groupID")
 	projectID := httpRequest.PostFormValue("projectID")
@@ -158,10 +168,6 @@ func DeleteAPIGroup(httpResponse http.ResponseWriter, httpRequest *http.Request)
 
 //GetAPIGroupList 获取接口分组列表
 func GetAPIGroupList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationAPI, controller.OperationREAD)
-	if e != nil {
-		return
-	}
 
 	projectID := httpRequest.PostFormValue("projectID")
 	pjID, err := strconv.Atoi(projectID)

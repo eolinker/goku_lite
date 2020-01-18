@@ -29,4 +29,5 @@ type AmsAPI struct {
 	APIName        string `json:"apiName"`
 	APIURI         string `json:"apiURI"`
 	APIRequestType int    `json:"apiRequestType"`
+	APIProtocol    int    `json:"apiProtocol"`
 }

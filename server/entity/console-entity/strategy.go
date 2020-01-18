@@ -11,4 +11,6 @@ type Strategy struct {
 	GroupName      string `json:"groupName,omitempty"`
 	EnableStatus   int    `json:"enableStatus"`
 	StrategyType   int    `json:"strategyType"`
+	Updater        string `json:"updater"`
+	Creater        string `json:"creater"`
 }

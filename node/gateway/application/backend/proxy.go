@@ -1,6 +1,7 @@
 package backend
 
 import (
+	"compress/gzip"
 	"fmt"
 	"io/ioutil"
 	"strings"
@@ -67,18 +68,20 @@ func (b *Proxy) Send(ctx *common.Context, variables *interpreter.Variables) (*Ba
 
 	// 不是restful时，将匹配路由之后对url拼接到path之后
 	if len(variables.Restful) == 0 {
-		orgRequestURL := ctx.RequestOrg.URL().RawPath
+		orgRequestURL := ctx.RequestOrg.URL().Path
 		lessPath := strings.TrimPrefix(orgRequestURL, b.RequestPath)
 		lessPath = strings.TrimPrefix(lessPath, "/")
-		path = strings.TrimSuffix(path, "/")
-		path = fmt.Sprint(path, "/", lessPath)
+		if lessPath != "" {
+			path = strings.TrimSuffix(path, "/")
+			path = fmt.Sprint(path, "/", lessPath)
+		}
 	}
 
 	method := b.Method
 	if method == "FOLLOW" {
 		method = ctx.ProxyRequest.Method
 	}
-	r, finalTargetServer, retryTargetServers, err := b.Balance.Send(b.Protocol, method, path, ctx.ProxyRequest.Querys(), ctx.ProxyRequest.Headers(), variables.Org, b.TimeOut, b.Retry)
+	r, finalTargetServer, retryTargetServers, err := b.Balance.Send(ctx, b.Protocol, method, path, ctx.ProxyRequest.Querys(), ctx.ProxyRequest.Headers(), variables.Org, b.TimeOut, b.Retry)
 
 	backendResponse := &BackendResponse{
 		Method:     method,
@@ -89,15 +92,21 @@ func (b *Proxy) Send(ctx *common.Context, variables *interpreter.Variables) (*Ba
 		TargetURL:          path,
 		FinalTargetServer:  finalTargetServer,
 		RetryTargetServers: retryTargetServers,
-		Header:             r.Header,
+
 		//Cookies:r.Cookies(),
 	}
 	if err != nil {
 		backendResponse.StatusCode, backendResponse.Status = 503, "503"
 		return backendResponse, err
 	}
+	backendResponse.Header = r.Header
 	defer r.Body.Close()
-	backendResponse.BodyOrg, err = ioutil.ReadAll(r.Body)
+	bd := r.Body
+	if r.Header.Get("Content-Encoding") == "gzip" {
+		bd, _ = gzip.NewReader(r.Body)
+		r.Header.Del("Content-Encoding")
+	}
+	backendResponse.BodyOrg, err = ioutil.ReadAll(bd)
 	if err != nil {
 		return backendResponse, nil
 	}

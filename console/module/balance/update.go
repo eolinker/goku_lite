@@ -2,25 +2,30 @@ package balance
 
 import (
 	"encoding/json"
+	"github.com/eolinker/goku-api-gateway/common/pdao"
+	"github.com/eolinker/goku-api-gateway/server/dao"
 
 	"github.com/eolinker/goku-api-gateway/common/general"
-	dao_balance_update2 "github.com/eolinker/goku-api-gateway/server/dao/console-sqlite3/dao-balance-update"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/balance-entity"
 )
-
+var (
+	balanceDao dao.BalanceDao
+	balanceUpdateDao dao.BalanceUpdateDao
+)
 func init() {
+	pdao.Need(&balanceDao,&balanceUpdateDao)
 	general.RegeditLater(Update)
 }
 
 //Update 将旧负载配置更新为新负载配置
 func Update() error {
 
-	l, e := dao_balance_update2.GetAllOldVerSion()
+	l, e := balanceUpdateDao.GetAllOldVerSion()
 	if e != nil {
 		return e
 	}
 
-	defStaticServiceName := dao_balance_update2.GetDefaultServiceStatic()
+	defStaticServiceName := balanceUpdateDao.GetDefaultServiceStatic()
 	for _, e := range l {
 		update(e, defStaticServiceName)
 	}

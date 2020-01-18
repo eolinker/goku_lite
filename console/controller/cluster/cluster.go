@@ -4,18 +4,39 @@ import (
 	"net/http"
 	"regexp"
 
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
+
 	"github.com/pkg/errors"
 
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/cluster"
 )
 
+const operationCluster = "nodeManagement"
+
+//Handlers handlers
+type Handlers struct {
+}
+
+//Handlers handlers
+func (h *Handlers) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/add":        factory.NewAccountHandleFunction(operationCluster, true, AddCluster),
+		"/edit":       factory.NewAccountHandleFunction(operationCluster, true, EditCluster),
+		"/delete":     factory.NewAccountHandleFunction(operationCluster, true, DeleteCluster),
+		"/list":       factory.NewAccountHandleFunction(operationCluster, false, GetClusterInfoList),
+		"/simpleList": factory.NewAccountHandleFunction(operationCluster, false, GetClusterList),
+	}
+}
+
+//NewHandlers new handlers
+func NewHandlers() *Handlers {
+	return &Handlers{}
+}
+
 //GetClusterList 获取集群列表
 func GetClusterList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
-	if e != nil {
-		return
-	}
+
 	list, _ := cluster.GetClusters()
 
 	controller.WriteResultInfo(httpResponse,
@@ -26,10 +47,7 @@ func GetClusterList(httpResponse http.ResponseWriter, httpRequest *http.Request)
 
 //GetCluster 获取集群信息
 func GetCluster(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
-	if e != nil {
-		return
-	}
+
 	httpRequest.ParseForm()
 	name := httpRequest.Form.Get("name")
 
@@ -47,10 +65,7 @@ func GetCluster(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //AddCluster 新增集群
 func AddCluster(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
-	if e != nil {
-		return
-	}
+
 	httpRequest.ParseForm()
 	name := httpRequest.Form.Get("name")
 	title := httpRequest.Form.Get("title")
@@ -78,10 +93,7 @@ func AddCluster(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //EditCluster 新增集群
 func EditCluster(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
-	if e != nil {
-		return
-	}
+
 	httpRequest.ParseForm()
 	name := httpRequest.Form.Get("name")
 	title := httpRequest.Form.Get("title")
@@ -105,10 +117,7 @@ func EditCluster(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 
 //DeleteCluster 新增集群
 func DeleteCluster(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
-	if e != nil {
-		return
-	}
+
 	httpRequest.ParseForm()
 	name := httpRequest.Form.Get("name")
 	match, err := regexp.MatchString(`^[a-zA-Z][a-zA-z0-9_]*$`, name)
@@ -135,10 +144,7 @@ func DeleteCluster(httpResponse http.ResponseWriter, httpRequest *http.Request) 
 
 //GetClusterInfoList 获取集群信息列表
 func GetClusterInfoList(httpResponse http.ResponseWriter, httpRequest *http.Request) {
-	_, e := controller.CheckLogin(httpResponse, httpRequest, controller.OperationNone, controller.OperationREAD)
-	if e != nil {
-		return
-	}
+
 	result, _ := cluster.GetClusters()
 
 	controller.WriteResultInfo(httpResponse,

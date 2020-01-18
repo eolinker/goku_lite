@@ -2,17 +2,13 @@ package discovery
 
 import (
 	"fmt"
-	"net/http"
-
 	"github.com/eolinker/goku-api-gateway/console/controller"
 	"github.com/eolinker/goku-api-gateway/console/module/service"
+	"net/http"
 )
 
 func getInfo(w http.ResponseWriter, r *http.Request) {
-	_, err := controller.CheckLogin(w, r, controller.OperationLoadBalance, controller.OperationREAD)
-	if err != nil {
-		return
-	}
+
 
 	name := r.URL.Query().Get("name")
 	if !service.ValidateName(name) {

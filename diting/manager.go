@@ -30,11 +30,13 @@ func get(namespace string) (Constructor, bool) {
 
 func construct(confs map[string]string) Factories {
 
+	lives:= make(map[string]int)
 	factories := make(Factories,0,len(confs))
 	defer func() {
 		// close 关闭不用的模块
-		lives := confs
+
 		for name,constructor:= range constructorMap{
+
 			if _,has:=lives[name];!has{
 				constructor.Close()
 			}
@@ -44,9 +46,9 @@ func construct(confs map[string]string) Factories {
 		return factories
 	}
 
-
 	for name, conf := range confs {
-		namespace:=ksitigarbha.GetNameSpaceByName(name)
+		namespace,_:=ksitigarbha.GetNameSpaceByName(name)
+		lives[namespace] = 1
 		constructor, has := get(namespace)
 		if !has {
 			continue

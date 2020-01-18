@@ -2,10 +2,15 @@ package application
 
 import (
 	"bytes"
+	"crypto/tls"
 	"errors"
 	"io"
+	"net"
 	"net/http"
 	"net/url"
+	"strconv"
+
+	goku_plugin "github.com/eolinker/goku-plugin"
 
 	"github.com/eolinker/goku-api-gateway/diting"
 	goku_labels "github.com/eolinker/goku-api-gateway/goku-labels"
@@ -17,6 +22,13 @@ import (
 
 //Version 版本号
 var Version = "2.0"
+
+var skipCertificate = 0
+
+//SetSkipCertificate 设置跳过证书
+func SetSkipCertificate(skip int) {
+	skipCertificate = skip
+}
 
 //Request request
 type Request struct {
@@ -40,6 +52,14 @@ func NewRequest(method string, URL *url.URL) (*Request, error) {
 	return newRequest(method, URL)
 }
 
+//URLPath urlPath
+func URLPath(url string, query url.Values) string {
+	if len(query) < 1 {
+		return url
+	}
+	return url + "?" + query.Encode()
+}
+
 func newRequest(method string, URL *url.URL) (*Request, error) {
 	var urlPath string
 	queryParams := make(map[string][]string)
@@ -47,8 +67,14 @@ func newRequest(method string, URL *url.URL) (*Request, error) {
 		queryParams[key] = values
 	}
 	urlPath = URL.Scheme + "://" + URL.Host + URL.Path
+	tp := http.DefaultTransport
+	if skipCertificate == 1 {
+		tp = &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+	}
 	r := &Request{
-		client:      &http.Client{},
+		client:      &http.Client{Transport: tp},
 		method:      method,
 		URL:         urlPath,
 		headers:     make(map[string][]string),
@@ -95,12 +121,13 @@ func (r *Request) SetTimeout(timeout time.Duration) {
 //}
 
 //Send 发送请求
-func (r *Request) Send() (*http.Response, error) {
+func (r *Request) Send(ctx goku_plugin.ContextAccess) (*http.Response, error) {
 	// now := time.Now()
 	req, err := r.parseBody()
 	if err != nil {
 		return nil, err
 	}
+	status := 0
 	start := time.Now()
 	defer func() {
 		delay := time.Since(start)
@@ -110,6 +137,9 @@ func (r *Request) Send() (*http.Response, error) {
 		labels[goku_labels.Host] = req.Host
 		labels[goku_labels.Path] = req.URL.Path
 		labels[goku_labels.Method] = req.Method
+		labels[goku_labels.API] = strconv.Itoa(ctx.ApiID())
+		labels[goku_labels.Strategy] = ctx.StrategyId()
+		labels[goku_labels.Status] = strconv.Itoa(status)
 		monitor.ProxyMonitor.Observe(float64(delay/time.Millisecond), labels)
 	}()
 	req.Header.Set("Accept-Encoding", "gzip")
@@ -120,8 +150,18 @@ func (r *Request) Send() (*http.Response, error) {
 	httpResponse, err := r.client.Do(req)
 
 	if err != nil {
+		if netErr, ok := err.(net.Error); ok {
+			if netErr.Timeout() {
+				status = 504
+			} else {
+				status = 503
+			}
+		} else {
+			status = 503
+		}
 		return nil, err
 	}
+	status = httpResponse.StatusCode
 	return httpResponse, nil
 
 }

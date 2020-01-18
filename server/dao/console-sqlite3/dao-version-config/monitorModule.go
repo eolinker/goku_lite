@@ -2,12 +2,11 @@ package dao_version_config
 
 import (
 	"fmt"
-
-	"github.com/eolinker/goku-api-gateway/common/database"
 )
 
-func GetMonitorModules(status int, isAll bool) (map[string]string, error) {
-	db := database.GetConnection()
+//GetMonitorModules 获取监控模块信息
+func (d *VersionConfigDao)GetMonitorModules(status int, isAll bool) (map[string]string, error) {
+	db := d.db
 	sql := "SELECT `name`,`config` FROM goku_monitor_module %s;"
 	if isAll {
 		sql = fmt.Sprintf(sql, "")

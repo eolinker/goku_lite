@@ -7,16 +7,34 @@ import (
 	"strings"
 	"time"
 
+	"github.com/eolinker/goku-api-gateway/server/dao"
+
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 
-	database2 "github.com/eolinker/goku-api-gateway/common/database"
 	entity "github.com/eolinker/goku-api-gateway/server/entity/console-entity"
 )
 
 var method = []string{"POST", "GET", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH"}
 
+//ImportDao ImportDao
+type ImportDao struct {
+	db *SQL.DB
+}
+
+//NewImportDao ImportDao
+func NewImportDao() *ImportDao {
+	return &ImportDao{}
+}
+
+//Create create
+func (d *ImportDao) Create(db *SQL.DB) (interface{}, error) {
+	d.db = db
+	var i dao.ImportDao = d
+	return &i, nil
+}
+
 // 导入接口信息
-func importAPIInfo(Tx *SQL.Tx, api entity.AmsAPIInfo, projectID, groupID, userID int, now string) bool {
+func (d *ImportDao) importAPIInfo(Tx *SQL.Tx, api entity.AmsAPIInfo, projectID, groupID, userID int, now string) bool {
 	// 新增API
 	requestURL := ""
 	host := ""
@@ -44,7 +62,7 @@ func importAPIInfo(Tx *SQL.Tx, api entity.AmsAPIInfo, projectID, groupID, userID
 	return true
 }
 
-func recursiveImportAPIGroupFromAms(Tx *SQL.Tx, projectID, userID int, groupInfo entity.AmsGroupInfo, groupDepth, parentGroupID int, groupPath, now string) (bool, string, error) {
+func (d *ImportDao) recursiveImportAPIGroupFromAms(Tx *SQL.Tx, projectID, userID int, groupInfo entity.AmsGroupInfo, groupDepth, parentGroupID int, groupPath, now string) (bool, string, error) {
 	// 插入分组信息
 	result, err := Tx.Exec("INSERT INTO goku_gateway_api_group (projectID,groupName,groupDepth,parentGroupID) VALUES (?,?,?,?);", projectID, groupInfo.GroupName, groupDepth, parentGroupID)
 	if err != nil {
@@ -72,19 +90,19 @@ func recursiveImportAPIGroupFromAms(Tx *SQL.Tx, projectID, userID int, groupInfo
 		return false, err.Error(), err
 	}
 	for _, childGroup := range groupInfo.APIGroupChildList {
-		_, _, err := recursiveImportAPIGroupFromAms(Tx, projectID, userID, childGroup, groupDepth+1, int(groupID), groupPath, now)
+		_, _, err := d.recursiveImportAPIGroupFromAms(Tx, projectID, userID, childGroup, groupDepth+1, int(groupID), groupPath, now)
 		if err != nil {
 			continue
 		}
 	}
 	for _, childGroup := range groupInfo.ChildGroupList {
-		_, _, err := recursiveImportAPIGroupFromAms(Tx, projectID, userID, childGroup, groupDepth+1, int(groupID), groupPath, now)
+		_, _, err := d.recursiveImportAPIGroupFromAms(Tx, projectID, userID, childGroup, groupDepth+1, int(groupID), groupPath, now)
 		if err != nil {
 			continue
 		}
 	}
 	for _, api := range groupInfo.APIList {
-		flag := importAPIInfo(Tx, api, projectID, int(groupID), userID, now)
+		flag := d.importAPIInfo(Tx, api, projectID, int(groupID), userID, now)
 		if !flag {
 			continue
 		}
@@ -93,11 +111,11 @@ func recursiveImportAPIGroupFromAms(Tx *SQL.Tx, projectID, userID int, groupInfo
 }
 
 //ImportAPIGroupFromAms 导入分组
-func ImportAPIGroupFromAms(projectID, userID int, groupInfo entity.AmsGroupInfo) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *ImportDao) ImportAPIGroupFromAms(projectID, userID int, groupInfo entity.AmsGroupInfo) (bool, string, error) {
+	db := d.db
 	Tx, _ := db.Begin()
 	now := time.Now().Format("2006-01-02 15:04:05")
-	_, errInfo, err := recursiveImportAPIGroupFromAms(Tx, projectID, userID, groupInfo, 1, 0, "", now)
+	_, errInfo, err := d.recursiveImportAPIGroupFromAms(Tx, projectID, userID, groupInfo, 1, 0, "", now)
 	if err != nil {
 		Tx.Rollback()
 		return false, errInfo, err
@@ -113,8 +131,8 @@ func ImportAPIGroupFromAms(projectID, userID int, groupInfo entity.AmsGroupInfo)
 }
 
 //ImportProjectFromAms 导入项目
-func ImportProjectFromAms(userID int, projectInfo entity.AmsProject) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *ImportDao) ImportProjectFromAms(userID int, projectInfo entity.AmsProject) (bool, string, error) {
+	db := d.db
 	Tx, _ := db.Begin()
 	now := time.Now().Format("2006-01-02 15:04:05")
 	// 插入项目信息
@@ -132,7 +150,7 @@ func ImportProjectFromAms(userID int, projectInfo entity.AmsProject) (bool, stri
 	}
 	id := int(projectID)
 	for _, groupInfo := range projectInfo.APIGroupList {
-		_, _, err := recursiveImportAPIGroupFromAms(Tx, id, userID, groupInfo, 1, 0, "", now)
+		_, _, err := d.recursiveImportAPIGroupFromAms(Tx, id, userID, groupInfo, 1, 0, "", now)
 		if err != nil {
 			continue
 		}
@@ -142,12 +160,12 @@ func ImportProjectFromAms(userID int, projectInfo entity.AmsProject) (bool, stri
 }
 
 //ImportAPIFromAms 从ams中导入接口
-func ImportAPIFromAms(projectID, groupID, userID int, apiList []entity.AmsAPIInfo) (bool, string, error) {
-	db := database2.GetConnection()
+func (d *ImportDao) ImportAPIFromAms(projectID, groupID, userID int, apiList []entity.AmsAPIInfo) (bool, string, error) {
+	db := d.db
 	Tx, _ := db.Begin()
 	now := time.Now().Format("2006-01-02 15:04:05")
 	for _, a := range apiList {
-		flag := importAPIInfo(Tx, a, projectID, groupID, userID, now)
+		flag := d.importAPIInfo(Tx, a, projectID, groupID, userID, now)
 		if !flag {
 			continue
 		}

@@ -6,12 +6,13 @@ import (
 )
 
 var (
-	//APICount diting.Counter
+	//APIMonitor diting.APIMonitor
 	APIMonitor diting.Histogram
+	//ProxyMonitor diting.Histogram
 	ProxyMonitor diting.Histogram
 )
 
-func initCollector(constLabels diting.Labels)  {
+func initCollector(constLabels diting.Labels) {
 	//apiLabelNames  := []string{
 	//	goku_labels.Cluster,
 	//	goku_labels.Instance,
@@ -22,29 +23,10 @@ func initCollector(constLabels diting.Labels)  {
 	//apiCounterOpt:= diting.NewCounterOpts("goku","api","count","api 请求计数",constLabels,apiLabelNames)
 	//APICount = diting.NewCounter(apiCounterOpt)
 
-	buckets:=[]float64{5, 25, 50, 100, 200,400, 600,800,1000, 2500,5000}
-	//buckets:=[]float64{.005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10}
-	apiDelayLabelNames := []string{
-		goku_labels.Cluster,
-		goku_labels.Instance,
-		goku_labels.API,
-		goku_labels.Strategy,
-		goku_labels.Status,
-	}
-	apiHistogramOpt := diting.NewHistogramOpts("goku","","api","api整体请求统计",constLabels,apiDelayLabelNames,buckets)
+	apiHistogramOpt := diting.NewHistogramOpts(goku_labels.Namespace, goku_labels.Subsystem, goku_labels.APIName, "api整体请求统计", constLabels, goku_labels.APIDelayLabelNames, goku_labels.APIBuckets)
 	APIMonitor = diting.NewHistogram(apiHistogramOpt)
 
-
-	proxyDelayLabelNames := []string{
-		goku_labels.Cluster,
-		goku_labels.Instance,
-		goku_labels.Proto,
-		goku_labels.Host,
-		goku_labels.Path,
-		goku_labels.Method,
-	}
-
-	proxyMonitorOpt := diting.NewHistogramOpts("goku","","proxy","转发统计",constLabels,proxyDelayLabelNames,buckets)
+	proxyMonitorOpt := diting.NewHistogramOpts(goku_labels.Namespace, goku_labels.Subsystem, goku_labels.ProxyName, "转发统计", constLabels, goku_labels.ProxyDelayLabelNames, goku_labels.ProxyBuckets)
 	ProxyMonitor = diting.NewHistogram(proxyMonitorOpt)
 
 }

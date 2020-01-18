@@ -14,7 +14,7 @@ func NewGauge(opt *GaugeOpts) Gauge {
 	return g
 }
 
-//NewHistogram new Histogram
+//NewHistogram new HistogramObserve
 func NewHistogram(opt *HistogramOpts) Histogram {
 	h := newHistogramProxy(opt)
 	refresher.Add(h)
@@ -23,6 +23,6 @@ func NewHistogram(opt *HistogramOpts) Histogram {
 
 //func  NewSummary(opt *SummaryOpts) Summary {
 //	s:= newSummariesProxy(opt)
-//	refresher.Add(s)
+//	refresher.RegisterDao(s)
 //	return s
 //}

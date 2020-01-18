@@ -30,9 +30,9 @@ func NewRequestReader(req *http.Request) *RequestReader {
 func (r *RequestReader) ParseRequest() {
 
 	r.Header = NewHeader(r.req.Header)
-	body ,err:= ioutil.ReadAll(r.req.Body)
+	body, err := ioutil.ReadAll(r.req.Body)
 	_ = r.req.Body.Close()
-	if err != nil  {
+	if err != nil {
 		r.BodyRequestHandler = NewBodyRequestHandler(r.req.Header.Get("Content-Type"), nil)
 	} else {
 		r.BodyRequestHandler = NewBodyRequestHandler(r.req.Header.Get("Content-Type"), body)

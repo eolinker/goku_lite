@@ -1,12 +1,13 @@
 package console_sqlite3
 
 import (
+	"database/sql"
 	"encoding/json"
 	"time"
 
-	log "github.com/eolinker/goku-api-gateway/goku-log"
+	"github.com/eolinker/goku-api-gateway/server/dao"
 
-	database2 "github.com/eolinker/goku-api-gateway/common/database"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 )
 
 type basicAuthConf struct {
@@ -66,9 +67,29 @@ type oauth2Credential struct {
 	Remark       string `json:"remark"`
 }
 
+//AuthDao AuthDao
+type AuthDao struct {
+	db *sql.DB
+}
+
+//NewAuthDao new AuthDao
+func NewAuthDao() *AuthDao {
+	return &AuthDao{}
+}
+
+//Create create
+func (d *AuthDao) Create(db *sql.DB) (interface{}, error) {
+
+	d.db = db
+
+	var i dao.AuthDao = d
+
+	return &i, nil
+}
+
 //GetAuthStatus 获取认证状态
-func GetAuthStatus(strategyID string) (bool, map[string]interface{}, error) {
-	db := database2.GetConnection()
+func (d *AuthDao) GetAuthStatus(strategyID string) (bool, map[string]interface{}, error) {
+	db := d.db
 	var basicStatus, apikeyStatus int
 	sql := `SELECT CASE WHEN goku_plugin.pluginStatus = 0 THEN 0 ELSE goku_conn_plugin_strategy.pluginStatus END AS pluginStatus FROM goku_conn_plugin_strategy INNER JOIN goku_plugin ON goku_plugin.pluginName = goku_conn_plugin_strategy.pluginName WHERE goku_conn_plugin_strategy.pluginName = ? AND goku_conn_plugin_strategy.strategyID = ?;`
 	db.QueryRow(sql, "goku-basic_auth", strategyID).Scan(&basicStatus)
@@ -85,8 +106,8 @@ func GetAuthStatus(strategyID string) (bool, map[string]interface{}, error) {
 }
 
 //GetAuthInfo 获取认证信息
-func GetAuthInfo(strategyID string) (bool, map[string]interface{}, error) {
-	db := database2.GetConnection()
+func (d *AuthDao) GetAuthInfo(strategyID string) (bool, map[string]interface{}, error) {
+	db := d.db
 	var strategyName, auth string
 	sql := "SELECT IFNULL(auth,''),strategyName FROM goku_gateway_strategy WHERE strategyID = ?;"
 	err := db.QueryRow(sql, strategyID).Scan(&auth, &strategyName)
@@ -132,8 +153,8 @@ func GetAuthInfo(strategyID string) (bool, map[string]interface{}, error) {
 }
 
 //EditAuthInfo 编辑认证信息
-func EditAuthInfo(strategyID, strategyName, basicAuthList, apikeyList, jwtCredentialList, oauth2CredentialList string, delClientIDList []string) (bool, error) {
-	db := database2.GetConnection()
+func (d *AuthDao) EditAuthInfo(strategyID, strategyName, basicAuthList, apikeyList, jwtCredentialList, oauth2CredentialList string, delClientIDList []string) (bool, error) {
+	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	sql := "UPDATE goku_gateway_strategy SET strategyName = ? WHERE strategyID = ?;"
 	stmt, err := db.Prepare(sql)

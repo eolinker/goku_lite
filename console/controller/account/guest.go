@@ -2,6 +2,9 @@ package account
 
 import (
 	"errors"
+
+	goku_handler "github.com/eolinker/goku-api-gateway/goku-handler"
+
 	"net/http"
 	"strconv"
 
@@ -9,6 +12,22 @@ import (
 	"github.com/eolinker/goku-api-gateway/console/module/account"
 	"github.com/eolinker/goku-api-gateway/utils"
 )
+
+//Account 账号类
+type Account struct {
+}
+
+//Handlers 处理器
+func (c *Account) Handlers(factory *goku_handler.AccountHandlerFactory) map[string]http.Handler {
+	return map[string]http.Handler{
+		"/login": http.HandlerFunc(Login),
+	}
+}
+
+//NewAccountController 新建账号控制类
+func NewAccountController() *Account {
+	return &Account{}
+}
 
 //Login 用户登录
 func Login(httpResponse http.ResponseWriter, httpRequest *http.Request) {
@@ -24,7 +43,7 @@ func Login(httpResponse http.ResponseWriter, httpRequest *http.Request) {
 			"100000",
 			"guest",
 			"[ERROR]Wrong username or password!",
-			errors.New("Wrong username or password"))
+			errors.New("wrong username or password"))
 		return
 	}
 

@@ -12,7 +12,7 @@ const moduleName = "Prometheus"
 
 //Pattern 请求路径
 const Pattern = "/prometheus/metrics"
-const desc = "API监控模块对接Prometheus"
+const desc = "对接Prometheus"
 const content = `[
         {
             "type": "line",
@@ -43,8 +43,8 @@ func (c *PrometheusModule) GetNameSpace() string {
 	return ModuleNameSpace
 }
 
-//Encoder encode
-func (c *PrometheusModule) Encoder(v interface{}) (string, error) {
+//Encode encode
+func (c *PrometheusModule) Encode(v interface{}) (string, error) {
 	return "", nil
 }
 

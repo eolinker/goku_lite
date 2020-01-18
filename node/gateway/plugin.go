@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"reflect"
+	"strings"
 
 	"github.com/eolinker/goku-api-gateway/config"
 	plugin_executor "github.com/eolinker/goku-api-gateway/node/gateway/plugin-executor"
@@ -32,7 +33,6 @@ func genPlugins(cfgs []*config.PluginConfig, cluster string, strategyID string, 
 	psBefor := make([]plugin_executor.Executor, 0, len(cfgs))
 	psAccess := make([]plugin_executor.Executor, 0, len(cfgs))
 	psProxy := make([]plugin_executor.Executor, 0, len(cfgs))
-
 	for _, cfg := range cfgs {
 
 		factory, e := plugin.LoadPlugin(cfg.Name)
@@ -48,6 +48,9 @@ func genPlugins(cfgs []*config.PluginConfig, cluster string, strategyID string, 
 			psBefor = append(psBefor, plugin_executor.NewBeforeExecutor(cfg, obj.BeforeMatch))
 		}
 		if obj.Access != nil && !reflect.ValueOf(obj.Access).IsNil() {
+			if strings.Contains(cfg.Name, "_auth") {
+				cfg.IsAuth = true
+			}
 			psAccess = append(psAccess, plugin_executor.NewAccessExecutor(cfg, obj.Access))
 		}
 		if obj.Proxy != nil && !reflect.ValueOf(obj.Proxy).IsNil() {

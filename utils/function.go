@@ -14,6 +14,35 @@ import (
 	"time"
 )
 
+//ConvertIntArrayToString 转换整型数组
+func ConvertIntArrayToString(ids []int) string {
+	idLen := len(ids)
+	if idLen < 1 {
+		return ""
+	}
+	idStr := ""
+	for i, id := range ids {
+		idStr += strconv.Itoa(id)
+		if i < idLen-1 {
+			idStr += ","
+		}
+	}
+	return idStr
+}
+
+//ConvertArray 将[]string转为[]int
+func ConvertArray(arr []string) (bool, []int) {
+	result := make([]int, 0)
+	for _, i := range arr {
+		res, err := strconv.Atoi(i)
+		if err != nil {
+			return false, result
+		}
+		result = append(result, res)
+	}
+	return true, result
+}
+
 //ValidateRemoteAddr 判断ip端口是否合法
 func ValidateRemoteAddr(ip string) bool {
 	match, err := regexp.MatchString(`^(?:(?:1[0-9][0-9]\.)|(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:1[0-9][0-9])|(?:2[0-4][0-9])|(?:25[0-5])|(?:[1-9][0-9])|(?:[0-9]))\:(([0-9])|([1-9][0-9]{1,3})|([1-6][0-9]{0,4}))$`, ip)
@@ -23,16 +52,28 @@ func ValidateRemoteAddr(ip string) bool {
 	return match
 }
 
-//InterceptIP 获取IP
-func InterceptIP(str, substr string) string {
+//ValidateURL 判断ip端口是否合法
+func ValidateURL(url string) bool {
+	match, err := regexp.MatchString(`^/(([a-zA-Z][0-9a-zA-Z+\-\.]*:)?/{0,2}[0-9a-zA-Z;/?:@&=+$\.\-_!~*'()%]+)?(#[0-9a-zA-Z;/?:@&=+$\.\-_!~*'()%]+)?$`, url)
+	if err != nil {
+		return false
+	}
+	return match
+}
+
+//Intercept 获取IP
+func Intercept(str, substr string) (string, string) {
 	result := strings.Index(str, substr)
 	var rs string
+	var bs string
 	if result != -1 {
 		rs = str[:result]
+		bs = str[result+1:]
 	} else {
 		rs = str
+		bs = str
 	}
-	return rs
+	return rs, bs
 }
 
 //Md5 md5加密

@@ -2,14 +2,12 @@ package dao_service
 
 import (
 	"fmt"
-
-	"github.com/eolinker/goku-api-gateway/common/database"
 )
 
 //SetDefault 设置默认服务
-func SetDefault(name string) error {
+func (d *ServiceDao) SetDefault(name string) error {
 	count := 0
-	err := database.GetConnection().QueryRow("SELECT count(1) FROM `goku_service_config` WHERE `name` = ?;", name).Scan(&count)
+	err := d.db.QueryRow("SELECT count(1) FROM `goku_service_config` WHERE `name` = ?;", name).Scan(&count)
 	if err != nil {
 
 		return err
@@ -18,7 +16,7 @@ func SetDefault(name string) error {
 		return fmt.Errorf("has no name=%s", name)
 	}
 
-	tx, e := database.GetConnection().Begin()
+	tx, e := d.db.Begin()
 	if e != nil {
 		return e
 	}
