@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
+	log "github.com/eolinker/goku-api-gateway/goku-log"
 	"net"
 	"net/http"
 	"os"
@@ -14,8 +15,6 @@ import (
 	"sync"
 	"syscall"
 	"time"
-
-	log "github.com/eolinker/goku-api-gateway/goku-log"
 )
 
 const (
@@ -40,10 +39,9 @@ var (
 	DefaultMaxHeaderBytes int
 	DefaultHammerTime     time.Duration
 
-	isChild         bool
-	socketOrder     string
-	adminServer     *endlessServer
-	nodeServer      *endlessServer
+	isChild     bool
+	socketOrder string
+
 	hookableSignals []os.Signal
 )
 
@@ -73,24 +71,15 @@ func init() {
 
 type endlessServer struct {
 	http.Server
-	EndlessListener      net.Listener
-	SignalHooks          map[int]map[os.Signal][]func()
-	tlsInnerListener     *endlessListener
-	wg                   sync.WaitGroup
-	sigChan              chan os.Signal
-	isChild              bool
-	state                uint8
-	lock                 *sync.RWMutex
-	BeforeBegin          func(add string)
-	runningServersForked bool
-}
-
-func SetAdminServer(server *endlessServer) {
-	adminServer = server
-}
-
-func SetNodeServer(server *endlessServer) {
-	nodeServer = server
+	EndlessListener  net.Listener
+	SignalHooks      map[int]map[os.Signal][]func()
+	tlsInnerListener *endlessListener
+	wg               sync.WaitGroup
+	sigChan          chan os.Signal
+	isChild          bool
+	state            uint8
+	lock             *sync.RWMutex
+	BeforeBegin      func(add string)
 }
 
 /*
@@ -151,25 +140,17 @@ func NewServer(addr string, handler http.Handler) (srv *endlessServer) {
 
 	runningServersOrder = append(runningServersOrder, addr)
 	runningServers[addr] = srv
+
 	return
 }
 
-func RestartServer() {
-	nodeServer.sigChan <- syscall.SIGHUP
-}
-
-func StopServer() {
-	nodeServer.sigChan <- syscall.SIGTERM
-}
-
-/*F
+/*
 ListenAndServe listens on the TCP network address addr and then calls Serve
 with handler to handle requests on incoming connections. Handler is typically
 nil, in which case the DefaultServeMux is used.
 */
 func ListenAndServe(addr string, handler http.Handler) error {
 	server := NewServer(addr, handler)
-	nodeServer = server
 	return server.ListenAndServe()
 }
 
@@ -357,7 +338,7 @@ func (srv *endlessServer) handleSignals() {
 			log.Info(pid, "Received SIGINT.")
 			srv.shutdown()
 		case syscall.SIGTERM:
-			log.Info(``, "Received SIGTERM.")
+			log.Info(pid, "Received SIGTERM.")
 			srv.shutdown()
 		case syscall.SIGTSTP:
 			log.Info(pid, "Received SIGTSTP.")
@@ -437,15 +418,15 @@ func (srv *endlessServer) hammerTime(d time.Duration) {
 
 func (srv *endlessServer) fork() (err error) {
 
+
 	runningServerReg.Lock()
 	defer runningServerReg.Unlock()
-	log.Info(1234)
 	// only one server instance should fork!
-	if srv.runningServersForked {
+	if runningServersForked {
 		return errors.New("Another process already forked. Ignoring this one.")
 	}
-	log.Info(5456)
-	srv.runningServersForked = true
+
+	runningServersForked = true
 
 	var files = make([]*os.File, len(runningServers))
 	var orderArgs = make([]string, len(runningServers))
@@ -462,7 +443,7 @@ func (srv *endlessServer) fork() (err error) {
 		}
 		orderArgs[socketPtrOffsetMap[srvPtr.Server.Addr]] = srvPtr.Server.Addr
 	}
-	log.Info(123)
+
 	env := append(
 		os.Environ(),
 		"ENDLESS_CONTINUE=1",
@@ -477,7 +458,7 @@ func (srv *endlessServer) fork() (err error) {
 	if len(os.Args) > 1 {
 		args = os.Args[1:]
 	}
-	log.Info(path, args)
+
 	cmd := exec.Command(path, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -495,7 +476,6 @@ func (srv *endlessServer) fork() (err error) {
 		log.Fatalf("Restart: Failed to launch, error: %v", err)
 	}
 
-	srv.runningServersForked = false
 	return
 }
 

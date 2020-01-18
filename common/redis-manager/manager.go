@@ -54,18 +54,3 @@ func Get(name string) (Redis, bool) {
 
 	return nil, false
 }
-
-func del(name string) {
-	locker.RLock()
-	defer locker.RUnlock()
-
-	delete(redisOfCluster, name)
-
-	return
-}
-
-//Delete delete
-func Delete(name string) {
-	del(name)
-	return
-}

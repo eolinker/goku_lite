@@ -2,6 +2,8 @@ package database
 
 import (
 	"database/sql"
+	"io/ioutil"
+	"strings"
 
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 
@@ -11,9 +13,15 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+var (
+	defaultDB *sql.DB
+)
+
 //InitConnection 初始化数据库连接
-func InitConnection(config Config) (*sql.DB, error) {
-	return getConnection(config)
+func InitConnection(config Config) error {
+	db, e := getConnection(config)
+	defaultDB = db
+	return e
 }
 func getConnection(config Config) (*sql.DB, error) {
 
@@ -26,6 +34,7 @@ func getConnection(config Config) (*sql.DB, error) {
 		}
 		db.SetMaxOpenConns(1000)
 		db.SetMaxIdleConns(100)
+		defaultDB = db
 		return db, nil
 	}
 	log.Info(e)
@@ -33,17 +42,25 @@ func getConnection(config Config) (*sql.DB, error) {
 
 }
 
-//CheckConnection 检查数据库连接
-func CheckConnection(driver string, source string) error {
+//GetConnection 获取数据库连接
+func GetConnection() *sql.DB {
+	return defaultDB
+}
 
-	db, e := sql.Open(driver, source)
-	defer db.Close()
-	if e == nil {
-		if err := db.Ping(); err != nil {
+//InitTable 初始化表
+func InitTable() error {
+
+	content, err := ioutil.ReadFile("sql/goku_ce.sql")
+	sqls := strings.Split(string(content), ";")
+	Tx, _ := GetConnection().Begin()
+	for _, sql := range sqls {
+		_, err = Tx.Exec(sql)
+		if err != nil {
+			Tx.Rollback()
+			log.Error("InitTable error:",err,"\t sql:",sql)
 			return err
 		}
-		return nil
 	}
-	return e
-
+	Tx.Commit()
+	return nil
 }
