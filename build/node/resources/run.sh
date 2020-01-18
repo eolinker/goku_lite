@@ -26,34 +26,32 @@ start() {
 
     ADMIN=$1
     INSTANCE=$2
-
-    if [[ "INSTANCE" = "" ]] ;then
-        PORT=${ENV_INSTANCE}
+    CONFIG_PATH=$WORK_PATH/goku-node.json
+    RUN_MODEL="console"
+    if [ -f "$CONFIG_PATH" ]; then
+	RUN_MODEL="config"  
     fi
 
     if [[ "$ADMIN" = "" ]] ; then
         ADMIN=${ENV_ADMIN}
     fi
+    
+    if [[ "$INSTANCE" = "" ]]; then
+	INSTANCE = ${ENV_INSTANCE}
+    fi
 
-    if [[ "$ADMIN" = "" ]] ; then
+    if [[ "$ADMIN" == "" && "$RUN_MODEL" == "console" ]] ; then
         echo "start fail :need admin url"
         exit 1
     fi
 
     mkdir -p $WORK_PATH/logs
     echo -e "ENV_PORT=$PORT\nENV_ADMIN=$ADMIN" > $WORK_PATH/$PROG.env
-
-    if [[ -e "$WORK_PATH/$PROG.pid" ]]; then
-        ## Program is running, exit with error.
-        echo "Error! $PROG is currently running!" 1>&2
-        exit 1
-    else
-        time=$(date "+%Y%m%d-%H%M%S")
-        ## Change from /dev/null to something like /var/log/$PROG if you want to save output.
-        nohup $PROG_PATH/$PROG --instance=$INSTANCE --admin=$ADMIN 2>&1 >"$WORK_PATH/logs/stdout-$PROG-$time.log" &  pid=$!
-
-        echo "$PROG started"
-        echo $pid > "$WORK_PATH/$PROG.pid"
+    
+    if [[ "$ADMIN" != "NULL" ]]; then
+    	$PROG_PATH/$PROG --admin=$ADMIN --instance=$INSTANCE
+    else 
+	$PROG_PATH/$PROG --config=$CONFIG_PATH
     fi
 }
  
@@ -104,3 +102,4 @@ case "$1" in
         exit 1
     ;;
 esac
+
