@@ -2,13 +2,11 @@ package main
 
 import (
 	"flag"
-
-	"github.com/eolinker/goku-api-gateway/console/module/account"
 	log "github.com/eolinker/goku-api-gateway/goku-log"
 
 	"github.com/eolinker/goku-api-gateway/common/conf"
 	"github.com/eolinker/goku-api-gateway/common/general"
-	"github.com/eolinker/goku-api-gateway/console"
+	"github.com/eolinker/goku-api-gateway/console/module/account"
 	"github.com/eolinker/goku-api-gateway/utils"
 )
 
@@ -33,21 +31,20 @@ func main() {
 		log.Panic(err)
 		return
 	}
-	// 初始化db
-	console.InitDatabase()
-	console.InitLog()
 
-	//console.InitClusters()
+
+	// 初始化db
+	InitDatabase()
+	InitLog()
+
 	// 其他需要初始化的模块
 	_ = general.General()
 	// 检测是否安装
 	s, err := account.CheckSuperAdminCount()
 	if err != nil {
-		err = console.InitTable()
-		if err != nil {
 			log.Panic(err)
 			return
-		}
+
 	}
 	if s == 0 {
 		if userName == "" {
@@ -62,13 +59,13 @@ func main() {
 
 		// 用户注册
 		password := utils.Md5(utils.Md5(userPassword))
-		f := console.Register(userName, password)
+		f := account.Register(userName, password)
 		if !f {
 			log.Fatal("[ERROR] Fail to create administrator. Please try again or contact technical support of eoLinker GOKU API Gateway.")
 			return
 		}
 	}
-
-	console.Router()
-	console.Server()
+	Server()
+	//console.Router()
+	//console.Server()
 }

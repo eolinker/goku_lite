@@ -2,9 +2,9 @@ package main
 
 import (
 	"flag"
+	"github.com/eolinker/goku-api-gateway/admin/node"
 	"github.com/eolinker/goku-api-gateway/config"
 	log "github.com/eolinker/goku-api-gateway/goku-log"
-	console2 "github.com/eolinker/goku-api-gateway/node/console"
 	"github.com/eolinker/goku-api-gateway/node/server"
 	"runtime"
 )
@@ -20,7 +20,8 @@ func main() {
 
 	if admin != "" && instance != ""{
 
-		console := console2.NewConsole(instance, admin)
+		console := node.NewConsole(admin,instance)
+
 		ser := server.NewServer()
 		log.Fatal(ser.ServerWidthConsole(console))
 		return
