@@ -69,7 +69,7 @@ All in all, Goku API Gateway enables enterprise to focus on their business.
 
 # Enterprise Support
 Goku API Gateway EE (Enterprise Version) has more powerful functions, plug-in libraries and professional technical support services. If you want to know more details, you can contact us in the following ways.
-- Apply for free trial and demonstration of Enterprise Version：[Appointment trial](https://wj.qq.com/s2/2150032/4b5e "Appointment trial")
+- Apply for free trial and demonstration of Enterprise Version：[Appointment trial](https://www.eolinker.com/#/survey/applyAmsCloud "Appointment trial")
 - Market Cooperation Mail：market@eolinker.com
 - Purchase consultation Mail：sales@eolinker.com
 - Help Center：[help.eolinker.com](help.eolinker.com "help.eolinker.com")
