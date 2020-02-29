@@ -1,0 +1,15 @@
+setting-log{
+    .divide_hsl_eoui{
+        border-top: 1px solid #ddd;
+        margin: 20px 0;
+    }
+    .account-setting-common-scss{
+        margin-top: 50px;
+    }
+    button:disabled{
+        cursor: not-allowed !important;
+    }
+    .common-table-div:nth-child(2){
+        margin-top: 0;
+    }
+}

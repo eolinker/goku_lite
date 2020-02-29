@@ -1,0 +1,115 @@
+eo-navbar1 {
+    position: fixed;
+    width: 100%;
+    z-index: 7;
+    left: 0;
+    top: 0;
+    background-color: #fff;
+
+    .nav-router-container {
+        height: 50px;
+        line-height: 50px;
+        text-align: left;
+    }
+
+    .nav-container {
+        height: 50px;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+    }
+
+    .space-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 230px;
+        display: inline-block;
+    }
+
+    .select-nav-item:hover .list-ni,
+    .special-select-nav-item:hover .list-ni {
+        display: block;
+    }
+
+    .special-select-nav-item:hover .list-ni {
+        right: 5px;
+    }
+
+    .list-ni {
+        background-color: #fff;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.12);
+        min-width: 160px;
+        border-radius: 3px;
+        border: 1px solid #d9d9d9;
+        position: absolute;
+        display: none;
+    }
+
+    .item-lni {
+        text-align: left;
+
+        line-height: 43px;
+        cursor: pointer;
+    }
+
+    .item-lni a {
+        padding: 0 10px;
+        display: block;
+    }
+
+    .btn-item-lni {
+        padding: 0 10px;
+    }
+
+    .user-logo-tni {
+        height: 20px;
+        line-height: 20px;
+        border-radius: 10px;
+        width: 20px;
+        background-color: #d9d9d9;
+        background-size: contain;
+    }
+
+    .divide-top-item-lni {
+        border-top-style: solid;
+        border-top-width: 1px;
+    }
+
+    .unread-new-tip {
+        color: #fff;
+        background-color: #e83333;
+        -webkit-border-radius: 9px;
+        border-radius: 9px;
+        padding: 0 10px;
+        font-size: 12px;
+        display: inline-block;
+        height: 18px;
+        line-height: 20px;
+    }
+    .space-container {
+        position: fixed;
+        width: 100%;
+        text-align: center;
+        top: 0;
+        left: 0;
+    }
+
+    .shrink-btn {
+
+        height: 50px;
+        padding: 0 20px;
+    }
+
+    .zindex-top-container {
+        z-index: 1;
+    }
+
+    .text-ni,
+    .nav-item {
+        width: auto;
+        display: inline-flex;
+        padding: 0 15px;
+        line-height: 50px;
+        cursor: pointer;
+    }
+}

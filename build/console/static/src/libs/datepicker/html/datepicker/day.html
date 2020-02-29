@@ -1,0 +1,24 @@
+<table role="grid" aria-labelledby="{{::uniqueId}}-title" aria-activedescendant="{{activeDateId}}">
+  <thead>
+    <tr>
+      <th><button type="button" class="btn eo_theme_btn_default btn-sm pull-left uib-left" ng-click="move(-1)" tabindex="-1"><i
+            aria-hidden="true" class="iconfont icon-jiantou_liebiaoxiangzuo"></i></button></th>
+      <th colspan="{{::4 + showWeeks}}"><button id="{{::uniqueId}}-title" role="heading" aria-live="assertive"
+          aria-atomic="true" type="button" class="btn eo_theme_btn_default btn-sm uib-title" ng-click="toggleMode()"
+          ng-disabled="datepickerMode === maxMode" tabindex="-1"><b>{{title}}</b></button></th>
+      <th><button type="button" class="btn eo_theme_btn_default btn-sm pull-right uib-right" ng-click="move(1)"
+          tabindex="-1"><i aria-hidden="true" class="iconfont icon-xuanzeqixiayige"></i></button></th>
+    </tr>
+    <tr>
+      <th ng-repeat="label in ::labels track by $index" class="text-center"><small aria-label="{{::label.full}}">{{::label.abbr}}</small></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="uib-weeks" ng-repeat="row in rows track by $index" role="row">
+      <td ng-repeat="dt in row" class="uib-day text-center" role="gridcell" id="{{::dt.uid}}" ng-class="::dt.customClass">
+        <button type="button" class="btn eo_theme_btn_default btn-sm" ng-class="{'td-selected':dt.selected,'eo_theme_btn_info td-duration-selected':dt.position=='start'||dt.position=='end'}"
+          ng-click="select(dt.date)" ng-disabled="::dt.disabled" tabindex="-1"><span ng-class="::{'text-muted': dt.secondary, 'text-info': dt.current}">{{::dt.label}}</span></button>
+      </td>
+    </tr>
+  </tbody>
+</table>

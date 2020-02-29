@@ -1,0 +1,137 @@
+<menu-default-common-component class="mt10" main-object="$ctrl.component.menuObject">
+</menu-default-common-component>
+<article class="first-level-article mt65 mb15">
+    <ng-form name="ConfirmForm">
+
+        <p class="lh_50">分组：</p>
+        <p class="group-p">
+            <select-multistage-common-component output="$ctrl.component.selectMultistageCommonComponentObject"
+                input="{query:$ctrl.data.apiGroup,key:'groupName',value:'groupID',groupID:$ctrl.ajaxResponse.apiInfo.groupID||$ctrl.ajaxRequest.groupID}">
+            </select-multistage-common-component>
+        </p>
+        <p class="lh_50 f_row_ac">
+            <span>返回数据类型：</span>
+            <tip-directive input="网关返回给客户端的数据类型"></tip-directive>
+        </p>
+        <p>
+            <select class="eo-input select_common_aop" ng-model="$ctrl.ajaxResponse.apiInfo.responseDataType">
+                <option value="origin" ng-if="$ctrl.ajaxResponse.apiInfo.apiType===0">不转换</option>
+                <option value="json">JSON</option>
+                <option value="xml">XML</option>
+            </select>
+        </p>
+        <p class="lh_50">名称：</p>
+        <p>
+            <input autocomplete="off" class="eo-input input_common_aop" type="text" name="name"
+                ng-model="$ctrl.ajaxResponse.apiInfo.apiName"
+                ng-class="{'eo-input-error':((ConfirmForm.name.$dirty||$ctrl.data.submitted)&&ConfirmForm.name.$invalid)}"
+                maxlength="255" required>
+        </p>
+
+        <p class="lh_50 f_row_ac">
+            <span>请求方式：</span>
+            <tip-directive input="终端通过网关请求的方式"></tip-directive>
+        </p>
+        <div class="checkbox-p f_row">
+            <div class="mr10" ng-repeat="item in $ctrl.data.requestMethodList">
+                <input autocomplete="off" class="hidden" type="checkbox" id="date-checkbox-{{$index}}-js"
+                    ng-model="item.checkbox" name="date-checkbox" ng-change="$ctrl.data.requestMethod=false">
+                <label for="date-checkbox-{{$index}}-js" class="eo-checkbox iconfont"
+                    ng-class="{'icon-duihao':item.checkbox,'eo-input-error':$ctrl.data.submitted&&$ctrl.data.requestMethod}">{{item.checkbox?'':'&nbsp;'}}</label>
+                <label for="date-checkbox-{{$index}}-js">{{item.key}}</label>
+            </div>
+        </div>
+        <p class="lh_50 f_row_ac">
+            <span>请求路径：</span>
+            <tip-directive input="终端通过网关请求的URL"></tip-directive>
+        </p>
+        <p>
+            <input autocomplete="off" class="eo-input input_common_aop" type="text" name="requestURL"
+                ng-model="$ctrl.ajaxResponse.apiInfo.requestURL" placeholder="以/开头，如/test/login"
+                ng-class="{'eo-input-error':((ConfirmForm.requestURL.$dirty||$ctrl.data.submitted)&&ConfirmForm.requestURL.$invalid)}"
+                maxlength="255" required>
+        </p>
+        <div ng-if="$ctrl.ajaxResponse.apiInfo.apiType===0">
+                <p class="lh_50 f_row_ac">
+                        <span>转发地址/负载后端(Target/Upstream)：</span>
+                        <tip-directive input="请求的实际后端地址，也可以是在网关配置的负载名称"></tip-directive>
+                    </p>
+                    <div class="f_row" ng-class="{'eo-had-input-error':$ctrl.data.submitted&&!$ctrl.ajaxResponse.apiInfo.balanceName}">
+                        <select class="eo-select select_target_protocol_aop mr5" ng-model="$ctrl.ajaxResponse.apiInfo.protocol"
+                            ng-options="item.value as item.key for item in $ctrl.CONST.PROTOCOL_ARR"></select>
+                        <div class="input_target_aop">
+                            <auto-complete-component model="$ctrl.ajaxResponse.apiInfo" key-name='balanceName'
+                                array="$ctrl.ajaxResponse.balanceList" placeholder="实际转发地址或负载后端名称"
+                                main-object="$ctrl.component.balanceAutoCompleteObj"
+                                ng-class="{'eo-had-input-error':$ctrl.data.submitted&&!$ctrl.ajaxResponse.apiInfo.balanceName}">
+                            </auto-complete-component>
+                        </div>
+                    </div>
+                    <p class="lh_50 f_row_ac">
+                        <span>转发路径：</span>
+                        <tip-directive input="网关转发请求的URL；转发规则：若转发路径为/a，实际上/a、/a/b、/a/b/c等都可以被转发到"></tip-directive>
+                    </p>
+                    <p>
+                        <input autocomplete="off" class="eo-input input_common_aop" type="text" name="targetURL"
+                            ng-model="$ctrl.ajaxResponse.apiInfo.targetURL"
+                            ng-class="{'eo-input-error':((ConfirmForm.targetURL.$dirty||$ctrl.data.submitted)&&ConfirmForm.targetURL.$invalid)}"
+                            maxlength="255" placeholder="以/开头，如/test/login" required>
+                    </p>
+                    <p class="lh_50 f_row_ac">
+                        <span>转发方式：</span>
+                        <tip-directive input="网关转发请求的方式"></tip-directive>
+                    </p>
+                    <p>
+                        <select class="eo-input select_common_aop" ng-model="$ctrl.ajaxResponse.apiInfo.targetMethod">
+                            <option value="-1" selected>跟随用户请求方式</option>
+                            <option value="post">POST</option>
+                            <option value="get">GET</option>
+                            <option value="put">PUT</option>
+                            <option value="delete">DELETE</option>
+                            <option value="head">HEAD</option>
+                            <option value="options">OPTIONS</option>
+                            <option value="patch">PATCH</option>
+                        </select>
+                    </p>
+        </div>
+        <p class="lh_50 f_row_ac">
+            <span>超时限制(ms)：</span>
+            <tip-directive input="网关转发时若遇到后端超时未返回，此时网关会对客户端返回504表示超时"></tip-directive>
+        </p>
+        <p>
+            <input autocomplete="off" class="eo-input input_common_aop" type="text" name="timeout"
+                ng-model="$ctrl.ajaxResponse.apiInfo.timeout" ng-pattern="/^[1-9]\d*$/"
+                ng-class="{'eo-input-error':((ConfirmForm.timeout.$dirty||$ctrl.data.submitted)&&ConfirmForm.timeout.$invalid)}"
+                required>
+        </p>
+        <div ng-if="$ctrl.ajaxResponse.apiInfo.apiType===0">
+                <p class="lh_50 f_row_ac">
+                        <span>重试次数：</span>
+                        <tip-directive input="网关转发失败后，再次对后端发送请求的次数"></tip-directive>
+                    </p>
+                    <p>
+                        <input autocomplete="off" class="eo-input input_common_aop" type="text" name="retryCount"
+                            ng-model="$ctrl.ajaxResponse.apiInfo.retryCount" placeholder="转发失败时执行重试的次数"
+                            ng-pattern="/(^[1-9]\d*$)|(^0$)/"
+                            ng-class="{'eo-input-error':ConfirmForm.retryCount.$dirty&&ConfirmForm.retryCount.$invalid}" required>
+                    </p>
+        </div>
+        <div class="bt_dd mt15 ptb15 bb_dd" ng-if="$ctrl.ajaxResponse.apiInfo.apiType===1">
+            <api-Link-Step-Component main-object="$ctrl.component.apiLinkStepObj" other-object="{balanceList:$ctrl.ajaxResponse.balanceList,balanceAutoCompleteObj:$ctrl.component.balanceAutoCompleteObj,submitted:$ctrl.data.submitted}" list="$ctrl.ajaxResponse.apiInfo.linkApis"></api-Link-Step-Component>
+        </div>
+        <div class="abnormal_container_aop mt15">
+            <div class="f_row_ac f_js plr15 lh_35 cp f_js " ng-click="$ctrl.data.isSpreedStaticResponse=!$ctrl.data.isSpreedStaticResponse">
+                <div>
+                    <span>异常返回：</span>
+                    <tip-directive input="当API出现超时等异常时，网关会返回以下内容"></tip-directive>
+                </div>
+                <div class="iconfont" ng-class="{'icon-xuanzeqishouqi_o':$ctrl.data.isSpreedStaticResponse,'icon-xuanzeqizhankai_o':!$ctrl.data.isSpreedStaticResponse}">
+                </div>
+            </div>
+            <p class="btd abnormal_text_aop p10" ng-show="$ctrl.data.isSpreedStaticResponse">
+                <textarea ng-model="$ctrl.ajaxResponse.apiInfo.staticResponse" class="eo-textarea w_100percent" rows="5"></textarea>
+            </p>
+        </div>
+    </ng-form>
+</article>
+<div load-directive="$ctrl.fun.requestProcessing(arg)" interaction="{request:{delay:true}}"></div>

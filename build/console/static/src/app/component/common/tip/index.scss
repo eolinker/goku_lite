@@ -1,0 +1,28 @@
+tip-common-component {
+    display: flex;
+    .tips-ul {
+        // margin-top: 10px;
+        padding: 0 10px;
+        min-height: 32px;
+        line-height: 34px;
+        border: 1px solid;
+        border-radius: 3px;
+        @include eo-width(100%, 20px);
+        li {
+            font-size: 12px;
+        }
+        .title-li {
+            font-weight: bold;
+        }
+        >.content-li {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+    .warning-ul {
+        // color: #FF5722;
+        background-color: #fdefdd;
+        border-color: #f57705;
+    }
+}

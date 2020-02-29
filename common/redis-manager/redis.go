@@ -5,9 +5,6 @@ import "github.com/go-redis/redis"
 const (
 	//RedisModeCluster cluster模式
 	RedisModeCluster = "cluster"
-
-	//RedisModeSentinel sentinel模式
-	RedisModeSentinel = "sentinel"
 	//RedisModeStand stand模式
 	RedisModeStand = "stand"
 )

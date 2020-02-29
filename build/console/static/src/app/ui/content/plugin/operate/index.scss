@@ -1,0 +1,33 @@
+plugin-operate {
+    display: block;
+    .form_plugin_opr{
+        border: 1px solid #e5e5e5;
+        background-color: #fff;
+        font-size: 14px;
+        padding: 15px;
+        margin-top: 10px;
+    }
+    .first-level-article {
+        margin: $DISPLAY-NAV-TOP 10px 10px 10px;
+
+        
+        input[type=text] {
+            width: 578px;
+        }
+        select {
+            text-indent: 0;
+            width: 580px;
+        }
+        input[type=text],
+        select {
+            &:disabled {
+                background-color: #fafafa;
+                cursor: not-allowed;
+            }
+        }
+    }
+    .title-p,
+    .match-rule-p {
+        line-height: 50px;
+    }
+}

@@ -1,0 +1,26 @@
+<div class="container-div" ng-click="$ctrl.fun.click($event)">
+        <div class="text-div f_row" ng-click="$ctrl.fun.wantToSelect($event)" ng-class="{'disabled-text-p':$ctrl.disabled}">
+            <div class="select-item-div">
+                <span ng-repeat="item in $ctrl.data.textList" ng-if="$ctrl.data.textList.length>0">{{$first?"":"&nbsp;/&nbsp;"}}{{item[$ctrl.input.key]}}</span>
+                <span class="eo-status-tips" ng-if="!($ctrl.data.textList.length>0)">请选择...</span>
+            </div>
+            <span class="iconfont icon-xuanzeqizhankai pull-right"></span>
+        </div>
+        <div class="list-container-div" ng-show="$ctrl.data.wantToSelect&&($ctrl.data.query.length>0||$ctrl.data.q)">
+            <p class="search-p bbd f_row">
+                <span class="iconfont icon-sousuo"></span>
+                <input type="text" autocomplete="off" ng-model="$ctrl.data.q" placeholder="搜索">
+                <input class="select-multistage-btn-clear-text eo_theme_btn_default pull-right " type="button" value="清除"
+                    ng-show="$ctrl.data.q" />
+            </p>
+            <p class="select-multistage-btn-back common-class-item bbd " ng-if="$ctrl.data.hasParent"><span
+                    class="iconfont icon-chexiao mr10"></span>返回上一级目录</p>
+            <div class="query-container-child-div">
+                <p class="select-multistage-btn-item common-class-item " ng-repeat="item in $ctrl.data.query | filter:$ctrl.fun.filter"
+                    eo-attr-index="{{$index}}">{{item[$ctrl.input.key]}}<span class="select-multistage-btn-item-span iconfont icon-xuanzeqixiayige pull-right"
+                        ng-if="item.hasChild"></span></p>
+                <p class="un-search-response-p eo-status-tips" ng-if="($ctrl.data.query | filter:$ctrl.fun.filter).length==0&&$ctrl.data.q">暂无搜索结果</p>
+            </div>
+            <p class="select-multistage-btn-close common-class-item btd eo-status-success tac" ng-if="$ctrl.data.hasParent&&$ctrl.data.queryHaveChild&&!$ctrl.input.selectDeepest">确定</p>
+        </div>
+    </div>

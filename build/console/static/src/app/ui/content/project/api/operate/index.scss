@@ -1,0 +1,33 @@
+
+api-operate {
+    z-index: 0;
+    tip-directive{
+        margin-left: 0;
+    }
+    .abnormal_container_aop{
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        width: 578px;
+    }
+    .abnormal_text_aop{
+        background-color: #fafafa;
+    }
+    .first-level-article {
+        margin-left: $PLATE_PADDING;
+        margin-right:$PLATE_PADDING;
+
+        border: 1px solid #e5e5e5;
+        background-color: #fff;
+        font-size: 14px;
+        padding: 10px;
+    }
+    .select_common_aop,.input_common_aop {
+        width: 578px;
+    }
+    .select_target_protocol_aop{
+        width: 100px;
+    }
+    .input_target_aop{
+        width: 473px;
+    }
+}

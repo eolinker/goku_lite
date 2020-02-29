@@ -1,0 +1,11 @@
+<div class="f_row">
+    <div class="f_row mr15" ng-repeat="item in $ctrl.list">
+        <button class="f_row" type="button" ng-disabled="$ctrl.disabled" ng-click="$ctrl.fun.clickMenu(item.value)">
+            <span class="iconfont fs23"
+                ng-class="{'icon-danxuanxuanzhong eo-status-success':$ctrl.output[$ctrl.modelKey]===item.value,'icon-danxuanweixuanzhong':$ctrl.output[$ctrl.modelKey]!==item.value}"></span>
+            <span class="key-span">{{item.key}}</span>
+        </button>
+        <tip-directive ng-if="item.tip" input="{{item.tip}}"></tip-directive>
+    </div>
+
+</div>

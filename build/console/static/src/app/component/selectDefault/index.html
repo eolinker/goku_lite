@@ -1,0 +1,29 @@
+<div class="container-div" ng-click="$ctrl.fun.domClick($event)" ng-class="{'container-focus':$ctrl.data.containerFocus}">
+        <p class="text-p preview-text-p" ng-class="{'disabled_preview_text_p':$ctrl.disabled}">
+            <span ng-show="$ctrl.output[$ctrl.modelKey]!==undefined">{{$ctrl.data.text}}</span>
+            <span class="eo-status-tips" ng-if="$ctrl.output[$ctrl.modelKey]===undefined">{{$ctrl.mainObject.setting.emptyText||'请选择...'}}</span>
+            <span class="iconfont icon-xuanzeqizhankai arrow-span" ng-hide="$ctrl.data.text&&!$ctrl.required"></span>
+        </p>
+        <input class="input-text text-p opacity-text-input input-select" ng-mousedown="$ctrl.fun.inputMousedown($event)" readonly ng-disabled="$ctrl.disabled">
+        <div class="list-container-div" ng-mouseleave="$ctrl.data.containerFocus=false;" ng-if="$ctrl.input.query.length>0" ng-mousedown="$ctrl.fun.listMouseDown($event)" ng-class="{'dp_b':$ctrl.data.searchFocusStatus}">
+            <p class="search-p bbd f_row" ng-if="$ctrl.input.query.length>=5">
+                <span class="iconfont icon-sousuo"></span>
+                <input class="input-search" type="text" autocomplete="off" ng-model="$ctrl.data.q" placeholder="搜索"
+                    ng-change="$ctrl.fun.searchChange()" ng-mousedown="$ctrl.fun.searchActiveStatus(true)" ng-blur="$ctrl.fun.searchActiveStatus(false)">
+            </p>
+            <div class="query-container-child-div" repaint-scroll-top-common-directive count="$ctrl.data.currentElementCount" min="5" l-height="35">
+                <p class="eo-none-tr tac" ng-show="$ctrl.data.query.length==0">暂无任何搜索项</p>
+                <p class="select-btn-item common-class-item f_row f_ac f_wrap" ng-show="$ctrl.data.query.length>0" ng-class="{'select-active-item':$ctrl.data.currentElementCount==$index}"
+                    ng-repeat="item in $ctrl.data.query" eo-attr-index="{{$index}}">
+                    <span ng-if="$ctrl.multiple==='true'" class="sd_check_box iconfont  fwb cg" ng-class="{'icon-duihao':$ctrl.output[$ctrl.modelKey][item[$ctrl.input.value]]}" eo-attr-index="{{$index}}"></span>
+                    <inner-Html-Common-Directive ng-if="$ctrl.mainObject.setting.customizeItemLabel" eo-attr-index="{{$index}}" html="$ctrl.mainObject.setting.customizeItemLabel"></inner-Html-Common-Directive>
+                    <span class="select-btn-item ws_nowrap" eo-attr-index="{{$index}}">{{item[$ctrl.input.key]}}</span>
+                </p>
+            </div>
+        </div>
+        <div class="list-container-div" ng-if="$ctrl.input.query.length==0">
+            <p class="un-search-response-p eo-status-tips">暂无任何选项</p>
+        </div>
+    
+    </div>
+    <div class="tab-focus-div eo-static-hidden" tabindex="0" ng-focus="$ctrl.fun.divFocus()"></div>

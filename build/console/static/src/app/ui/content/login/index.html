@@ -1,0 +1,26 @@
+<div class="login-wrap">
+    <eo-navbar></eo-navbar>
+    <div class="login-content ">
+        <header>
+            <p class="logo-p">Goku管理后台</p>
+            <p class="tips-p">欢迎回到goku</p>
+        </header>
+        <article>
+            <form name="ConfirmForm">
+                <ul>
+                    <li>
+                        <input  class="eo-input" name="username" ng-model="$ctrl.ajaxRequest.loginCall" type="text" placeholder="账号" ng-class="{'eo-input-error':ConfirmForm.username.$invalid&&$ctrl.data.submitted}" required autofocus />
+                    </li>
+                    <li class="password-li">
+                        <input  class="eo-input  pull-left" name="password" ng-if="!$ctrl.data.password.isShow" ng-class="{'eo-input-error':$ctrl.data.submitted&&ConfirmForm.password.$invalid}" type="password" placeholder="密码" ng-model="$ctrl.ajaxRequest.loginPassword" required />
+                        <input  class="eo-input  pull-left" name="eyepassword" ng-if="$ctrl.data.password.isShow" ng-class="{'eo-input-error':$ctrl.data.submitted&&ConfirmForm.eyepassword.$invalid}" type="text" placeholder="密码" ng-model="$ctrl.ajaxRequest.loginPassword" required />
+                        <a class="iconfont" ng-class="{'icon-yanjing_yincang':$ctrl.data.password.isShow,'icon-yanjing_xianshi':!$ctrl.data.password.isShow}" ng-click="$ctrl.fun.changeView()" ></a>
+                    </li>
+                    <li>
+                        <button class="eo_theme_btn_success" ng-click="$ctrl.fun.confirm()">登录</button>
+                    </li>
+                </ul>
+            </form>
+        </article>
+    </div>
+</div>

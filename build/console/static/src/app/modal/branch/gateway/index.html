@@ -1,0 +1,271 @@
+<div class="gateway-modal modal">
+    <!-- 复制API弹窗 -->
+    <script type="text/ng-template" id="Gateway_CopyApiModal">
+        <div class="gateway-modal-copy-api common-modal eo-modal">
+            <form name="ConfirmForm">
+            <header class="eo-modal-header">复制API</header>
+            <article class="eo-modal-article">
+                <p class="eo_form_first_item_title f_row">API名称：</p>
+                <input autocomplete="off" class="eo-input w_100percent" type="text" ng-model="input.apiName" required>
+                <p class="eo_form_item_title f_row">
+                    <span>请求方式：</span>
+                    <tip-directive input="终端通过网关请求的方式"></tip-directive>
+                </p>
+                <div class="checkbox-p f_row">
+                    <div class="mr10" ng-repeat="item in input.requestMethodList">
+                        <input autocomplete="off" class="hidden" type="checkbox" id="date-checkbox-{{$index}}-js"
+                            ng-model="item.checkbox" name="date-checkbox" ng-change="data.requestMethod=false">
+                        <label for="date-checkbox-{{$index}}-js" class="eo-checkbox iconfont"
+                            ng-class="{'icon-duihao':item.checkbox,'eo-input-error':data.submitted&&data.requestMethod}">{{item.checkbox?'':'&nbsp;'}}</label>
+                        <label for="date-checkbox-{{$index}}-js">{{item.key}}</label>
+                    </div>
+                </div>
+                <p class="eo_form_item_title f_row">
+                    <span>请求路径：</span>
+                    <tip-directive input="终端通过网关请求的URL"></tip-directive>
+                </p>
+                <input autocomplete="off" class="eo-input w_100percent" type="text" name="requestURL"
+                        ng-model="input.requestURL" placeholder="以/开头，如/test/login"
+                        ng-class="{'eo-input-error':((ConfirmForm.requestURL.$dirty||data.submitted)&&ConfirmForm.requestURL.$invalid)}"
+                        maxlength="255" required>
+                <p class="eo_form_item_title f_row">
+                    <span>转发地址/负载后端(Target/Upstream)：</span>
+                    <tip-directive input="请求的实际后端地址，也可以是在网关配置的负载名称"></tip-directive>
+                </p>
+                <div class="f_row" ng-class="{'eo-had-input-error':data.submitted&&!input.balanceName}">
+                    <select class="eo-select w_80 mr5"
+                        ng-model="input.protocol"
+                        ng-options="item.value as item.key for item in CONST.PROTOCOL_ARR"></select>
+                    <div class="w_100percent">
+                        <auto-complete-component model="input" key-name='balanceName'
+                            array="input.balanceList" placeholder="实际转发地址或负载后端名称"
+                            main-object="component.balanceAutoCompleteObj"
+                            ng-class="{'eo-had-input-error':data.submitted&&!input.balanceName}">
+                        </auto-complete-component>
+                    </div>
+                </div>
+                <p class="eo_form_item_title f_row">
+                    <span>转发路径：</span>
+                    <tip-directive input="网关转发时的URL是否不拼接网关请求路径"></tip-directive>
+                </p>
+                <input autocomplete="off" class="eo-input w_100percent" type="text" name="targetURL" ng-model="input.targetURL"  ng-class="{'eo-input-error':((ConfirmForm.targetURL.$dirty||data.submitted)&&ConfirmForm.targetURL.$invalid)}" maxlength="255" placeholder="以/开头，如/test/login" required>
+                <p class="eo_form_item_title f_row">
+                    <span>转发方式：</span>
+                    <tip-directive input="网关转发请求的方式"></tip-directive>
+                </p>
+                <select class="eo-input w_100percent" ng-model="input.targetMethod">
+                    <option value="-1">跟随用户请求方式</option>
+                    <option value="post">POST</option>
+                    <option value="get">GET</option>
+                    <option value="put">PUT</option>
+                    <option value="delete">DELETE</option>
+                    <option value="head">HEAD</option>
+                    <option value="options">OPTIONS</option>
+                    <option value="patch">PATCH</option>
+                </select>
+            </article>
+            <footer class="eo-modal-footer">
+                <button class="eo_theme_btn_success " ng-click="fun.confirm()">确定</button>
+                <button type="button" class="eo_theme_btn_default " ng-click="fun.cancel()">取消</button>
+            </footer>
+        </form>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+    <!--编辑API插件弹窗-->
+    <script type="text/ng-template" id="Gateway_GpeditApiPluginModal">
+        <div class="gateway-modal-gpedit-api-plugin modal-project eo-modal common-modal">
+            <header class="eo-modal-header">
+                <span>配置插件</span>
+                <button class="iconfont icon-guanbi pull-right mt15 ab_r20" type="button"
+                    ng-click="fun.cancel()"></button>
+            </header>
+            <article class="eo-modal-article">
+                <gpedit-inside-plugin-operate chinese-Name="{{input.chineseName}}" plugin-name="{{input.pluginName}}" status="{{input.oprType}}" opr-target="api" accept="component.pluginOprObj.trigger" trigger="component.pluginOprObj.accept"></gpedit-inside-plugin-operate>
+            </article>
+            <footer class="eo-modal-footer">
+                <button class="{{input.btnObject.class||'eo_theme_btn_success'}}" button-set-disable-directive="fun.confirm()">{{input.btnObject.text||"确定"}}</button>
+                <button type="button" class="eo_theme_btn_default" ng-click="fun.cancel()">取消</button>
+            </footer>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+    <!--服务弹窗-->
+    <script type="text/ng-template" id="Gateway_ServiceModal">
+        <div class="gateway-modal-service modal-project eo-modal common-modal">
+            <header class="eo-modal-header">
+                <span ng-bind="::input.title"></span>
+                <button class="iconfont icon-guanbi pull-right mt15 ab_r20" type="button"
+                    ng-click="fun.cancel()"></button>
+            </header>
+            <form autocomplete="off" name="ConfirmForm">
+            <article class="eo-modal-article">
+                    <div>
+                        <div class="dp_ib">
+                            <menu-radio-common-component class="pull-left mr5" list="CONST.SERVICE_TYPE_ARR" output="ajaxResponse.serviceData" model-key="type" cancel-Bind-Fun="true" disabled="input.opr==='Edit'" ></menu-radio-common-component>
+                        </div>
+                        <p class="eo_form_first_item_title mt10">服务注册方式名称</p>
+                        <div>
+                            <input autocomplete="off" type="text" name="name" ng-model="ajaxResponse.serviceData.name" placeholder="仅支持字母、数字、下划线" class="eo-input" ng-class="{'eo-input-error':(data.submitted&&ConfirmForm.name.$invalid)}" ng-disabled="input.opr==='Edit'" ng-pattern="/^\w+$/" required>
+                        </div>
+                        <div ng-if="ajaxResponse.serviceData.type=='discovery'">
+                            <p class="eo_form_first_item_title mt10">类型</p>
+                            <p>
+                                <select-default-common-component output="ajaxResponse.serviceData" disabled="input.opr==='Edit'" model-key="driver" input="{query:ajaxResponse.driverQuery,key:'title',value:'name',initialData:ajaxResponse.serviceData.driver}" required="true">
+                                </select-default-common-component>
+                            </p>
+                            <p class="eo_form_item_title f_row_ac">
+                                <span>全局接入地址</span>
+                                <tip-directive input="服务发现默认使用的接入地址"></tip-directive>
+                            </p>
+                            <div>
+                                <input autocomplete="off" ng-pattern="/^[\w\.\/:]+$/" type="text" name="config" ng-model="ajaxResponse.serviceData.config" class="eo-input" ng-class="{'eo-input-error':(data.submitted&&ConfirmForm.config.$invalid)}" ng-required="ajaxResponse.serviceData.type=='discovery'">
+                            </div>
+                            <p class="eo_form_item_title f_row_ac">
+                                <span>集群接入地址</span>
+                                <span class="c999 fs12">[非必填]</span>
+                                <tip-directive input="<p>不同集群使用不同的服务发地址时，需要填写相应的地址；</p><p>且集群的配置优先级高于全局的配置</p>"></tip-directive>
+                            </p>
+                            <div class="eo-block-container"><list-block-common-component main-object="component.listBlockObj" list="ajaxResponse.clusterQuery" other-object="{submitted:data.submitted}"></list-block-common-component></div>
+                        </div>
+                    </div>
+                
+            </article>
+            <footer class="eo-modal-footer">
+                <button class="{{input.btnObject.class||'eo_theme_btn_success'}}" button-set-disable-directive="fun.confirm()">{{input.btnObject.text||"确定"}}</button>
+                <button type="button" class="eo_theme_btn_default" ng-click="fun.cancel()">取消</button>
+            </footer>
+        </form>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+    <!-- 节点错误报告弹窗 -->
+    <script type="text/ng-template" id="Gateway_NodeCheckErrorReportModal">
+        <div class="gateway-modal-node-check-error-report eo-modal common-modal">
+            <header class="eo-modal-header">
+                <span>检测报告-{{input.pluginName}}</span>
+                <button class="iconfont icon-guanbi pull-right mt15 ab_r20" type="button" ng-click="fun.cancel()"></button>
+            </header>
+            <article class="eo-modal-article">
+                <div ng-repeat="item in input.query">
+                    <p class="f_row"><span class="mw_90">服务器地址：</span><span>{{item.nodeAddress}}</span></p>
+                    <p class="f_row"><span class="mw_90">错误原因：</span><span>{{item.error}}</span></p>
+                </div>
+            </article>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+    <!-- 修改密码弹窗 -->
+    <script type="text/ng-template" id="Gateway_ChangePasswordModal">
+        <div class="gateway-modal-change-password eo-modal common-modal">
+            <form name="editForm">
+            <header class="eo-modal-header">修改密码</header>
+            <article class="eo-modal-article">
+                
+                    <ul>
+                        <li class="eo_form_first_item_title">
+                            <span>旧密码：</span>
+                        </li>
+                        <li>
+                            <input class="eo-input" type="password" name="old" placeholder="旧密码" placeholder="旧密码" ng-pattern="/^[\x21-\x7E]{6,32}$/"
+                                ng-model="data.interaction.request.oldPassword" maxlength="32" required=>
+                        </li>
+                        <li class="eo_form_item_title">
+                            <span>新密码：</span>
+                        </li>
+                        <li>
+                            <input class="eo-input" type="password" name="new" placeholder="新密码" ng-pattern="/^[\x21-\x7E]{6,32}$/" ng-model="data.interaction.request.newPassword"
+                                maxlength="32" required>
+                        </li>
+                        <li class="eo_form_item_title">
+                            <span>确认新密码：</span>
+                        </li>
+                        <li>
+                            <input class="eo-input" type="password" name="confirm" placeholder="确认新密码" ng-model="$ctrl.data.interaction.request.confirm"
+                                maxlength="32" password-confirm-directive="new" required>
+                        </li>
+                    </ul>
+                
+            </article>
+            <footer class="eo-modal-footer">
+                    <button class="eo_theme_btn_success mr10 pull-left" button-set-disable-directive="data.fun.confirm()">确认</button>
+                    <button class="eo_theme_btn_default " type="button" ng-click="cancel()">取消</button>
+            </footer>
+        </form>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+    <!-- 添加编辑网关策略控制弹窗 -->
+    <script type="text/ng-template" id="GatewayGpeditDefaultModal">
+        <div class="gateway-modal-gpedit-default eo-modal common-modal">
+            <form name="ConfirmForm">
+            <header class="eo-modal-header">添加访问策略</header>
+            <article class="eo-modal-article">
+                
+                    <p class="eo_form_first_item_title">分组：</p>
+                    <p class="common-p">
+                        <select class="eo-select " ng-model="output.groupID" ng-options="item.groupID as item.groupName for item in data.group"></select>
+                    </p>
+                    <p class="eo_form_item_title">名称：</p>
+                    <p class="common-p">
+                        <input autocomplete="off" class="eo-input " type="text" name="name" ng-model="output.strategyName" ng-class="{'eo-input-error':(ConfirmForm.name.$dirty&&ConfirmForm.name.$invalid)}"
+                            required>
+                    </p>
+                
+            </article>
+            <footer class="eo-modal-footer">
+                <button class="eo_theme_btn_success " ng-click="fun.confirm()">确定</button>
+                <button type="button" class="eo_theme_btn_default " ng-click="fun.cancel()">取消</button>
+            </footer>
+            </form>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+    <!-- 添加编辑网关节点控制弹窗 -->
+    <script type="text/ng-template" id="GatewayClusterModal">
+        <div class="gateway-modal-cluster eo-modal common-modal">
+                <form name="ConfirmForm">
+            <header class="eo-modal-header">{{data.title}}</header>
+            <article class="eo-modal-article">
+                
+                    <p class="eo_form_first_item_title">分组：</p>
+                    <p class="common-p">
+                        <select class="eo-input " ng-model="output.groupID" ng-options="item.groupID as item.groupName for item in data.group"></select>
+                    </p>
+                    <p class="eo_form_item_title">网关文件路径：</p>
+                    <p class="common-p">
+                        <input autocomplete="off" class="eo-input " type="text" name="gatewayPath" ng-model="output.gatewayPath" ng-class="{'eo-input-error':(ConfirmForm.gatewayPath.$dirty&&ConfirmForm.gatewayPath.$invalid)}"
+                            required>
+                    </p>
+                    <p class="eo_form_item_title">节点名称：</p>
+                    <p class="common-p">
+                        <input autocomplete="off" class="eo-input " type="text" name="name" ng-model="output.nodeName" ng-class="{'eo-input-error':(ConfirmForm.name.$dirty&&ConfirmForm.name.$invalid)}"
+                            required>
+                    </p>
+                    <p class="eo_form_item_title f_row_ac">
+                        <span>监听地址：</span>
+                        <tip-directive input="用于监听节点程序；监听的端口号用于节点做请求转发"></tip-directive>
+                    </p>
+                    <p class="common-p">
+                        <input autocomplete="off" class="eo-input " type="text" name="ip" ng-model="output.listenAddress" ng-class="{'eo-input-error':(ConfirmForm.ip.$dirty&&ConfirmForm.ip.$invalid)}"
+                            ng-pattern="/^(?:(?:1[0-9][0-9]\.)|(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:1[0-9][0-9])|(?:2[0-4][0-9])|(?:25[0-5])|(?:[1-9][0-9])|(?:[0-9]))\:(([0-9])|([1-9][0-9]{1,3})|([1-6][0-9]{0,4}))$/"
+                            required>
+                    </p>
+                    <p class="eo_form_item_title">
+                        <span>管理地址：</span>
+                        <tip-directive input="用于监控组件获取监控数据和对节点做健康检查等"></tip-directive>
+                    </p>
+                    <p class="common-p">
+                        <input autocomplete="off" type="text" name="port" class="eo-input " ng-model="output.adminAddress" ng-class="{'eo-input-error':(ConfirmForm.port.$dirty&&ConfirmForm.port.$invalid)}"
+                            ng-pattern="/^(?:(?:1[0-9][0-9]\.)|(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:1[0-9][0-9])|(?:2[0-4][0-9])|(?:25[0-5])|(?:[1-9][0-9])|(?:[0-9]))\:(([0-9])|([1-9][0-9]{1,3})|([1-6][0-9]{0,4}))$/" required>
+                    </p>
+            </article>
+            <footer class="eo-modal-footer">
+                    <button class="eo_theme_btn_success " ng-click="fun.confirm()">确定</button>
+                    <button type="button" class="eo_theme_btn_default " ng-click="fun.cancel()">取消</button>
+            </footer>
+        </form>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+</div>

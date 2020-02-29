@@ -1,0 +1,41 @@
+<div class="account-setting-common-scss">
+    <article class="common-table-div eo-tab-container">
+        <p class="title-p">
+            <b>基本设置</b>
+        </p>
+        <div class="content">
+            <form autocomplete="off" name="BasicForm">
+                <p class="mt20">
+                    策略名称
+                </p>
+                <p class="mt10">
+                    <input autocomplete="off" class="eo-input" type="text" placeholder="策略名称" maxlength="255" ng-model="$ctrl.ajaxResponse.strategyInfo.strategyName" ng-disabled="!$ctrl.service.authority.permission.default.strategyManagement.edit||$ctrl.ajaxResponse.strategyInfo.strategyType===1" required>
+                </p>
+                <p class="mt20" ng-if="$ctrl.ajaxResponse.strategyInfo.strategyType===0">
+                    <span class="pull-left">策略ID：{{$ctrl.ajaxResponse.strategyInfo.strategyID}}</span>
+                    <tip-directive input="使用该策略需要在Header或Body带上Strategy-ID参数"></tip-directive>
+                </p>
+                <p class="mt20" ng-if="$ctrl.service.authority.permission.default.strategyManagement.edit&&$ctrl.ajaxResponse.strategyInfo.strategyType===0">
+                    <button class="eo_theme_btn_success" button-set-disable-directive="$ctrl.fun.confirm()" ng-disabled="BasicForm.$invalid">保存</button>
+                </p>
+            </form>
+        </div>
+    </article>
+    <article class="common-table-div eo-tab-container mt15" ng-if="$ctrl.service.authority.permission.default.strategyManagement.edit">
+        <p class="title-p">
+            <b>启用/停用策略</b>
+        </p>
+        <div class="content">
+            <ng-form autocomplete="off" name="AdvancedForm">
+                <p class="tips-p mt20">
+                    停用策略后，所有请求将无法通过该策略访问API
+                </p>
+                <p class="mt20">
+                    <button ng-class="{'eo_theme_btn_danger':$ctrl.ajaxResponse.strategyInfo.enableStatus===1,'eo_theme_btn_success':$ctrl.ajaxResponse.strategyInfo.enableStatus===0}" button-set-disable-directive="$ctrl.fun.oprGpeditStatus($ctrl.ajaxResponse.strategyInfo.enableStatus)">{{$ctrl.ajaxResponse.strategyInfo.enableStatus?"停用":"启用"}}</button>
+                </p>
+            </ng-form>
+        </div>
+    </article>
+    <loading-common-component fun="$ctrl.fun.init(arg)">
+    </loading-common-component>
+</div>

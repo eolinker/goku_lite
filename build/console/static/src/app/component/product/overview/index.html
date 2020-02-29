@@ -1,0 +1,49 @@
+<div class="first-box">
+    <div class="project-info">
+        <div class="f_row">
+            <h1 class="h20"> {{$ctrl.mainObject.setting.title}}</h1>
+            <span ng-if="$ctrl.authorityObject.edit" class="btn-edit-project iconfont icon-bianji fs24 ml15 cp"
+                ng-click="$ctrl.mainObject.setting.editFun()"></span>
+        </div>
+        <div class="f_row productInfo-box">
+            <ul class="productInfo-ul" ng-repeat="list in $ctrl.mainObject.setting.divideArr">
+                <li ng-repeat="item in $ctrl.mainObject.list.slice(list[0],list[1])" class="f_row productInfo-il"
+                    ng-switch="item.type">
+                    <span class="productInfo-name">{{item.key}}：</span>
+                    <div ng-switch-default inner-html-common-directive html="item.html"></div>
+                    <div ng-switch-when="link">
+                        <a ng-if="!item.linkAuthority||$ctrl.authorityObject[item.linkAuthority]" class="eo_link"
+                            ui-sref="{{item.sref}}" inner-html-common-directive html="item.html"></a>
+                        <span ng-if="item.linkAuthority&&!$ctrl.authorityObject[item.linkAuthority]"
+                            inner-html-common-directive html="item.html"></span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="project-operate f_row"
+        ng-if="!$ctrl.mainObject.setting.showOperate||$ctrl.authorityObject[$ctrl.mainObject.setting.showOperate]">
+        <div class="operate-box f_column" ng-if="!item.authority||$ctrl.authorityObject[item.authority]"
+            ng-repeat="item in $ctrl.mainObject.operate" ng-switch="item.type">
+            <div class="f_column operate-box-top  ptb20 fg1 {{item.class}} " ng-switch-when='staticData'>
+                <p class="c9">{{item.title}}</p>
+                <p class="h24 mt10">{{$ctrl.otherObject[item.quotePoint][item.quoteVariable]}}</p>
+            </div>
+            <div class="f_row operate-box-top  fg1 f_ac {{item.class}} " ng-switch-when='html'
+                inner-html-common-directive html="item.html">
+            </div>
+            <div class="f_row operate-box-top fg1 f_ac {{item.class}} " ng-switch-default>
+                <span ng-if="item.icon" class="iconfont icon-{{item.icon}} fs24 mr15"></span>{{item.key}}
+            </div>
+            <div class="operate-box-bottom f_row f_js_ac" ng-if="item.btnList">
+                <button class="common-btn f_row f_jc_ac" ng-repeat="childItem in item.btnList"
+                    ng-if="!childItem.authority||$ctrl.authorityObject[childItem.authority]"
+                    ng-click="$ctrl.fun.common(childItem)">
+                    <span class="common_btn_divide" ng-if="!$first&&(!item.btnList[$index-1].authority||$ctrl.authorityObject[item.btnList[$index-1].authority])"></span>
+                    <span ng-if="childItem.icon" class="iconfont icon-{{childItem.icon}} fs24 mr5"></span>
+                    <span>{{childItem.key}}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

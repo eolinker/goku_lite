@@ -1,0 +1,5 @@
+<div class="plr15 pb15">
+        <menu-default-common-component  active-object="$ctrl.component.menuObject.active" authority-object="{edit:$ctrl.service.authority.permission.default.strategyManagement.edit,showTitle:!$ctrl.service.authority.permission.default.strategyManagement.edit}" main-object="$ctrl.component.menuObject"  other-object="{batch:$ctrl.data.batch,isBatchDisabled:!$ctrl.ajaxResponse.query.length}"></menu-default-common-component>
+        <list-default-common-component authority-object="{operate:$ctrl.service.authority.permission.default.strategyManagement.edit}" main-object="$ctrl.component.listDefaultCommonObject" list="$ctrl.ajaxResponse.query" other-object="{batch:$ctrl.data.batch}"></list-default-common-component>
+    </div>
+    <loading-common-component fun="$ctrl.fun.init(arg)"></loading-common-component>

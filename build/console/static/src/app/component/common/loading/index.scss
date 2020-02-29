@@ -1,0 +1,42 @@
+loading-common-component {
+    //加载动画
+    @keyframes load {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+    .loading-content {
+        top: 109px;
+        @include eo-left(50%, 176px);
+        position: fixed;
+        z-index: 10;
+        .loading {
+            min-width: 350px;
+            max-width: 500px;
+            border-radius: 3px;
+            @include eo-modal-color(#e5e5e5, #fff);
+            box-shadow: 0px 10px 29px #ccc;
+            li {
+                @include eo-line(50px);
+                text-align: center;
+                color: #555;
+                font-size: 14px;
+                .iconfont {
+                    font-size: 18px;
+                    color: #555;
+                    font-size: 14px;
+                }
+                div {
+                    @include eo-animation(load 1.7s infinite ease);
+                    display: inline-block;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+}

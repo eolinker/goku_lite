@@ -1,0 +1,18 @@
+<div class="thead-div" inner-html-common-directive html="$ctrl.data.thHtml" ng-if="!$ctrl.mainObject.setting.hideTh"></div>
+<div class="tbody_div_wrap" ng-if="!$ctrl.mainObject.setting.isPartModule" sv-group-root fun="$ctrl.fun.sort" sv-group-part="$ctrl.list" disabled="(!$ctrl.data.sort)||($ctrl.data.sortAuthorityVar&&!$ctrl.authorityObject[$ctrl.data.sortAuthorityVar])||($ctrl.mainObject.setting.unsortableVar&&$ctrl.otherObject[$ctrl.mainObject.setting.unsortableVar])" un-level="!$ctrl.mainObject.setting.isLevel" disabled-in-and-after-model-key="$ctrl.mainObject.setting.disabledSortInAndAfterModelKey" disabled-model-key="$ctrl.mainObject.setting.disabledSortModelKey">
+    <div class="tbody-div" infinite-scroll="$ctrl.mainObject.baseFun.scrollLoading()" infinite-scroll-parent infinite-scroll-cancel="$ctrl.otherObject.allQuery.length===0||$ctrl.otherObject.allQuery.length<$ctrl.mainObject.setting.scrollMaxSize||!$ctrl.mainObject.setting.isScrollLoad" ng-class="{'readonly-tbody-div':$ctrl.mainObject.setting.readonly}" ng-click="$ctrl.fun.itemClick($event)">
+        <inner-html-common-directive class="container-tbd" html="$ctrl.data.html"></inner-html-common-directive>
+    </div>
+</div>
+<div class="container-div" ng-if="$ctrl.mainObject.setting.isPartModule" ng-class="{'readonly-tbody-div':$ctrl.mainObject.setting.readonly}">
+    <div class="tbody-div" ng-class="{'disable-tbody-div':$ctrl.data.movePart!==null&&$ctrl.data.movePart!==$partIndex}" ng-repeat="($partIndex,itemHtml) in $ctrl.data.partHtml" ng-click="$ctrl.fun.itemClick($event,$partIndex)" un-level="true"  sv-group-root fun="$ctrl.fun.sort" sv-group-part="$ctrl.list[$partIndex]" disabled="(!$ctrl.data.sort)||($ctrl.mainObject.setting.unsortableVar&&$ctrl.otherObject[$ctrl.mainObject.setting.unsortableVar])||($ctrl.data.sortAuthorityVar&&!$ctrl.authorityObject[$ctrl.data.sortAuthorityVar])">
+        <inner-html-common-directive class="container-tbd" html="itemHtml"></inner-html-common-directive>
+    </div>
+</div>
+<div class=" tfooter-div" ng-if="$ctrl.pageObject&&$ctrl.list.length>0">
+    <div class="pageFooter f_row f_ac">
+            <uib-pagination total-items="$ctrl.pageObject.msgCount" items-per-page="$ctrl.pageObject.pageSize"
+            ng-model="$ctrl.pageObject.page" max-size="$ctrl.pageObject.maxSize" boundary-link-Number="true"
+            rotate="false" next-text="&#xeb5b;" previous-text="&#xeb5a;" ng-change="$ctrl.pageObject.fun()"></uib-pagination>
+    </div>
+</div>

@@ -1,0 +1,118 @@
+@charset "utf-8";
+
+//vendor
+
+@import './vendor.scss';
+
+
+//Iconfont
+
+// @import '//at.alicdn.com/t/font_395537_miuzzkfucswkx1or.css';
+
+@import './iconfont.scss';
+@import './baseVar.scss';
+
+@import './base.scss';
+@import './baseAttr.scss';
+@import './theme.scss';
+/* scss 集合*/
+
+//common-scss-injector
+
+@import "./modal/index.scss";
+
+@import "./component/apiLinkStep/index.scss";
+
+@import "./component/autoComplete/index.scss";
+
+@import "./component/listBlock/index.scss";
+
+@import "./component/loadingPart/index.scss";
+
+@import "./component/menuDefault/index.scss";
+
+@import "./component/menuRadio/index.scss";
+
+@import "./component/progressBar/index.scss";
+
+@import "./component/selectDefault/index.scss";
+
+@import "./directive/tip/index.scss";
+
+@import "./directive/tipMove/index.scss";
+
+@import "./scss/common/account.scss";
+
+@import "./scss/common/group.scss";
+
+@import "./ui/content/index.scss";
+
+@import "./component/common/loading/index.scss";
+
+@import "./component/common/sidebar/index.scss";
+
+@import "./component/common/tip/index.scss";
+
+@import "./component/product/overview/index.scss";
+
+@import "./directive/common/datepicker/index.scss";
+
+@import "./directive/sort/group/index.scss";
+
+@import "./modal/branch/gateway/index.scss";
+
+@import "./modal/branch/common/index.scss";
+
+@import "./ui/content/monitor/index.scss";
+
+@import "./ui/content/login/index.scss";
+
+@import "./ui/content/panel/index.scss";
+
+@import "./ui/content/publish/index.scss";
+
+@import "./ui/navbar/nav0/index.scss";
+
+@import "./ui/navbar/nav1/index.scss";
+
+@import "./component/ams/editor/ace/index.scss";
+
+@import "./component/common/group/default/index.scss";
+
+@import "./component/common/group/old/index.scss";
+
+@import "./component/common/list/default/index.scss";
+
+@import "./component/common/select/multistage/index.scss";
+
+@import "./ui/content/balance/operate/index.scss";
+
+@import "./ui/content/cluster/node/index.scss";
+
+@import "./ui/content/cluster/_default/index.scss";
+
+@import "./ui/content/gpedit/common/index.scss";
+
+@import "./ui/content/gpedit/inside/index.scss";
+
+@import "./ui/content/gpedit/overview/index.scss";
+
+@import "./ui/content/plugin/_default/index.scss";
+
+@import "./ui/content/project/_default/index.scss";
+
+@import "./ui/content/setting/log/index.scss";
+
+@import "./ui/content/project/api/operate/index.scss";
+
+@import "./ui/content/project/api/_default/index.scss";
+
+@import "./ui/content/gpedit/inside/content/auth/index.scss";
+
+@import "./ui/content/gpedit/inside/content/api/operate/index.scss";
+
+@import "./ui/content/gpedit/inside/content/api/_default/index.scss";
+
+@import "./ui/content/gpedit/inside/content/plugin/operate/index.scss";
+
+//common-scss-end

@@ -5,12 +5,9 @@ import (
 	"errors"
 	"sync"
 )
-
 var (
-	//ErrorContextDone context done error
 	ErrorContextDone = errors.New("context done")
 )
-
 //Telegraph telegraph
 type Telegraph struct {
 	value   interface{}
@@ -53,7 +50,7 @@ func (t *Telegraph) get() (string, <-chan struct{}, interface{}) {
 }
 
 //Get get
-func (t *Telegraph) Get(version string) (interface{}, error) {
+func (t *Telegraph) Get(version string) (interface{},error) {
 	return t.GetWidthContext(context.Background(), version)
 }
 
@@ -66,21 +63,21 @@ func (t *Telegraph) Close() {
 }
 
 //GetWidthContext 获取上下文
-func (t *Telegraph) GetWidthContext(ctx context.Context, version string) (interface{}, error) {
+func (t *Telegraph) GetWidthContext(ctx context.Context, version string) (interface{} ,error){
 	v, c, value := t.get()
 	if v == "" {
 		// closed
-		return nil, nil
+		return nil,nil
 	}
 	if version != v {
-		return value, nil
+		return value,nil
 	}
 
 	select {
 	case <-c:
 		return t.GetWidthContext(ctx, version)
 	case <-ctx.Done():
-		return nil, ErrorContextDone
+		return nil,ErrorContextDone
 	}
 
 }

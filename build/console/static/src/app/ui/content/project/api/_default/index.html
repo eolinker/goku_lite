@@ -1,0 +1,12 @@
+<div class="home-common-has-group-div">
+    <menu-default-common-component
+        authority-object="{edit:$ctrl.service.authority.permission.default.apiManagement.edit,showTitle:!$ctrl.service.authority.permission.default.apiManagement.edit}"
+        other-object="{batch:$ctrl.data.batch,isBatchDisabled:!$ctrl.ajaxResponse.query.length}"
+        main-object="$ctrl.component.menuObject" active-object="$ctrl.component.menuObject.active"></menu-default-common-component>
+    <list-default-common-component page-object="{pageInfo:$ctrl.data.pagination}"
+        authority-object="{operate:$ctrl.service.authority.permission.default.apiManagement.edit}"
+        main-object="$ctrl.component.listDefaultCommonObject" list="$ctrl.ajaxResponse.query"
+         other-object="{batch:$ctrl.data.batch,allQueryID:$ctrl.data.allQueryID}">
+    </list-default-common-component>
+    <loading-common-component fun="$ctrl.fun.init(arg)"></loading-common-component>
+</div>

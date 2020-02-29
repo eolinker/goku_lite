@@ -1,0 +1,37 @@
+.strategy-id-copy-div {
+    position: absolute;
+    right: $PLATE_PADDING;
+    font-size: 14px;
+    line-height: 50px;
+    color:#555;
+    z-index: 5;
+    .copy-a{
+        margin-left:10px;
+        background-color: #fff;
+        border-radius: 3px;
+        border:1px solid #e5e5e5;
+        padding:0 10px;
+        line-height: 20px;
+        display: inline-block;
+        &:hover{
+            color:#333;
+        }
+    }
+}
+.readonly_strategy_id_copy_gi{
+    border:1px solid #ddd;
+    border-radius: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: fixed;
+    background-color: #f0f2f5;
+    top:60px;
+    right: 10px;
+    line-height: 40px;
+}
+
+gpedit-Inside-Api-Plugin{
+    .container_giap{
+        margin-top: 145px;
+    }
+}

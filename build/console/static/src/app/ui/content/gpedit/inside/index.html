@@ -1,0 +1,8 @@
+<div>
+    <div class="home-project-pro-inside" data-ng-class="{'shrink-inside-div':$ctrl.data.info.shrinkObject.isShrink}">
+        <gpedit-navbar shrink-object="$ctrl.data.info.shrinkObject"></gpedit-navbar>
+        <!-- <div class="strategy-id-copy-div" ng-class="{'readonly_strategy_id_copy_gi':!$ctrl.service.authority.permission.default.strategyManagement.edit}"><span>策略ID：</span><span>{{$ctrl.data.info.strategyID}}</span><a class="copy-a" copy-common-directive copy-model="$ctrl.data.info.strategyID">复制</a></div> -->
+        <div ui-view=''></div>
+        <div class="mask"></div>
+    </div>
+</div>

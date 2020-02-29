@@ -1,0 +1,5 @@
+<div class="home-common-project-list">
+    <menu-default-common-component authority-object="{edit:$ctrl.service.authority.permission.default.apiManagement.edit,showTitle:true}" main-object="$ctrl.component.menuObject"  other-object="{batch:$ctrl.data.batch,isBatchDisabled:!$ctrl.ajaxResponse.query.length}"></menu-default-common-component>
+    <list-default-common-component authority-object="{operate:$ctrl.service.authority.permission.default.apiManagement.edit}"  main-object="$ctrl.component.listDefaultCommonObject" list="$ctrl.ajaxResponse.query" other-object="{batch:$ctrl.data.batch}"></list-default-common-component>
+</div>
+<loading-common-component fun="$ctrl.fun.init(arg)"></loading-common-component>

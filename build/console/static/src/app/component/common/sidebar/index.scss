@@ -1,0 +1,239 @@
+/**
+* @name 侧边栏
+* @author 广州银云信息科技有限公司
+*/
+
+sidebar-common-component {
+    .footer_sidebar_cc{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 40px;
+        line-height: 41px;
+        background-color: #f2f2f2;
+        border-top: 1px solid #d9d9d9;
+        text-indent: 12px;
+        width: 100%;
+        overflow: hidden;
+        &:hover{
+            background-color: #f0f2f5;
+            .iconfont{
+                color: #00b775;
+            }
+        }
+    }
+    .text_footer_sidebar_cc{
+        white-space: nowrap;
+    }
+    .shrink_footer_sidebar_cc .iconfont{
+        color: #00b775;
+    }
+    .shrink_footer_sidebar_cc .text_footer_sidebar_cc{
+        display: none;
+    }
+    >div {
+        height: 100%;
+        width: 50px;
+        color: #444;
+    }
+    .tip_scc{
+        float: left;
+    line-height: 50px;
+    }
+    .tip_scc .iconfont{
+        font-size: 20px;
+    }
+    .tip_scc .eo-tip-container{
+        margin-top: -26px !important;
+    }
+    .eo-sidebar {
+        // height: 100%;
+        width: 240px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        border-right-style: solid;
+        border-right-width: 1px;
+        transition: all .3s cubic-bezier(0, 0, .2, 1);
+    }
+
+    .common-sidebar {
+        height: calc(100% - 91px);
+        overflow: hidden;
+
+        .item-container-ul {
+            height: 100%;
+        }
+    }
+
+    .divide-li {
+        border-top-style: solid;
+        border-top-width: 1px;
+    }
+
+    .divide-solid-bottom-li {
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+    }
+
+    .divide-solid-top-li {
+        border-top-style: solid;
+        border-top-width: 1px;
+    }
+
+
+    .default-div {
+
+        .item-container-ul {
+            overflow-y: auto;
+        }
+
+        .group-name1 {
+            margin-left: 35px;
+        }
+    }
+
+    .inside-sidebar {
+        z-index: 7;
+    }
+
+    .item-li {
+        @include eo-line(45px);
+        overflow: hidden;
+        text-indent: 12px;
+        cursor: pointer;
+        .title-icon {
+            font-size: 24px;
+            width: 35px;
+        }
+    }
+
+    .logo-li {
+        text-align: left;
+        background-color: #00ab6d;
+        color: #fff;
+        .img-span {
+            min-width: 50px;
+            display: inline-block;
+        }
+
+        .item-span {
+            width: 170px;
+            font-weight: bold;
+            font-size: 14px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    }
+
+    .disable-menu-li {
+        cursor: default;
+    }
+
+    .static-sidebar {
+        overflow: hidden;
+    }
+
+    .static-li {
+        @include eo-line(50px);
+        .title-icon {
+            margin-right: 0;
+            padding-right: 15px;
+        }
+    }
+
+    .parent-router-p {
+        display: none;
+        text-indent: 15px;
+        color: #999;
+        line-height: 28px;
+    }
+
+    .float-s2 {
+        .parent-router-p {
+
+            display: block;
+        }
+    }
+
+    .had-child-div {
+        margin-top: -50px;
+
+        .parent-router-p {
+            font-size: 12px;
+            background-color: #f3f3f3;
+            font-weight: bold;
+        }
+    }
+
+    .un-child-div {
+        margin-top: -45px;
+
+        .float-s2 {
+            padding-bottom: 0 !important;
+            width: max-content !important;
+            word-break: keep-all;
+            padding-right: 15px;
+        }
+
+        .parent-router-p {
+            background-color: #fff;
+            line-height: 40px;
+            color: #333;
+            font-weight: initial;
+        }
+    }
+
+    .s1_tip_style {
+
+        border-radius: 3px;
+        padding: 2px 5px;
+        font-size: 12px;
+    }
+
+    .shrink-sidebar-div {
+        .list-item-div1 {
+            position: absolute;
+
+            margin-left: 50px;
+
+
+            display: none;
+
+            div {
+                margin-left: 5px;
+                width: 180px;
+                border-radius: 3px;
+                overflow: hidden;
+                box-shadow: $PLATE_SHADOW;
+                padding-bottom: 5px;
+
+                .item-li {
+                    height: 40px;
+                    line-height: 40px;
+
+                    &:nth-child(n+2) {
+                        margin-top: 5px;
+                    }
+                }
+            }
+        }
+
+        .item-container-li {
+            &:hover {
+                .list-item-div1 {
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+.shrink-div {
+    sidebar-common-component {
+        .eo-sidebar {
+            width: 50px;
+        }
+    }
+}

@@ -1,0 +1,512 @@
+menu-Default-Common-Component {
+  display: flex;
+  .common_menu_ul {
+    padding: 0 10px;
+    background-color: #fff;
+    width: 100%;
+    @include eo-line(50px);
+    margin-top: $PLATE_PADDING;
+    border-radius: 0 3px 0 0;
+    border-right: 1px solid #d9d9d9;
+    border-top: 1px solid #d9d9d9;
+    border-left: 1px solid #d9d9d9;
+    .menu-title {
+      float: left;
+    }
+    .eo_more_btn:focus +.wrap_div_mcc{
+      display: block;
+    }
+    .wrap_div_mcc{
+      z-index: 4;
+      color: #333;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.12);
+      min-width: 200px;
+      line-height: 30px;
+      border: 1px solid #d9d9d9;
+      background-color: #fff;
+      font-size: 12px;
+      display: none;
+      right: -11px;
+      .checkbox-th,.checkbox-td{
+        border-right: none;
+      }
+      .tbody-div{
+        max-height: 200px;
+        overflow: auto;
+      }
+      .thead-div,.tr-tbd{
+        height: 30px;
+      }
+      .checkbox-td{
+        padding-top: 7px !important;
+      }
+      &:hover{
+        display: block;
+      }
+    }
+    .common-btn-list {
+      .common-btn {
+        margin-left: 15px;
+      }
+    }
+
+    .common-btn-list-first {
+      .common-btn {
+        &:first-child {
+          margin-left: 0px;
+        }
+      }
+    }
+
+    .common-btn {
+      @include eo-line(32px);
+      display: inline-block;
+      text-align: center;
+      vertical-align: middle;
+
+      .iconfont {
+        font-size: 24px;
+        margin-right: 5px;
+      }
+
+      &:hover {
+        color: $buttonInfoBgColor;
+        @extend %HOVER_ANIMATION;
+
+        .disabled-tip {
+          display: block;
+        }
+      }
+
+      &:disabled {
+        color: #999;
+        cursor: not-allowed;
+        .iconfont {
+          color: #999;
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .block-btn {
+      .iconfont {
+        margin-right: 0;
+      }
+      &:hover {
+        color: #fff;
+      }
+      &:disabled {
+        background-color: #fafafa;
+        color: #999;
+        border: 1px solid #ddd;
+      }
+    }
+
+    .more-btn-box {
+      position: relative;
+      .more-btn-left {
+        border-radius: 3px 0 0 3px;
+      }
+
+      .more-btn-right {
+        border-left: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 0 3px 3px 0;
+        padding: 0 5px;
+      }
+      .more-btn-right:focus + .more-btn-div {
+        display: block;
+      }
+      .more-btn-div {
+        position: absolute;
+        right: 0;
+        z-index: 2;
+        display: none;
+        margin-top: -1px;
+        .more-btn-list {
+          background-color: #fff;
+          border: 1px solid #d9d9d9;
+          border-radius: 3px;
+
+          li {
+            @include eo-line(35px);
+            cursor: pointer;
+            text-align: left;
+            min-width: 60px;
+            padding: 0 10px;
+            white-space: nowrap;
+            &:hover,
+            &:focus,
+            &:active {
+              background-color: #fafafa;
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+
+    .block-btn,
+    .more-btn-left,
+    .more-btn-right {
+      .iconfont {
+        font-size: 14px;
+      }
+    }
+
+    .default-btn {
+      border-style: solid;
+      border-width: 1px;
+      border-radius: 3px;
+    }
+
+    .fun-list-li {
+      cursor: pointer;
+      text-align: center;
+      margin-left: 15px;
+      .iconfont {
+        cursor: pointer;
+        font-size: 24px;
+      }
+
+      &:hover {
+        color: $buttonInfoBgColor;
+        @extend %HOVER_ANIMATION;
+
+        .list_function_wrap {
+          display: block;
+        }
+      }
+      .disabled-btn {
+        color: #999;
+        cursor: not-allowed;
+
+        .iconfont {
+          color: #999;
+          cursor: not-allowed;
+        }
+
+        .list_function_wrap {
+          display: none;
+        }
+      }
+
+      .list_function_wrap {
+        position: absolute;
+        cursor: default;
+        margin-top: -1px;
+        display: none;
+        z-index: 4;
+        color: #333;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.12);
+        .nav-function {
+          background-color: #fff;
+          border: 1px solid #d9d9d9;
+          border-radius: 3px;
+          li {
+            @include eo-line(35px);
+            cursor: pointer;
+            text-align: left;
+            min-width: 60px;
+            padding: 0 10px;
+            white-space: nowrap;
+            &:hover,
+            &:focus,
+            &:active {
+              background-color: #fafafa;
+            }
+          }
+          .strong-li {
+            font-weight: bold;
+            color: $buttonInfoBgColor;
+          }
+        }
+      }
+    }
+    .batch_cancel_ldcc+.fun-list-li{
+      margin-left: 0;
+    }
+    .combo_box_mdcc {
+      line-height: 51px;
+    }
+    .vertical_divide_line_mdcc {
+      color: #d9d9d9;
+    }
+    .divide-span {
+      border-right: 1px solid #d9d9d9;
+      margin-left: 15px;
+    }
+
+    .elem-active {
+      cursor: default;
+    }
+
+    .menu-li {
+      border-style: solid;
+      border-width: 1px;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-right: 5px;
+
+      a {
+        padding: 0 20px;
+        @include eo-line(30px);
+        display: inline-block;
+      }
+    }
+
+    .first-menu-li {
+      margin-left: 5px;
+    }
+
+    .menu-navigation {
+      position: absolute;
+      bottom: 0;
+
+      li {
+        cursor: pointer;
+        @include eo-line(40px);
+        padding: 0 15px;
+        text-align: center;
+        margin-right: 2px;
+        border-bottom-style: solid;
+        border-bottom-width: 3px;
+      }
+    }
+
+    .search-form {
+      @include eo-line(50px);
+      z-index: 2;
+      right: 0;
+    }
+
+    .search-tips {
+      color: #9e9e9e;
+      background-color: rgba(237, 237, 237, 1);
+      height: 30px;
+      line-height: 30px;
+      border: 1px solid #d9d9d9;
+      padding: 0 10px;
+      border-radius: 3px 0 0 3px;
+      cursor: default;
+    }
+
+    .search-div {
+      @include eo-line(28px);
+      width: 100px;
+      border: 1px solid #d9d9d9;
+      background-color: #fff;
+      border-radius: 3px;
+      transition: width 0.3s linear 0s;
+      overflow: hidden;
+      white-space: nowrap;
+      .search-input {
+        width: calc(100% - 30px);
+        height: 100%;
+        border: none;
+      }
+
+      .search-tap-box {
+        border-radius: 3px;
+        left: 25px;
+        background-color: #eeeeee;
+        @include eo-line(20px);
+      }
+
+      .search-text {
+        border-right: 1px solid #d9d9d9;
+        padding: 0 5px;
+        max-width: 130px;
+        text-overflow: ellipsis;
+        transition: max-width 0.1s linear 0s;
+        overflow: hidden;
+      }
+
+      .search-tap {
+        .iconfont {
+          &:hover {
+            color: $buttonDangerBgColor;
+          }
+        }
+      }
+    }
+
+
+    .search-input-width-200 {
+      width: 200px;
+    }
+
+    .search-div-advanced {
+      .advanced-btn {
+        display: none;
+        @include eo-line(20px);
+        min-width: 24px;
+      }
+      &:hover,
+      &:focus {
+        .search-input {
+          width: calc(100% - 75px);
+        }
+
+        .search-text {
+          max-width: 75px;
+        }
+        .advanced-btn {
+          display: initial;
+        }
+      }
+    }
+
+    .menu-ml15 {
+      margin-left: 15px;
+    }
+
+    .menu-ml10 {
+      margin-left: 10px;
+    }
+
+    .menu-mr15 {
+      margin-right: 15px;
+    }
+
+    .menu-mr10 {
+      margin-right: 10px;
+    }
+
+    .menu-mr5 {
+      margin-right: 5px;
+    }
+
+    .menu-mr0 {
+      margin-right: 0px;
+    }
+
+    .menu-ml0 {
+      margin-left: 0px;
+    }
+  }
+
+  .common-menu-lg {
+    padding: 20px;
+    height: auto;
+    line-height: initial;
+    width: calc(100% - #{$HOME-SIDEBAR-LEFT+$PLATE_PADDING+20});
+
+    .menu-title {
+      float: none;
+      margin-bottom: 15px;
+    }
+    .vertical_divide_line_mdcc {
+      line-height: 32px;
+    }
+  }
+
+  .can-operate-placeholder {
+    height: 112px;
+  }
+
+  .can-operate-has-second-title-placeholder {
+    height: 160px;
+  }
+
+  .disabled-operate-placeholder {
+    height: 83px;
+  }
+
+  .disabled-operate-has-second-title-placeholder {
+    height: 123px;
+  }
+
+  .common-menu-md {
+    height: $MD_FIXEDMENU_HEIGHT;
+    // padding: 0 40px;
+  }
+
+  .common-menu-fixed-seperate {
+    margin: 0;
+    background-color: #fff;
+    border-top: none;
+    border-left: none;
+    border-bottom: 1px solid #d9d9d9;
+    position: fixed;
+    z-index: 5;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .common-menu-only-navigation {
+    @include eo-line(50px);
+  }
+
+  .divide-li {
+    line-height: 60px;
+  }
+  .tsc_ul {
+    margin-top: 10px;
+  }
+  .view-btn-li {
+    margin-left: 5px;
+
+    > ul {
+      border-radius: 3px;
+      overflow: hidden;
+      .view-common-btn {
+        cursor: pointer;
+        @include eo-line(30px);
+        text-align: center;
+        padding: 0 10px;
+        border-style: solid;
+        border-width: 1px;
+      }
+      .view-common-btn+.view-common-btn{
+        margin-left: 0;
+        border-left-style:none;
+      }
+    }
+  }
+
+  .un-margin-left {
+    margin-left: 0;
+  }
+
+  .disabled-tip {
+    position: absolute;
+    margin-top: -69px;
+    z-index: 10;
+    display: none;
+
+    .tip-div {
+      padding: 10px;
+
+      line-height: initial;
+      border-radius: 3px;
+      background-color: #000;
+      color: #fff;
+      font-size: 12px;
+      text-align: left;
+      max-width: 500px;
+      min-width: 200px;
+    }
+
+    .arrow-div {
+      border-color: #000 transparent transparent transparent;
+      border-width: 5px 5px 0 5px;
+      border-style: solid;
+      width: 0;
+      margin-left: 8px;
+    }
+  }
+}
+
+.home-common-has-group-div {
+  menu-default-common-component {
+    padding-right: $PLATE_PADDING;
+  }
+}
+
+.shrink-div {
+  .common-menu-fixed-seperate {
+    width: calc(100% - #{$HOME-SHRINK-SIDEBAR-LEFT+$PLATE_PADDING});
+  }
+  .common-menu-lg {
+    width: calc(100% - #{$HOME-SHRINK-SIDEBAR-LEFT+$PLATE_PADDING+20});
+  }
+}
