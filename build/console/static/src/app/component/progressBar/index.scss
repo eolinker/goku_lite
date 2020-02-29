@@ -1,0 +1,19 @@
+progress-bar-common-component{
+    .container_pbcc{
+        width: fit-content;
+        border-radius: 3px;
+        overflow: hidden;
+        background-color: $buttonSuccessBgColor;
+        color:#fff;
+    }
+    .item_btn_pbcc{
+        height: 30px;
+    }
+    .active_item_btn_pbcc~button{
+        background-color: #ccc;
+        color:#333;
+        &:hover{
+            background-color: #ddd;
+        }
+    }
+}

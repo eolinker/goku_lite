@@ -1,0 +1,17 @@
+gpedit-default {
+    list-default-common-component .fixed-height-list {
+        @include eo-height(100%, 183px);
+    }
+
+    .copy_btn_gd {
+        font-size: 12px;
+        padding: 2px 3px;
+    }
+}
+
+gpedit-Group {
+    .common-scss-group {
+        margin-top: 65px;
+        @include eo-height(100%, 132px);
+    }
+}

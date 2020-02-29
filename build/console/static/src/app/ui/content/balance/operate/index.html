@@ -1,0 +1,81 @@
+<div class="home-common-project-list">
+    <menu-default-common-component class="mt10" main-object="$ctrl.component.menuObject">
+    </menu-default-common-component>
+    <div class="plr15 mt65">
+        <tip-common-component version="balance"></tip-common-component>
+        <article class="first-level-article mtb15">
+            <ng-form name="ConfirmForm">
+                <div class="first-part div-part">
+                    <p class="lh_50 f_row_ac">
+                        <span>负载名称：</span>
+                        <tip-directive input="API配置转发地址时所使用的名称"></tip-directive>
+                    </p>
+                    <p>
+                        <input autocomplete="off" class="eo-input input_cluster_blo" type="text" name="name"
+                            ng-model="$ctrl.ajaxResponse.balanceInfo.balanceName"
+                            ng-class="{'eo-input-error':(($ctrl.data.submitted||ConfirmForm.name.$dirty)&&ConfirmForm.name.$invalid)}"
+                            ng-disabled="$ctrl.data.status==='edit'" maxlength="255" placeholder="支持字母、数字、_、.、：、/"
+                            ng-pattern="$ctrl.data.balanceNamePattern" required>
+                    </p>
+                    <p class="lh_50 mt10"><b>服务类型</b></p>
+                    <div class="dp_ib">
+                        <menu-radio-common-component class="pull-left mr5" list="$ctrl.CONST.SERVICE_TYPE_ARR"
+                            output="$ctrl.ajaxResponse.balanceInfo" model-key="serviceType"
+                            bind-fun="$ctrl.fun.switchMenu(arg)">
+                        </menu-radio-common-component>
+                    </div>
+                    <p class="mtb10">
+                        <span>服务注册方式：</span>
+                    </p>
+                    <p>
+                        <select class="eo-select select_cluster_blo"
+                            ng-class="{'eo-input-error':$ctrl.ajaxResponse.balanceInfo.serviceName==='无'&&$ctrl.data.submitted}"
+                            ng-model="$ctrl.ajaxResponse.balanceInfo.serviceName"
+                            ng-options="item.name as item.name for item in $ctrl.ajaxResponse.serviceQuery"></select>
+                    </p>
+                    <div ng-if="$ctrl.ajaxResponse.balanceInfo.serviceType==='discovery'">
+
+                        <p class="lh_50 f_row_ac">
+                            <span>服务名称：</span>
+                            <tip-directive input="服务发现时服务实例所使用的名称"></tip-directive>
+                        </p>
+                        <p>
+                            <input autocomplete="off" class="eo-input input_cluster_blo" type="text" name="appName"
+                                ng-model="$ctrl.ajaxResponse.balanceInfo.appName"
+                                ng-required="$ctrl.ajaxResponse.balanceInfo.serviceType==='discovery'"
+                                placeholder="appName 或 service_name"
+                                ng-class="{'eo-input-error':($ctrl.data.submitted||ConfirmForm.appName.$dirty)&&ConfirmForm.appName.$invalid}"
+                                maxlength="255">
+                        </p>
+                    </div>
+
+                    <div ng-show="$ctrl.ajaxResponse.balanceInfo.serviceType==='static'">
+                        <p class="mtb10 f_row_ac">
+                            <span>全局静态服务地址：</span>
+                            <tip-directive input="后端默认使用的IP地址"></tip-directive>
+                        </p>
+                        <p>
+                            <input autocomplete="off" class="eo-input input_cluster_blo" type="text"
+                                name="defaultStatic" ng-required="$ctrl.ajaxResponse.balanceInfo.serviceType==='static'"
+                                ng-class="{'eo-input-error':($ctrl.data.submitted||ConfirmForm.defaultStatic.$dirty)&&ConfirmForm.defaultStatic.$invalid}"
+                                ng-model="$ctrl.ajaxResponse.balanceInfo.static"
+                                ng-pattern="/^(((\w+\.)+(\w+)(:\d+)?)(\s+\d+(\s+\w+)?)?(\s*;[\n\s]*))*(((\w+\.)+(\w+)(:\d+)?)(\s+\d+(\s+\w+)?)?(\s*;?[\n\s]*))?$/">
+                        </p>
+                        <p class="lh_50 f_row_ac">
+                            <span>各集群静态服务地址：</span>
+                            <tip-directive input="后端在不同集群使用不同的IP地址时，需要填写相应的地址，且集群的配置优先级高于全局的配置"></tip-directive>
+                        </p>
+                        <div class="eo-block-container">
+                            <list-block-common-component main-object="$ctrl.component.listBlockObj"
+                                other-object="{'submitted':$ctrl.data.submitted}" list="$ctrl.ajaxResponse.clusterList">
+                            </list-block-common-component>
+                        </div>
+                    </div>
+            </ng-form>
+        </article>
+    </div>
+    <footer ng-init="$ctrl.fun.init()">
+        <div load-directive="$ctrl.fun.requestProcessing(arg)" interaction="{request:{delay:true}}">
+        </div>
+    </footer>
+</div>

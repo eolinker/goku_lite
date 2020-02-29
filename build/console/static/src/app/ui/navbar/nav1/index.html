@@ -1,0 +1,36 @@
+<div class="nav-container f_row f_js_ac n0_style">
+    <div class="f_row zindex-top-container" ng-class="{'ml240':!$ctrl.service.sidebar.isShrink,'ml50':$ctrl.service.sidebar.isShrink}">
+        <div class="n_r_style nav-router-container f_row ml20">
+            <span ng-repeat="item in $ctrl.service.navbar.info.navigation.query">
+                <span ng-if="!item.sref">{{item.name}}</span>
+                <a class="n_ra_style" ng-if="item.sref" ui-sref="{{item.sref}}">{{item.name}}</a>
+                <span class="iconfont icon-xuanzeqixiayige"></span>
+            </span>
+            <span>{{$ctrl.service.navbar.info.navigation.current}}</span>
+            <span ng-if="$ctrl.service.navbar.info.navigation.extra"><span
+                    class="iconfont icon-xuanzeqixiayige"></span>{{$ctrl.service.navbar.info.navigation.extra}}</span>
+        </div>
+    </div>
+    <div class="f_row zindex-top-container">
+        <div class="special-select-nav-item n_list0_style">
+            <div class="text-ni f_row f_ac">
+                <span class="user-logo-tni mr5"
+                    ng-style="{'background-image':$ctrl.service.navbar.info.userInfo.userImage?'url(https://data.eolinker.com/'+$ctrl.service.navbar.info.userInfo.userImage+')':''}">&nbsp;</span>
+                <span
+                    class="mr5">{{$ctrl.data.userInfo.remark||$ctrl.data.userInfo.loginCall||'&nbsp;'}}</span>
+                <button type="button" ng-click="$ctrl.fun.news()" class="unread-new-tip ml5"
+                    ng-show="$ctrl.service.navbar.info.userInfo.unreadMsgNum||$ctrl.service.navbar.info.userInfo.unreadNoticeNum">{{$ctrl.service.navbar.info.userInfo.unreadMsgNum+$ctrl.service.navbar.info.userInfo.unreadNoticeNum}}</button>
+            </div>
+            <ul class="list-ni n_list1_style">
+                <li class="n_list1_i_style divide-top-item-lni n_dv_c item-lni btn-item-lni" ng-click="$ctrl.fun.changePassword()">
+                    <span class="iconfont icon-gerentouxiang fs22 pull-left mr5"></span>
+                    <span>修改密码</span>
+                </li>
+                <li class="item-lni btn-item-lni n_list1_i_style" ng-click="$ctrl.fun.logout()">
+                    <span class="iconfont icon-kaiguan fs22 pull-left mr5"></span>
+                    <span>退出登录</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+login {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: table;
+    .login-wrap {
+        vertical-align: middle;
+        display: table-cell;
+        background-color: #f7f8fc;
+        .login-content {
+            width: 325px;
+            margin: -100px auto 30px auto;
+            text-align: left;
+            padding: 30px;
+            font-size: 14px;
+            box-shadow: 0 0 14px #d4d4d4;
+            background-color: #fff;
+            header {
+                .logo-p {
+                    margin-bottom: 30px;
+                    font-size: 30px;
+                }
+                .tips-p {
+                    color: #666;
+                    line-height: 1.75em;
+                }
+            }
+            article {
+                li {
+                    margin-bottom: 15px;
+                    @include eo-line(37px);
+                    .iconfont {
+                        color: #999;
+                        &:hover,
+                        &:focus,
+                        &:active {
+                            color: #333;
+                        }
+                    }
+                }
+                .password-li {
+                    .iconfont {
+                        position: absolute;
+                        @include eo-line(18px);
+                        padding: 0 9px;
+                        margin-left: -39px;
+                        margin-top: 9px;
+                    }
+                }
+                li:first-child {
+                    margin-top: 20px;
+                }
+                li:nth-child(n+4) {
+                    margin-bottom: 25px;
+                }
+                .eo-input {
+                    @include eo-width(100%, 2px);
+                }
+                .eo_theme_btn_success,
+                .eo_theme_btn_default {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

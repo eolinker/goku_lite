@@ -1,0 +1,100 @@
+panel {
+    .foot_panel{
+        @include eo-line(40px);
+        background-color: #f8f8f8;
+        border-top: 1px solid #ddd;
+        position: fixed;
+        bottom: 0;
+        @include eo-width(100%,20px);
+        left: 0;
+        padding-right: 20px;
+    }
+    .first-box {
+        padding-bottom: 0;
+        padding-top: 30px;
+    }
+    .basic_data_panel{
+        width: 100%;
+    }
+    .item_panel{
+        width: 50%;
+        overflow: hidden;
+    }
+    list-default-common-component .first-level-article {
+        margin-top: 0;
+    }
+
+    .icon-bangzhu_o {
+        font-size: 50px;
+    }
+
+    .time_panel {
+        .item_time_panel {
+            background-color: #fff;
+            @include eo-line(30px);
+            display: inline-block;
+            text-align: center;
+            padding: 0 10px;
+            border: 1px solid #ddd;
+
+            &:nth-child(n+2) {
+                border-left: none;
+            }
+
+            &:first-child {
+                border-radius: 3px 0 0 3px;
+            }
+        }
+
+        .item_time_active_panel {
+            background-color: $buttonSuccessBgColor;
+            color: #fff;
+        }
+
+        .disable-a {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .item_time_panel:last-child {
+            margin-left: 0;
+            border-left: none;
+            border-radius: 0 3px 3px 0;
+        }
+
+    }
+
+    .panel-ui-div {
+        .table-container-div {
+            max-width: 1236px;
+        }
+
+        .eo-tab-menu .item-tab {
+            border-color: transparent;
+            cursor: default;
+        }
+
+        .item-p {
+            font-size: 14px;
+            color: #555;
+            margin: 20px 0;
+        }
+
+        .untop-div {
+            border-top: 0;
+        }
+        .default-btn {
+            display: inline-block;
+            @include eo-line(30px);
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            background-color: #fff;
+            padding: 0 10px;
+
+            &:hover {
+                background-color: #fafafa;
+            }
+        }
+
+    }
+}

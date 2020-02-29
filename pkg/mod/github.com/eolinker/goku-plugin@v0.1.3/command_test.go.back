@@ -1,0 +1,33 @@
+package goku_plugin
+
+import "github.com/go-redis/redis"
+
+
+var _ Cmd = (*redis.Cmd)(nil)
+var _ SliceCmd = (*redis.SliceCmd)(nil)
+var _ StatusCmd = (*redis.StatusCmd)(nil)
+var _ IntCmd = (*redis.IntCmd)(nil)
+var _ DurationCmd = (*redis.DurationCmd)(nil)
+var _ TimeCmd = (*redis.TimeCmd)(nil)
+var _ BoolCmd = (*redis.BoolCmd)(nil)
+var _ StringCmd = (*redis.StringCmd)(nil)
+var _ FloatCmd = (*redis.FloatCmd)(nil)
+var _ StringSliceCmd = (*redis.StringSliceCmd)(nil)
+var _ BoolSliceCmd = (*redis.BoolSliceCmd)(nil)
+var _ StringStringMapCmd = (*redis.StringStringMapCmd)(nil)
+var _ StringIntMapCmd = (*redis.StringIntMapCmd)(nil)
+var _ StringStructMapCmd = (*redis.StringStructMapCmd)(nil)
+//var _ XMessageSliceCmd = (*redis.XMessageSliceCmd)(nil)
+//var _ XStreamSliceCmd = (*redis.XStreamSliceCmd)(nil)
+//var _ XPendingCmd = (*redis.XPendingCmd)(nil)
+//var _ XPendingExtCmd = (*redis.XPendingExtCmd)(nil)
+//var _ ZSliceCmd = (*redis.ZSliceCmd)(nil)
+//var _ ZWithKeyCmd = (*redis.ZWithKeyCmd)(nil)
+//var _ ScanCmd = (*redis.ScanCmd)(nil)
+//var _ ClusterNode = (*redis.ClusterNode)(nil)
+//var _ ClusterSlot = (*redis.ClusterSlot)(nil)
+//var _ ClusterSlotsCmd = (*redis.ClusterSlotsCmd)(nil)
+//var _ GeoLocationCmd = (*redis.GeoLocationCmd)(nil)
+//var _ GeoPosCmd = (*redis.GeoPosCmd)(nil)
+//var _ CommandsInfoCmd = (*redis.CommandsInfoCmd)(nil)
+

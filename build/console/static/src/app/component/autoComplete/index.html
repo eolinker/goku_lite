@@ -1,0 +1,22 @@
+<div class="container_acac" ng-if="$ctrl.array.length">
+    <button type="button" class="cp iconfont icon-xuanzeqizhankai fs12" ng-show="$ctrl.data.inputIsFocus" ng-click="$ctrl.fun.changeSwitch(false)"></button>
+    <button type="button" class="cp iconfont icon-xuanzeqizhankai fs12" ng-hide="$ctrl.data.inputIsFocus" ng-click="$ctrl.fun.changeSwitch(true)"></button>
+    <input type="text" autocomplete="off" placeholder="{{$ctrl.placeholder || ''}}"
+        ng-required="$ctrl.mainObject.required"
+        class="eo-input input-text-acac" ng-model="$ctrl.model[$ctrl.keyName]"
+        ng-change="$ctrl.fun.modelChange()" name="{{$ctrl.keyName}}" ng-pattern="$ctrl.mainObject.pattern" ng-focus="$ctrl.fun.inputFocus($event)" ng-blur="$ctrl.fun.inputBlur($event)" ng-keydown="$ctrl.fun.keydown($event)" ng-disabled="$ctrl.readOnly">
+    
+    <div class="list_container_acac" repaint-scroll-top-common-directive count="$ctrl.data.currentElementCount"
+    min="4" l-height="20" ng-show="$ctrl.data.inputIsFocus&&$ctrl.data.query.length">
+        <ul>
+            <li class="item_acac" ng-repeat="item in $ctrl.data.query track by $index"  ng-class="{'active_item_acac':$ctrl.data.currentElementCount===$index}"
+                ng-mousedown="$ctrl.fun.changeText(item)">{{item}}</li>
+        </ul>
+    </div>
+</div>
+<div class="container_acac" ng-if="!$ctrl.array.length">
+    <input autocomplete="off" placeholder="{{$ctrl.placeholder || ''}}" name="{{$ctrl.keyName}}"
+    ng-required="$ctrl.mainObject.required"
+        class="eo-input" ng-model="$ctrl.model[$ctrl.keyName]"
+        ng-change="$ctrl.fun.modelChange()" ng-disabled="$ctrl.readOnly" ng-pattern="$ctrl.mainObject.pattern">
+</div>

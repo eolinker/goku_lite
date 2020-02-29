@@ -1,0 +1,82 @@
+<div class="cc-group-container common-scss-group"
+    ng-class="{'untop-gdcc':$ctrl.funObject.hideTopMenu,'shrink-gdcc':$ctrl.service.cache.isShrink}">
+    <div class="title-ul f_row f_jc" ng-if="!$ctrl.funObject.hideTopMenu">
+        <div ng-if="$ctrl.authorityObject.edit" ng-show="!$ctrl.service.cache.isShrink" class="btn-group-li fg1">
+            <div ng-repeat="(key,item) in $ctrl.funObject.btnGroupList" ng-switch="item.type">
+                <button ng-switch-default class="{{item.class}} common-btn block-btn" ng-click="$ctrl.fun.common(item)"
+                    ng-show="$ctrl.funObject.showObject[$ctrl.funObject.showVar]==item.showable"
+                    ng-if="!item.authority||$ctrl.authorityObject[item.authority]">
+                    <span class="icon-{{item.icon}} pull-left" ng-class="{'iconfont':item.icon}"></span>
+                    <span class="btn-name">{{item.name}}</span>
+                </button>
+                <div ng-switch-when="more-btn" class="more-btn-box"
+                    ng-show="!item.showPoint&&($ctrl.showObject[item.showPoint][item.showVariable]==item.show)">
+                    <button class="common-btn more-btn-left {{item.btnClass}}"
+                        ng-click="$ctrl.fun.common(item.btnList[item.funIndex||0])"
+                        ng-disabled="item.disabledPoint&&(item.disabledVariable?$ctrl.otherObject[item.disabledPoint][item.disabledVariable]==btnItem.disabled:$ctrl.otherObject[item.disabledPoint]==btnItem.disabled)">
+                        <span ng-if="item.icon" class="iconfont icon-{{item.icon}}"></span><span>{{item.name}}</span>
+                    </button><button class="common-btn eo_more_btn {{item.btnClass}} more-btn-right"
+                        ng-class="{'disabled-a':item.disabledPoint&&(item.disabledVariable?$ctrl.otherObject[item.disabledPoint][item.disabledVariable]==btnItem.disabled:$ctrl.otherObject[item.disabledPoint]==btnItem.disabled)}"
+                        ng-click="$event.stopPropagation();item.disabledPoint&&(item.disabledVariable?$ctrl.otherObject[item.disabledPoint][item.disabledVariable]==btnItem.disabled:$ctrl.otherObject[item.disabledPoint]==btnItem.disabled)?'':item.isClick=!item.isClick;"></span>
+                        <span class="iconfont icon-xuanzeqizhankai"></span>
+                    </button>
+                    <ul class="more-btn-list" ng-click="$event.stopPropagation()">
+                        <li class="item-li eo_theme_gd_li_fli" ng-repeat="funItem in item.btnList"
+                            ng-mousedown="$ctrl.fun.common(funItem)">{{funItem.name}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <p class="fg1 fs18 fwb"
+            ng-if="$ctrl.mainObject.baseInfo.titleAuthority?$ctrl.authorityObject[$ctrl.mainObject.baseInfo.titleAuthority]:!$ctrl.authorityObject.edit"
+            ng-show='!$ctrl.service.cache.isShrink'>{{$ctrl.mainObject.baseInfo.title||'分组'}}</p>
+        <span ng-if="!$ctrl.mainObject.baseInfo.disabledShrink" class="iconfont icon-zhediedaohang shrink-btn fs24 cp"
+            ng-click="$ctrl.service.cache.isShrink=!$ctrl.service.cache.isShrink"></span>
+        <span ng-if="!$ctrl.mainObject.baseInfo.disabledShrink" move-tip-directive parent-class-name="title-ul"
+            able-class-name="shrink-btn" tips-style='{"left":0,"top":15}' tips-text="显示 / 隐藏侧边栏"></span>
+    </div>
+    <div ng-show="!$ctrl.service.cache.isShrink" class="group-ul eo_theme_gd_container sort-container-gdcc" id="test_js"
+        disabled="!($ctrl.authorityObject.edit&&$ctrl.mainObject.baseInfo.sort&&!$ctrl.data.listIsClick)" sv-group-root
+        fun="$ctrl.fun.sort" ng-hide="$ctrl.funObject.showObject[$ctrl.funObject.showVar]">
+        <div class="po_re" ng-repeat='item in $ctrl.mainObject.staticQuery track by $index'
+            ng-if="!item.authority||item.authority&&$ctrl.authorityObject[item.authority]">
+            <div class="group-li eo_theme_gd_li" ng-click="$ctrl.fun.click({item:item})"
+                ng-class="{'eo_theme_gd_li_fli_a':item[$ctrl.mainObject.baseInfo.id]==$ctrl.mainObject.baseInfo.current[$ctrl.mainObject.baseInfo.id]}">
+                <span class="iconfont icon-{{item.icon}}"></span>
+                <span class="group-name">{{item[$ctrl.mainObject.baseInfo.name]}}</span>
+                <inner-html-common-directive html="item.tipHtml"></inner-html-common-directive>
+            </div>
+        </div>
+        <div ng-if="$ctrl.mainObject.staticQuery.length" class="divide-li eo_theme_gd_d"></div>
+        <div class="actural-group-box" sv-group-part="$ctrl.ajaxResponse.query"
+            ng-click="$ctrl.fun.click({$event:$event})">
+            <div class="po_re" data-index="{{$index}}"
+                ng-repeat='($outerIndex,item) in $ctrl.ajaxResponse.query track by $index'
+                sv-group-element="$ctrl.data.sortForm" ng-hide="item.hideStatus">
+                <div ng-style="{'padding-left':!item.groupDepth||item.groupDepth==$ctrl.mainObject.baseInfo.initGroupDepth?'10px':((item.groupDepth-$ctrl.mainObject.baseInfo.initGroupDepth+1)*10+'px')}"
+                    class="group-li eo_theme_gd_li"
+                    ng-class="{'eo_theme_gd_li_fli_a':item[$ctrl.mainObject.baseInfo.id]==$ctrl.mainObject.baseInfo.current[$ctrl.mainObject.baseInfo.id]}">
+                    <span class="group-icon iconfont " ng-if="$ctrl.mainObject.baseInfo.hasIcon!='0'"
+                        ng-class="{'icon-jiantou_liebiaoxiangyou':!item.isOpen,'icon-jiantou_liebiaozhankai eo_theme_gd_lt_icon':item.isOpen}"></span>
+                    <span class="group-name pull-left">{{item[$ctrl.mainObject.baseInfo.name]}}</span>
+                    <span class="group-tips"
+                    ng-if="$ctrl.mainObject.baseInfo.tips">({{item[$ctrl.mainObject.baseInfo.tips]}})</span>
+                    <div class="active"
+                        ng-if="item[$ctrl.mainObject.baseInfo.id]>0&&($ctrl.authorityObject.edit||$ctrl.authorityObject.export)"
+                        ng-show="!$ctrl.mainObject.baseInfo.itemFunShowPoint||item[$ctrl.mainObject.baseInfo.itemFunShowPoint]===$ctrl.mainObject.baseInfo.itemFunShow"
+                        ng-click="$ctrl.fun.more({item:item,$event:$event,$index:$outerIndex})"
+                        ng-mouseleave="item.listIsClick=false;$ctrl.data.listIsClick=false;">
+                        <span class="more-icon iconfont icon-iosgengduo"></span>
+                        <ul class="group-function eo_theme_gd_li_fl" ng-class="{'envFirst':$first}"
+                            ng-show="item.listIsClick">
+                            <li class="eo_theme_gd_li_fli" ng-class="{'eo_theme_gd_li_fli_s':funItem.isStrong}"
+                                ng-repeat="(funKey,funItem) in $ctrl.mainObject.itemFun" data-child-index="{{$index}}"
+                                ng-if="!funItem.authority||$ctrl.authorityObject[funItem.authority]">{{funItem.key}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

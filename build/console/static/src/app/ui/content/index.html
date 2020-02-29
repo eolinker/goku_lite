@@ -1,0 +1,11 @@
+<div ng-class="{'eo_shrink_group_sidebar_container':$ctrl.service.sidebar.isShrink&&$ctrl.service.group.isShrink,'shrink-div':$ctrl.service.sidebar.isShrink,'shrink-group-div':$ctrl.service.group.isShrink}">
+    <eo-navbar1></eo-navbar1>
+    <eo-sidebar shrink-object="$ctrl.data.info.shrinkObject" ng-if="$ctrl.data.info.sidebarShow"></eo-sidebar>
+    <div class="home">
+        <div class="home-content home-content-project">
+            <div class="home-div" ui-view></div>
+        </div>
+        <div class="eo_theme_mask_bg"></div>
+    </div>
+
+</div>

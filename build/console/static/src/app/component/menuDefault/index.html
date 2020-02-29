@@ -1,0 +1,231 @@
+<ul class="common_menu_ul m0_style {{$ctrl.mainObject.setting.class}}">
+    <li class="menu-title fs18 fwb"
+        ng-if="$ctrl.mainObject.setting.title&&($ctrl.mainObject.setting.titleAuthority?$ctrl.authorityObject[$ctrl.mainObject.setting.titleAuthority]:!$ctrl.authorityObject.edit)">
+        <span>{{$ctrl.mainObject.setting.title}}</span></li>
+    <li class="menu-title pb10" ng-if="$ctrl.mainObject.setting.secondTitle" inner-html-common-directive
+        html="$ctrl.mainObject.setting.secondTitle"></li>
+    <li ng-repeat="item in $ctrl.mainObject.list"
+        ng-hide="$ctrl.mainObject.setting.batch&&$ctrl.otherObject.batch.isOperating&&!item.batchOperatingShow"
+        class="{{item.class}}" ng-class="{'menu-li m_i_tab_style':item.type=='tabs'}" ng-switch="item.type"
+        ng-if="!item.authority||$ctrl.authorityObject[item.authority]">
+        <p ng-switch-when="btn" class="common-btn-list" ng-class="{'common-btn-list-first':$index==0}">
+            <button ng-repeat="btnItem in item.btnList " class="{{btnItem.class}} common-btn"
+                button-set-disable-directive="$ctrl.fun.common(btnItem.fun,{item:btnItem})"
+                ng-show="!item.showPoint||($ctrl.showObject[item.showPoint][item.showVariable]==btnItem.show)"
+                ng-disabled="item.disabledPoint&&(item.disabledVariable?$ctrl.otherObject[item.disabledPoint][item.disabledVariable]==btnItem.disabled:$ctrl.otherObject[item.disabledPoint]==btnItem.disabled)">
+                <span class="iconfont icon-{{btnItem.icon}} pull-left"
+                    ng-if="btnItem.icon"></span><span>{{btnItem.name}}</span>
+                <div class="disabled-tip" ng-if="$ctrl.otherObject[item.disableTip]&&btnItem.tips">
+                    <span class="tip-div">{{btnItem.tips}}</span>
+                    <div class="arrow-div"></div>
+                </div>
+            </button>
+        </p>
+        <div ng-switch-when='customized-html' inner-html-common-directive html="item.html"
+            ng-show="!item.showPoint||(item.showVariable?$ctrl.showObject[item.showPoint][item.showVariable]==item.show:$ctrl.showObject[item.showPoint]==item.show)">
+        </div>
+        <p ng-switch-when='link'
+            ng-show="!item.showPoint||(item.showVariable?$ctrl.showObject[item.showPoint][item.showVariable]==item.show:$ctrl.showObject[item.showPoint]==item.show)">
+            <a class="common-btn  link-a" ui-sref="{{item.sref}}">
+                <span class="iconfont icon-{{item.icon}} pull-left" ng-if="item.icon"></span><span>{{item.name}}</span>
+            </a>
+        </p>
+        <span ng-switch-when="divide" class="divide-span"></span>
+        <p ng-switch-when='download'>
+            <a class="common-btn" ng-href="{{item.href}}" download="{{item.download}}"
+                ng-show="!item.showPoint||(item.showVariable?$ctrl.showObject[item.showPoint][item.showVariable]==item.show:$ctrl.showObject[item.showPoint]==item.show)">
+                <span class="iconfont icon-{{item.icon}} pull-left"></span><span>{{item.name}}</span>
+            </a>
+        </p>
+        <form autocomplete="off" name="searchForm" class="f_row f_ac search-form po_re" ng-click="item.tapShow=false"
+            ng-init="item.keyword?item.tapShow=true:item.tapShow=false" ng-switch-when="search"
+            ng-show="!item.showPoint||(item.showVariable?$ctrl.showObject[item.showPoint][item.showVariable]==item.show:$ctrl.showObject[item.showPoint]==item.show)">
+            <div class="search-div f_row f_ac po_re search-input-width-200"
+                ng-class="{'search-div-advanced':item.advanced}">
+                <span class="iconfont icon-sousuo fs20 ml5 pull-left cp"
+                    ng-click="$ctrl.fun.search({item:item,$event:$event})"><button
+                        ng-click="$ctrl.fun.search({item:item,$event:$event})"></button></span>
+                <label class="search-tap-box f_row cp" for="menu_search" ng-show="item.tapShow&&item.keyword"
+                    ng-click="item.tapShow=false">
+                    <div class="search-tap f_row">
+                        <span class="search-text">{{item.keyword}}</span>
+                        <span class="iconfont icon-guanbi_o plr5 cp"
+                            ng-click="item.keyword='';$ctrl.fun.search({item:item,$event:$event})"></span>
+                    </div>
+                </label>
+                <input ng-show="item.tapShow==true" class="search-input" autocomplete="off" type="text">
+                <input ng-focus="item.widthLg=true" id="menu_search" ng-blur="item.keyWord?'':item.widthLg=false"
+                    ng-show="item.tapShow==false" class="search-input" ng-change="item.tapShow=false;"
+                    placeholder="{{item.placeholder||'搜索'}}" autocomplete="off" type="text" ng-model="item.keyword">
+                <span ng-if="item.advanced" class="eo_theme_btn_info plr10 fs12 ptb2 advanced-btn"
+                    ng-click="$event.stopPropagation();item.advancedFun({item:item})">高级</span>
+            </div>
+        </form>
+        <ul ng-switch-when="tips-tab" class="f_row tsc_ul"
+            ng-show="!item.showPoint||(item.showVariable?$ctrl.showObject[item.showPoint][item.showVariable]==item.show:$ctrl.showObject[item.showPoint]==item.show)">
+            <li ng-repeat="tabItem in item.tabList" ng-if="!tabItem.authority||$ctrl.authorityObject[tabItem.authority]"
+                class="view-common-btn m_tab_d"
+                ng-class="{'elem-active m_tab_a':item.activeVariable?$ctrl.activeObject[item.activePoint][item.activeVariable]==tabItem.active:$ctrl.activeObject[item.activePoint]==tabItem.active}"
+                ng-click="$ctrl.fun.common(tabItem.fun,{item:tabItem,$event:$event})" ng-switch="tabItem.type">
+                <span class="iconfont icon-{{tabItem.icon}} pull-left" ng-switch-default></span><span
+                    class="maw_200 dp_ib ws_nowrap" ng-switch-default>{{tabItem.name}}</span>
+                <inner-html-common-directive html="tabItem.html" ng-switch-when="html"></inner-html-common-directive>
+            </li>
+        </ul>
+        <div class="po_re" ng-switch-when="tab_block_list">
+            <button type="button" class="common-btn eo_more_btn">
+                <span class="iconfont icon-{{item.icon}} pull-left"></span>
+                <span>{{item.name}}</span>
+            </button>
+            <div class="po_ab wrap_div_mcc">
+                <list-Block-Common-Component active-object="$ctrl.blockListObject" list="item.query" main-object="item.blockComponentObj||$ctrl.component.blockListObject[item.blockName]"></list-Block-Common-Component>
+            </div>
+        </div>
+        <div ng-switch-when="fun-list" ng-click="item.isClick=!item.isClick" class="po_re"
+            ng-show="!item.showPoint||(item.showVariable?$ctrl.showObject[item.showPoint][item.showVariable]==item.show:$ctrl.showObject[item.showPoint]==item.show)"
+            ng-class="{ 'disabled-btn':item.disabledPoint&&(item.disabledVariable?$ctrl.otherObject[item.disabledPoint][item.disabledVariable]==btnItem.disabled:$ctrl.otherObject[item.disabledPoint]==btnItem.disabled)}"
+            ng-mouseleave="item.isClick=false;">
+            <span class="iconfont icon-{{item.icon}} pull-left mr5"
+                ng-if="item.icon"></span><span>{{item.name}}</span><span
+                class="ml5 iconfont icon-{{item.rightIcon}} pull-right" ng-if="item.rightIcon"></span>
+            <div class="list_function_wrap" ng-switch="!item.funHtml" ng-show="(item.isClick&&item.click)||!item.click">
+                <ul class="nav-function" ng-switch-when=false>
+                    <li class="f_row" ng-click="$ctrl.fun.common(funItem.fun,{item:funItem})"
+                        ng-repeat="funItem in item.funList"
+                        ng-class="{'strong-li':item.activePoint&&(item.activeVariable?$ctrl.activeObject[item.activePoint][item.activeVariable]==funItem.active:($ctrl.activeObject[item.activePoint]==funItem.active))}"
+                        ng-init="item.init({item:funItem})" inner-html-common-directive html="item.funHtml"></li>
+                </ul>
+                <ul class="nav-function" ng-switch-default>
+                    <li class="f_row" ng-click="$ctrl.fun.common(funItem.fun,{item:funItem})"
+                        ng-repeat="funItem in item.funList"
+                        ng-class="{'strong-li':item.activePoint&&(item.activeVariable?$ctrl.activeObject[item.activePoint][item.activeVariable]==funItem.active:($ctrl.activeObject[item.activePoint]==funItem.active))}"
+                        ng-init="item.init({item:funItem})"><span class="iconfont icon-{{funItem.icon}} mr5"
+                            ng-if="funItem.icon"></span><span>{{funItem.name}}</span></li>
+                </ul>
+            </div>
+        </div>
+        <div ng-switch-when="more-btn" class="more-btn-box"
+            ng-show="!item.showPoint&&($ctrl.showObject[item.showPoint][item.showVariable]==item.show)">
+            <button class="common-btn more-btn-left block-btn {{item.btnClass}}"
+                ng-click="$ctrl.fun.common(item.btnList[item.funIndex||0].fun,{item:item})"
+                ng-disabled="item.disabledPoint&&(item.disabledVariable?$ctrl.otherObject[item.disabledPoint][item.disabledVariable]==btnItem.disabled:$ctrl.otherObject[item.disabledPoint]==btnItem.disabled)">
+                <span ng-if="item.icon" class="iconfont icon-{{item.icon}}"></span><span>{{item.name}}</span>
+            </button><button class="common-btn  block-btn eo_more_btn {{item.btnClass}} more-btn-right"
+                ng-class="{'disabled-a':item.disabledPoint&&(item.disabledVariable?$ctrl.otherObject[item.disabledPoint][item.disabledVariable]==btnItem.disabled:$ctrl.otherObject[item.disabledPoint]==btnItem.disabled)}"
+                ng-click="item.disabledPoint&&(item.disabledVariable?$ctrl.otherObject[item.disabledPoint][item.disabledVariable]==btnItem.disabled:$ctrl.otherObject[item.disabledPoint]==btnItem.disabled)?'':item.isClick=!item.isClick;">
+                <span class="iconfont icon-xuanzeqizhankai"></span>
+            </button>
+            <div class="more-btn-div">
+                <ul class="more-btn-list">
+                    <li class="item-li eo_theme_gd_li_fli" ng-repeat="funItem in item.btnList"
+                        ng-if="!funItem.authority||$ctrl.authorityObject[funItem.authority]"
+                        ng-mousedown="$ctrl.fun.common(funItem.fun,{item:funItem})">{{funItem.name}}</li>
+                </ul>
+            </div>
+        </div>
+        <p ng-switch-when="tabs">
+            <a ng-repeat="tabItem in item.tabList" class="pull-left m_tab_d {{tabItem.class}}"
+                ng-click="$ctrl.fun.common(tabItem.fun,{item:tabItem})"
+                ng-class="{'elem-active m_tab_a':tabItem.isFocus||(item.activeVariable?$ctrl.activeObject[item.activePoint][item.activeVariable]==tabItem.active:item.activePoint&&$ctrl.activeObject[item.activePoint]==tabItem.active)}"
+                ng-if="!tabItem.authority||$ctrl.authorityObject[tabItem.authority]">{{tabItem.name}}</a>
+        </p>
+        <ul ng-switch-when="navigation" class="f_row">
+            <li ng-repeat="tabItem in item.tabList" class="pull-left m_nav_item_style {{tabItem.class}}"
+                ng-click="$ctrl.fun.common(tabItem.fun,{item:tabItem})"
+                ng-class="{'elem-active m_nav_active_item_style':tabItem.isFocus||(item.activeVariable?$ctrl.activeObject[item.activePoint][item.activeVariable]==tabItem.active:item.activePoint&&$ctrl.activeObject[item.activePoint]==tabItem.active)}"
+                ng-if="!tabItem.authority||$ctrl.authorityObject[tabItem.authority]" ng-switch="tabItem.type">
+                <inner-html-common-directive html="tabItem.html"></inner-html-common-directive>
+                <span ng-switch-default>{{tabItem.name}}</span>
+            </li>
+        </ul>
+    </li>
+    <li ng-if="$ctrl.mainObject.setting.batch&&$ctrl.authorityObject[$ctrl.mainObject.setting.batchAuthority||'edit']"
+        ng-hide="$ctrl.otherObject.batch.isOperating" class="pull-left">
+        <p class="common-btn-list" ng-class="{'common-btn-list-first':$ctrl.mainObject.list.length===0}">
+            <button class="common-btn" ng-click="$ctrl.fun.batchDefault()"
+                ng-disabled="$ctrl.otherObject.isBatchDisabled"><span
+                    class="iconfont icon-xinzengdaohangliebiao pull-left"></span>批量操作
+                <!-- <div class="disabled-tip" ng-if="$ctrl.otherObject.isBatchDisabled">
+                    <span class="tip-div">当前列表为空</span>
+                    <div class="arrow-div"></div>
+                </div></button> -->
+        </p>
+    </li>
+    <li ng-if="$ctrl.mainObject.setting.batch" ng-show="$ctrl.otherObject.batch.isOperating"
+        class="pull-left menu-mr15 f_row f_ac batch_cancel_ldcc">
+        <button class="common-btn" ng-click="$ctrl.fun.batchCancel()">
+            <span class="iconfont icon-chexiao pull-left"></span>
+            <span>取消</span>
+        </button>
+        <span class="vertical_divide_line_mdcc ml15" ng-if="!$last">|</span>
+    </li>
+    <li ng-repeat="item in $ctrl.mainObject.batchList" ng-show="$ctrl.otherObject.batch.isOperating"
+        class="{{item.class}} f_row f_ac" ng-class="{'menu-li m_i_tab_style':item.type=='tabs','menu-ml0':$first}"
+        ng-switch="item.type"
+        ng-if="$ctrl.mainObject.setting.batch&&!item.authority||$ctrl.authorityObject[item.authority]">
+        <div ng-switch-when='btn' class="common-btn-list f_row" ng-class="{'common-btn-list-first':$index==0}">
+            <div ng-repeat="btnItem in item.btnList">
+                <span class="vertical_divide_line_mdcc ml15" ng-if="!$first">|</span>
+                <button class="{{btnItem.class}} common-btn"
+                    button-set-disable-directive="$ctrl.fun.common(btnItem.fun,{item:btnItem})"
+                    ng-show="!item.showPoint||($ctrl.showObject[item.showPoint][item.showVariable]==btnItem.show)"
+                    ng-disabled="(!item.disabledPoint&&$ctrl.otherObject.batch.query.length==0)||(item.disabledPoint&&(item.disabledVariable?$ctrl.otherObject[item.disabledPoint][item.disabledVariable]==btnItem.disabled:$ctrl.otherObject[item.disabledPoint]==btnItem.disabled))">
+                    <!-- <span class="iconfont icon-{{btnItem.icon}} pull-left" ng-if="btnItem.icon"></span> -->
+                    <span>{{btnItem.name}}</span>
+                    <div class="disabled-tip" ng-if="$ctrl.otherObject[item.disableTip]&&btnItem.tips">
+                        <span class="tip-div">{{btnItem.tips}}</span>
+                        <div class="arrow-div"></div>
+                    </div>
+                </button>
+            </div>
+        </div>
+        <p ng-switch-when='customized-html' inner-html-common-directive html="item.html"
+            ng-show="$ctrl.showObject[item.showPoint][item.showVariable]==item.show"></p>
+        <p ng-switch-when="tips-tab"
+            ng-show="!item.showPoint||(item.showVariable?$ctrl.showObject[item.showPoint][item.showVariable]==item.show:$ctrl.showObject[item.showPoint]==item.show)">
+            <a ng-repeat="tabItem in item.tabList" ng-if="!tabItem.authority||$ctrl.authorityObject[tabItem.authority]"
+                class="view-common-btn m_tab_d"
+                ng-class="{'elem-active m_tab_a':item.activeVariable?$ctrl.activeObject[item.activePoint][item.activeVariable]==tabItem.active:$ctrl.activeObject[item.activePoint]==tabItem.active}"
+                ng-click="$ctrl.fun.common(tabItem.fun,{item:tabItem,$event:$event})" ng-switch="tabItem.type">
+                <!-- <span class="iconfont icon-{{tabItem.icon}} pull-left" ng-switch-default></span> -->
+                <span ng-switch-default>{{tabItem.name}}</span>
+                <inner-html-common-directive html="tabItem.html" ng-switch-when="html"></inner-html-common-directive>
+            </a>
+        </p>
+        <div ng-switch-when="fun-list" ng-if="!item.authority||$ctrl.authorityObject[item.authority]"
+            class="cp combo_box_mdcc" ng-click="item.isClick=!item.isClick"
+            ng-show="!item.showPoint||(item.showVariable?$ctrl.showObject[item.showPoint][item.showVariable]==item.show:$ctrl.showObject[item.showPoint]==item.show)"
+            ng-class="{ 'disabled-btn':(!item.disabledPoint&&$ctrl.otherObject.batch.query.length==0)||(item.disabledPoint&&(item.disabledVariable?$ctrl.otherObject[item.disabledPoint][item.disabledVariable]==btnItem.disabled:$ctrl.otherObject[item.disabledPoint]==btnItem.disabled))}"
+            ng-mouseleave="item.isClick=false;">
+            <span class="iconfont icon-{{item.icon}} pull-left mr5"></span><span>{{item.name}}</span><span
+                class="ml5 iconfont pull-right icon-{{item.rightIcon}}" ng-if="item.rightIcon"></span>
+            <div class="list_function_wrap" ng-switch="!item.funHtml" ng-show="(item.isClick&&item.click)||!item.click">
+                <ul class="nav-function" ng-switch-when=false>
+                    <li ng-click="$ctrl.fun.common(funItem.fun,{item:funItem})" ng-repeat="funItem in item.funList"
+                        ng-class="{'strong-li':item.activePoint&&(item.activeVariable?$ctrl.activeObject[item.activePoint][item.activeVariable]==funItem.active:($ctrl.activeObject[item.activePoint]==funItem.active))}"
+                        ng-init="item.init({item:funItem})" inner-html-common-directive html="item.funHtml"></li>
+                </ul>
+                <ul class="nav-function" ng-switch-default>
+                    <li ng-click="$ctrl.fun.common(funItem.fun,{item:funItem})" ng-repeat="funItem in item.funList"
+                        ng-class="{'strong-li':item.activePoint&&(item.activeVariable?$ctrl.activeObject[item.activePoint][item.activeVariable]==funItem.active:($ctrl.activeObject[item.activePoint]==funItem.active))}"
+                        ng-init="item.init({item:funItem})">
+                        <!-- <span class="iconfont icon-{{funItem.icon}}" ng-if="funItem.icon"></span> -->
+                        <span> {{funItem.name}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <p ng-switch-when="tabs">
+            <a ng-repeat="tabItem in item.tabList" class="pull-left m_tab_d {{tabItem.class}}"
+                ng-click="$ctrl.fun.common(tabItem.fun,{item:tabItem})"
+                ng-class="{'elem-active m_tab_a':tabItem.isFocus||(item.activeVariable?$ctrl.activeObject[item.activePoint][item.activeVariable]==tabItem.active:$ctrl.activeObject[item.activePoint]==tabItem.active&&item.activePoint)}"
+                ng-if="!tabItem.authority||$ctrl.authorityObject[tabItem.authority]">{{tabItem.name}}</a>
+        </p>
+        <span class="vertical_divide_line_mdcc ml15 c999" ng-if="!$last">|</span>
+    </li>
+</ul>
+<!-- fixed布局变动占位符 -->
+<div class="common-menu-placeholder"
+    ng-if="$ctrl.mainObject.setting.class.indexOf('common-menu-lg')>-1&&$ctrl.authorityObject"
+    ng-class="{'can-operate-placeholder':$ctrl.authorityObject[$ctrl.mainObject.setting.placeholderAuthority||'edit'],'can-operate-has-second-title-placeholder':$ctrl.authorityObject[$ctrl.mainObject.setting.placeholderAuthority||'edit']&&$ctrl.mainObject.setting.secondTitle,'disabled-operate-placeholder':!$ctrl.authorityObject[$ctrl.mainObject.setting.placeholderAuthority||'edit'],'disabled-operate-has-second-title-placeholder':!$ctrl.authorityObject[$ctrl.mainObject.setting.placeholderAuthority||'edit']&&$ctrl.mainObject.setting.secondTitle}">
+</div>

@@ -1,0 +1,8 @@
+cluster-default{
+    list-default-common-component tip-directive{
+        margin-left: 0;
+    }
+    list-default-common-component .eo-tip-container{
+        margin-left: -15px !important;
+    }
+}

@@ -1,0 +1,4 @@
+<ul class="tips-ul {{$ctrl.data[$ctrl.version][$ctrl.status||'general'].class}}" ng-style="$ctrl.data[$ctrl.version][$ctrl.status||'general'].style" >
+    <li class="title-li pull-left" ng-style="$ctrl.data[$ctrl.version][$ctrl.status||'general'].titleStyle">{{$ctrl.data[$ctrl.version][$ctrl.status||'general'].title}}：</li>
+    <li class="content-li"><inner-html-common-directive remove=true  html="$ctrl.user=='general'?$ctrl.data[$ctrl.version][$ctrl.status||'general'].general:$ctrl.data[$ctrl.version][$ctrl.status||'general'].content"></inner-html-common-directive> <a ng-href="{{$ctrl.data[$ctrl.version][$ctrl.status||'general'].link.href}}" target="_blank" ng-show="$ctrl.user!='general'&&$ctrl.data[$ctrl.version][$ctrl.status||'general'].link.content"><b>[{{$ctrl.data[$ctrl.version][$ctrl.status||'general'].link.content}}]</b> </a>{{$ctrl.data[$ctrl.version][$ctrl.status||'general'].afterContent}}</li>
+</ul>

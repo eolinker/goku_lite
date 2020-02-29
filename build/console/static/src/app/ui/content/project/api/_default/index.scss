@@ -1,0 +1,14 @@
+api-default{
+    list-default-common-component .fixed-height-list{
+        @include eo-height(100%,183px);
+    }
+    menu-Default-Common-Component .more-btn-div{
+        right: auto !important;
+    }
+}
+api-Group{
+    .common-scss-group{
+        margin-top: 65px;
+        @include eo-height(100%,132px);
+    }
+}

@@ -1,0 +1,276 @@
+<div class="modal">
+    <!-- input/select/textarea混合输入弹窗 -->
+    <script type="text/ng-template" id="MixInputModal">
+        <div class="modal-project eo-modal common-modal" ng-click="data.showSearchList=false;">
+            <header class="eo-modal-header">
+                <span  ng-bind="::input.title"></span>
+                    <button class="iconfont icon-guanbi pull-right mt15 ab_r20" type="button" ng-click="fun.cancel()"></button>
+            </header>
+            <article class="eo-modal-article">
+                <form autocomplete="off" name="ConfirmForm">
+                    <div ng-repeat="item in input.textArray" ng-switch="item.type">
+                        <div class="f_row_ac" ng-class="{'eo_form_first_item_title':$first,'eo_form_item_title':!$first}">
+                            <span>{{item.title}}</span>
+                            <tip-directive input="{{item.tip}}" ng-if="item.tip"></tip-directive>
+                            <span class="eo-modal-tip" ng-if="item.titleTip">{{item.titleTip}}</span>
+                        </div>
+                        <div ng-switch-when="input">
+                            <input autocomplete="off" type="text" name="{{item.key}}" ng-model="item.value" placeholder="{{item.placeholder}}" class="eo-input" ng-class="{'eo-input-error':(data.submitted&&ConfirmForm[item.key].$invalid)}" maxlength="{{item.maxlength}}" ng-disabled="{{item.disabled}}" ng-pattern="item.pattern" ng-required="item.required">
+                            <p class="eo-error-tips">请填写正确的{{item.title}}</p>
+                        </div>
+                        <div ng-switch-when="password">
+                            
+                            <input autocomplete="off" type="password" name="{{item.key}}" ng-model="item.value" placeholder="{{item.placeholder}}" class="eo-input" ng-class="{'eo-input-error':(data.submitted&&ConfirmForm[item.key].$invalid)}" maxlength="{{item.maxlength}}" ng-pattern="item.pattern" ng-required="item.required">
+                            <p class="eo-error-tips">请填写正确的{{item.title}}</p>
+                        </div>
+                        <p ng-switch-when="select">
+                            <select-default-common-component output="item" model-key="value" required="true" input="{query:item.selectOptions,key:'key',value:'value',initialData:item.value}"></select-default-common-component>
+                        </p>
+                        <p ng-switch-when="textarea">
+                            <textarea name="name" ng-model="item.value" placeholder="{{item.placeholder}}" class="eo-textarea" maxlength="{{item.maxlength}}"></textarea>
+                        </p>
+                        <div ng-switch-when="html" inner-html-common-directive="{{item.html}}">
+                        </div>
+                    </div>
+                    <button class="hidden" button-set-disable-directive="fun.confirm()"></button>
+                </form>
+                <div ng-if="input.datePickerObject" ng-click="$event.stopPropagation();" >
+                        <p class="eo_form_item_title">{{input.datePickerObject.title}}
+                                <span class="eo-modal-tip" ng-if="input.datePickerObject.titleTip">{{input.datePickerObject.titleTip}}</span>
+                            </p>    
+                        <div ng-click="data.datePickerObject.show=!data.datePickerObject.show;" style="line-height:22px" class="eo-input w_100percent">{{data.datePickerObject.request.startTime?((data.datePickerObject.request.startTime | currentTimeFilter:{min:'day'})+(data.datePickerObject.request.endTime?(' 至 '+(data.datePickerObject.request.endTime | currentTimeFilter:{min:'day'})):'')):''}}</div>
+                        <div datepicker-times-directive="fun.datePickerSelect(arg)" interaction="data.datePickerObject"></div>
+                    </div>
+                <div ng-if="input.singleTextObject">
+                    <p class="eo_form_item_title">{{input.singleTextObject.title}}
+                        <span class="eo-modal-tip" ng-if="input.singleTextObject.titleTip">{{input.singleTextObject.titleTip}}</span>
+                    </p>
+                    <select-person-common-component output="component.selectPersonCommonComponentObject" input="{query:input.singleTextObject.selectOptions,loginCall:'inviteCall',nickName:'userNickName',noteName:'memberNickName',value:'connID'}"></select-person-common-component>
+                </div>
+            </article>
+            <footer class="eo-modal-footer">
+                <button class="{{input.btnObject.class||'eo_theme_btn_success'}}" button-set-disable-directive="fun.confirm()">{{input.btnObject.text||"确定"}}</button>
+                <button type="button" class="eo_theme_btn_success"  button-set-disable-directive="fun.confirm('tmp')" ng-if="input.tmpBtnObj">{{input.tmpBtnObj.text||"确定"}}</button>
+                <button type="button" class="eo_theme_btn_default" ng-click="fun.cancel()">取消</button>
+            </footer>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+    <!-- 导出弹窗 -->
+    <script type="text/ng-template" id="ExportModal">
+        <a id="dump-directive_js" class="hidden"></a>
+        <div class="modal-export eo-modal common-modal">
+            <form autocomplete="off" name="Form">
+                <header class="eo-modal-header" ng-bind="::input.title"></header>
+                <article class="eo-modal-article">
+                    <div class="view-btn-li">
+                        数据粒度：&nbsp;
+                        <a ng-repeat="tabItem in data.granularityList" class="view-common-btn" ng-class="{'elem-active':data.granularity==tabItem.active,'last-view-common-btn':$last}" ng-click="fun.changeMenu('granularity',{item:tabItem,$event:$event})" ng-switch="tabItem.type">
+                            <span class="iconfont icon-{{tabItem.icon}}" ng-switch-default></span><span ng-switch-default>{{tabItem.name}}</span>
+                        </a>
+                    </div>
+                </article>
+                <footer class="eo-modal-footer">
+                    <div class="eo_theme_btn_success btn-style-div mr10" dump-directive='fun.dumpDirective(arg)' interaction='{request:{text:"下载",switch:data.exportType,broadcast:"export-by-one-key"}}'></div>
+                    <button type="button" class="eo_theme_btn_default" ng-click="fun.cancel()">取消</button>
+                </footer>
+            </form>
+        </div>
+        <div class="eo_theme_modal_mask" ng-click="cancel()"></div>
+    </script>
+    <!-- 修改密码弹窗 -->
+    <script type="text/ng-template" id="CommonChangePasswordModal">
+        <div class="common-modal common-modal-change-password eo-modal">
+                <form name="editForm">
+            <header class="eo-modal-header" ng-bind="::data.input.title"></header>
+            <article class="eo-modal-article">
+                
+                    <p class="eo_form_first_item_title">*新密码</p>
+                    <div>
+                        <input autocomplete="off" type="password" name="newPassword" ng-model="data.input.inputObject.key"
+                                            placeholder="6~32位字符串" class="eo-input w_100percent"
+                                            ng-class="{'eo-input-error':(editForm.newPassword.$dirty&&editForm.newPassword.$invalid)}" ng-pattern="/^.{6,32}$/"
+                                            maxlength="32" required>
+                    </div>
+                    <p class="eo_form_item_title">*确认新密码</p>
+                    <div>
+                            <input autocomplete="off" type="password" name="confirmNewPassword" ng-model="data.input.inputObject.confirmNewPassword"
+                            placeholder="6~32位字符串" class="eo-input w_100percent"
+                            ng-class="{'eo-input-error':(editForm.confirmNewPassword.$dirty&&(editForm.confirmNewPassword.$invalid||data.input.inputObject.confirmNewPassword!=data.input.inputObject.key))}" ng-pattern="/^.{6,32}$/"
+                            maxlength="32" required>
+                    </div>
+                
+            </article>
+            <footer class="eo-modal-footer">
+                    <button class="eo_theme_btn_success " ng-click="data.fun.confirm()">确定</button>
+                    <button type="button" class="eo_theme_btn_default " ng-click="data.fun.cancel()">取消</button>
+                </footer>
+            </form>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+    <script type="text/ng-template" id="SelectVisualGroupModal">
+        <div class="modal-visual-group eo-modal common-modal">
+            <header class="eo-modal-header" ng-bind="::title"></header>
+            <article class="eo-modal-article" ng-switch="modalType">
+                <group-default-common-Component fun-object="component.groupCommonObject.funObject" main-object="component.groupCommonObject.mainObject" list="list"></group-default-common-Component>
+                <loading-part-common-component ng-switch-when="projectGroup"  fun="fun.initGroup()"></loading-part-common-component>
+            </article>
+            <footer class="eo-modal-footer">
+                <button class="eo_theme_btn_success" ng-click="fun.confirm()">确定</button>
+                <button type="button" class="eo_theme_btn_default" ng-click="fun.cancel()">取消</button>
+            </footer>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+    <!-- 重新登录弹窗 -->
+    <script type="text/ng-template" id="Common_LoginModal">
+        <div class="common-modal-login  eo-modal common-modal">
+                <form name="confirmForm">
+            <header class="eo-modal-header">
+                    <span>登录</span>
+                    <button class="iconfont icon-guanbi pull-right mt15 ab_r20" type="button" ng-click="data.fun.close()"></button>
+                </header>
+            
+            <article class="eo-modal-article">
+                <p class="tips-p eo-status-error">您的账号当前状态为未登录，若想继续操作，请重新登录！（若直接关闭，将会自动跳转登录页面）</p>
+                <p class="mt20 eo_form_first_item_title">用户名</p>
+                <div>
+                    <input autocomplete="off" class="eo-input" name="username" ng-model="data.interaction.request.loginCall" type="text" placeholder="账号"
+                                ng-class="{'eo-input-error':confirmForm.username.$invalid&&data.info.submitted}" required autofocus
+                            />
+                </div>
+                <p class="mt20 eo_form_item_title">密码</p>
+                <div>
+                    <input autocomplete="off" class="eo-input" name="password" ng-class="{'eo-input-error':data.info.submitted&&confirmForm.password.$invalid}"
+                                type="password" placeholder="密码" ng-model="data.interaction.request.loginPassword" required />
+                </div>
+            </article>
+            <footer class="eo-modal-footer">
+                    <button ng-class="{'eo_theme_btn_success':confirmForm.$valid,'eo_theme_btn_default':confirmForm.$invalid}" ng-click="data.fun.confirm()">登录</button>
+            </footer>
+        </form>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+    <!-- Info弹窗 -->
+    <script type="text/ng-template" id="InfoModal">
+        <div class="modal-info" ng-class="{'error':type=='error','success':type=='success','info':type=='info'}">
+            <p class="f_row_ac">
+                <i class="iconfont" ng-class="{'icon-guanbi':type=='error','icon-duihao':type=='success','icon-shanchu':type=='info'}"></i>
+                <span class="text-center modal-title" ng-bind="::info"></span>
+            </p>
+        </div>
+    </script>
+    <!-- 确认弹窗 -->
+    <script type="text/ng-template" id="EnsureModal">
+        <div class="modal-sure eo-modal common-modal">
+                <form autocomplete="off" name="sureForm">
+                        <header class="eo-modal-header">
+                            <span>{{title}}</span>
+                            <tip-directive input="{{data.input.tips}}" ng-if="data.input.tips"></tip-directive>
+                            <button class="iconfont icon-guanbi pull-right mt15 ab_r20" type="button" ng-click="cancel()"></button>
+                        </header>
+                        <article class="eo-modal-article">
+                            <p inner-html-common-directive html="info.message" status="unbind-angular" class="{{data.input.class}}"></p>
+                            <p ng-if="necessity">
+                                <input autocomplete="off" type="text" name="sure" ng-model="sure" placeholder="操作不可撤回，确定请输入yes" class="eo-input" ng-class="{'eo-input-error':(submited&&sureForm.sure.$invalid)}" ng-pattern="/^[y|Y][e|E][s|S]$/" autofocus="true" required>
+                            </p>
+                        </article>
+                        <footer class="eo-modal-footer" ng-switch="info.btnType">
+                            <button ng-switch-default ng-if="!info.hideDefaultBtn" ng-class="{'eo_theme_btn_danger':info.btnType==0,'eo_theme_btn_info':info.btnType==1,'eo_theme_btn_success':info.btnType==2}" ng-click="ok()">{{info.btnMessage}}</button>
+                            <button class="eo_theme_btn_success btn-confirm" ng-switch-when="3" ng-disabled="info.timer.value>0" ng-click="ok()">{{info.timer.value>0?(info.timer.value+"s"):"确定"}}</button>
+                            <button type="button" ng-repeat="item in info.btnGroup" ng-class="{'eo_theme_btn_danger':item.btnType==0,'eo_theme_btn_info':item.btnType==1,'eo_theme_btn_success':item.btnType==2}" ng-href="{{item.href}}" ng-click="fun.btnClick(item)" download="{{item.downloadMsg}}">{{item.btnMessage}}</button>
+                            <button type="button" class="eo_theme_btn_default" ng-click="cancel()">{{info.btnCancelMessage}}</button>
+                        </footer>
+                    </form>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+    <!-- 添加编辑分组弹窗 -->
+    <script type="text/ng-template" id="GroupModal">
+        <div class="modal-group eo-modal common-modal">
+            <form autocomplete="off" name="editGroupForm">
+                <header class="eo-modal-header">
+                    <span ng-bind="::title"></span>
+                        <button class="iconfont icon-guanbi pull-right mt15 ab_r20" type="button" ng-click="cancel()"></button>
+                </header>
+                <article class="eo-modal-article">
+                    <ul class="group-inherit group-ul">
+                        <li class="eo_form_first_item_title">{{secondTitle}}</li>
+                        <li>
+                            <input autocomplete="off" type="text" name="name" ng-class="{'eo-input-error':editGroupForm.name.$invalid&&submited}" ng-model="info.groupName" placeholder="{{placeholder}}" class="eo-input" ng-pattern="/^.{1,32}$/" maxlength="32" ng-required="{{required}}">
+                            <p class="eo-error-tips">请填写{{secondTitle}}</p>
+                        </li>
+                    </ul>
+                </article>
+                <footer class="eo-modal-footer">
+                    <button class="eo_theme_btn_success" ng-click="ok()">确定</button>
+                    <button type="button" class="eo_theme_btn_default" ng-click="cancel()">取消</button>
+                </footer>
+            </form>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+    <!-- 通用input单输入弹窗 -->
+    <script type="text/ng-template" id="Common_SingleInputModal">
+        <div class="common-modal-singel-input common-modal eo-modal">
+            <form name="editGroupForm">
+            <header class="eo-modal-header">{{data.input.title}}</header>
+            <article class="eo-modal-article">
+                    <input autocomplete="off" class="eo-input w_100percent" type="text" ng-model="data.input.text" placeholder="{{data.input.placeholder}}"
+                        required>
+            </article>
+            <footer class="eo-modal-footer">
+                <button class="eo_theme_btn_success " ng-click="fun.ok()">确定</button>
+                <button type="button" class="eo_theme_btn_default " ng-click="fun.cancel()">取消</button>
+            </footer>
+        </form>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+    <!-- 导入弹窗 -->
+    <script type="text/ng-template" id="ImportModal">
+        <div class="common-modal-import common-modal eo-modal">
+            <header class="eo-modal-header">
+                <span ng-bind="::data.title">登录</span>
+                <button class="iconfont icon-guanbi pull-right mt15 ab_r20" type="button" ng-click="fun.cancel()"></button>
+            </header>
+            <article class="eo-modal-article">
+                <form name="Form">
+                    <ul>
+                        <li class="modal-import-info">
+                            <ul class="modal-btn-group-ul">
+                                <li class="pull-left first-li">
+                                    <input autocomplete="off" id="eolinker-js" type="file" onchange="angular.element(this).scope().fun.getFile({$file:this.files})"
+                                        file-reset-directive button-function="change" required>
+                                    <a class="postman-1-a">
+                                        <p>eolinker</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </form>
+            </article>
+            <loading-common-component fun="fun.import(arg)" interaction="{request:{delay:true}}"></loading-common-component>
+        </div>
+        <div class="eo_theme_modal_mask" ng-click="cancel()"></div>
+    </script>
+    <!-- 通用select弹窗 -->
+    <script type="text/ng-template" id="SingleSelectModal">
+        <div class="common-modal-singel-select common-modal eo-modal">
+            <form name="editGroupForm">
+            <header class="eo-modal-header">{{data.title}}</header>
+            <article class="eo-modal-article">
+                <select class="eo-input w_100percent" ng-model="output.$index" ng-options="key as item[data.position.key] for (key,item) in data.query "></select>
+            </article>
+            <footer class="eo-modal-footer">
+                <button class="eo_theme_btn_success " ng-click="ok()">确定</button>
+                <button type="button" class="eo_theme_btn_default " ng-click="cancel()">取消</button>
+            </footer>
+        </form>
+        </div>
+        <div class="eo_theme_modal_mask"></div>
+    </script>
+</div>

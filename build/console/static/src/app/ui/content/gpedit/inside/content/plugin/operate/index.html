@@ -1,0 +1,22 @@
+<div class="home-common-project-list">
+    <menu-default-common-component main-object="$ctrl.component.menuObject" ng-if="$ctrl.oprTarget==='gpedit'"></menu-default-common-component>
+    <article class="first-level-article">
+        <ng-form name="ConfirmForm">
+            <div class="first-part div-part">
+                <p class="title-p">插件：</p>
+                <p>
+                    <select class="eo-input" ng-model="$ctrl.ajaxResponse.bindInfo.pluginName" ng-options="item.pluginName as (item.chineseName||'')+(' ['+item.pluginName+']') for item in $ctrl.ajaxResponse.pluginList" ng-change="$ctrl.fun.reset()" ng-disabled="$ctrl.data.status=='edit'">
+                    </select>
+                </p>
+                <p  class="title-p">配置信息：</p>
+                <p>
+                    <ace-editor-ams-component class="ace-editor-container" set-model='$ctrl.ajaxResponse.bindInfo.pluginConfig' ng-init="$ctrl.fun.init()"></ace-editor-ams-component>
+                </p>
+            </div>
+        </ng-form>
+    </article>
+    <footer>
+        <div load-directive="$ctrl.fun.requestProcessing(arg)" interaction="{request:{delay:true}}">
+        </div>
+    </footer>
+</div>

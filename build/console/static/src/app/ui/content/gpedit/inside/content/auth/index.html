@@ -1,0 +1,256 @@
+<tip-common-component class="mlr15 pt15" version="gepditAuth" ng-if="!$ctrl.data.menuType"></tip-common-component>
+<menu-default-common-component authority-object="$ctrl.service.authority.permission.default.strategyManagement" main-object="$ctrl.component.menuObject" show-object="$ctrl.component.menuObject.show" ng-if="$ctrl.service.authority.permission.default.strategyManagement.edit&&$ctrl.data.menuType">
+</menu-default-common-component>
+<div class="mt65 plr15 mb15" ng-if="$ctrl.data.menuType">
+    <div class="eo-tab-container" ng-if="$ctrl.data.menuType">
+        <div class="eo-tab-menu mt15">
+            <div class="pull-left  item-tab" ng-class="{'active-item':$ctrl.data.menuType=='apiKey'}"
+                ng-click="$ctrl.data.menuType='apiKey'" ng-if="$ctrl.ajaxResponse.authAuthority.apiKeyStatus">
+                API&nbsp;KEY</div>
+            <div class="pull-left item-tab" ng-class="{'active-item':$ctrl.data.menuType=='basicAuth'}"
+                ng-click="$ctrl.data.menuType='basicAuth'" ng-if="$ctrl.ajaxResponse.authAuthority.basicAuthStatus">
+                BASIC&nbsp;AUTH</div>
+            <div class="pull-left item-tab" ng-class="{'active-item':$ctrl.data.menuType=='jwt'}"
+                ng-click="$ctrl.data.menuType='jwt'" ng-if="$ctrl.ajaxResponse.authAuthority.jwtStatus">
+                JWT</div>
+            <div class="pull-left item-tab" ng-class="{'active-item':$ctrl.data.menuType=='oauth2.0'}"
+                ng-click="$ctrl.data.menuType='oauth2.0'" ng-if="$ctrl.ajaxResponse.authAuthority.oAuthStatus">OAUTH2.0
+            </div>
+        </div>
+        <div class="item-part common-table-part" ng-show="$ctrl.data.menuType=='apiKey'"
+            ng-if="$ctrl.ajaxResponse.authAuthority.apiKeyStatus">
+            <div>
+                <article>
+                    <table class="common-table">
+                        <thead>
+                            <tr>
+                                <td class="request-header-label">Key</td>
+                                <td class="request-header-label">Hide&nbsp;Credential</td>
+                                <td>备注</td>
+                                <td class="operation-td" ng-show="$ctrl.component.menuObject.show.status.writable">操作
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <ul>
+                        <li ng-repeat="item in $ctrl.ajaxResponse.authInfo.apiKeyList">
+                            <table class="common-table" ng-switch="$last">
+                                <tbody>
+                                    <td class="label-td request-header-label">
+                                        <input autocomplete="off" class="eo-input " type="text" ng-model="item.Apikey"
+                                            maxlength="256" placeholder="6-256位字符串"
+                                            ng-change="$ctrl.fun.last('apiKey',{$last:$last})"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable">
+                                    </td>
+                                    <td class="label-td request-header-label">
+                                        <select class="eo-input " ng-model="item.hideCredential"
+                                            ng-change="$ctrl.fun.last('apiKey',{$last:$last})"
+                                            data-ng-options="item.value as item.key for item in $ctrl.constant.twoLengthArray"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable"></select>
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" class="eo-input " type="text" ng-model="item.remark"
+                                            maxlength="65530" placeholder="备注内容"
+                                            ng-change="$ctrl.fun.last('apiKey',{$last:$last})"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable">
+                                    </td>
+                                    <td class="operation-td" ng-show="$ctrl.component.menuObject.show.status.writable">
+                                        <label ng-switch-when=false>
+                                            <a class="iconfont icon-shanchu number-label"
+                                                ng-click="$ctrl.fun.delete('apiKey',{$index:$index})"></a>
+                                        </label>
+                                    </td>
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+        <div class="item-part common-table-part" ng-show="$ctrl.data.menuType=='basicAuth'"
+            ng-if="$ctrl.ajaxResponse.authAuthority.basicAuthStatus">
+            <div>
+                <article>
+                    <table class="common-table">
+                        <thead>
+                            <tr>
+                                <td class="request-header-label">Username</td>
+                                <td class="request-header-label">Password</td>
+                                <td class="request-header-label">Hide&nbsp;Credential</td>
+                                <td>备注</td>
+                                <td class="operation-td" ng-show="$ctrl.component.menuObject.show.status.writable">操作
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <ul>
+                        <li ng-repeat="item in $ctrl.ajaxResponse.authInfo.basicAuthList">
+                            <table class="common-table" ng-switch="$last">
+                                <tbody>
+                                    <td class="label-td request-header-label">
+                                        <input autocomplete="off" class="eo-input " type="text" ng-model="item.userName"
+                                            maxlength="256" placeholder="6-256位字符串"
+                                            ng-change="$ctrl.fun.last('basicAuth',{$last:$last})"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable">
+                                    </td>
+                                    <td class="label-td request-header-label">
+                                        <input autocomplete="off" class="eo-input " type="text" ng-model="item.password"
+                                            maxlength="256" placeholder="6-256位字符串"
+                                            ng-change="$ctrl.fun.last('basicAuth',{$last:$last})"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable">
+                                    </td>
+                                    <td class="label-td request-header-label">
+                                        <select class="eo-input " ng-model="item.hideCredential"
+                                            ng-change="$ctrl.fun.last('basicAuth',{$last:$last})"
+                                            data-ng-options="item.value as item.key for item in $ctrl.constant.twoLengthArray"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable"></select>
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" class="eo-input " type="text" ng-model="item.remark"
+                                            maxlength="65530" placeholder="备注内容"
+                                            ng-change="$ctrl.fun.last('basicAuth',{$last:$last})"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable">
+                                    </td>
+                                    <td class="operation-td" ng-show="$ctrl.component.menuObject.show.status.writable">
+                                        <label ng-switch-when=false>
+                                            <a class="iconfont icon-shanchu number-label"
+                                                ng-click="$ctrl.fun.delete('basicAuth',{$index:$index})"></a>
+                                        </label>
+                                    </td>
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+        <div class="item-part common-table-part" ng-show="$ctrl.data.menuType=='jwt'"
+            ng-if="$ctrl.ajaxResponse.authAuthority.jwtStatus">
+            <div>
+                <article>
+                    <table class="common-table">
+                        <thead>
+                            <tr>
+                                <td class="request-header-label">ISS</td>
+                                <td class="request-header-label">Secret</td>
+                                <td class="request-header-label">Rsa&nbsp;Public&nbsp;Key</td>
+                                <td class="request-header-label">Algorithm</td>
+                                <td>备注</td>
+                                <td class="operation-td" ng-show="$ctrl.component.menuObject.show.status.writable">操作
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <ul ng-class="{'disabled-table':!$ctrl.component.menuObject.show.status.writable}">
+                        <li ng-repeat="item in $ctrl.ajaxResponse.authInfo.jwtCredentialList">
+                            <table class="common-table" ng-switch="$last">
+                                <tbody>
+                                    <td class="label-td request-header-label">
+                                        <input autocomplete="off" class="eo-input " type="text" ng-model="item.iss"
+                                            placeholder="证书签发者" ng-change="$ctrl.fun.last('jwt',{$last:$last})"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable">
+                                    </td>
+                                    <td class="label-td request-header-label">
+                                        <input autocomplete="off" class="eo-input " type="text" ng-model="item.secret"
+                                            placeholder="Alorithm是HS时必填" ng-change="$ctrl.fun.last('jwt',{$last:$last})"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable">
+                                    </td>
+                                    <td class="label-td request-header-label">
+                                        <textarea class="eo-input item-textarea" ng-model="item.rsaPublicKey"
+                                            placeholder="Alorithm是RS或ES时必填"
+                                            ng-change="$ctrl.fun.last('jwt',{$last:$last})"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable"></textarea>
+                                        <div class="eo-input textarea-div"
+                                            ng-class="{'disabled-div':!$ctrl.component.menuObject.show.status.writable}"
+                                            ng-bind="item.rsaPublicKey"></div>
+
+
+                                    </td>
+                                    <td class="label-td request-header-label">
+                                        <select class="eo-input " ng-model="item.algorithm"
+                                            ng-change="$ctrl.fun.last('jwt',{$last:$last})"
+                                            data-ng-options="item.value as item.key for item in $ctrl.constant.algorithmArray"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable"></select>
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" class="eo-input " type="text" ng-model="item.remark"
+                                            maxlength="65530" placeholder="备注内容"
+                                            ng-change="$ctrl.fun.last('jwt',{$last:$last})"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable">
+                                    </td>
+                                    <td class="operation-td" ng-show="$ctrl.component.menuObject.show.status.writable">
+                                        <label ng-switch-when=false>
+                                            <a class="iconfont icon-shanchu number-label"
+                                                ng-click="$ctrl.fun.delete('jwt',{$index:$index})"></a>
+                                        </label>
+                                    </td>
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+        <div class="item-part common-table-part" ng-show="$ctrl.data.menuType=='oauth2.0'"
+            ng-if="$ctrl.ajaxResponse.authAuthority.oAuthStatus">
+            <div>
+                <article>
+                    <table class="common-table">
+                        <thead>
+                            <tr>
+                                <td class="request-header-label">Credential&nbsp;ID</td>
+                                <td class="request-header-label">Client&nbsp;ID</td>
+                                <td class="request-header-label">Client&nbsp;Secret</td>
+                                <td class="request-header-label">Redirect&nbsp;URI</td>
+                                <td>备注</td>
+                                <td class="operation-td" ng-show="$ctrl.component.menuObject.show.status.writable">操作
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <ul>
+                        <li ng-repeat="item in $ctrl.ajaxResponse.authInfo.oauth2CredentialList">
+                            <table class="common-table" ng-switch="$last">
+                                <tbody>
+                                    <td class="label-td request-header-label">
+                                        <input autocomplete="off" class="eo-input " type="text"
+                                            ng-model="item.credentialID" disabled>
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" class="eo-input " type="text" ng-model="item.clientID"
+                                            disabled>
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" class="eo-input " type="text"
+                                            ng-model="item.clientSecret" maxlength="65530" placeholder="客户端密钥"
+                                            ng-change="$ctrl.fun.last('oauth',{$last:$last})"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable">
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" class="eo-input " type="text"
+                                            ng-model="item.redirectURI" maxlength="65530"
+                                            placeholder="重定向地址，需加http或https"
+                                            ng-change="$ctrl.fun.last('oauth',{$last:$last})"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable">
+                                    </td>
+                                    <td>
+                                        <input autocomplete="off" class="eo-input " type="text" ng-model="item.remark"
+                                            maxlength="65530" placeholder="备注内容"
+                                            ng-change="$ctrl.fun.last('oauth',{$last:$last})"
+                                            ng-disabled="!$ctrl.component.menuObject.show.status.writable">
+                                    </td>
+                                    <td class="operation-td" ng-show="$ctrl.component.menuObject.show.status.writable">
+                                        <label ng-switch-when=false>
+                                            <a class="iconfont icon-shanchu number-label"
+                                                ng-click="$ctrl.fun.delete('oauth',{$index:$index,item:item})"></a>
+                                        </label>
+                                    </td>
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </div>
+</div>

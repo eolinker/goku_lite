@@ -1,0 +1,141 @@
+.gateway-modal-copy-api{
+    tip-directive {
+        margin-left: 0;
+    }
+}
+.gateway-modal-service {
+    .icon-huadongkaiguan-dakai {
+        color: $buttonSuccessBgColor;
+    }
+}
+
+.gateway-modal-gpedit-api-plugin {
+    .first-level-article {
+        margin: 0;
+        border: none;
+        padding: 0;
+    }
+    .title-p:first-child{
+        line-height: inherit;
+        margin-bottom: 10px;
+    }
+    .eo-input{
+        width: 100%;
+    }
+}
+
+
+.gateway-modal-copy-api{
+    width: 640px;
+}
+.gateway-modal-node-check-error-report {
+    width: 600px;
+
+    article {
+        @include eo-width(100%, 40px);
+        padding: 20px;
+        line-height: 1.75em;
+        max-height: 600px;
+        overflow: auto;
+
+        >div {
+            &:nth-child(n+2) {
+                border-top: 1px dashed #e5e5e5;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+
+        }
+    }
+
+    table {
+        border-bottom: 1px solid #e5e5e5;
+        width: 100%;
+        padding: 0 20px;
+        height: 61px;
+
+        button {
+            width: 60px;
+        }
+
+        .title-p {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+    }
+}
+
+.gateway-modal-change-password {
+    width: 400px;
+
+    .eo-input {
+        @include eo-width(100%, 2px);
+    }
+
+    .ng-invalid-pattern,
+    .ng-invalid-password-confirm-directive {
+        border: 1px solid #d85030;
+    }
+}
+.gateway-modal-cluster,
+.gateway-modal-gpedit-default {
+    width: 570px;
+
+    .common-p {
+        textarea {
+            @include eo-width(100%, 22px);
+            min-height: 80px;
+        }
+
+        input {
+            @include eo-width(100%, 2px);
+        }
+
+        select {
+            width: 100%;
+        }
+    }
+}
+
+.gateway-modal-cluster {
+
+    @keyframes load {
+        0% {
+            -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
+    }
+
+    .icon-jiazai_shuaxin {
+        @include eo-animation(load 1.7s infinite ease);
+        display: inline-block;
+    }
+
+    .testing-div {
+        display: inline-block;
+    }
+
+    .auth-type-p {
+        label {
+            cursor: pointer;
+        }
+
+        .iconfont {
+            margin-right: 5px;
+            font-size: 18px;
+        }
+
+        .name-label {
+            margin-right: 10px;
+        }
+
+        .icon-danxuanxuanzhong {
+            color: $buttonSuccessFocusBgColor;
+        }
+    }
+}

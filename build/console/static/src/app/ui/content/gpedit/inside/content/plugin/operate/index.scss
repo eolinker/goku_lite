@@ -1,0 +1,24 @@
+gpedit-inside-plugin-operate {
+    .first-level-article {
+        border: 1px solid #e5e5e5;
+        background-color: #fff;
+        font-size: 14px;
+        padding: 0 $PLATE_PADDING 5px $PLATE_PADDING;
+        margin: $DISPLAY-NAV-TOP + 5px $PLATE_PADDING $PLATE_PADDING;
+    }
+    .title-p,
+    .match-rule-p {
+        line-height: 50px;
+    }
+    input[type=text] {
+        width: 578px;
+    }
+    select {
+        text-indent: 0;
+        width: 580px;
+        &:disabled{
+            background-color:#fafafa;
+            cursor:not-allowed;
+        }
+    }
+}

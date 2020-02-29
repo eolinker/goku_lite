@@ -1,0 +1,10 @@
+<div class="home-project-pro-inside-test-import">
+    <menu-default-common-component main-object="$ctrl.component.menuDefaultObject"></menu-default-common-component>
+    <group-default-common-Component main-object="$ctrl.component.groupCommonObject.firstGroup.mainObject" fun-object="$ctrl.component.groupCommonObject.firstGroup.funObject" list="$ctrl.ajaxResponse.firstGroupList"></group-default-common-Component>
+    <group-default-common-Component class="group-compoment-container" fun-object="$ctrl.component.groupCommonObject.secondGroup.funObject" main-object="$ctrl.component.groupCommonObject.secondGroup.mainObject" list="$ctrl.ajaxResponse.seondGroupList"></group-default-common-Component>
+    <div class="container-div home-common-has-group-div">
+        <menu-default-common-component class="mt65 dp_b search_menu_giao" main-object="$ctrl.component.menuObject"></menu-default-common-component>
+        <list-default-common-component page-object="{pageInfo:$ctrl.data.pagination}" main-object="$ctrl.component.listDefaultCommonObject" list="$ctrl.ajaxResponse.query" other-object="{batch:$ctrl.data.batch,allQueryID:$ctrl.data.allQueryID}"></list-default-common-component>
+    </div>
+</div>
+<loading-common-component fun="$ctrl.fun.init(arg)"></loading-common-component>

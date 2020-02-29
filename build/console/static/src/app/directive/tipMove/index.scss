@@ -1,0 +1,27 @@
+.move-tip-directive {
+    position: fixed;
+    z-index: 100;
+    visibility: hidden;
+    .message-li {
+        padding: 10px;
+        line-height: initial;
+        border-radius: 3px;
+        background-color: #000;
+        color: #fff;
+        font-size: 12px;
+        text-align: left;
+        max-width: 500px;
+        min-width: 150px;
+        * {
+            color: #fff;
+        }
+    }
+
+    .arrow-li {
+        border-color: #000 transparent transparent transparent;
+        border-width: 5px 5px 0 5px;
+        border-style: solid;
+        width: 0;
+        margin-left: 8px;
+    }
+}

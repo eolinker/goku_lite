@@ -1,0 +1,18 @@
+cluster-node{
+    margin-top: 50px;
+}
+cluster-Node-default{
+    list-default-common-component .fixed-height-list{
+        @include eo-height(100%,183px);
+    }
+    .eo-tip-container{
+        margin-left: -14px !important;
+        position: fixed;
+    }
+}
+cluster-Node-Group{
+    .common-scss-group{
+        margin-top: 65px;
+        @include eo-height(100%,132px);
+    }
+}

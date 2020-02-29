@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"runtime/debug"
 
-	"github.com/eolinker/goku-api-gateway/common/endless"
+	//"github.com/eolinker/goku-api-gateway/common/endless"
 
 	"github.com/eolinker/goku-api-gateway/goku-service/application"
 
@@ -111,8 +111,8 @@ func (s *Server) ServerWidthConfig(conf *config.GokuConfig) error {
 		StartAdmin(conf.AdminAddress)
 	}
 
-	return endless.ListenAndServe(conf.BindAddress, s)
-	//return http.ListenAndServe(conf.BindAddress, s)
+	//return endless.ListenAndServe(conf.BindAddress, s)
+	return http.ListenAndServe(conf.BindAddress, s)
 }
 
 //FlushRouter flushConfig

@@ -1,0 +1,125 @@
+.account-setting-common-scss {
+    display: block;
+    padding: $PLATE_PADDING;
+
+    article {
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 3px;
+        font-size: 14px;
+        
+        .disabled-btn {
+            cursor: not-allowed;
+        }
+
+        .title-p {
+            border-bottom: 1px solid #e5e5e5;
+            padding-bottom: 10px;
+        }
+
+        .warning-span {
+            color: red;
+            margin-left: 5px;
+            font-size: 13px;
+        }
+
+        .open-alert-btn {
+            display: inline-block;
+            text-align: center;
+            margin-left: 10px;
+            font-size: 20px;
+            padding: 0;
+            min-width: auto;
+        }
+
+        .icon-huadongkaiguan-dakai {
+            color: $buttonSuccessBgColor;
+        }
+
+        .btn-group-li {
+
+            button,
+            input[type=button] {
+                min-width: 60px;
+                padding: 0 10px;
+            }
+
+            button,
+            input[type=button] {
+                &:disabled {
+                    background-color: #b7b7b7;
+                    color: #fff;
+                    border-color: #b7b7b7;
+                    cursor: not-allowed;
+
+                    &:hover {
+                        background-color: #b7b7b7;
+                        color: #fff;
+                        border-color: #b7b7b7;
+                        cursor: not-allowed;
+                    }
+                }
+            }
+
+            button {
+                margin-right: 5px;
+            }
+
+            margin-top: 30px;
+
+            .list-div {
+                display: inline-grid;
+
+                p {
+                    line-height: 40px;
+                }
+
+                button {
+                    width: 80px;
+                }
+            }
+        }
+
+        &:nth-child(n+2) {
+            margin-top: 10px;
+        }
+
+        .tips-span {
+            color: #999;
+            font-size: 13px;
+            margin-left: 10px;
+            display: inline-block;
+        }
+
+        input[type=text]:disabled,
+        select:disabled {
+            background-color: #fafafa;
+            cursor: not-allowed;
+        }
+
+        .icon-shanchu {
+            width: 25px;
+            height: 25px;
+            line-height: 25px;
+            border-radius: 3px;
+            background-color: #f2f2f2;
+            color: #9e9e9e;
+            display: inline-block;
+            text-align: center;
+            border: 1px solid #ddd;
+            margin-left: 10px;
+
+            &:hover {
+                background-color: $buttonDangerBgColor;
+                color: #fff;
+                border: 1px solid $buttonDangerFocusBgColor;
+            }
+        }
+
+        tr:nth-child(n+2) {
+            td {
+                padding-top: 10px;
+            }
+        }
+    }
+}

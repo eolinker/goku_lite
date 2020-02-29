@@ -1,0 +1,7 @@
+<div class="plr15 pb15 list_default_common_component_has_no_group">
+    <menu-default-common-component active-object="$ctrl.component.menuObject.active" authority-object="{edit:$ctrl.service.authority.permission.default.strategyManagement.edit,showTitle:!$ctrl.service.authority.permission.default.strategyManagement.edit}" main-object="$ctrl.component.menuObject"  other-object="{batch:$ctrl.data.batch,isBatchDisabled:!$ctrl.ajaxResponse.query.length}"></menu-default-common-component>
+    <list-default-common-component class="container_div" page-object="{pageInfo:$ctrl.data.pagination}" authority-object="{operate:$ctrl.service.authority.permission.default.strategyManagement.edit}" main-object="$ctrl.component.listDefaultCommonObject" list="$ctrl.ajaxResponse.query" other-object="{batch:$ctrl.data.batch,allQueryID:$ctrl.data.allQueryID}"></list-default-common-component>
+    <p move-tip-directive parent-class-name="container_div" able-class-name="api_balance_tip" tips-style='{"left":-5,"top":-5}' tips-text="使用在[注册方式与负载]处设置的负载"></p>
+    <p move-tip-directive parent-class-name="container_div" able-class-name="gpedit_balance_tip" tips-style='{"left":-5,"top":-5}' tips-text="通过策略访问时所使用的负载"></p>
+</div>
+<loading-common-component fun="$ctrl.fun.init(arg)"></loading-common-component>

@@ -1,0 +1,22 @@
+plugin-default {
+    .icon-jiazai_shuaxin {
+        @include eo-animation(load 1.7s infinite ease);
+        display: inline-block;
+        height: 14px;
+        line-height: 14px;
+        text-indent: 0;
+        margin-left: 5px;
+    }
+    .fun-list-li >div{
+        line-height: 30px;
+        
+    }
+    .fun-list-li{
+        position: absolute;
+        right: 230px;
+        bottom: 20px;
+    }
+    .eo-tip-container{
+        margin-left: -14px !important;
+    }
+}

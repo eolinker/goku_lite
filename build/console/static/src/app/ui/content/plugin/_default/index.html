@@ -1,0 +1,7 @@
+<div class="home-common-project-list">
+    <!-- <tip-common-component version="plug"></tip-common-component> -->
+    <menu-default-common-component  active-object="$ctrl.component.menuObject.active" class="mt10"  authority-object="{edit:$ctrl.service.authority.permission.default.pluginManagement.edit,showTitle:true}" main-object="$ctrl.component.menuObject"  other-object="{batch:$ctrl.data.batch,isBatchDisabled:!$ctrl.ajaxResponse.query.length}"></menu-default-common-component>
+    <list-default-common-component authority-object="{operate:$ctrl.service.authority.permission.default.pluginManagement.edit}"
+        main-object="$ctrl.component.listDefaultCommonObject" list="$ctrl.ajaxResponse.query" other-object="{batch:$ctrl.data.batch}"></list-default-common-component>
+</div>
+<loading-common-component fun="$ctrl.fun.init(arg)"></loading-common-component>

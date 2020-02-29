@@ -1,0 +1,38 @@
+{
+  "development": {
+    "serverUrl": "/",
+    "nodeServerUrl":"/nodeHttpServer/",
+    "isDebug":true,
+    "assetUrl":"app/",
+    "PRODUCT_TYPE":"online",
+    "COOKIE_CONFIG":{
+      "path":"/",
+      "domain":"localhost"
+    },
+    "WEBSOCKET_PORT":11204
+  },
+  "production": {
+    "serverUrl": "../",
+    "nodeServerUrl":"../nodeHttpServer/",
+    "isDebug":false,
+    "assetUrl":"",
+    "PRODUCT_TYPE":"online",
+    "COOKIE_CONFIG":{
+      "path":"/",
+      "domain":".eolinker.com"
+    },
+    "WEBSOCKET_PORT":1204
+  },
+  "test": {
+    "serverUrl": "../",
+    "nodeServerUrl":"../nodeHttpServer/",
+    "isDebug":false,
+    "assetUrl":"",
+    "PRODUCT_TYPE":"online",
+    "COOKIE_CONFIG":{
+      "path":"/",
+      "domain":".eolinker.com"
+    },
+    "WEBSOCKET_PORT":11204
+  }
+}

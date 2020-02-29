@@ -1,0 +1,31 @@
+<div class="mlr15 container_monitor mb15">
+    <ul class="eo-tab-container plr15">
+        <li class="f_row_ac f_js lh_30" ng-repeat="moduleItem in $ctrl.ajaxResponse.list">
+            <span>{{moduleItem.moduleDesc}}</span>
+            <button type="button" class="iconfont fs20"
+                ng-class="{'icon-huadongkaiguan-dakai':moduleItem.moduleStatus,'icon-huadongkaiguan-guanbi':!moduleItem.moduleStatus}"
+                ng-click="$ctrl.fun.oprModule('on-off',moduleItem)"></button>
+        </li>
+    </ul>
+    <div class="eo-tab-container mt15" ng-repeat="moduleItem in $ctrl.ajaxResponse.list" ng-if="moduleItem.moduleStatus">
+        <p class="bbd plr15 lh_50">{{moduleItem.moduleName}}</p>
+        <form name="ConfirmForm">
+            <div class="plr15" ng-repeat="layerItem in moduleItem.layer">
+                <p class="ptb15 f_row_ac">
+                    <span>{{layerItem.label}}</span>
+                    <span class="c999 fs12 ml10">{{layerItem.descript}}</span>
+                </p>
+                <div class="f_row f_js_ac" ng-repeat="item in layerItem.items">
+                    <input type="text" class="eo-input w_500" name="{{item.name}}" ng-required="item.required"
+                        ng-model="moduleItem.config[item.name]" ng-pattern="item.pattern"
+                        placeholder="{{item.placeholder}}">
+                </div>
+            </div>
+            <div class="f_row_ac p15" ng-if="moduleItem.config">
+                <button class="eo_theme_btn_success mr15" ng-click="$ctrl.fun.oprModule('save',moduleItem,ConfirmForm)">保存</button>
+                <button class="eo_theme_btn_default" type="button" ng-click="$ctrl.fun.oprModule('cancel',moduleItem)">取消</button>
+            </div>
+        </form>
+    </div>
+    <loading-common-component fun="$ctrl.fun.init(arg)"></loading-common-component>
+</div>

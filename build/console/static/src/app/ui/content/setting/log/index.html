@@ -1,0 +1,138 @@
+<menu-default-common-component main-object="$ctrl.component.navigationMenuObject"
+    active-object="{menuType:$ctrl.data.menuType}"></menu-default-common-component>
+<div class="account-setting-common-scss">
+    <article class="common-table-div" ng-show="$ctrl.data.menuType===0">
+        <fieldset ng-disabled="!$ctrl.data.accessIsEdit">
+            <form name="AccessForm">
+                <p class="mb10 ">请求日志名称</p>
+                <p class="f_row_ac">
+                    <input class="eo-input mr5" name="file" ng-class="{'eo-input-error':$ctrl.data.submitted&&AccessForm.file.$invalid}" ng-model="$ctrl.ajaxResponse.accessLog.file" autocomplete="off" type="input" required>
+                    <span>.log</span>
+                </p>
+                <p class="mb10 mt20 f_row_ac">
+                    <span>记录状态</span>
+                    <button type="button" class="iconfont open-alert-btn"
+                        ng-class="{'icon-huadongkaiguan-dakai':$ctrl.ajaxResponse.accessLog.enable,'icon-huadongkaiguan-guanbi':!$ctrl.ajaxResponse.accessLog.enable}"
+                        ng-click="$ctrl.ajaxResponse.accessLog.enable=!$ctrl.ajaxResponse.accessLog.enable"></button>
+                </p>
+                <p class="mb10 mt20">存放路径</p>
+                <p>
+                    <input class="eo-input mr5" name="dir" ng-class="{'eo-input-error':$ctrl.data.submitted&&AccessForm.dir.$invalid}" autocomplete="off" type="input" ng-model="$ctrl.ajaxResponse.accessLog.dir" required>
+                    </p>
+                <p class="mb10 mt20">记录周期</p>
+                <p>
+                    <select class="eo-select" ng-model="$ctrl.ajaxResponse.accessLog.period"
+                        ng-options="item.name as item.title for item in $ctrl.ajaxResponse.accessLog.periods "></select>
+                </p>
+                <p class="mb10 mt20">保留时间</p>
+                <p>
+                    <select class="eo-select" ng-model="$ctrl.ajaxResponse.accessLog.expire"
+                        ng-options="item.value as item.title for item in $ctrl.ajaxResponse.accessLog.expires "></select>
+                </p>
+                <p class="mb10 mt20">记录内容</p>
+                <div class="eo-block-container">
+                    <list-block-common-component main-object="$ctrl.component.listBlockObj" authority-object="{'edit':$ctrl.data.accessIsEdit}" list="$ctrl.ajaxResponse.accessLog.fields">
+                    </list-block-common-component>
+                </div>
+                <div class="btn-group-li" ng-show="$ctrl.data.accessIsEdit" ng-if="$ctrl.service.authority.permission.default.gatewayConfig.edit">
+                    <button class="eo_theme_btn_success pull-left" button-Set-Disable-Directive="$ctrl.fun.saveForm('access')">保存</button>
+                    <button class="eo_theme_btn_default" type="button" ng-click="$ctrl.fun.cancelEdit('access')">取消</button>
+                </div>
+                
+            </form>
+        </fieldset>
+        <div class="btn-group-li" ng-hide="$ctrl.data.accessIsEdit" ng-if="$ctrl.service.authority.permission.default.gatewayConfig.edit">
+                <button class="eo_theme_btn_success" type="button" ng-click="$ctrl.fun.wantToEdit('access')">编辑</button>
+            </div>
+    </article>
+    <article class="common-table-div" ng-show="$ctrl.data.menuType===1">
+        <fieldset ng-disabled="!$ctrl.data.nodeIsEdit">
+            <form name="NodeForm">
+                <p class="mb10 ">节点日志名称</p>
+                <p class="f_row_ac">
+                    <input class="eo-input mr5" name="file" ng-class="{'eo-input-error':$ctrl.data.submitted&&NodeForm.file.$invalid}" autocomplete="off" type="input" ng-model="$ctrl.ajaxResponse.nodeLog.file">
+                    <span>.log</span>
+                </p>
+                <p class="mb10 mt20 f_row_ac">
+                    <span>记录状态</span>
+                    <button type="button" class="iconfont open-alert-btn"
+                        ng-class="{'icon-huadongkaiguan-dakai':$ctrl.ajaxResponse.nodeLog.enable,'icon-huadongkaiguan-guanbi':!$ctrl.ajaxResponse.nodeLog.enable}"
+                        ng-click="$ctrl.ajaxResponse.nodeLog.enable=!$ctrl.ajaxResponse.nodeLog.enable"></button>
+                </p>
+                <p class="mb10 mt20">存放路径</p>
+                <p>
+                    <input class="eo-input mr5" name="dir" ng-class="{'eo-input-error':$ctrl.data.submitted&&NodeForm.dir.$invalid}" autocomplete="off" type="input" ng-model="$ctrl.ajaxResponse.nodeLog.dir" required>
+                </p>
+                <p class="mb10 mt20">记录周期</p>
+                <p>
+                    <select class="eo-select" ng-model="$ctrl.ajaxResponse.nodeLog.period"
+                        ng-options="item.name as item.title for item in $ctrl.ajaxResponse.nodeLog.periods "></select>
+                </p>
+                <p class="mb10 mt20">保留时间</p>
+                <p>
+                    <select class="eo-select" ng-model="$ctrl.ajaxResponse.nodeLog.expire"
+                        ng-options="item.value as item.title for item in $ctrl.ajaxResponse.nodeLog.expires "></select>
+                </p>
+                <p class="mb10 mt20">记录内容</p>
+                <div>
+                    <progress-Bar-Common-Component main-object="$ctrl.component.progressBarObj"
+                        list="$ctrl.ajaxResponse.nodeLog.levels" model-Key="$ctrl.ajaxResponse.nodeLog.level">
+                    </progress-Bar-Common-Component>
+                </div>
+                <div class="btn-group-li" ng-show="$ctrl.data.nodeIsEdit"
+                    ng-if="$ctrl.service.authority.permission.default.gatewayConfig.edit">
+                    <button class="eo_theme_btn_success pull-left" button-Set-Disable-Directive="$ctrl.fun.saveForm('node')">保存</button>
+                    <button class="eo_theme_btn_default" type="button" ng-click="$ctrl.fun.cancelEdit('node')">取消</button>
+                </div>
+                
+            </form>
+        </fieldset>
+        <div class="btn-group-li" ng-hide="$ctrl.data.nodeIsEdit" ng-if="$ctrl.service.authority.permission.default.gatewayConfig.edit">
+                <button class="eo_theme_btn_success" type="button"  ng-click="$ctrl.fun.wantToEdit('node')">编辑</button>
+            </div>
+        <p class="divide_hsl_eoui"></p>
+        <fieldset ng-disabled="!$ctrl.data.consoleIsEdit">
+            <form name="ConsoleForm">
+                <p class="mb10 mt20">控制台日志名称</p>
+                <p class="f_row_ac">
+                    <input class="eo-input mr5" name="file" ng-class="{'eo-input-error':$ctrl.data.submitted&&ConsoleForm.file.$invalid}" autocomplete="off" type="input" ng-model="$ctrl.ajaxResponse.consoleLog.file">
+                    <span>.log</span>
+                </p>
+                <p class="mb10 mt20 f_row_ac">
+                    <span>记录状态</span>
+                    <button type="button" class="iconfont open-alert-btn"
+                        ng-class="{'icon-huadongkaiguan-dakai':$ctrl.ajaxResponse.consoleLog.enable,'icon-huadongkaiguan-guanbi':!$ctrl.ajaxResponse.consoleLog.enable}"
+                        ng-click="$ctrl.ajaxResponse.consoleLog.enable=!$ctrl.ajaxResponse.consoleLog.enable"></button>
+                </p>
+                <p class="mb10 mt20">存放路径</p>
+                <p>
+                    <input class="eo-input mr5" name="dir" ng-class="{'eo-input-error':$ctrl.data.submitted&&ConsoleForm.dir.$invalid}" autocomplete="off" type="input" ng-model="$ctrl.ajaxResponse.consoleLog.dir" required>
+                </p>
+                <p class="mb10 mt20">记录周期</p>
+                <p>
+                    <select class="eo-select" ng-model="$ctrl.ajaxResponse.consoleLog.period"
+                        ng-options="item.name as item.title for item in $ctrl.ajaxResponse.consoleLog.periods "></select>
+                </p>
+                <p class="mb10 mt20">保留时间</p>
+                <p>
+                    <select class="eo-select" ng-model="$ctrl.ajaxResponse.consoleLog.expire"
+                        ng-options="item.value as item.title for item in $ctrl.ajaxResponse.consoleLog.expires "></select>
+                </p>
+                <p class="mb10 mt20">记录内容</p>
+                <div>
+                    <progress-Bar-Common-Component main-object="$ctrl.component.progressBarObj"
+                        list="$ctrl.ajaxResponse.consoleLog.levels" model-Key="$ctrl.ajaxResponse.consoleLog.level">
+                    </progress-Bar-Common-Component>
+                </div>
+                <div class="btn-group-li" ng-show="$ctrl.data.consoleIsEdit" ng-if="$ctrl.service.authority.permission.default.gatewayConfig.edit">
+                    <button class="eo_theme_btn_success pull-left" button-Set-Disable-Directive="$ctrl.fun.saveForm('console')">保存</button>
+                    <button class="eo_theme_btn_default" type="button" ng-click="$ctrl.fun.cancelEdit('console')">取消</button>
+                </div>
+                
+            </form>
+        </fieldset>
+        <div class="btn-group-li" ng-hide="$ctrl.data.consoleIsEdit" ng-if="$ctrl.service.authority.permission.default.gatewayConfig.edit">
+                <button class="eo_theme_btn_success" type="button" ng-click="$ctrl.fun.wantToEdit('console')">编辑</button>
+            </div>
+    </article>
+</div>
