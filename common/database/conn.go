@@ -18,10 +18,8 @@ var (
 )
 
 //InitConnection 初始化数据库连接
-func InitConnection(config Config) error {
-	db, e := getConnection(config)
-	defaultDB = db
-	return e
+func InitConnection(config Config) (*sql.DB, error) {
+	return getConnection(config)
 }
 func getConnection(config Config) (*sql.DB, error) {
 
