@@ -26,7 +26,7 @@ func (d *NodeGroupDao) Create(db *SQL.DB) (interface{}, error) {
 //AddNodeGroup 新建节点分组
 func (d *NodeGroupDao) AddNodeGroup(groupName string, clusterID int) (bool, interface{}, error) {
 	db := d.db
-	sql := "INSERT INTO goku_node_group (`groupName`,`clusterID`) VALUES (?,?);"
+	sql := "INSERT INTO goku_node_group (`groupName`,`clusterID`,`groupType`) VALUES (?,?,0);"
 	stmt, err := db.Prepare(sql)
 	if err != nil {
 		return false, err.Error(), err
