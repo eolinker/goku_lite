@@ -12,7 +12,7 @@ OUTPATH="${BasePath}/out/console-${VERSION}"
 buildApp console $VERSION
 
 mkdir  ${OUTPATH}/static
-cp -a ${BasePath}/console/static/*  ${OUTPATH}/static/
+cp -a ${BasePath}/build/console/static/*  ${OUTPATH}/static/
 cp -a ${BasePath}/build/console/resources/*  ${OUTPATH}/
 
 chmod +x ${OUTPATH}/install.sh ${OUTPATH}/run.sh
