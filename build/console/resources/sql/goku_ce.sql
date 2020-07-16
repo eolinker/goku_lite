@@ -166,6 +166,7 @@ CREATE TABLE "goku_gateway_api" (
                                   "projectID" integer(11) NOT NULL,
                                   "requestURL" text(255) NOT NULL,
                                   "apiName" text(255) NOT NULL,
+                                  "alias" text(255) NOT NULL,
                                   "requestMethod" text(255) NOT NULL,
                                   "targetServer" text(255),
                                   "targetURL" text(255),
