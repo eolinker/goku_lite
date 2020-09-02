@@ -8,14 +8,14 @@ Goku provides graphic interface and plug-in system to make configuration easier 
 
 # Summary / [中文介绍](https://github.com/eolinker/goku-api-gateway/blob/master/README_CN.md "中文介绍")
 
-- [WhyGoku](#WhyGoku "WhyGoku")
-- [Features](#Features "Features")
-- [Benchmark](#Benchmark "Benchmark")
-- [ConsolePreview](#ConsolePreview "ConsolePreview")
-- [QuickStart](#QuickStart "QuickStart")
-- [EnterpriseSupport](#EnterpriseSupport "EnterpriseSupport")
-- [AboutUs](#AboutUs "AboutUs")
-- [License](#License "License")
+- [WhyGoku](#why-goku "WhyGoku")
+- [Features](#product-features "Features")
+- [Benchmark](#benchmark "Benchmark")
+- [ConsolePreview](#console-preview "ConsolePreview")
+- [QuickStart](#quick-start "QuickStart")
+- [EnterpriseSupport](#enterprise-support "EnterpriseSupport")
+- [AboutUs](#about-us "AboutUs")
+- [License](#license "License")
 
 # Why Goku
  
