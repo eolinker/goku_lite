@@ -35,7 +35,7 @@ func (d *APIDao) AddAPI(apiName, alias, requestURL, targetURL, requestMethod, ta
 	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
-	res, err := Tx.Exec("INSERT INTO goku_gateway_api (projectID,groupID,apiName,alias,requestURL,targetURL,requestMethod,targetMethod,protocol,linkAPIs,staticResponse,responseDataType,balanceName,isFollow,timeout,retryCount,alertValve,createTime,updateTime,managerID,lastUpdateUserID,createUserID,apiType) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", projectID, groupID, apiName, alias, requestURL, targetURL, requestMethod, targetMethod, protocol, linkAPIs, staticResponse, responseDataType, balanceName, isFollow, timeout, retryCount, alertValve, now, now, managerID, userID, userID, apiType)
+	res, err := Tx.Exec("INSERT INTO goku_gateway_api (projectID,groupID,apiName,requestURL,targetURL,requestMethod,targetMethod,protocol,linkAPIs,staticResponse,responseDataType,balanceName,isFollow,timeout,retryCount,alertValve,createTime,updateTime,managerID,lastUpdateUserID,createUserID,apiType) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", projectID, groupID, apiName, requestURL, targetURL, requestMethod, targetMethod, protocol, linkAPIs, staticResponse, responseDataType, balanceName, isFollow, timeout, retryCount, alertValve, now, now, managerID, userID, userID, apiType)
 
 	if err != nil {
 		Tx.Rollback()
@@ -57,7 +57,7 @@ func (d *APIDao) EditAPI(apiName, alias, requestURL, targetURL, requestMethod, t
 	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
-	_, err := Tx.Exec("UPDATE goku_gateway_api SET projectID = ?,groupID = ?,apiName = ?,alias = ?,requestURL = ?,targetURL = ?,requestMethod = ?,protocol = ?,balanceName = ?,targetMethod = ?,isFollow = ?,linkAPIs = ?,staticResponse = ?,responseDataType = ?,timeout = ?,retryCount = ?,alertValve = ?,updateTime = ?,managerID = ?,lastUpdateUserID = ? WHERE apiID = ?", projectID, groupID, apiName, alias, requestURL, targetURL, requestMethod, protocol, balanceName, targetMethod, isFollow, linkAPIs, staticResponse, responseDataType, timeout, retryCount, alertValve, now, managerID, userID, apiID)
+	_, err := Tx.Exec("UPDATE goku_gateway_api SET projectID = ?,groupID = ?,apiName = ?,requestURL = ?,targetURL = ?,requestMethod = ?,protocol = ?,balanceName = ?,targetMethod = ?,isFollow = ?,linkAPIs = ?,staticResponse = ?,responseDataType = ?,timeout = ?,retryCount = ?,alertValve = ?,updateTime = ?,managerID = ?,lastUpdateUserID = ? WHERE apiID = ?", projectID, groupID, apiName, requestURL, targetURL, requestMethod, protocol, balanceName, targetMethod, isFollow, linkAPIs, staticResponse, responseDataType, timeout, retryCount, alertValve, now, managerID, userID, apiID)
 
 	if err != nil {
 		Tx.Rollback()
@@ -428,7 +428,7 @@ func (d *APIDao) BatchDeleteAPI(apiIDList string) (bool, string, error) {
 	db := d.db
 	now := time.Now().Format("2006-01-02 15:04:05")
 	Tx, _ := db.Begin()
-	sql := "DELETE FROM goku_gateway_api A WHERE apiID IN (" + apiIDList + ");"
+	sql := "DELETE FROM goku_gateway_api WHERE apiID IN (" + apiIDList + ");"
 	_, err := Tx.Exec(sql)
 	if err != nil {
 		Tx.Rollback()

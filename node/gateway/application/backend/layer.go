@@ -41,7 +41,9 @@ func (b *Layer) Send(deadline context.Context, ctx *common.Context, variables *i
 	path := b.Path.Execution(variables)
 	body := b.Body.Execution(variables)
 	method := b.Method
-
+	if method == "FOLLOW" {
+		method = ctx.ProxyRequest.Method
+	}
 	r, finalTargetServer, retryTargetServers, err := b.Balance.Send(ctx, b.Protocol, method, path, ctx.ProxyRequest.Querys(), ctx.ProxyRequest.Headers(), []byte(body), b.TimeOut, b.Retry)
 
 	if err != nil {
