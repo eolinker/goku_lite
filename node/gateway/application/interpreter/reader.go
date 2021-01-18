@@ -49,10 +49,13 @@ func (r *_BodyReader) Read(variables *Variables) string {
 func find(node *reflect.Value, path []string) string {
 
 	if len(path) == 0 {
-		if node.IsValid() {
-			return fmt.Sprint(node.Interface())
+		if !node.IsValid(){
+			return ""
 		}
-		return ""
+		if node.IsNil(){
+			return ""
+		}
+		return fmt.Sprint(node.Interface())
 	}
 
 	k := node.Kind()
