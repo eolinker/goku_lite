@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 	"reflect"
+	"strconv"
 )
 
 //Reader reder
@@ -71,6 +72,15 @@ func find(node *reflect.Value, path []string) string {
 			key := reflect.ValueOf(path[0])
 			next := node.MapIndex(key)
 			return find(&next, path[1:])
+		}
+	case reflect.Slice:
+		{
+			index,err:= strconv.Atoi(path[0])
+			if err!= nil{
+				return ""
+			}
+			next :=node.Index(index)
+			return find(&next,path[1:])
 		}
 	default:
 		return ""
