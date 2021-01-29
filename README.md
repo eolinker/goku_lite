@@ -34,7 +34,7 @@ All in all, Goku API Gateway enables enterprise to focus on their business.
 - **Cluster Management**：Goku nodes are stateless and can be expanded horizontally. Also the configuration can be synchronized automatically.
 - **Hot Updates**: Continuously updates configurations without restart nodes.
 - **Orchestration**：Orchestration can correspond to multiple backends. The backend input parameter supports the client incoming, and also supports the parameter transfer between backend. The return data of backend supports filter, delete, move, rename, target and group. API can set the exception return when the orchestration call fails.
-- **Data transform ** :Support for converting returned data to JSON or XML.
+- **Data transform** :Support for converting returned data to JSON or XML.
 - **Load balancing**: Round-robin load balancing with weight.
 - **Service Discovery**: Service discorvery from Consul or Eureka.
 - **HTTP(S) Forward Proxy**: Hide real backend services, support Rest API, Webservice.
