@@ -29,7 +29,7 @@ func Server() {
 		go func() {
 			log.Print("Listen: ", port)
 			log.Print("Start Successfully!")
-			err := http.ListenAndServe(":7000", router())
+			err := http.ListenAndServe(":" + port, router())
 
 			ec <- err
 		}()
