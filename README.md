@@ -2,6 +2,10 @@
 
 [![Gitter](https://badges.gitter.im/goku-api-gateway/community.svg)](https://gitter.im/goku-api-gateway/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Go Report Card](https://goreportcard.com/badge/github.com/eolinker/goku-api-gateway)](https://goreportcard.com/report/github.com/eolinker/goku-api-gateway) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3214/badge)](https://bestpractices.coreinfrastructure.org/projects/3214) ![](https://img.shields.io/badge/license-GPL3.0-blue.svg)
 
+----
+
+Goku_lite project has stopped maintenance. We have launched a new generation of Goku gateway. Welcome to pay attention [goku](github.com/eolinker/goku)
+----
 Goku API Gateway is a Golang-based microservice gateway that enables high-performance dynamic routing,service orchestration, multi-tenancy management, API access control, etc. It's also suitable for API management under micro-service system. 
 
 Goku provides graphic interface and plug-in system to make configuration easier and expand more convenient.
