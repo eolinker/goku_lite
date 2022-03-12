@@ -4,7 +4,7 @@
 [![Gitter](https://badges.gitter.im/goku-api-gateway/community.svg)](https://gitter.im/goku-api-gateway/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![Go Report Card](https://goreportcard.com/badge/github.com/eolinker/goku-api-gateway)](https://goreportcard.com/report/github.com/eolinker/goku-api-gateway) [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3214/badge)](https://bestpractices.coreinfrastructure.org/projects/3214) ![](https://img.shields.io/badge/license-GPL3.0-blue.svg)
 ----
 
-### goku_lite 项目已停止维护，我们推出了新一代的goku网关，欢迎关注[goku](github.com/eolinker/goku)
+### goku_lite 项目已停止维护，我们推出了新一代的goku网关，欢迎关注[goku](https://github.com/eolinker/goku)
 
 ------
 
