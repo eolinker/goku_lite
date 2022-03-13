@@ -4,7 +4,7 @@
 
 ----
 
-Goku_lite project has stopped maintenance. We have launched a new generation of Goku gateway. Welcome to pay attention [goku](https://github.com/eolinker/goku)
+Goku_lite project has stopped maintenance. We have launched a new generation of Goku gateway. Welcome to pay attention [apinto](https://github.com/eolinker/apinto)
 ----
 Goku API Gateway is a Golang-based microservice gateway that enables high-performance dynamic routing,service orchestration, multi-tenancy management, API access control, etc. It's also suitable for API management under micro-service system. 
 
